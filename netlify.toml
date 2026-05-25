@@ -1,0 +1,7 @@
+[build]
+  publish = "livrables/sites-web"
+
+[[redirects]]
+  from = "/"
+  to = "/2026-05-25_creatorflow-ai-hub_v2.html"
+  status = 200
