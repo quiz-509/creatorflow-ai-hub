@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Profil Expert — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--cg:rgba(6,182,212,0.25);--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
+.btn-outline:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+.btn-cyan{background:linear-gradient(135deg,var(--c),#0891B2);color:#fff;box-shadow:0 6px 20px -6px var(--cg);}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px var(--cg);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* LAYOUT */
+.page{padding-top:64px;min-height:100vh;}
+.container{max-width:1100px;margin:0 auto;padding:0 24px;}
+
+/* HERO */
+.hero{background:linear-gradient(180deg,rgba(124,58,237,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);padding:48px 0 0;}
+.hero-inner{display:flex;gap:32px;align-items:flex-start;}
+.hero-avatar-wrap{position:relative;flex-shrink:0;}
+.hero-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#fff;border:3px solid var(--border-2);}
+.hero-badge{position:absolute;bottom:4px;right:4px;width:18px;height:18px;border-radius:50%;background:var(--green);border:2px solid var(--bg);}
+.hero-info{flex:1;}
+.hero-name{font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.hero-title{font-size:15px;color:var(--text-2);margin-bottom:12px;}
+.hero-rating{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.stars{display:flex;gap:2px;}
+.star{color:var(--orange);font-size:14px;}
+.star.empty{color:var(--text-3);}
+.rating-val{font-size:14px;font-weight:700;}
+.rating-count{font-size:13px;color:var(--text-3);}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.tag{padding:5px 12px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:999px;font-size:12px;font-weight:600;color:var(--vs);}
+.tag-cyan{background:rgba(6,182,212,0.10);border-color:rgba(6,182,212,0.25);color:var(--c);}
+.hero-meta{display:flex;gap:20px;}
+.meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);}
+.meta-item svg{flex-shrink:0;}
+.hero-actions{display:flex;flex-direction:column;gap:10px;min-width:180px;}
+.dispo-chip{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.25);color:var(--green);font-size:12px;font-weight:600;justify-content:center;}
+.dispo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);}
+.hero-tabs{display:flex;gap:0;margin-top:32px;border-bottom:1px solid var(--border);}
+.htab{padding:14px 20px;font-size:14px;font-weight:600;color:var(--text-3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 180ms;cursor:pointer;}
+.htab:hover{color:var(--text-2);}
+.htab.active{color:var(--vs);border-bottom-color:var(--v);}
+
+/* BODY */
+.body-grid{display:grid;grid-template-columns:1fr 300px;gap:24px;padding:32px 0 60px;}
+
+/* SECTION */
+.section{margin-bottom:28px;}
+.section-title{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.section-title span{font-size:12px;font-weight:500;color:var(--text-3);padding:2px 8px;background:var(--surf-2);border-radius:999px;border:1px solid var(--border);}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:28px;}
+.stat-cell{background:var(--surf);padding:20px 16px;text-align:center;}
+.stat-val{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:2px;}
+.stat-val.purple{color:var(--vs);}
+.stat-val.cyan{color:var(--c);}
+.stat-val.green{color:var(--green);}
+.stat-val.orange{color:var(--orange);}
+.stat-lbl{font-size:12px;color:var(--text-3);}
+
+/* ABOUT */
+.about-text{font-size:14px;color:var(--text-2);line-height:1.75;}
+
+/* SKILLS */
+.skills-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.skill-chip{display:flex;align-items:center;gap:6px;padding:7px 14px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;font-size:13px;font-weight:500;}
+.skill-bar-wrap{margin-top:4px;}
+.skill-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.skill-name{font-size:13px;font-weight:600;width:140px;flex-shrink:0;}
+.skill-bar{flex:1;height:6px;background:var(--surf-2);border-radius:999px;overflow:hidden;}
+.skill-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--v),var(--c));}
+.skill-pct{font-size:12px;color:var(--text-3);width:36px;text-align:right;flex-shrink:0;}
+
+/* PORTFOLIO */
+.portfolio-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.portfolio-card{background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color 200ms,transform 200ms;}
+.portfolio-card:hover{border-color:rgba(124,58,237,0.35);transform:translateY(-3px);}
+.portfolio-thumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:32px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.10));}
+.portfolio-body{padding:14px;}
+.portfolio-name{font-size:13px;font-weight:700;margin-bottom:4px;}
+.portfolio-desc{font-size:12px;color:var(--text-3);line-height:1.6;margin-bottom:10px;}
+.portfolio-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.ptag{font-size:11px;padding:3px 8px;background:rgba(124,58,237,0.12);border-radius:999px;color:var(--vs);}
+
+/* REVIEWS */
+.review-card{background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.review-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.review-meta{flex:1;}
+.review-name{font-size:13px;font-weight:700;}
+.review-date{font-size:12px;color:var(--text-3);}
+.review-stars{display:flex;gap:2px;margin-left:auto;}
+.review-body{font-size:13px;color:var(--text-2);line-height:1.65;}
+.review-mission{font-size:11px;color:var(--text-3);margin-top:8px;}
+
+/* SIDEBAR */
+.sidebar-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
+.sidebar-title{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--text-2);}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.price-row:last-child{border:none;padding-bottom:0;}
+.price-label{font-size:13px;color:var(--text-3);}
+.price-val{font-size:14px;font-weight:700;}
+.price-val.big{font-size:20px;color:var(--vs);}
+.resp-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.resp-icon{width:32px;height:32px;border-radius:8px;background:var(--surf-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.resp-text{font-size:13px;}
+.resp-text strong{display:block;font-weight:700;}
+.resp-text span{font-size:12px;color:var(--text-3);}
+.guarantee-list{display:flex;flex-direction:column;gap:8px;}
+.guarantee-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);}
+.guarantee-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.similar-expert{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.similar-expert:last-child{border:none;padding-bottom:0;}
+.sim-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.sim-info{flex:1;}
+.sim-name{font-size:13px;font-weight:600;}
+.sim-spec{font-size:12px;color:var(--text-3);}
+.sim-rate{font-size:13px;font-weight:700;color:var(--vs);}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 500ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Location:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  Clock:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  Globe:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  Shield:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  Check:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Message:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  Briefcase:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
+  Star:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Share:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+  Heart:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
+  Link:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
+};
+
+const expert = {
+  name: 'Amélie Chen',
+  initials: 'AC',
+  title: 'Experte IA & Automatisation',
+  rating: 4.9,
+  reviewCount: 47,
+  location: 'Paris, France',
+  timezone: 'Europe/Paris (UTC+2)',
+  languages: 'Français, Anglais, Mandarin',
+  memberSince: 'Membre depuis janvier 2024',
+  available: true,
+  tags: ['ChatGPT','Make.com','Zapier','LangChain','Python','n8n'],
+  stats: { missions: 62, success: '100%', response: '< 2h', satisfaction: '4.9/5' },
+  about: `Spécialiste en intelligence artificielle appliquée aux entreprises, j'accompagne des TPE/PME et grands groupes dans l'automatisation de leurs processus métier et l'intégration de solutions IA sur mesure.\n\nAvec plus de 3 ans d'expérience dans le domaine, j'ai livré plus de 60 missions réussies couvrant des domaines variés : chatbots avancés, pipelines d'automatisation, analyses prédictives et formations aux équipes.\n\nMon approche : comprendre vos besoins avant de coder, livrer rapidement des prototypes testables, et assurer un transfert de compétences à vos équipes.`,
+  skills: [
+    { name: 'ChatGPT / GPT-4', pct: 98 },
+    { name: 'Make.com / Zapier', pct: 95 },
+    { name: 'LangChain', pct: 88 },
+    { name: 'Python', pct: 85 },
+    { name: 'API & Webhooks', pct: 92 },
+    { name: 'Prompt Engineering', pct: 97 },
+  ],
+  portfolio: [
+    { emoji: '🤖', name: 'Chatbot service client', desc: 'Chatbot IA multilingue intégré au CRM d\'un e-commerce, réduisant les tickets support de 60%.', tags: ['ChatGPT','Zapier','Shopify'] },
+    { emoji: '📊', name: 'Dashboard analytics IA', desc: 'Pipeline de données + prédictions ventes avec LangChain et visualisation Notion automatisée.', tags: ['LangChain','Python','Notion'] },
+    { emoji: '✉️', name: 'Automatisation email', desc: 'Séquences email intelligentes avec scoring IA — +35% de taux d\'ouverture pour une SaaS B2B.', tags: ['Make.com','GPT-4','HubSpot'] },
+    { emoji: '🔍', name: 'Veille concurrentielle', desc: 'Agent IA de veille automatique — scraping, synthèse et rapport quotidien via n8n.', tags: ['n8n','Python','Telegram'] },
+  ],
+  reviews: [
+    { name: 'Thomas R.', initials: 'TR', color: '#7C3AED', date: 'Il y a 2 semaines', rating: 5, mission: 'Automatisation CRM + ChatGPT', body: 'Amélie est exceptionnelle. Elle a su comprendre nos besoins en quelques échanges et livré un chatbot bluffant. Disponible, réactive et force de proposition. Je recommande sans hésitation !' },
+    { name: 'Sarah M.', initials: 'SM', color: '#0891B2', date: 'Il y a 1 mois', rating: 5, mission: 'Pipeline IA analytics', body: 'Mission réalisée dans les délais, avec une qualité de code irréprochable. Amélie a aussi pris le temps de former mon équipe. Un vrai plus.' },
+    { name: 'Karim B.', initials: 'KB', color: '#059669', date: 'Il y a 6 semaines', rating: 5, mission: 'Chatbot multilingue e-commerce', body: 'Très professionnel. Le projet était complexe et Amélie a géré tous les imprévus avec calme. Le résultat dépasse nos attentes.' },
+  ],
+  similar: [
+    { name: 'Lucas Bernard', initials: 'LB', color: '#7C3AED', spec: 'Automatisation & No-Code', rate: '95€/h' },
+    { name: 'Sofia Martins', initials: 'SM', color: '#0891B2', spec: 'Machine Learning', rate: '110€/h' },
+    { name: 'Karim Benali', initials: 'KB', color: '#059669', spec: 'Chatbots & NLP', rate: '85€/h' },
+  ]
+};
+
+function Stars({ rating, size=13 }) {
+  return (
+    <div className="stars">
+      {[1,2,3,4,5].map(i => (
+        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= Math.round(rating) ? 'var(--orange)' : 'var(--surf-3)'}>
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState('apropos');
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  const tabs = [
+    { id: 'apropos', label: 'À propos' },
+    { id: 'competences', label: 'Compétences' },
+    { id: 'portfolio', label: 'Portfolio' },
+    { id: 'avis', label: `Avis (${expert.reviewCount})` },
+  ];
+
+  return (
+    <React.Fragment>
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <div className="nav-right">
+            <a href="recherche.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Retour aux experts</a>
+            <a href="dashboard-client.html" className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}}>Mon dashboard</a>
+          </div>
+        </div>
+      </nav>
+
+      <div className="page">
+        {/* HERO */}
+        <div className="hero">
+          <div className="container">
+            {/* Breadcrumb */}
+            <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--text-3)',marginBottom:24,marginTop:20}}>
+              <a href="index.html" style={{color:'var(--text-3)'}}>Accueil</a>
+              <span>/</span>
+              <a href="recherche.html" style={{color:'var(--text-3)'}}>Experts</a>
+              <span>/</span>
+              <span style={{color:'var(--text-2)'}}>{expert.name}</span>
+            </div>
+
+            <div className="hero-inner">
+              <div className="hero-avatar-wrap">
+                <div className="hero-avatar">{expert.initials}</div>
+                {expert.available && <div className="hero-badge"/>}
+              </div>
+              <div className="hero-info">
+                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
+                  <div>
+                    <div className="hero-name">{expert.name}</div>
+                    <div className="hero-title">{expert.title}</div>
+                  </div>
+                  <div style={{display:'flex',gap:8}}>
+                    <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>setSaved(s=>!s)}>
+                      <Ic.Heart style={{stroke: saved ? 'var(--v)' : 'currentColor', fill: saved ? 'var(--v)' : 'none'}}/>
+                      {saved ? 'Sauvegardé' : 'Sauvegarder'}
+                    </button>
+                    <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}}>
+                      <Ic.Share/>Partager
+                    </button>
+                  </div>
+                </div>
+                <div className="hero-rating">
+                  <Stars rating={expert.rating}/>
+                  <span className="rating-val">{expert.rating}</span>
+                  <span className="rating-count">({expert.reviewCount} avis)</span>
+                  {expert.available && <div className="dispo-chip" style={{marginLeft:8}}><div className="dispo-dot"/>Disponible maintenant</div>}
+                </div>
+                <div className="hero-tags">
+                  {expert.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                </div>
+                <div className="hero-meta">
+                  <div className="meta-item"><Ic.Location/>{expert.location}</div>
+                  <div className="meta-item"><Ic.Clock/>{expert.timezone}</div>
+                  <div className="meta-item"><Ic.Globe/>{expert.languages}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="hero-tabs">
+              {tabs.map(t => (
+                <div key={t.id} className={`htab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>{t.label}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* BODY */}
+        <div className="container">
+          {/* Stats */}
+          <div className="stats-row" style={{marginTop:32}}>
+            <div className="stat-cell">
+              <div className="stat-val purple">{expert.stats.missions}</div>
+              <div className="stat-lbl">Missions réalisées</div>
+            </div>
+            <div className="stat-cell">
+              <div className="stat-val green">{expert.stats.success}</div>
+              <div className="stat-lbl">Taux de succès</div>
+            </div>
+            <div className="stat-cell">
+              <div className="stat-val cyan">{expert.stats.response}</div>
+              <div className="stat-lbl">Temps de réponse</div>
+            </div>
+            <div className="stat-cell">
+              <div className="stat-val orange">{expert.stats.satisfaction}</div>
+              <div className="stat-lbl">Note satisfaction</div>
+            </div>
+          </div>
+
+          <div className="body-grid">
+            {/* MAIN */}
+            <div>
+              {tab === 'apropos' && (
+                <div className="fade-up">
+                  <div className="section">
+                    <div className="section-title">À propos</div>
+                    <div className="card">
+                      {expert.about.split('\n\n').map((p,i) => (
+                        <p key={i} className="about-text" style={{marginBottom: i < 2 ? 14 : 0}}>{p}</p>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="section">
+                    <div className="section-title">Derniers avis <span>{expert.reviewCount} au total</span></div>
+                    {expert.reviews.slice(0,2).map((r,i) => (
+                      <div key={i} className="review-card">
+                        <div className="review-header">
+                          <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
+                          <div className="review-meta">
+                            <div className="review-name">{r.name}</div>
+                            <div className="review-date">{r.date}</div>
+                          </div>
+                          <Stars rating={r.rating} size={12}/>
+                        </div>
+                        <div className="review-body">{r.body}</div>
+                        <div className="review-mission">Mission : {r.mission}</div>
+                      </div>
+                    ))}
+                    <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:4}} onClick={()=>setTab('avis')}>
+                      Voir tous les avis <Ic.Arrow/>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {tab === 'competences' && (
+                <div className="fade-up">
+                  <div className="section">
+                    <div className="section-title">Niveaux de compétence</div>
+                    <div className="card">
+                      <div className="skill-bar-wrap">
+                        {expert.skills.map((s,i) => (
+                          <div key={i} className="skill-row">
+                            <div className="skill-name">{s.name}</div>
+                            <div className="skill-bar">
+                              <div className="skill-fill" style={{width:`${s.pct}%`}}/>
+                            </div>
+                            <div className="skill-pct">{s.pct}%</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="section">
+                    <div className="section-title">Technologies maîtrisées</div>
+                    <div className="card">
+                      <div className="skills-grid">
+                        {['ChatGPT','GPT-4','Claude','Make.com','Zapier','n8n','LangChain','Python','FastAPI','Notion','Airtable','HubSpot','Slack','Telegram','Webhook'].map(s => (
+                          <div key={s} className="skill-chip">
+                            <Ic.Check style={{color:'var(--green)',width:12,height:12}}/>{s}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {tab === 'portfolio' && (
+                <div className="fade-up">
+                  <div className="section">
+                    <div className="section-title">Réalisations <span>{expert.portfolio.length} projets</span></div>
+                    <div className="portfolio-grid">
+                      {expert.portfolio.map((p,i) => (
+                        <div key={i} className="portfolio-card">
+                          <div className="portfolio-thumb">{p.emoji}</div>
+                          <div className="portfolio-body">
+                            <div className="portfolio-name">{p.name}</div>
+                            <div className="portfolio-desc">{p.desc}</div>
+                            <div className="portfolio-tags">
+                              {p.tags.map(t => <span key={t} className="ptag">{t}</span>)}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {tab === 'avis' && (
+                <div className="fade-up">
+                  <div className="section">
+                    <div className="section-title">Tous les avis <span>{expert.reviewCount} avis</span></div>
+                    {/* Rating summary */}
+                    <div className="card" style={{marginBottom:16,display:'flex',alignItems:'center',gap:32}}>
+                      <div style={{textAlign:'center'}}>
+                        <div style={{fontSize:48,fontWeight:800,letterSpacing:'-0.04em',lineHeight:1}}>{expert.rating}</div>
+                        <Stars rating={expert.rating} size={16}/>
+                        <div style={{fontSize:12,color:'var(--text-3)',marginTop:4}}>{expert.reviewCount} avis</div>
+                      </div>
+                      <div style={{flex:1}}>
+                        {[5,4,3,2,1].map(n => (
+                          <div key={n} style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
+                            <span style={{fontSize:12,color:'var(--text-3)',width:8}}>{n}</span>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--orange)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <div style={{flex:1,height:5,background:'var(--surf-2)',borderRadius:999,overflow:'hidden'}}>
+                              <div style={{height:'100%',background:'linear-gradient(90deg,var(--orange),#EF4444)',borderRadius:999,width: n===5?'92%':n===4?'6%':'1%'}}/>
+                            </div>
+                            <span style={{fontSize:12,color:'var(--text-3)',width:28}}>{n===5?'92%':n===4?'6%':'1%'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {expert.reviews.map((r,i) => (
+                      <div key={i} className="review-card">
+                        <div className="review-header">
+                          <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
+                          <div className="review-meta">
+                            <div className="review-name">{r.name}</div>
+                            <div className="review-date">{r.date}</div>
+                          </div>
+                          <Stars rating={r.rating} size={12}/>
+                        </div>
+                        <div className="review-body">{r.body}</div>
+                        <div className="review-mission">Mission : {r.mission}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* SIDEBAR */}
+            <div>
+              <div className="sidebar-card">
+                <div style={{textAlign:'center',marginBottom:20}}>
+                  <div style={{fontSize:13,color:'var(--text-3)',marginBottom:4}}>Tarif journalier</div>
+                  <div style={{fontSize:32,fontWeight:800,letterSpacing:'-0.03em'}}>120<span style={{fontSize:16,color:'var(--text-3)'}}>€/h</span></div>
+                  <div style={{fontSize:12,color:'var(--text-3)'}}>ou sur devis pour les projets forfait</div>
+                </div>
+                <a href="nouveau-brief.html" className="btn btn-primary" style={{width:'100%',justifyContent:'center',marginBottom:10}}>
+                  <Ic.Briefcase/>Poster un brief
+                </a>
+                <a href="messages.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center'}}>
+                  <Ic.Message/>Envoyer un message
+                </a>
+              </div>
+
+              <div className="sidebar-card">
+                <div className="sidebar-title">Informations</div>
+                <div className="resp-row">
+                  <div className="resp-icon"><Ic.Clock style={{color:'var(--vs)'}}/></div>
+                  <div className="resp-text"><strong>Réponse rapide</strong><span>Répond en moins de 2h en moyenne</span></div>
+                </div>
+                <div className="resp-row">
+                  <div className="resp-icon"><Ic.Shield style={{color:'var(--green)'}}/></div>
+                  <div className="resp-text"><strong>Profil vérifié</strong><span>Identité et compétences vérifiées</span></div>
+                </div>
+                <div className="resp-row" style={{marginBottom:0}}>
+                  <div className="resp-icon"><Ic.Globe style={{color:'var(--c)'}}/></div>
+                  <div className="resp-text"><strong>Multilangue</strong><span>FR, EN, ZH</span></div>
+                </div>
+              </div>
+
+              <div className="sidebar-card">
+                <div className="sidebar-title">Garanties incluses</div>
+                <div className="guarantee-list">
+                  {['Paiement sécurisé via escrow','Remboursement si insatisfait','Support inclus 30 jours','NDA disponible sur demande','Révisions incluses'].map(g => (
+                    <div key={g} className="guarantee-item"><div className="guarantee-dot"/>{g}</div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="sidebar-card">
+                <div className="sidebar-title">Experts similaires</div>
+                {expert.similar.map((s,i) => (
+                  <div key={i} className="similar-expert">
+                    <div className="sim-avatar" style={{background:s.color}}>{s.initials}</div>
+                    <div className="sim-info">
+                      <div className="sim-name">{s.name}</div>
+                      <div className="sim-spec">{s.spec}</div>
+                    </div>
+                    <div className="sim-rate">{s.rate}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

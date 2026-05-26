@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Recherche Experts — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 28px;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
+.btn-outline:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+
+/* HERO SEARCH */
+.search-hero{background:linear-gradient(180deg,rgba(124,58,237,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);padding:32px 0 24px;}
+.search-hero-inner{max-width:1280px;margin:0 auto;padding:0 28px;}
+.search-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;}
+.search-title em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-lg);padding:6px 8px 6px 18px;transition:border-color 200ms,box-shadow 200ms;}
+.search-bar:focus-within{border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.10);}
+.search-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--f);padding:6px 0;}
+.search-input::placeholder{color:var(--text-3);}
+
+/* CATS PILLS */
+.cats-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-top:16px;scrollbar-width:none;}
+.cats-row::-webkit-scrollbar{display:none;}
+.cat-pill{padding:7px 16px;background:var(--surf);border:1px solid var(--border-2);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);cursor:pointer;transition:all 180ms;white-space:nowrap;}
+.cat-pill:hover{color:var(--text-2);}
+.cat-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:var(--vs);}
+
+/* LAYOUT */
+.layout{display:flex;max-width:1280px;margin:0 auto;padding:0 28px;gap:24px;padding-top:24px;padding-bottom:60px;}
+
+/* SIDEBAR FILTERS */
+.filters{width:250px;flex-shrink:0;}
+.filter-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;}
+.filter-title{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--text-2);}
+.filter-group{margin-bottom:16px;}
+.filter-group:last-child{margin-bottom:0;}
+.filter-label{font-size:12px;font-weight:600;color:var(--text-3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em;}
+.checkbox-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;}
+.checkbox{width:16px;height:16px;border:2px solid var(--border-2);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 150ms;}
+.checkbox.checked{background:var(--v);border-color:var(--v);}
+.checkbox-label{font-size:13px;color:var(--text-2);}
+.checkbox-count{margin-left:auto;font-size:11px;color:var(--text-3);}
+.range-row{display:flex;gap:8px;align-items:center;}
+.range-input{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:8px;color:var(--text);font-size:13px;font-family:var(--f);padding:8px 10px;outline:none;width:0;}
+.range-input:focus{border-color:rgba(124,58,237,0.5);}
+.range-sep{font-size:12px;color:var(--text-3);}
+.filter-reset{width:100%;padding:8px;font-size:13px;color:var(--text-3);text-align:center;border:1px solid var(--border);border-radius:999px;transition:all 150ms;}
+.filter-reset:hover{color:var(--text-2);border-color:var(--border-2);}
+
+/* RESULTS */
+.results{flex:1;min-width:0;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.results-count{font-size:14px;color:var(--text-2);}
+.results-count strong{color:var(--text);}
+.sort-select{background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);font-size:13px;font-family:var(--f);padding:7px 12px;border-radius:999px;outline:none;cursor:pointer;}
+.sort-select:focus{border-color:rgba(124,58,237,0.5);}
+
+/* EXPERT CARD */
+.expert-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:14px;transition:border-color 220ms,transform 220ms;display:flex;gap:18px;}
+.expert-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-2px);}
+.expert-card.featured{border-color:rgba(124,58,237,0.35);background:linear-gradient(135deg,rgba(124,58,237,0.05),var(--surf));}
+.expert-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;border:2px solid var(--border-2);}
+.online-wrap{position:relative;flex-shrink:0;}
+.online-dot{position:absolute;bottom:3px;right:3px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--surf);}
+.expert-body{flex:1;min-width:0;}
+.expert-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.expert-name{font-size:15px;font-weight:800;letter-spacing:-0.01em;}
+.expert-spec{font-size:13px;color:var(--text-2);margin-bottom:8px;}
+.expert-rating{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.expert-about{font-size:13px;color:var(--text-3);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.expert-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.etag{padding:4px 10px;background:rgba(124,58,237,0.10);border:1px solid rgba(124,58,237,0.20);border-radius:999px;font-size:11px;font-weight:600;color:var(--vs);}
+.expert-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.expert-meta{display:flex;gap:14px;}
+.emeta-item{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:4px;}
+.expert-price{text-align:right;}
+.price-val{font-size:18px;font-weight:800;color:var(--vs);}
+.price-unit{font-size:12px;color:var(--text-3);}
+.featured-badge{padding:3px 10px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:999px;font-size:11px;font-weight:700;color:#fff;}
+.dispo-badge{padding:3px 10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:999px;font-size:11px;font-weight:600;color:var(--green);}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;}
+.empty-emoji{font-size:40px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--text-3);}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;}
+.page-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;border:1px solid var(--border-2);color:var(--text-3);transition:all 150ms;cursor:pointer;}
+.page-btn:hover{color:var(--text-2);border-color:rgba(255,255,255,0.2);}
+.page-btn.active{background:var(--v);border-color:var(--v);color:#fff;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 400ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const Ic = {
+  Search:(p)=><svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Location:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  Clock:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  Briefcase:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
+  Check:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Filter:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+  X:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+};
+
+const ALL_EXPERTS = [
+  { id:1, name:'Amélie Chen', initials:'AC', color:'#7C3AED', spec:'Experte IA & Automatisation', about:'Spécialiste en chatbots GPT et automatisation de processus métier. +60 missions réussies, taux de succès 100%.', tags:['ChatGPT','Make.com','LangChain','Python'], rating:4.9, reviews:47, missions:62, response:'< 2h', location:'Paris', available:true, featured:true, rate:120, category:'Chatbot & IA' },
+  { id:2, name:'Lucas Bernard', initials:'LB', color:'#2563EB', spec:'Expert Automatisation No-Code', about:'Spécialiste Make.com et Zapier, je connecte vos outils et automatise vos workflows sans une ligne de code.', tags:['Make.com','Zapier','Airtable','Notion'], rating:4.8, reviews:31, missions:38, response:'< 4h', location:'Lyon', available:true, featured:false, rate:95, category:'Automatisation' },
+  { id:3, name:'Sofia Martins', initials:'SM', color:'#0891B2', spec:'Data Scientist & ML Engineer', about:'Machine learning, analyse prédictive et dashboards BI. Je transforme vos données brutes en décisions stratégiques.', tags:['Python','Pandas','Power BI','Tableau'], rating:5.0, reviews:24, missions:29, response:'< 6h', location:'Bordeaux', available:false, featured:true, rate:130, category:'Data & Analytics' },
+  { id:4, name:'Karim Benali', initials:'KB', color:'#059669', spec:'Expert Chatbots & NLP', about:'Développeur spécialisé dans les agents conversationnels et le traitement du langage naturel pour entreprises.', tags:['NLP','Rasa','Dialogflow','Python'], rating:4.7, reviews:19, missions:22, response:'< 3h', location:'Marseille', available:true, featured:false, rate:85, category:'Chatbot & IA' },
+  { id:5, name:'Marie Dupont', initials:'MD', color:'#D97706', spec:'Experte Contenu IA', about:'Stratégie de contenu augmentée par l\'IA, copywriting, génération et optimisation SEO automatisée.', tags:['GPT-4','Jasper','SEO','Notion'], rating:4.6, reviews:38, missions:45, response:'< 5h', location:'Nantes', available:true, featured:false, rate:70, category:'Contenu IA' },
+  { id:6, name:'Antoine Moreau', initials:'AM', color:'#7C3AED', spec:'Expert Intégrations API & CRM', about:'Architecte d\'intégrations sur mesure : CRM, ERP, outils SaaS. Salesforce, HubSpot, REST API.', tags:['API REST','HubSpot','Salesforce','Node.js'], rating:4.9, reviews:15, missions:18, response:'< 2h', location:'Toulouse', available:true, featured:false, rate:110, category:'Intégrations' },
+  { id:7, name:'Julie Leclerc', initials:'JL', color:'#DB2777', spec:'Expert Image & Vidéo IA', about:'Création visuelle par IA : Midjourney, Stable Diffusion, Runway. Identité visuelle et contenus automatisés.', tags:['Midjourney','Runway','Stable Diffusion','Canva'], rating:4.8, reviews:28, missions:33, response:'< 3h', location:'Paris', available:false, featured:false, rate:90, category:'Image & Vidéo' },
+  { id:8, name:'Nicolas Petit', initials:'NP', color:'#0891B2', spec:'Expert IA & Automatisation', about:'Pipelines d\'automatisation complexes, agents IA multi-outils et formations équipes sur les outils IA.', tags:['n8n','LangChain','GPT-4','Slack'], rating:4.7, reviews:12, missions:14, response:'< 4h', location:'Strasbourg', available:true, featured:false, rate:100, category:'Automatisation' },
+];
+
+const CATS = ['Tous','Chatbot & IA','Automatisation','Data & Analytics','Contenu IA','Image & Vidéo','Intégrations'];
+
+function CheckRow({ label, count, checked, onChange }) {
+  return (
+    <div className="checkbox-row" onClick={onChange}>
+      <div className={`checkbox ${checked ? 'checked' : ''}`}>
+        {checked && <Ic.Check style={{color:'#fff'}}/>}
+      </div>
+      <span className="checkbox-label">{label}</span>
+      {count != null && <span className="checkbox-count">{count}</span>}
+    </div>
+  );
+}
+
+function Stars({ rating }) {
+  return (
+    <div style={{display:'flex',gap:2}}>
+      {[1,2,3,4,5].map(i=>(
+        <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill={i<=Math.round(rating)?'var(--orange)':'var(--surf-3)'}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      ))}
+    </div>
+  );
+}
+
+function App() {
+  const [query, setQuery] = useState('');
+  const [cat, setCat] = useState('Tous');
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
+  const [onlyFeatured, setOnlyFeatured] = useState(false);
+  const [minRating, setMinRating] = useState(null);
+  const [sort, setSort] = useState('pertinence');
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 5;
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  const filtered = useMemo(() => {
+    let list = ALL_EXPERTS;
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter(e => e.name.toLowerCase().includes(q) || e.spec.toLowerCase().includes(q) || e.about.toLowerCase().includes(q) || e.tags.some(t => t.toLowerCase().includes(q)));
+    }
+    if (cat !== 'Tous') list = list.filter(e => e.category === cat);
+    if (onlyAvailable) list = list.filter(e => e.available);
+    if (onlyFeatured) list = list.filter(e => e.featured);
+    if (minRating) list = list.filter(e => e.rating >= minRating);
+    if (sort === 'note') list = [...list].sort((a,b) => b.rating - a.rating);
+    else if (sort === 'missions') list = [...list].sort((a,b) => b.missions - a.missions);
+    else if (sort === 'prix_asc') list = [...list].sort((a,b) => a.rate - b.rate);
+    else if (sort === 'prix_desc') list = [...list].sort((a,b) => b.rate - a.rate);
+    else list = [...list].sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    return list;
+  }, [query, cat, onlyAvailable, onlyFeatured, minRating, sort]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const paginated = filtered.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  const resetFilters = () => { setOnlyAvailable(false); setOnlyFeatured(false); setMinRating(null); setCat('Tous'); setQuery(''); };
+  const hasFilters = onlyAvailable || onlyFeatured || minRating || cat !== 'Tous' || query;
+
+  return (
+    <React.Fragment>
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <div className="nav-right">
+            <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+            <a href="nouveau-brief.html" className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}}>Poster un brief</a>
+          </div>
+        </div>
+      </nav>
+
+      <div className="page">
+        {/* HERO SEARCH */}
+        <div className="search-hero">
+          <div className="search-hero-inner">
+            <div className="search-title">Trouvez votre expert <em>IA</em></div>
+            <div className="search-bar">
+              <Ic.Search style={{color:'var(--text-3)',flexShrink:0}}/>
+              <input className="search-input" placeholder="Chatbot, automatisation, Make.com, Python…" value={query} onChange={e=>{setQuery(e.target.value);setPage(1);}}/>
+              {query && <button style={{color:'var(--text-3)',padding:'4px 8px'}} onClick={()=>setQuery('')}><Ic.X/></button>}
+              <button className="btn btn-primary" style={{padding:'8px 18px',fontSize:13,flexShrink:0}}>
+                <Ic.Search style={{width:13,height:13}}/>Rechercher
+              </button>
+            </div>
+            <div className="cats-row">
+              {CATS.map(c => (
+                <div key={c} className={`cat-pill ${cat===c?'active':''}`} onClick={()=>{setCat(c);setPage(1);}}>{c}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="layout">
+          {/* FILTERS */}
+          <div className="filters">
+            <div className="filter-card">
+              <div className="filter-title">Filtres</div>
+              <div className="filter-group">
+                <div className="filter-label">Disponibilité</div>
+                <CheckRow label="Disponible maintenant" checked={onlyAvailable} onChange={()=>{setOnlyAvailable(v=>!v);setPage(1);}}/>
+                <CheckRow label="Expert certifié" checked={onlyFeatured} onChange={()=>{setOnlyFeatured(v=>!v);setPage(1);}}/>
+              </div>
+              <div className="filter-group">
+                <div className="filter-label">Note minimale</div>
+                {[4.5, 4.0, 3.5].map(r => (
+                  <CheckRow key={r} label={`${r}★ et plus`} checked={minRating===r} onChange={()=>{setMinRating(minRating===r?null:r);setPage(1);}}/>
+                ))}
+              </div>
+              <div className="filter-group" style={{marginBottom:0}}>
+                <div className="filter-label">Tarif journalier</div>
+                <div className="range-row">
+                  <input className="range-input" placeholder="Min" type="number"/>
+                  <span className="range-sep">–</span>
+                  <input className="range-input" placeholder="Max" type="number"/>
+                  <span style={{fontSize:12,color:'var(--text-3)'}}>€/h</span>
+                </div>
+              </div>
+            </div>
+            {hasFilters && (
+              <button className="filter-reset" onClick={resetFilters}>Réinitialiser les filtres</button>
+            )}
+          </div>
+
+          {/* RESULTS */}
+          <div className="results fade-up">
+            <div className="results-header">
+              <div className="results-count"><strong>{filtered.length}</strong> expert{filtered.length !== 1 ? 's' : ''} trouvé{filtered.length !== 1 ? 's' : ''}</div>
+              <select className="sort-select" value={sort} onChange={e=>setSort(e.target.value)}>
+                <option value="pertinence">Pertinence</option>
+                <option value="note">Meilleure note</option>
+                <option value="missions">Plus de missions</option>
+                <option value="prix_asc">Prix croissant</option>
+                <option value="prix_desc">Prix décroissant</option>
+              </select>
+            </div>
+
+            {paginated.length === 0 ? (
+              <div className="empty">
+                <div className="empty-emoji">🔍</div>
+                <div className="empty-title">Aucun expert trouvé</div>
+                <div className="empty-sub">Essayez avec d'autres mots-clés ou réinitialisez les filtres.</div>
+                <button className="btn btn-ghost" style={{margin:'16px auto 0',display:'flex'}} onClick={resetFilters}>Réinitialiser</button>
+              </div>
+            ) : (
+              <>
+                {paginated.map(e => (
+                  <div key={e.id} className={`expert-card ${e.featured ? 'featured' : ''}`}>
+                    <div className="online-wrap">
+                      <div className="expert-avatar" style={{background:e.color}}>{e.initials}</div>
+                      {e.available && <div className="online-dot"/>}
+                    </div>
+                    <div className="expert-body">
+                      <div className="expert-header">
+                        <div>
+                          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:2}}>
+                            <div className="expert-name">{e.name}</div>
+                            {e.featured && <span className="featured-badge">Expert certifié</span>}
+                            {e.available && <span className="dispo-badge">Disponible</span>}
+                          </div>
+                          <div className="expert-spec">{e.spec}</div>
+                        </div>
+                        <div className="expert-price">
+                          <div className="price-val">{e.rate}<span className="price-unit">€/h</span></div>
+                        </div>
+                      </div>
+                      <div className="expert-rating">
+                        <Stars rating={e.rating}/>
+                        <span style={{fontSize:13,fontWeight:700}}>{e.rating}</span>
+                        <span style={{fontSize:12,color:'var(--text-3)'}}>({e.reviews} avis)</span>
+                      </div>
+                      <div className="expert-about">{e.about}</div>
+                      <div className="expert-tags">
+                        {e.tags.map(t => <span key={t} className="etag">{t}</span>)}
+                      </div>
+                      <div className="expert-footer">
+                        <div className="expert-meta">
+                          <div className="emeta-item"><Ic.Location/>{e.location}</div>
+                          <div className="emeta-item"><Ic.Clock/>{e.response}</div>
+                          <div className="emeta-item"><Ic.Briefcase/>{e.missions} missions</div>
+                        </div>
+                        <div style={{display:'flex',gap:8}}>
+                          <a href="messages.html" className="btn btn-ghost" style={{padding:'7px 14px',fontSize:12}}>Contacter</a>
+                          <a href="profil-expert.html" className="btn btn-primary" style={{padding:'7px 16px',fontSize:12}}>Voir le profil <Ic.Arrow/></a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* PAGINATION */}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    {Array.from({length:totalPages},(_,i)=>i+1).map(p => (
+                      <div key={p} className={`page-btn ${page===p?'active':''}`} onClick={()=>setPage(p)}>{p}</div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

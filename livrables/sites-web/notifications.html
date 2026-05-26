@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Notifications — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+.container{max-width:800px;margin:0 auto;padding:0 24px;}
+
+/* HEADER */
+.page-header{padding:32px 0 20px;display:flex;align-items:center;justify-content:space-between;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;}
+.unread-count{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;background:var(--v);border-radius:999px;font-size:12px;font-weight:700;color:#fff;margin-left:10px;}
+
+/* TABS */
+.tab-row{display:flex;gap:4px;background:var(--surf);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:24px;}
+.tab-btn{flex:1;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);transition:all 200ms var(--ease);text-align:center;cursor:pointer;}
+.tab-btn.active{background:var(--v);color:#fff;box-shadow:0 0 16px var(--vg);}
+
+/* NOTIF LIST */
+.notif-group{margin-bottom:28px;}
+.group-label{font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+.notif-item{display:flex;gap:14px;padding:16px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:8px;transition:border-color 200ms,background 200ms;cursor:pointer;position:relative;}
+.notif-item:hover{border-color:var(--border-2);background:rgba(255,255,255,0.02);}
+.notif-item.unread{background:rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.15);}
+.notif-item.unread:hover{border-color:rgba(124,58,237,0.3);}
+.unread-dot{position:absolute;top:18px;right:16px;width:8px;height:8px;border-radius:50%;background:var(--v);}
+.notif-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.icon-purple{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);}
+.icon-green{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);}
+.icon-cyan{background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.2);}
+.icon-orange{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);}
+.icon-red{background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.2);}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:14px;font-weight:600;margin-bottom:3px;}
+.notif-title strong{color:var(--vs);}
+.notif-desc{font-size:13px;color:var(--text-2);line-height:1.55;margin-bottom:6px;}
+.notif-meta{display:flex;align-items:center;gap:10px;}
+.notif-time{font-size:12px;color:var(--text-3);}
+.notif-action{font-size:12px;color:var(--vs);font-weight:600;}
+.notif-action:hover{color:#fff;}
+.notif-badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-orange{background:rgba(245,158,11,0.12);color:var(--orange);border:1px solid rgba(245,158,11,0.2);}
+
+/* ACTIONS BAR */
+.actions-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:12px 16px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r);}
+.actions-left{font-size:13px;color:var(--text-3);}
+.actions-right{display:flex;gap:8px;}
+.action-link{font-size:13px;color:var(--text-2);padding:5px 12px;border:1px solid var(--border-2);border-radius:999px;transition:all 150ms;}
+.action-link:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.action-link.danger:hover{color:var(--red);border-color:rgba(239,68,68,0.3);}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;}
+.empty-emoji{font-size:40px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--text-3);}
+
+/* SETTINGS CARD */
+.settings-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
+.settings-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border:none;padding-bottom:0;}
+.setting-info{flex:1;}
+.setting-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.setting-desc{font-size:12px;color:var(--text-3);}
+.toggle{width:44px;height:24px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;position:relative;cursor:pointer;transition:background 200ms;}
+.toggle.on{background:var(--v);border-color:var(--v);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 200ms;}
+.toggle.on .toggle-knob{transform:translateX(20px);}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 400ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Bell:(p)=><svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  Check:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  CheckAll:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="15 3 9 17 4 12"/></svg>,
+  Trash:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>,
+  Settings:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+};
+
+const NOTIFS_DATA = [
+  // Aujourd'hui
+  { id:1, group:'Aujourd\'hui', type:'mission', icon:'💼', iconClass:'icon-purple', unread:true, title:<>Nouvelle proposition sur <strong>Chatbot IA e-commerce</strong></>, desc:'Amélie Chen vous a envoyé une proposition de 1 800€ pour votre brief. Réponse sous 72h recommandée.', time:'Il y a 35 min', action:'Voir la proposition', href:'mission.html', badge:'Nouveau', badgeClass:'badge-purple' },
+  { id:2, group:'Aujourd\'hui', type:'message', icon:'💬', iconClass:'icon-cyan', unread:true, title:<>Nouveau message de <strong>Karim Benali</strong></>, desc:'« Bonjour ! J\'ai bien regardé votre brief et j\'aurais quelques questions avant de vous envoyer un devis… »', time:'Il y a 1h', action:'Lire le message', href:'messages.html', badge:null },
+  { id:3, group:'Aujourd\'hui', type:'payment', icon:'✅', iconClass:'icon-green', unread:true, title:<>Paiement confirmé — <strong>1 260€</strong></>, desc:'Votre virement pour la mission "Automatisation CRM" a été reçu et l\'acompte est libéré à l\'expert.', time:'Il y a 3h', action:'Voir la facture', href:'paiement.html', badge:'Confirmé', badgeClass:'badge-green' },
+  // Hier
+  { id:4, group:'Hier', type:'mission', icon:'🚀', iconClass:'icon-purple', unread:false, title:<>Mission <strong>Pipeline analytics IA</strong> — Livrable déposé</>, desc:'Sofia Martins a déposé le livrable #2 "Dashboard Power BI". Vérifiez et validez pour débloquer le prochain jalon.', time:'Hier, 16:42', action:'Valider le livrable', href:'mission.html', badge:'Action requise', badgeClass:'badge-orange' },
+  { id:5, group:'Hier', type:'review', icon:'⭐', iconClass:'icon-orange', unread:false, title:<>Évaluez votre mission avec <strong>Lucas Bernard</strong></>, desc:'La mission "Automatisation Slack & Notion" est terminée. Partagez votre avis pour aider la communauté.', time:'Hier, 10:15', action:'Laisser un avis', href:'dashboard-client.html', badge:null },
+  { id:6, group:'Hier', type:'alert', icon:'⚠️', iconClass:'icon-red', unread:false, title:<>Délai approaching — <strong>Chatbot IA e-commerce</strong></>, desc:'La date de livraison estimée est dans 3 jours. Pensez à relancer votre expert si besoin.', time:'Hier, 09:00', action:'Voir la mission', href:'mission.html', badge:null },
+  // Cette semaine
+  { id:7, group:'Cette semaine', type:'system', icon:'🔒', iconClass:'icon-green', unread:false, title:<>Votre profil est <strong>vérifié</strong></>, desc:'Votre identité et vos informations de facturation ont été vérifiées. Vous pouvez maintenant poster des briefs.', time:'Lun. 14:30', action:null, href:null, badge:'Compte vérifié', badgeClass:'badge-green' },
+  { id:8, group:'Cette semaine', type:'mission', icon:'📋', iconClass:'icon-purple', unread:false, title:<>Brief <strong>Agent IA service client</strong> publié</>, desc:'Votre brief est maintenant visible par les experts. 3 experts l\'ont déjà consulté ce matin.', time:'Lun. 09:05', action:'Voir le brief', href:'dashboard-client.html', badge:null },
+  { id:9, group:'Cette semaine', type:'payment', icon:'🧾', iconClass:'icon-cyan', unread:false, title:<>Facture disponible — <strong>Mission #BRF-2841</strong></>, desc:'La facture #FAC-0047 de 540€ est prête à télécharger pour votre comptabilité.', time:'Dim. 18:00', action:'Télécharger', href:'paiement.html', badge:null },
+];
+
+const SETTINGS_DATA = [
+  { name:'Nouvelles propositions', desc:'Quand un expert répond à l\'un de vos briefs', key:'proposals', default:true },
+  { name:'Messages', desc:'Nouveaux messages dans vos conversations', key:'messages', default:true },
+  { name:'Mises à jour de mission', desc:'Jalons, livrables et changements de statut', key:'missions', default:true },
+  { name:'Paiements', desc:'Confirmations, factures et remboursements', key:'payments', default:true },
+  { name:'Rappels', desc:'Délais approchants et actions requises', key:'reminders', default:true },
+  { name:'Newsletters & promos', desc:'Actualités et offres de CreatorFlow Market', key:'marketing', default:false },
+];
+
+function App() {
+  const [tab, setTab] = useState('toutes');
+  const [notifs, setNotifs] = useState(NOTIFS_DATA);
+  const [settings, setSettings] = useState(() => {
+    const s = {};
+    SETTINGS_DATA.forEach(x => s[x.key] = x.default);
+    return s;
+  });
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  const unreadCount = notifs.filter(n => n.unread).length;
+  const markAllRead = () => setNotifs(n => n.map(x => ({...x, unread:false})));
+  const markRead = id => setNotifs(n => n.map(x => x.id===id ? {...x, unread:false} : x));
+  const deleteNotif = id => setNotifs(n => n.filter(x => x.id!==id));
+  const clearAll = () => setNotifs([]);
+
+  const filtered = tab === 'non-lues' ? notifs.filter(n => n.unread)
+    : tab === 'missions' ? notifs.filter(n => n.type === 'mission')
+    : tab === 'paiements' ? notifs.filter(n => n.type === 'payment')
+    : notifs;
+
+  const groups = [...new Set(filtered.map(n => n.group))];
+
+  const tabs = [
+    { id:'toutes', label:'Toutes', count: notifs.length },
+    { id:'non-lues', label:'Non lues', count: unreadCount },
+    { id:'missions', label:'Missions', count: notifs.filter(n=>n.type==='mission').length },
+    { id:'paiements', label:'Paiements', count: notifs.filter(n=>n.type==='payment').length },
+  ];
+
+  return (
+    <React.Fragment>
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <div className="nav-right">
+            <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+          </div>
+        </div>
+      </nav>
+
+      <div className="page">
+        <div className="container">
+          <div className="page-header">
+            <div>
+              <div style={{display:'flex',alignItems:'center',gap:4}}>
+                <div className="page-title">Notifications</div>
+                {unreadCount > 0 && <span className="unread-count">{unreadCount}</span>}
+              </div>
+              <div style={{fontSize:13,color:'var(--text-3)',marginTop:4}}>Toutes vos alertes et mises à jour en un seul endroit</div>
+            </div>
+            <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>setTab(t=>t==='settings'?'toutes':'settings')}>
+              <Ic.Settings/>Préférences
+            </button>
+          </div>
+
+          {tab !== 'settings' && (
+            <>
+              <div className="tab-row">
+                {tabs.map(t => (
+                  <div key={t.id} className={`tab-btn ${tab===t.id?'active':''}`} onClick={()=>setTab(t.id)}>
+                    {t.label}{t.count>0 && tab!==t.id && <span style={{marginLeft:5,opacity:0.6,fontSize:11}}>({t.count})</span>}
+                  </div>
+                ))}
+              </div>
+
+              <div className="actions-bar fade-up">
+                <div className="actions-left">{filtered.length} notification{filtered.length!==1?'s':''}</div>
+                <div className="actions-right">
+                  {unreadCount > 0 && <button className="action-link" onClick={markAllRead}><Ic.CheckAll style={{display:'inline',verticalAlign:'middle',marginRight:4}}/>Tout lire</button>}
+                  {notifs.length > 0 && <button className="action-link danger" onClick={clearAll}><Ic.Trash style={{display:'inline',verticalAlign:'middle',marginRight:4}}/>Tout effacer</button>}
+                </div>
+              </div>
+
+              <div className="fade-up">
+                {filtered.length === 0 ? (
+                  <div className="empty">
+                    <div className="empty-emoji">🔔</div>
+                    <div className="empty-title">Aucune notification</div>
+                    <div className="empty-sub">{tab==='non-lues' ? 'Tout est à jour !' : 'Vous n\'avez pas encore de notifications.'}</div>
+                  </div>
+                ) : (
+                  groups.map(group => (
+                    <div key={group} className="notif-group">
+                      <div className="group-label">{group}</div>
+                      {filtered.filter(n => n.group === group).map(n => (
+                        <div key={n.id} className={`notif-item ${n.unread ? 'unread' : ''}`} onClick={() => markRead(n.id)}>
+                          <div className={`notif-icon ${n.iconClass}`}>{n.icon}</div>
+                          <div className="notif-body">
+                            <div className="notif-title">{n.title}</div>
+                            <div className="notif-desc">{n.desc}</div>
+                            <div className="notif-meta">
+                              <div className="notif-time">{n.time}</div>
+                              {n.action && <a href={n.href} className="notif-action" onClick={e=>e.stopPropagation()}>{n.action} →</a>}
+                              {n.badge && <span className={`notif-badge ${n.badgeClass}`}>{n.badge}</span>}
+                            </div>
+                          </div>
+                          {n.unread && <div className="unread-dot"/>}
+                          <button style={{padding:'4px 8px',color:'var(--text-3)',flexShrink:0,fontSize:12,borderRadius:999,transition:'color 150ms'}}
+                            onMouseEnter={e=>e.currentTarget.style.color='var(--red)'}
+                            onMouseLeave={e=>e.currentTarget.style.color='var(--text-3)'}
+                            onClick={e=>{e.stopPropagation();deleteNotif(n.id);}}>
+                            <Ic.Trash/>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                )}
+              </div>
+            </>
+          )}
+
+          {tab === 'settings' && (
+            <div className="fade-up">
+              <div style={{marginBottom:20,fontSize:14,color:'var(--text-2)'}}>Choisissez quelles notifications vous souhaitez recevoir.</div>
+              <div className="settings-card">
+                <div className="settings-title">Notifications email</div>
+                {SETTINGS_DATA.map(s => (
+                  <div key={s.key} className="setting-row">
+                    <div className="setting-info">
+                      <div className="setting-name">{s.name}</div>
+                      <div className="setting-desc">{s.desc}</div>
+                    </div>
+                    <div className={`toggle ${settings[s.key] ? 'on' : ''}`} onClick={()=>setSettings(st=>({...st,[s.key]:!st[s.key]}))}>
+                      <div className="toggle-knob"/>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="settings-card">
+                <div className="settings-title">Notifications push</div>
+                {SETTINGS_DATA.slice(0,4).map(s => (
+                  <div key={s.key+'push'} className="setting-row">
+                    <div className="setting-info">
+                      <div className="setting-name">{s.name}</div>
+                      <div className="setting-desc">{s.desc}</div>
+                    </div>
+                    <div className={`toggle ${settings[s.key+'push'] ? 'on' : ''}`} onClick={()=>setSettings(st=>({...st,[s.key+'push']:!st[s.key+'push']}))}>
+                      <div className="toggle-knob"/>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button className="btn btn-primary" style={{marginBottom:40}} onClick={()=>setTab('toutes')}>
+                <Ic.Check/>Enregistrer les préférences
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
