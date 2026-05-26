@@ -186,14 +186,15 @@ function App() {
                   setLoading(true);
                   setError('');
                   try {
-                    await fetch('/', {
+                    const res = await fetch('/inscription.html', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                       body: encode({ 'form-name': 'inscription-expert', ...form }),
                     });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
                     setDone(true);
                   } catch(err) {
-                    setError('Une erreur est survenue. Veuillez réessayer.');
+                    setError('Une erreur est survenue. Veuillez réessayer. (' + err.message + ')');
                   } finally {
                     setLoading(false);
                   }
