@@ -150,11 +150,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Location:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
@@ -171,20 +177,20 @@ const Ic = {
   Link:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
 };
 
-const expert = {
-  name: 'Amélie Chen',
-  initials: 'AC',
-  title: 'Experte IA & Automatisation',
+const expertDefaut = {
+  name: 'Chargement…',
+  initials: '??',
+  title: 'Expert IA',
   rating: 4.9,
-  reviewCount: 47,
-  location: 'Paris, France',
-  timezone: 'Europe/Paris (UTC+2)',
-  languages: 'Français, Anglais, Mandarin',
-  memberSince: 'Membre depuis janvier 2024',
+  reviewCount: 0,
+  location: 'Montréal, Canada',
+  timezone: 'America/Montreal (UTC-4)',
+  languages: 'Français, Anglais',
+  memberSince: 'Nouveau membre',
   available: true,
-  tags: ['ChatGPT','Make.com','Zapier','LangChain','Python','n8n'],
-  stats: { missions: 62, success: '100%', response: '< 2h', satisfaction: '4.9/5' },
-  about: `Spécialiste en intelligence artificielle appliquée aux entreprises, j'accompagne des TPE/PME et grands groupes dans l'automatisation de leurs processus métier et l'intégration de solutions IA sur mesure.\n\nAvec plus de 3 ans d'expérience dans le domaine, j'ai livré plus de 60 missions réussies couvrant des domaines variés : chatbots avancés, pipelines d'automatisation, analyses prédictives et formations aux équipes.\n\nMon approche : comprendre vos besoins avant de coder, livrer rapidement des prototypes testables, et assurer un transfert de compétences à vos équipes.`,
+  tags: [],
+  stats: { missions: 0, success: '—', response: '—', satisfaction: '—' },
+  about: '',
   skills: [
     { name: 'ChatGPT / GPT-4', pct: 98 },
     { name: 'Make.com / Zapier', pct: 95 },
@@ -226,8 +232,30 @@ function Stars({ rating, size=13 }) {
 function App() {
   const [tab, setTab] = useState('apropos');
   const [saved, setSaved] = useState(false);
+  const [expert, setExpert] = useState(expertDefaut);
 
   useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return;
+      const u = data.session.user;
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
+      if (profile || exp) {
+        const prenom = profile?.prenom || '';
+        const nom = profile?.nom || '';
+        const fullName = `${prenom} ${nom}`.trim();
+        const initials = ((prenom[0]||'?') + (nom[0]||'?')).toUpperCase();
+        setExpert(prev => ({
+          ...prev,
+          name: fullName || prev.name,
+          initials,
+          title: exp?.specialite ? `Expert ${exp.specialite}` : prev.title,
+          about: exp?.bio || prev.about,
+          available: exp?.disponible ?? prev.available,
+          tags: exp?.specialite ? [exp.specialite] : prev.tags,
+        }));
+      }
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
