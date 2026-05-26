@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Rapport de Mission — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1100px;margin:0 auto;padding:0 28px;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+.page{padding-top:64px;min-height:100vh;}
+.container{max-width:900px;margin:0 auto;padding:0 24px;}
+
+/* PRINT STYLES */
+@media print{
+  .nav,.no-print{display:none!important;}
+  .page{padding-top:0;}
+  body{background:#fff;color:#000;}
+  .report{box-shadow:none;border:none;}
+  .stat-val,.section-title,.report-title{color:#000!important;}
+  .card{background:#f8f8f8;border-color:#ddd;}
+}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0 24px;}
+.toolbar-left{display:flex;flex-direction:column;gap:4px;}
+.page-title{font-size:20px;font-weight:800;letter-spacing:-0.02em;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);}
+.toolbar-actions{display:flex;gap:10px;}
+
+/* REPORT */
+.report{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:40px;}
+
+/* REPORT HEADER */
+.report-header{background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.10));border-bottom:1px solid var(--border);padding:32px;}
+.report-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.report-brand{font-size:14px;font-weight:800;letter-spacing:-0.02em;}
+.report-brand em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.status-chip{padding:5px 14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:999px;font-size:12px;font-weight:700;color:var(--green);}
+.report-title{font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.report-ref{font-size:13px;color:var(--text-3);margin-bottom:16px;}
+.report-meta-row{display:flex;gap:24px;flex-wrap:wrap;}
+.report-meta-item{font-size:13px;color:var(--text-2);}
+.report-meta-item strong{color:var(--text);font-weight:700;}
+
+/* PARTIES */
+.parties-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px;border-bottom:1px solid var(--border);}
+.party-card{background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);padding:16px;}
+.party-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+.party-avatar{display:flex;align-items:center;gap:10px;}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0;}
+.party-name{font-size:14px;font-weight:700;}
+.party-sub{font-size:12px;color:var(--text-3);}
+
+/* STATS */
+.stats-section{padding:24px;border-bottom:1px solid var(--border);}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.stat-box{background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;}
+.stat-val{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;}
+.stat-val.green{color:var(--green);}
+.stat-val.purple{color:var(--vs);}
+.stat-val.cyan{color:var(--c);}
+.stat-val.orange{color:var(--orange);}
+.stat-lbl{font-size:11px;color:var(--text-3);}
+
+/* SECTION */
+.rep-section{padding:24px;border-bottom:1px solid var(--border);}
+.rep-section:last-child{border:none;}
+.section-title{font-size:14px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.section-icon{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;}
+
+/* LIVRABLES TABLE */
+.table{width:100%;border-collapse:collapse;}
+.table th{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.table td{font-size:13px;padding:12px;border-bottom:1px solid var(--border);}
+.table tr:last-child td{border:none;}
+.table tr:hover td{background:rgba(255,255,255,0.02);}
+.status-badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.s-done{background:rgba(16,185,129,0.12);color:var(--green);}
+.s-review{background:rgba(245,158,11,0.12);color:var(--orange);}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;padding:12px 0;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;gap:0;width:24px;flex-shrink:0;}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.tl-dot.done{background:var(--green);}
+.tl-dot.active{background:var(--v);box-shadow:0 0 0 3px rgba(124,58,237,0.2);}
+.tl-dot.pending{background:var(--surf-2);border:2px solid var(--border-2);}
+.tl-line{flex:1;width:1px;background:var(--border);margin:3px 0;}
+.tl-content{flex:1;padding-bottom:12px;}
+.tl-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.tl-date{font-size:12px;color:var(--text-3);}
+
+/* FINANCIER */
+.fin-table{width:100%;}
+.fin-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.fin-row:last-child{border:none;}
+.fin-label{font-size:13px;color:var(--text-3);}
+.fin-val{font-size:13px;font-weight:700;}
+.fin-total{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:var(--r);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.fin-total-label{font-size:14px;font-weight:700;}
+.fin-total-val{font-size:20px;font-weight:800;color:var(--vs);}
+
+/* SATISFACTION */
+.stars-row{display:flex;gap:6px;margin-bottom:12px;}
+.big-star{font-size:24px;}
+.review-quote{font-size:14px;color:var(--text-2);line-height:1.7;font-style:italic;border-left:3px solid var(--v);padding-left:16px;}
+
+/* SIGNATURE */
+.sig-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.sig-box{background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);padding:16px;}
+.sig-label{font-size:11px;color:var(--text-3);margin-bottom:6px;}
+.sig-name{font-size:14px;font-weight:700;}
+.sig-date{font-size:12px;color:var(--text-3);margin-top:2px;}
+.sig-line{height:1px;background:var(--border-2);margin:12px 0 6px;}
+.sig-stamp{font-size:11px;color:var(--green);font-weight:700;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 450ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Download:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+  Share:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+  Printer:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
+  Check:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+};
+
+function App() {
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  return (
+    <React.Fragment>
+      <nav className="nav"><div className="nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div style={{display:'flex',gap:10}}>
+          <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+        </div>
+      </div></nav>
+
+      <div className="page">
+        <div className="container">
+          <div className="toolbar no-print">
+            <div className="toolbar-left">
+              <div className="breadcrumb">
+                <a href="dashboard-client.html">Dashboard</a>
+                <span>/</span>
+                <a href="mission.html">Mission</a>
+                <span>/</span>
+                <span style={{color:'var(--text-2)'}}>Rapport final</span>
+              </div>
+              <div className="page-title">Rapport de mission</div>
+            </div>
+            <div className="toolbar-actions">
+              <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>window.print()}>
+                <Ic.Printer/>Imprimer
+              </button>
+              <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}}>
+                <Ic.Share/>Partager
+              </button>
+              <button className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}} onClick={()=>window.print()}>
+                <Ic.Download/>Télécharger PDF
+              </button>
+            </div>
+          </div>
+
+          <div className="report fade-up">
+            {/* HEADER */}
+            <div className="report-header">
+              <div className="report-header-top">
+                <div className="report-brand">CreatorFlow <em>Market</em></div>
+                <div className="status-chip">✓ Mission terminée</div>
+              </div>
+              <div className="report-title">Rapport de mission finale</div>
+              <div className="report-ref">Référence : #MSN-2841 · Généré le 26 mai 2026</div>
+              <div className="report-meta-row">
+                <div className="report-meta-item">Début : <strong>3 avril 2026</strong></div>
+                <div className="report-meta-item">Fin : <strong>25 mai 2026</strong></div>
+                <div className="report-meta-item">Durée : <strong>52 jours</strong></div>
+                <div className="report-meta-item">Catégorie : <strong>Chatbot & IA</strong></div>
+              </div>
+            </div>
+
+            {/* PARTIES */}
+            <div className="parties-row">
+              <div className="party-card">
+                <div className="party-label">Client</div>
+                <div className="party-avatar">
+                  <div className="av" style={{background:'#2563EB'}}>TR</div>
+                  <div>
+                    <div className="party-name">Thomas Richard</div>
+                    <div className="party-sub">Richard Consulting · Paris</div>
+                  </div>
+                </div>
+              </div>
+              <div className="party-card">
+                <div className="party-label">Expert</div>
+                <div className="party-avatar">
+                  <div className="av" style={{background:'#7C3AED'}}>AC</div>
+                  <div>
+                    <div className="party-name">Amélie Chen</div>
+                    <div className="party-sub">Experte IA & Automatisation · Certifiée</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* STATS */}
+            <div className="stats-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(124,58,237,0.12)'}}>📊</span>Résumé de la mission</div>
+              <div className="stats-grid">
+                <div className="stat-box"><div className="stat-val green">100%</div><div className="stat-lbl">Livrables validés</div></div>
+                <div className="stat-box"><div className="stat-val purple">6/6</div><div className="stat-lbl">Jalons complétés</div></div>
+                <div className="stat-box"><div className="stat-val cyan">-3 j.</div><div className="stat-lbl">En avance sur planning</div></div>
+                <div className="stat-box"><div className="stat-val orange">1 800€</div><div className="stat-lbl">Budget final</div></div>
+              </div>
+            </div>
+
+            {/* LIVRABLES */}
+            <div className="rep-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(16,185,129,0.10)'}}>📦</span>Livrables</div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Livrable</th>
+                    <th>Date de livraison</th>
+                    <th>Validé par</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Audit des besoins + spécifications', '8 avr. 2026', 'Thomas R.', 'done'],
+                    ['Architecture technique du chatbot', '15 avr. 2026', 'Thomas R.', 'done'],
+                    ['Prototype v1 — flux principaux', '25 avr. 2026', 'Thomas R.', 'done'],
+                    ['Intégration CRM (HubSpot)', '5 mai 2026', 'Thomas R.', 'done'],
+                    ['Tests & corrections', '15 mai 2026', 'Thomas R.', 'done'],
+                    ['Livraison finale + documentation', '25 mai 2026', 'Thomas R.', 'done'],
+                  ].map(([nom, date, val, s], i) => (
+                    <tr key={i}>
+                      <td style={{fontWeight:600}}>{nom}</td>
+                      <td style={{color:'var(--text-2)'}}>{date}</td>
+                      <td style={{color:'var(--text-2)'}}>{val}</td>
+                      <td><span className={`status-badge ${s==='done'?'s-done':'s-review'}`}>{s==='done'?'Validé':'En révision'}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* TIMELINE */}
+            <div className="rep-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(6,182,212,0.10)'}}>🗓️</span>Chronologie</div>
+              <div className="timeline">
+                {[
+                  { label:'Démarrage de la mission', date:'3 avr. 2026', done:true },
+                  { label:'Phase 1 — Audit & Architecture', date:'3 – 15 avr. 2026', done:true },
+                  { label:'Phase 2 — Développement', date:'15 – 30 avr. 2026', done:true },
+                  { label:'Phase 3 — Intégrations', date:'1 – 10 mai 2026', done:true },
+                  { label:'Phase 4 — Tests & Recette', date:'10 – 20 mai 2026', done:true },
+                  { label:'Livraison finale & clôture', date:'25 mai 2026', done:true },
+                ].map((t,i,arr)=>(
+                  <div key={i} className="tl-item">
+                    <div className="tl-left">
+                      <div className={`tl-dot ${t.done?'done':'pending'}`}/>
+                      {i < arr.length-1 && <div className="tl-line"/>}
+                    </div>
+                    <div className="tl-content">
+                      <div className="tl-title">{t.label}</div>
+                      <div className="tl-date">{t.date}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FINANCIER */}
+            <div className="rep-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(124,58,237,0.10)'}}>💰</span>Récapitulatif financier</div>
+              <div style={{maxWidth:400}}>
+                {[
+                  ['Montant total de la mission', '1 800,00€'],
+                  ['Acompte versé (30%)', '540,00€'],
+                  ['Solde versé à la livraison (70%)', '1 260,00€'],
+                  ['Commission CreatorFlow Market (5%)', '90,00€'],
+                  ['TVA (20%)', '360,00€'],
+                ].map(([l,v])=>(
+                  <div key={l} className="fin-row">
+                    <span className="fin-label">{l}</span>
+                    <span className="fin-val">{v}</span>
+                  </div>
+                ))}
+                <div className="fin-total">
+                  <span className="fin-total-label">Total TTC réglé</span>
+                  <span className="fin-total-val">2 160,00€</span>
+                </div>
+              </div>
+            </div>
+
+            {/* SATISFACTION */}
+            <div className="rep-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(245,158,11,0.10)'}}>⭐</span>Évaluation client</div>
+              <div className="stars-row">{'⭐⭐⭐⭐⭐'.split('').map((s,i)=><span key={i} className="big-star">{s}</span>)}</div>
+              <div style={{fontSize:14,fontWeight:700,marginBottom:12}}>Note : 5/5 — Exceptionnel</div>
+              <div className="review-quote">"Amélie a livré un travail remarquable, bien au-delà de mes attentes. Le chatbot est opérationnel, intégré parfaitement à notre HubSpot, et l'équipe a été formée. Je recommande sans hésitation et je reviendrai certainement pour un prochain projet."</div>
+              <div style={{fontSize:12,color:'var(--text-3)',marginTop:10}}>— Thomas Richard, Richard Consulting</div>
+            </div>
+
+            {/* SIGNATURES */}
+            <div className="rep-section">
+              <div className="section-title"><span className="section-icon" style={{background:'rgba(16,185,129,0.10)'}}>✍️</span>Validation & Signatures</div>
+              <div className="sig-row">
+                <div className="sig-box">
+                  <div className="sig-label">Client</div>
+                  <div className="sig-name">Thomas Richard</div>
+                  <div className="sig-date">Richard Consulting · Paris</div>
+                  <div className="sig-line"/>
+                  <div className="sig-stamp">✓ Validé électroniquement le 25 mai 2026</div>
+                </div>
+                <div className="sig-box">
+                  <div className="sig-label">Expert</div>
+                  <div className="sig-name">Amélie Chen</div>
+                  <div className="sig-date">Experte IA certifiée CreatorFlow</div>
+                  <div className="sig-line"/>
+                  <div className="sig-stamp">✓ Livraison confirmée le 25 mai 2026</div>
+                </div>
+              </div>
+              <div style={{marginTop:16,padding:12,background:'rgba(16,185,129,0.07)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--r)',fontSize:12,color:'var(--text-2)',textAlign:'center'}}>
+                Document officiel généré par CreatorFlow Market · Référence #MSN-2841 · Valeur contractuelle
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

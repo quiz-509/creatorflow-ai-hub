@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Devenez Expert IA — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--cg:rgba(6,182,212,0.25);--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-cyan{background:linear-gradient(135deg,var(--c),#0891B2);color:#fff;box-shadow:0 6px 20px -6px var(--cg);}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px var(--cg);}
+.btn-lg{padding:16px 32px;font-size:16px;}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+.page{padding-top:64px;}
+.container{max-width:1100px;margin:0 auto;padding:0 28px;}
+
+/* HERO */
+.hero{padding:80px 0 70px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 900px 600px at 50% 20%,rgba(6,182,212,0.08),transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;background:rgba(6,182,212,0.10);border:1px solid rgba(6,182,212,0.25);border-radius:999px;font-size:12px;font-weight:700;color:var(--c);margin-bottom:22px;}
+.hero-title{font-size:52px;font-weight:800;letter-spacing:-0.04em;margin-bottom:18px;line-height:1.05;}
+.hero-title em{font-style:normal;background:linear-gradient(135deg,var(--c),var(--vs));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-sub{font-size:18px;color:var(--text-2);max-width:560px;margin:0 auto 36px;line-height:1.65;}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:50px;}
+.hero-proof{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;}
+.proof-item{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-2);}
+.proof-icon{color:var(--green);}
+
+/* STATS BANNER */
+.stats-banner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin:0 0 80px;}
+.stat-cell{background:var(--surf);padding:24px;text-align:center;}
+.stat-val{font-size:30px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.stat-val.cyan{color:var(--c);}
+.stat-val.purple{color:var(--vs);}
+.stat-val.green{color:var(--green);}
+.stat-val.orange{color:var(--orange);}
+.stat-lbl{font-size:13px;color:var(--text-3);}
+
+/* SECTIONS */
+.section{padding:70px 0;}
+.section-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;background:rgba(6,182,212,0.10);border:1px solid rgba(6,182,212,0.2);border-radius:999px;font-size:11px;font-weight:700;color:var(--c);margin-bottom:14px;}
+.section-title{font-size:34px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;line-height:1.1;}
+.section-sub{font-size:16px;color:var(--text-2);max-width:520px;line-height:1.65;}
+
+/* HOW IT WORKS */
+.hiw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px;}
+.hiw-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;}
+.hiw-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;margin-bottom:16px;}
+.hiw-title{font-size:16px;font-weight:800;margin-bottom:8px;}
+.hiw-desc{font-size:13px;color:var(--text-2);line-height:1.65;}
+
+/* BENEFITS */
+.benefits-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:40px;}
+.benefit-item{display:flex;gap:14px;padding:20px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);transition:border-color 200ms;}
+.benefit-item:hover{border-color:rgba(6,182,212,0.25);}
+.benefit-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.benefit-title{font-size:14px;font-weight:800;margin-bottom:4px;}
+.benefit-desc{font-size:13px;color:var(--text-2);line-height:1.6;}
+
+/* EXPERTS SHOWCASE */
+.experts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+.expert-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;text-align:center;transition:border-color 200ms,transform 200ms;}
+.expert-card:hover{border-color:rgba(6,182,212,0.25);transform:translateY(-3px);}
+.ex-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin:0 auto 12px;border:2px solid var(--border-2);}
+.ex-name{font-size:15px;font-weight:800;margin-bottom:3px;}
+.ex-spec{font-size:12px;color:var(--text-2);margin-bottom:10px;}
+.ex-stats{display:flex;justify-content:center;gap:16px;}
+.ex-stat{text-align:center;}
+.ex-stat-val{font-size:16px;font-weight:800;color:var(--c);}
+.ex-stat-lbl{font-size:10px;color:var(--text-3);}
+.ex-earning{display:inline-block;margin-top:12px;padding:5px 14px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:999px;font-size:13px;font-weight:700;color:var(--green);}
+
+/* CTA SECTION */
+.cta-section{background:linear-gradient(135deg,rgba(6,182,212,0.10),rgba(124,58,237,0.12));border:1px solid rgba(6,182,212,0.2);border-radius:var(--r-xl);padding:60px;text-align:center;margin:0 0 80px;}
+.cta-title{font-size:32px;font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;}
+.cta-sub{font-size:16px;color:var(--text-2);max-width:480px;margin:0 auto 32px;line-height:1.65;}
+.cta-steps{display:flex;gap:24px;justify-content:center;margin-top:32px;flex-wrap:wrap;}
+.cta-step{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);}
+.cta-step-num{width:24px;height:24px;border-radius:50%;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c);flex-shrink:0;}
+
+/* TESTIMONIALS */
+.testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+.testi-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;}
+.testi-quote{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.testi-name{font-size:13px;font-weight:700;}
+.testi-role{font-size:11px;color:var(--text-3);}
+.testi-earning{margin-left:auto;font-size:14px;font-weight:800;color:var(--green);}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px;margin-bottom:80px;}
+.faq-item{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+.faq-q{font-size:14px;font-weight:700;margin-bottom:8px;}
+.faq-a{font-size:13px;color:var(--text-2);line-height:1.65;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.05) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 600ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useEffect } = React;
+
+const Ic = {
+  Check:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Arrow:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+};
+
+function App() {
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  return (
+    <React.Fragment>
+      <nav className="nav"><div className="nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div style={{display:'flex',gap:10,alignItems:'center'}}>
+          <a href="connexion.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Se connecter</a>
+          <a href="inscription.html" className="btn btn-cyan" style={{padding:'8px 18px',fontSize:13}}>Devenir expert <Ic.Arrow style={{width:13,height:13}}/></a>
+        </div>
+      </div></nav>
+
+      <div className="page">
+        {/* HERO */}
+        <div className="hero">
+          <div className="container">
+            <div className="hero-badge">🚀 Plus de 280 experts certifiés</div>
+            <div className="hero-title fade-up">Monétisez votre expertise<br/><em>IA & Automatisation</em></div>
+            <div className="hero-sub fade-up">Rejoignez la plateforme qui met en relation les meilleurs experts IA avec des entreprises prêtes à investir.</div>
+            <div className="hero-cta fade-up">
+              <a href="inscription.html" className="btn btn-cyan btn-lg">Créer mon profil expert <Ic.Arrow/></a>
+              <a href="#comment-ca-marche" className="btn btn-ghost btn-lg">Comment ça marche ?</a>
+            </div>
+            <div className="hero-proof fade-up">
+              {[
+                ['✓','Gratuit pour s\'inscrire'],
+                ['✓','Paiement garanti sous 48h'],
+                ['✓','Missions dès la première semaine'],
+                ['✓','Commission transparente à 5%'],
+              ].map(([ic,txt])=>(
+                <div key={txt} className="proof-item"><span className="proof-icon">{ic}</span>{txt}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="container">
+          {/* STATS */}
+          <div className="stats-banner fade-up">
+            <div className="stat-cell"><div className="stat-val cyan">4 200+</div><div className="stat-lbl">Clients actifs</div></div>
+            <div className="stat-cell"><div className="stat-val purple">280+</div><div className="stat-lbl">Experts certifiés</div></div>
+            <div className="stat-cell"><div className="stat-val green">6 800€</div><div className="stat-lbl">Revenu mensuel moyen (top experts)</div></div>
+            <div className="stat-cell"><div className="stat-val orange">98%</div><div className="stat-lbl">Taux de satisfaction client</div></div>
+          </div>
+
+          {/* HOW IT WORKS */}
+          <div className="section" id="comment-ca-marche">
+            <div className="section-tag">Processus</div>
+            <div className="section-title">En 3 étapes simples</div>
+            <div className="section-sub">De votre inscription à votre première mission, voici comment ça se passe.</div>
+            <div className="hiw-grid fade-up">
+              {[
+                { num:1, title:'Créez votre profil', desc:'Renseignez vos compétences, votre expérience et vos références. Notre équipe vérifie votre profil sous 48h.' },
+                { num:2, title:'Recevez des missions', desc:'Les clients publient des briefs, vous postulez avec une proposition personnalisée. Pas de cold calling, pas de démarchage.' },
+                { num:3, title:'Livrez et soyez payé', desc:'Vous livrez votre travail, le client valide. Le paiement est libéré automatiquement et sécurisé via escrow.' },
+              ].map(s=>(
+                <div key={s.num} className="hiw-card">
+                  <div className="hiw-num">{s.num}</div>
+                  <div className="hiw-title">{s.title}</div>
+                  <div className="hiw-desc">{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* BENEFITS */}
+          <div className="section" style={{paddingTop:0}}>
+            <div className="section-tag">Avantages</div>
+            <div className="section-title">Pourquoi CreatorFlow Market ?</div>
+            <div className="section-sub">Nous avons conçu la plateforme pour que vous puissiez vous concentrer sur ce que vous faites de mieux.</div>
+            <div className="benefits-grid fade-up">
+              {[
+                { icon:'💼', title:'Missions qualifiées', desc:'Nos clients sont des entreprises sérieuses avec un vrai budget. Fini les briefs flous et les clients qui négocient indéfiniment.' },
+                { icon:'🛡️', title:'Paiement garanti', desc:'Votre paiement est sécurisé en escrow dès le début de la mission. Vous ne pouvez pas vous faire avoir.' },
+                { icon:'⚡', title:'Zéro démarche commerciale', desc:'On s\'occupe de l\'acquisition client. Vous, vous vous concentrez sur la technique et la livraison.' },
+                { icon:'🌟', title:'Profil mis en avant', desc:'Votre profil est référencé dans notre annuaire, promu aux clients selon vos spécialités.' },
+                { icon:'📈', title:'Montez en niveau', desc:'Chaque mission réussie améliore votre note et votre visibilité. Les meilleurs experts obtiennent le badge "Certifié".' },
+                { icon:'💬', title:'Support dédié', desc:'Une équipe réelle disponible pour vous aider en cas de litige, question technique ou blocage administratif.' },
+              ].map(b=>(
+                <div key={b.title} className="benefit-item">
+                  <div className="benefit-icon" style={{background:'rgba(6,182,212,0.10)'}}>{b.icon}</div>
+                  <div>
+                    <div className="benefit-title">{b.title}</div>
+                    <div className="benefit-desc">{b.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* EXPERTS */}
+          <div className="section" style={{paddingTop:0}}>
+            <div className="section-tag">Nos experts</div>
+            <div className="section-title">Ils gagnent leur vie sur CreatorFlow Market</div>
+            <div className="section-sub">Des experts comme vous qui ont fait de l'IA leur métier à plein temps.</div>
+            <div className="experts-grid fade-up">
+              {[
+                { name:'Amélie Chen', init:'AC', color:'#7C3AED', spec:'IA & Automatisation', missions:62, note:'4.9', earning:'6 800€/mois' },
+                { name:'Lucas Bernard', init:'LB', color:'#2563EB', spec:'No-Code & Zapier', missions:38, note:'4.8', earning:'4 200€/mois' },
+                { name:'Sofia Martins', init:'SM', color:'#0891B2', spec:'Data Science & ML', missions:29, note:'5.0', earning:'5 500€/mois' },
+              ].map(e=>(
+                <div key={e.name} className="expert-card">
+                  <div className="ex-avatar" style={{background:e.color}}>{e.init}</div>
+                  <div className="ex-name">{e.name}</div>
+                  <div className="ex-spec">{e.spec}</div>
+                  <div className="ex-stats">
+                    <div className="ex-stat"><div className="ex-stat-val">{e.missions}</div><div className="ex-stat-lbl">Missions</div></div>
+                    <div className="ex-stat"><div className="ex-stat-val">{e.note}</div><div className="ex-stat-lbl">Note</div></div>
+                  </div>
+                  <div className="ex-earning">{e.earning}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* TESTIMONIALS */}
+          <div className="section" style={{paddingTop:0}}>
+            <div className="section-tag">Témoignages</div>
+            <div className="section-title">Ce qu'ils disent</div>
+            <div className="testimonials fade-up">
+              {[
+                { quote:'Avant CreatorFlow, je perdais 30% de mon temps à prospecter. Maintenant je reçois des missions directement. Mon CA a doublé en 4 mois.', name:'Karim B.', role:'Expert Chatbots NLP', color:'#059669', earning:'+4 800€/mois' },
+                { quote:'Le système de paiement escrow est vraiment rassurant. On livre, on est payé. Aucun impayé depuis 18 mois sur la plateforme.', name:'Marie D.', role:'Experte Contenu IA', color:'#D97706', earning:'+3 200€/mois' },
+                { quote:'J\'ai eu mes 3 premières missions dans la première semaine. La qualité des clients est vraiment au-dessus de ce que j\'avais sur Malt.', name:'Antoine M.', role:'Expert Intégrations API', color:'#7C3AED', earning:'+5 100€/mois' },
+              ].map((t,i)=>(
+                <div key={i} className="testi-card">
+                  <div className="testi-quote">"{t.quote}"</div>
+                  <div className="testi-author">
+                    <div className="testi-av" style={{background:t.color}}>{t.name.slice(0,2)}</div>
+                    <div>
+                      <div className="testi-name">{t.name}</div>
+                      <div className="testi-role">{t.role}</div>
+                    </div>
+                    <div className="testi-earning">{t.earning}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="cta-section fade-up">
+            <div style={{fontSize:40,marginBottom:16}}>🚀</div>
+            <div className="cta-title">Prêt à rejoindre l'aventure ?</div>
+            <div className="cta-sub">Créez votre profil en 5 minutes. Nos équipes examinent les candidatures chaque semaine.</div>
+            <a href="inscription.html" className="btn btn-cyan btn-lg" style={{margin:'0 auto'}}>
+              Créer mon profil expert <Ic.Arrow/>
+            </a>
+            <div className="cta-steps">
+              {['Inscription gratuite','Profil vérifié sous 48h','Première mission en 7 jours','Paiement garanti'].map((s,i)=>(
+                <div key={i} className="cta-step">
+                  <div className="cta-step-num">{i+1}</div>{s}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div>
+            <div style={{fontSize:26,fontWeight:800,letterSpacing:'-0.02em',marginBottom:8,textAlign:'center'}}>Questions fréquentes</div>
+            <div style={{fontSize:14,color:'var(--text-2)',textAlign:'center',marginBottom:0}}>Tout ce que vous voulez savoir avant de postuler.</div>
+            <div className="faq-grid fade-up">
+              {[
+                { q:'Quelle commission prend CreatorFlow Market ?', a:'5% de commission sur chaque mission complétée. C\'est l\'une des commissions les plus basses du marché. Aucun abonnement mensuel.' },
+                { q:'Qui peut devenir expert ?', a:'Tout professionnel ayant une expertise réelle en IA, automatisation, data ou no-code. Nous vérifions les profils et les compétences.' },
+                { q:'Comment fonctionne le paiement ?', a:'Le client paie en acompte au lancement. Les fonds sont sécurisés en escrow. Vous êtes payé automatiquement à la validation de chaque livrable.' },
+                { q:'Puis-je proposer mes propres tarifs ?', a:'Oui, vous fixez librement votre tarif horaire ou forfaitaire. Nous vous conseillons simplement sur les prix du marché selon votre niveau.' },
+                { q:'Y a-t-il une exclusivité ?', a:'Non. Vous pouvez continuer à travailler avec vos clients directs ou via d\'autres plateformes. Aucune clause d\'exclusivité.' },
+                { q:'Comment les clients vous trouvent-ils ?', a:'Via le moteur de recherche interne, les briefs publiés sur lesquels vous pouvez postuler, et les recommandations algorithmiques basées sur votre profil.' },
+              ].map((f,i)=>(
+                <div key={i} className="faq-item">
+                  <div className="faq-q">{f.q}</div>
+                  <div className="faq-a">{f.a}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
