@@ -119,18 +119,18 @@ const CODE = 'THOMAS-X7K2';
 const SHARE_URL = `https://creatorflomarket.netlify.app?ref=${CODE}`;
 
 const FAQS = [
-  { q:'Combien puis-je gagner avec le parrainage ?', a:'Il n\'y a pas de limite. Chaque filleul qui complète une mission vous rapporte 50€ pour vous et 50€ de réduction pour lui. Vous pouvez parrainer autant de personnes que vous voulez.' },
-  { q:'Quand est-ce que je reçois ma récompense ?', a:'Votre crédit de 50€ est ajouté à votre compte dès que votre filleul a complété et payé sa première mission. Les crédits apparaissent sous 24h.' },
+  { q:'Combien puis-je gagner avec le parrainage ?', a:'Il n\'y a pas de limite. Chaque filleul qui complète une mission vous rapporte 50$ pour vous et 50$ de réduction pour lui. Vous pouvez parrainer autant de personnes que vous voulez.' },
+  { q:'Quand est-ce que je reçois ma récompense ?', a:'Votre crédit de 50$ est ajouté à votre compte dès que votre filleul a complété et payé sa première mission. Les crédits apparaissent sous 24h.' },
   { q:'Comment utiliser mes crédits de parrainage ?', a:'Vos crédits sont automatiquement déduits lors de votre prochain paiement de mission sur CreatorFlow Market. Ils ne expirent pas.' },
   { q:'Mon lien de parrainage est-il limité dans le temps ?', a:'Non, votre code et lien de parrainage sont permanents. Partagez-les quand vous voulez, ils fonctionneront toujours.' },
   { q:'Mon filleul doit-il être un nouveau client ?', a:'Oui, la récompense s\'applique uniquement aux nouveaux comptes qui s\'inscrivent via votre lien ou code et qui complètent une première mission.' },
 ];
 
 const HISTORY = [
-  { name:'Sarah M.', init:'SM', color:'#7C3AED', date:'15 mai 2026', amount:'+50€', status:'paid', mission:'Automatisation CRM' },
-  { name:'Jean-Pierre K.', init:'JP', color:'#0891B2', date:'3 mai 2026', amount:'+50€', status:'paid', mission:'Chatbot e-commerce' },
-  { name:'Laura F.', init:'LF', color:'#059669', date:'20 avr. 2026', amount:'+50€', status:'paid', mission:'Pipeline IA analytics' },
-  { name:'Marc D.', init:'MD', color:'#D97706', date:'Inscrit le 10 avr.', amount:'+50€', status:'pending', mission:'En attente de mission' },
+  { name:'Sarah M.', init:'SM', color:'#7C3AED', date:'15 mai 2026', amount:'+50$', status:'paid', mission:'Automatisation CRM' },
+  { name:'Jean-Pierre K.', init:'JP', color:'#0891B2', date:'3 mai 2026', amount:'+50$', status:'paid', mission:'Chatbot e-commerce' },
+  { name:'Laura F.', init:'LF', color:'#059669', date:'20 avr. 2026', amount:'+50$', status:'paid', mission:'Pipeline IA analytics' },
+  { name:'Marc D.', init:'MD', color:'#D97706', date:'Inscrit le 10 avr.', amount:'+50$', status:'pending', mission:'En attente de mission' },
 ];
 
 function App() {
@@ -183,11 +183,11 @@ function App() {
           <div className="container">
             <div className="hero-badge">🎁 Programme de parrainage</div>
             <div className="hero-title fade-up">Invitez vos amis,<br/>gagnez <em>ensemble</em></div>
-            <div className="hero-sub fade-up">Pour chaque ami que vous parrainez, vous recevez tous les deux 50€ de crédit sur votre prochaine mission.</div>
+            <div className="hero-sub fade-up">Pour chaque ami que vous parrainez, vous recevez tous les deux 50$ de crédit sur votre prochaine mission.</div>
             <div className="hero-rewards fade-up">
-              <div className="reward-chip">🧑 Vous : <em>+50€</em> de crédit</div>
+              <div className="reward-chip">🧑 Vous : <em>+50$</em> de crédit</div>
               <div style={{display:'flex',alignItems:'center',color:'var(--text-3)',fontSize:20}}>+</div>
-              <div className="reward-chip">👥 Votre filleul : <em>-50€</em> sur sa mission</div>
+              <div className="reward-chip">👥 Votre filleul : <em>-50$</em> sur sa mission</div>
             </div>
 
             {/* CODE CARD */}
@@ -203,11 +203,11 @@ function App() {
                 <button className="btn btn-ghost share-btn" onClick={copyLink}>
                   🔗 {copiedLink ? 'Lien copié !' : 'Copier le lien'}
                 </button>
-                <a href={`https://wa.me/?text=Rejoins%20CreatorFlow%20Market%20avec%20mon%20code%20${CODE}%20et%20on%20gagne%20tous%20les%20deux%2050€%20!`}
+                <a href={`https://wa.me/?text=Rejoins%20CreatorFlow%20Market%20avec%20mon%20code%20${CODE}%20et%20on%20gagne%20tous%20les%20deux%2050$%20!`}
                   className="btn btn-ghost share-btn" target="_blank" rel="noopener">
                   💬 WhatsApp
                 </a>
-                <a href={`mailto:?subject=Je%20t%27invite%20sur%20CreatorFlow%20Market&body=Rejoins-moi%20avec%20mon%20code%20de%20parrainage%20${CODE}%20et%20tu%20bénéficies%20de%2050€%20de%20réduction%20sur%20ta%20première%20mission%20IA%20!`}
+                <a href={`mailto:?subject=Je%20t%27invite%20sur%20CreatorFlow%20Market&body=Rejoins-moi%20avec%20mon%20code%20de%20parrainage%20${CODE}%20et%20tu%20bénéficies%20de%2050$%20de%20réduction%20sur%20ta%20première%20mission%20IA%20!`}
                   className="btn btn-ghost share-btn">
                   📧 Email
                 </a>
@@ -215,7 +215,7 @@ function App() {
               <div className="code-stats">
                 <div className="cstat"><div className="cstat-val">4</div><div className="cstat-lbl">Filleuls inscrits</div></div>
                 <div className="cstat"><div className="cstat-val" style={{color:'var(--green)'}}>3</div><div className="cstat-lbl">Missions complétées</div></div>
-                <div className="cstat"><div className="cstat-val" style={{color:'var(--orange)'}}>150€</div><div className="cstat-lbl">Crédits gagnés</div></div>
+                <div className="cstat"><div className="cstat-val" style={{color:'var(--orange)'}}>150$</div><div className="cstat-lbl">Crédits gagnés</div></div>
               </div>
             </div>
           </div>
@@ -229,8 +229,8 @@ function App() {
             <div className="steps-row">
               {[
                 { num:1, emoji:'🔗', title:'Partagez votre code', desc:'Envoyez votre code ou lien unique à vos contacts, collègues et sur vos réseaux sociaux.' },
-                { num:2, emoji:'✍️', title:'Votre filleul s\'inscrit', desc:'Il crée son compte avec votre code et profite de 50€ de réduction sur sa première mission.' },
-                { num:3, emoji:'💸', title:'Vous recevez 50€', desc:'Dès que sa première mission est complétée, 50€ de crédit sont ajoutés à votre compte.' },
+                { num:2, emoji:'✍️', title:'Votre filleul s\'inscrit', desc:'Il crée son compte avec votre code et profite de 50$ de réduction sur sa première mission.' },
+                { num:3, emoji:'💸', title:'Vous recevez 50$', desc:'Dès que sa première mission est complétée, 50$ de crédit sont ajoutés à votre compte.' },
               ].map((s,i,arr)=>(
                 <div key={i} style={{position:'relative'}}>
                   <div className="step-card">
@@ -249,16 +249,16 @@ function App() {
               <div className="reward-card highlight">
                 <div className="reward-icon">🧑</div>
                 <div className="reward-title">Votre récompense</div>
-                <div className="reward-amount">50€</div>
+                <div className="reward-amount">50$</div>
                 <div className="reward-desc">Crédit ajouté à votre compte. Utilisable sur n'importe quelle mission sur CreatorFlow Market.</div>
                 <div className="reward-cond">Condition : votre filleul complète sa première mission.</div>
               </div>
               <div className="reward-card highlight">
                 <div className="reward-icon">👥</div>
                 <div className="reward-title">La récompense de votre filleul</div>
-                <div className="reward-amount">-50€</div>
-                <div className="reward-desc">Réduction immédiate de 50€ sur sa première mission. Aucun code à saisir au paiement.</div>
-                <div className="reward-cond">Valable sur les missions de 200€ minimum.</div>
+                <div className="reward-amount">-50$</div>
+                <div className="reward-desc">Réduction immédiate de 50$ sur sa première mission. Aucun code à saisir au paiement.</div>
+                <div className="reward-cond">Valable sur les missions de 200$ minimum.</div>
               </div>
             </div>
           </div>
@@ -281,7 +281,7 @@ function App() {
             ))}
             <div style={{marginTop:16,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderTop:'1px solid var(--border)'}}>
               <span style={{fontSize:14,fontWeight:700}}>Total crédits gagnés</span>
-              <span style={{fontSize:18,fontWeight:800,color:'var(--green)'}}>150€</span>
+              <span style={{fontSize:18,fontWeight:800,color:'var(--green)'}}>150$</span>
             </div>
           </div>
 

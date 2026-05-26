@@ -789,9 +789,9 @@ function PlatformPreview() {
                 </div>
                 <div className="p-results">
                   {[
-                    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA · Paris',match:'98%',rate:'95€'},
-                    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA · Lyon',match:'94%',rate:'120€'},
-                    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie · Bordeaux',match:'91%',rate:'180€'},
+                    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA · Paris',match:'98%',rate:'95$'},
+                    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA · Lyon',match:'94%',rate:'120$'},
+                    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie · Bordeaux',match:'91%',rate:'180$'},
                   ].map((r,i)=>(
                     <div className="p-result" key={i}>
                       <div className="p-avt"><img src={r.ph} alt=""/></div>
@@ -945,9 +945,9 @@ function Expertise() {
 /* ── Experts ── */
 function Experts() {
   const list = [
-    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. 12 missions livrées en 2025.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:'95€',rating:'4.9',rev:47},
-    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA pour équipes',bio:'Forme les équipes marketing et ops aux outils IA. 850+ collaborateurs accompagnés.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:'120€',rating:'5.0',rev:62},
-    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie IA',bio:'Roadmap IA et audit pour scale-ups. Ex-McKinsey, certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:'180€',rating:'4.9',rev:31},
+    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. 12 missions livrées en 2025.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:'95$',rating:'4.9',rev:47},
+    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA pour équipes',bio:'Forme les équipes marketing et ops aux outils IA. 850+ collaborateurs accompagnés.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:'120$',rating:'5.0',rev:62},
+    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie IA',bio:'Roadmap IA et audit pour scale-ups. Ex-McKinsey, certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:'180$',rating:'4.9',rev:31},
   ];
   return (
     <section id="experts" className="pad" style={{paddingTop:80}}>

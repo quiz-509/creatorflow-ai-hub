@@ -191,7 +191,7 @@ function App() {
   const [notifSettings, setNotifSettings] = useState({ propositions:true, messages:true, missions:true, payments:true, reminders:true, marketing:false });
 
   // Prefs state
-  const [prefs, setPrefs] = useState({ lang:'fr', currency:'EUR', timezone:'America/Montreal' });
+  const [prefs, setPrefs] = useState({ lang:'fr', currency:'CAD', timezone:'America/Montreal' });
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -368,7 +368,7 @@ function App() {
                   </div>
                   <div className="input-grid">
                     <div className="field">
-                      <label className="label">Tarif horaire (€)</label>
+                      <label className="label">Tarif horaire ($)</label>
                       <input className="input" type="number" min="0" placeholder="ex: 80" value={expertData.tarif} onChange={e=>setExpertData(p=>({...p,tarif:e.target.value}))}/>
                     </div>
                     <div className="field">
@@ -487,7 +487,7 @@ function App() {
                   <span className="plan-badge">Plan Pro</span>
                   <div className="plan-info">
                     <div className="plan-name">CreatorFlow Market Pro</div>
-                    <div className="plan-desc">49€/mois · Renouvellement le 26 juin 2026</div>
+                    <div className="plan-desc">49$/mois · Renouvellement le 26 juin 2026</div>
                   </div>
                   <button className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Changer de plan</button>
                 </div>
@@ -539,9 +539,9 @@ function App() {
                     <div className="card-title" style={{margin:0}}>Historique des factures</div>
                   </div>
                   {[
-                    { ref:'FAC-0049', date:'26 mai 2026', amount:'49€', status:'Payée' },
-                    { ref:'FAC-0041', date:'26 avr. 2026', amount:'49€', status:'Payée' },
-                    { ref:'FAC-0033', date:'26 mar. 2026', amount:'49€', status:'Payée' },
+                    { ref:'FAC-0049', date:'26 mai 2026', amount:'49$', status:'Payée' },
+                    { ref:'FAC-0041', date:'26 avr. 2026', amount:'49$', status:'Payée' },
+                    { ref:'FAC-0033', date:'26 mar. 2026', amount:'49$', status:'Payée' },
                   ].map((f,i) => (
                     <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:i<2?'1px solid var(--border)':'none'}}>
                       <div>
@@ -607,7 +607,7 @@ function App() {
                     <div className="field">
                       <label className="label">Devise</label>
                       <select className="input" value={prefs.currency} onChange={e=>setPrefs(p=>({...p,currency:e.target.value}))}>
-                        <option value="EUR">EUR (€)</option>
+                        <option value="CAD">CAD ($)</option>
                         <option value="USD">USD ($)</option>
                         <option value="GBP">GBP (£)</option>
                       </select>

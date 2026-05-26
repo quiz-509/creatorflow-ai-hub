@@ -195,15 +195,15 @@ const Ic = {
 };
 
 const MISSIONS = [
-  {id:1, name:'Chatbot IA e-commerce', cat:'Chatbots', icon:'🤖', iconBg:'rgba(124,58,237,0.12)', status:'active', statusLabel:'En cours', badge:'badge-green', client:'TechCorp SAS', price:'1 800€', progress:65, deadline:'10 juin'},
-  {id:2, name:'Agent IA support RH', cat:'Agents IA', icon:'🧠', iconBg:'rgba(6,182,212,0.1)', status:'review', statusLabel:'En révision', badge:'badge-amber', client:'StartupRH', price:'2 400€', progress:92, deadline:'2 juin'},
-  {id:3, name:'Formation équipe IA', cat:'Formation IA', icon:'📚', iconBg:'rgba(16,185,129,0.1)', status:'new', statusLabel:'Nouveau', badge:'badge-cyan', client:'BankGroup', price:'3 500€', progress:10, deadline:'20 juin'},
+  {id:1, name:'Chatbot IA e-commerce', cat:'Chatbots', icon:'🤖', iconBg:'rgba(124,58,237,0.12)', status:'active', statusLabel:'En cours', badge:'badge-green', client:'TechCorp SAS', price:'1 800$', progress:65, deadline:'10 juin'},
+  {id:2, name:'Agent IA support RH', cat:'Agents IA', icon:'🧠', iconBg:'rgba(6,182,212,0.1)', status:'review', statusLabel:'En révision', badge:'badge-amber', client:'StartupRH', price:'2 400$', progress:92, deadline:'2 juin'},
+  {id:3, name:'Formation équipe IA', cat:'Formation IA', icon:'📚', iconBg:'rgba(16,185,129,0.1)', status:'new', statusLabel:'Nouveau', badge:'badge-cyan', client:'BankGroup', price:'3 500$', progress:10, deadline:'20 juin'},
 ];
 
 const OPPS = [
-  {id:1, title:'Automatisation pipeline marketing', client:'Anonyme', budget:'800 — 1 500€', delai:'Dans 2 semaines', desc:'Nous cherchons un expert Make / Zapier pour automatiser notre séquence email + CRM + Notion. Environ 15 workflows à créer.', tags:['Make','Zapier','CRM']},
-  {id:2, title:'Développement agent IA sur mesure', client:'Anonyme', budget:'2 000 — 4 000€', delai:'Dans 1 mois', desc:'Besoin d\'un agent IA capable de scraper des données, les analyser et générer des rapports PDF automatiquement chaque semaine.', tags:['LangChain','Python','GPT-4']},
-  {id:3, title:'Prompt Engineering — suite de prompts', client:'Anonyme', budget:'400 — 800€', delai:'Flexible', desc:'Créer une bibliothèque de 50 prompts optimisés pour une équipe marketing. Inclut rédaction, design brief, reporting.', tags:['Prompts','GPT-4','Marketing']},
+  {id:1, title:'Automatisation pipeline marketing', client:'Anonyme', budget:'800 — 1 500$', delai:'Dans 2 semaines', desc:'Nous cherchons un expert Make / Zapier pour automatiser notre séquence email + CRM + Notion. Environ 15 workflows à créer.', tags:['Make','Zapier','CRM']},
+  {id:2, title:'Développement agent IA sur mesure', client:'Anonyme', budget:'2 000 — 4 000$', delai:'Dans 1 mois', desc:'Besoin d\'un agent IA capable de scraper des données, les analyser et générer des rapports PDF automatiquement chaque semaine.', tags:['LangChain','Python','GPT-4']},
+  {id:3, title:'Prompt Engineering — suite de prompts', client:'Anonyme', budget:'400 — 800$', delai:'Flexible', desc:'Créer une bibliothèque de 50 prompts optimisés pour une équipe marketing. Inclut rédaction, design brief, reporting.', tags:['Prompts','GPT-4','Marketing']},
 ];
 
 const MSGS = [
@@ -340,7 +340,7 @@ function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
-              <div className="stat-val">4 820€</div>
+              <div className="stat-val">4 820$</div>
               <div className="stat-label">Revenus ce mois</div>
               <div className="stat-trend trend-up"><Ic.TrendUp/>+23% vs avril</div>
             </div>
@@ -442,7 +442,7 @@ function App() {
                 <div style={{padding:'18px 20px 0'}}>
                   <div style={{fontSize:14,fontWeight:700,marginBottom:4}}>Revenus 2026</div>
                   <div className="rev-total">
-                    <span className="rev-amount">18 640€</span>
+                    <span className="rev-amount">18 640$</span>
                     <span className="rev-period">depuis janv.</span>
                     <span className="rev-trend"><Ic.TrendUp style={{display:'inline'}}/> +38%</span>
                   </div>

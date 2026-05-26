@@ -381,7 +381,7 @@ function App() {
                               {label:'IBAN', val:'FR76 3000 4000 0100 0000 0000 000', copy:true},
                               {label:'BIC / SWIFT', val:'BNPAFRPPXXX', copy:true},
                               {label:'Référence', val:'CFM-2026-00847', copy:true},
-                              {label:'Montant', val:'1 260,00 €'},
+                              {label:'Montant', val:'1 260,00 $'},
                             ].map((r,i) => (
                               <div key={i} className="virement-row">
                                 <span className="vir-label">{r.label}</span>
@@ -402,7 +402,7 @@ function App() {
                       {/* PAYPAL */}
                       {method === 'paypal' && (
                         <div className="paypal-wrap">
-                          <div style={{fontSize:13,color:'var(--text-2)',marginBottom:20}}>Vous serez redirigé vers PayPal pour finaliser le paiement de <strong style={{color:'var(--text)'}}>1 260€</strong>.</div>
+                          <div style={{fontSize:13,color:'var(--text-2)',marginBottom:20}}>Vous serez redirigé vers PayPal pour finaliser le paiement de <strong style={{color:'var(--text)'}}>1 260$</strong>.</div>
                           <div className="paypal-btn" onClick={handlePay}>
                             <span style={{fontSize:22}}>🅿</span>
                             Payer avec PayPal
@@ -431,7 +431,7 @@ function App() {
                               ) : (
                                 <React.Fragment>
                                   <Ic.Lock/>
-                                  {method === 'card' ? 'Payer 1 260€ maintenant' : 'Confirmer le virement'}
+                                  {method === 'card' ? 'Payer 1 260$ maintenant' : 'Confirmer le virement'}
                                   <Ic.Arrow/>
                                 </React.Fragment>
                               )}
@@ -480,19 +480,19 @@ function App() {
                     <div className="pricing-block">
                       <div className="price-row">
                         <span className="price-label">Budget total convenu</span>
-                        <span className="price-val">1 800€</span>
+                        <span className="price-val">1 800$</span>
                       </div>
                       <div className="price-row">
                         <span className="price-label">Acompte déjà versé (30%)</span>
-                        <span className="price-val" style={{color:'var(--green)'}}>- 540€</span>
+                        <span className="price-val" style={{color:'var(--green)'}}>- 540$</span>
                       </div>
                       <div className="price-row">
                         <span className="price-label">Commission plateforme</span>
-                        <span className="price-val" style={{color:'var(--text-3)'}}>0€ <span className="discount-tag">Incluse</span></span>
+                        <span className="price-val" style={{color:'var(--text-3)'}}>0$ <span className="discount-tag">Incluse</span></span>
                       </div>
                       <div className="price-total-row">
                         <span className="price-total-label">Total à payer</span>
-                        <span className="price-total-val">1 260€</span>
+                        <span className="price-total-val">1 260$</span>
                       </div>
                     </div>
                   </div>
@@ -540,14 +540,14 @@ function App() {
                 <div className="success-wrap">
                   <div className="success-ring">✓</div>
                   <h1 className="success-title">Paiement confirmé !</h1>
-                  <p className="success-sub">Votre paiement de <strong>1 260€</strong> a bien été enregistré. Amélie Chen a été notifiée et la livraison finale est prévue pour le <strong>10 juin 2026</strong>.</p>
+                  <p className="success-sub">Votre paiement de <strong>1 260$</strong> a bien été enregistré. Amélie Chen a été notifiée et la livraison finale est prévue pour le <strong>10 juin 2026</strong>.</p>
 
                   <div className="success-details">
                     {[
                       {label:'Référence', val:'CFM-2026-00847'},
                       {label:'Mission', val:'Chatbot service client IA'},
                       {label:'Expert', val:'Amélie Chen'},
-                      {label:'Montant payé', val:'1 260€'},
+                      {label:'Montant payé', val:'1 260$'},
                       {label:'Date', val:'27 mai 2026 · 14:32'},
                       {label:'Statut', val:'✅ Confirmé'},
                     ].map((r,i) => (

@@ -190,7 +190,7 @@ function App() {
           <div className="stats-banner fade-up">
             <div className="stat-cell"><div className="stat-val cyan">4 200+</div><div className="stat-lbl">Clients actifs</div></div>
             <div className="stat-cell"><div className="stat-val purple">280+</div><div className="stat-lbl">Experts certifiés</div></div>
-            <div className="stat-cell"><div className="stat-val green">6 800€</div><div className="stat-lbl">Revenu mensuel moyen (top experts)</div></div>
+            <div className="stat-cell"><div className="stat-val green">6 800$</div><div className="stat-lbl">Revenu mensuel moyen (top experts)</div></div>
             <div className="stat-cell"><div className="stat-val orange">98%</div><div className="stat-lbl">Taux de satisfaction client</div></div>
           </div>
 
@@ -246,9 +246,9 @@ function App() {
             <div className="section-sub">Des experts comme vous qui ont fait de l'IA leur métier à plein temps.</div>
             <div className="experts-grid fade-up">
               {[
-                { name:'Amélie Chen', init:'AC', color:'#7C3AED', spec:'IA & Automatisation', missions:62, note:'4.9', earning:'6 800€/mois' },
-                { name:'Lucas Bernard', init:'LB', color:'#2563EB', spec:'No-Code & Zapier', missions:38, note:'4.8', earning:'4 200€/mois' },
-                { name:'Sofia Martins', init:'SM', color:'#0891B2', spec:'Data Science & ML', missions:29, note:'5.0', earning:'5 500€/mois' },
+                { name:'Amélie Chen', init:'AC', color:'#7C3AED', spec:'IA & Automatisation', missions:62, note:'4.9', earning:'6 800$/mois' },
+                { name:'Lucas Bernard', init:'LB', color:'#2563EB', spec:'No-Code & Zapier', missions:38, note:'4.8', earning:'4 200$/mois' },
+                { name:'Sofia Martins', init:'SM', color:'#0891B2', spec:'Data Science & ML', missions:29, note:'5.0', earning:'5 500$/mois' },
               ].map(e=>(
                 <div key={e.name} className="expert-card">
                   <div className="ex-avatar" style={{background:e.color}}>{e.init}</div>
@@ -270,9 +270,9 @@ function App() {
             <div className="section-title">Ce qu'ils disent</div>
             <div className="testimonials fade-up">
               {[
-                { quote:'Avant CreatorFlow, je perdais 30% de mon temps à prospecter. Maintenant je reçois des missions directement. Mon CA a doublé en 4 mois.', name:'Karim B.', role:'Expert Chatbots NLP', color:'#059669', earning:'+4 800€/mois' },
-                { quote:'Le système de paiement escrow est vraiment rassurant. On livre, on est payé. Aucun impayé depuis 18 mois sur la plateforme.', name:'Marie D.', role:'Experte Contenu IA', color:'#D97706', earning:'+3 200€/mois' },
-                { quote:'J\'ai eu mes 3 premières missions dans la première semaine. La qualité des clients est vraiment au-dessus de ce que j\'avais sur Malt.', name:'Antoine M.', role:'Expert Intégrations API', color:'#7C3AED', earning:'+5 100€/mois' },
+                { quote:'Avant CreatorFlow, je perdais 30% de mon temps à prospecter. Maintenant je reçois des missions directement. Mon CA a doublé en 4 mois.', name:'Karim B.', role:'Expert Chatbots NLP', color:'#059669', earning:'+4 800$/mois' },
+                { quote:'Le système de paiement escrow est vraiment rassurant. On livre, on est payé. Aucun impayé depuis 18 mois sur la plateforme.', name:'Marie D.', role:'Experte Contenu IA', color:'#D97706', earning:'+3 200$/mois' },
+                { quote:'J\'ai eu mes 3 premières missions dans la première semaine. La qualité des clients est vraiment au-dessus de ce que j\'avais sur Malt.', name:'Antoine M.', role:'Expert Intégrations API', color:'#7C3AED', earning:'+5 100$/mois' },
               ].map((t,i)=>(
                 <div key={i} className="testi-card">
                   <div className="testi-quote">"{t.quote}"</div>

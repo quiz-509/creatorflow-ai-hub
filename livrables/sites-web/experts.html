@@ -235,7 +235,7 @@ function ExpertCard({ expert, delay = 0 }) {
       <p className="exp-bio">{expert.bio}</p>
       <div className="tags">{expert.skills.map(s => <span className="tag" key={s}>{s}</span>)}</div>
       <div className="exp-foot">
-        <div className="exp-rate">{expert.rate}€<small>/heure</small></div>
+        <div className="exp-rate">{expert.rate}$<small>/heure</small></div>
         <div className="exp-stars"><span className="s"><Ic.Star/></span>{expert.rating}<span className="cnt">({expert.reviews})</span></div>
       </div>
       <div className="exp-actions">
@@ -308,9 +308,9 @@ function App() {
             <span className="filter-label">Budget / heure</span>
             <select className="filter-select" value={budget} onChange={e => setBudget(e.target.value)}>
               <option value="tous">Tous les budgets</option>
-              <option value="moins100">Moins de 100€</option>
-              <option value="100-150">100€ — 150€</option>
-              <option value="plus150">Plus de 150€</option>
+              <option value="moins100">Moins de 100$</option>
+              <option value="100-150">100$ — 150$</option>
+              <option value="plus150">Plus de 150$</option>
             </select>
           </div>
           <div className="filter-divider"/>
