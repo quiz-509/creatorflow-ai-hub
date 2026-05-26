@@ -422,9 +422,9 @@ function App() {
 
               {/* PROFIL CARD */}
               <div className="profil-card">
-                <div className="profil-avatar-lg">AC</div>
-                <div className="profil-name">Amélie Chen</div>
-                <div className="profil-spec">Agents IA · Automatisation · LLM</div>
+                <div className="profil-avatar-lg">{initials}</div>
+                <div className="profil-name">{fullName}</div>
+                <div className="profil-spec">{expert?.specialite || 'Expert IA'} · {expert?.niveau || ''}</div>
                 <div className="stars">
                   {[1,2,3,4,5].map(i => <Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
                   <span style={{fontSize:12,color:'var(--text-2)',marginLeft:4}}>4.9 (14 avis)</span>
