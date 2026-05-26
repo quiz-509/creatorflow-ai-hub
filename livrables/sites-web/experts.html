@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Experts IA — CreatorFlow Market</title>
+  <meta name="description" content="Trouvez l'expert IA certifié qu'il vous faut parmi nos 120+ profils vérifiés." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg:#04040A; --bg-2:#07070F; --surf:#0C0C18; --surf-2:#101020; --surf-3:#14142A;
+  --border:rgba(255,255,255,0.055); --border-2:rgba(255,255,255,0.10); --border-3:rgba(255,255,255,0.18);
+  --text:#F4F4FF; --text-2:#9898B8; --text-3:#55557A;
+  --v:#7C3AED; --v2:#6D28D9; --vs:#A78BFA; --vg:rgba(124,58,237,0.35);
+  --c:#06B6D4; --cs:#67E8F9; --green:#10B981; --amber:#F59E0B;
+  --r:14px; --r-lg:20px; --r-xl:28px;
+  --f:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{display:block;max-width:100%;}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid transparent;transition:all 300ms ease;}
+.nav.stuck{background:rgba(4,4,10,0.88);backdrop-filter:blur(20px);border-color:var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;display:flex;align-items:center;gap:6px;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms ease;}
+.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--vs);}
+.nav-ctas{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,0.14) inset,0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:8px 16px;font-size:13px;}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE HEADER */
+.page-header{padding:120px 0 60px;text-align:center;position:relative;}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 800px 400px at 50% 0%,rgba(124,58,237,0.12),transparent 70%);pointer-events:none;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--vs);}
+.eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);}
+.page-title{font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-0.03em;margin:16px 0 14px;}
+.page-title em{background:linear-gradient(135deg,#C084FC,var(--v),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;}
+.page-sub{font-size:17px;color:var(--text-2);max-width:520px;margin:0 auto;}
+
+/* FILTER BAR */
+.filter-wrap{padding:0 0 48px;}
+.filter-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:18px 20px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);}
+.filter-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px;}
+.filter-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-3);}
+.filter-select,.filter-input{background:var(--surf-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--f);font-size:13px;padding:8px 12px;outline:none;transition:border-color 180ms ease;appearance:none;cursor:pointer;}
+.filter-select:focus,.filter-input:focus{border-color:rgba(124,58,237,0.5);}
+.filter-divider{width:1px;height:40px;background:var(--border);flex-shrink:0;}
+.filter-count{font-size:13px;color:var(--text-3);white-space:nowrap;flex-shrink:0;}
+.filter-count span{color:var(--vs);font-weight:700;}
+.filter-reset{font-size:13px;color:var(--text-3);padding:8px 12px;border-radius:8px;transition:all 160ms ease;flex-shrink:0;}
+.filter-reset:hover{color:var(--text);background:rgba(255,255,255,0.04);}
+
+/* EXPERTS GRID */
+.experts-section{padding-bottom:100px;}
+.experts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.expert-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:26px;transition:all 260ms var(--ease);position:relative;overflow:hidden;cursor:pointer;}
+.expert-card::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(124,58,237,0.4),rgba(6,182,212,0.2));opacity:0;transition:opacity 260ms;pointer-events:none;z-index:0;}
+.expert-card>*{position:relative;z-index:1;}
+.expert-card:hover{transform:translateY(-4px);box-shadow:0 28px 70px -20px rgba(0,0,0,0.6);border-color:rgba(124,58,237,0.3);}
+.expert-card:hover::after{opacity:1;}
+.cert-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--green);background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:3px 9px;border-radius:999px;margin-bottom:16px;}
+.exp-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.exp-avt{width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(124,58,237,0.3);}
+.exp-avt img{width:100%;height:100%;object-fit:cover;}
+.exp-name{font-size:15px;font-weight:700;margin-bottom:2px;}
+.exp-role{font-size:12px;color:var(--text-3);}
+.exp-bio{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:14px;}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.tag{font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);font-weight:500;cursor:pointer;transition:all 160ms var(--ease);}
+.tag:hover{background:rgba(124,58,237,0.14);border-color:rgba(124,58,237,0.4);color:var(--vs);}
+.exp-foot{display:flex;align-items:center;justify-content:space-between;}
+.exp-rate{font-size:16px;font-weight:700;color:var(--text);}
+.exp-rate small{font-size:12px;font-weight:400;color:var(--text-3);}
+.exp-stars{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--amber);}
+.exp-stars .s{display:flex;}
+.exp-stars .cnt{font-size:12px;color:var(--text-3);font-weight:400;}
+.avail-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);margin-bottom:8px;}
+.avail-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.avail-badge.busy{color:var(--amber);}
+.avail-badge.busy .avail-dot{background:var(--amber);}
+.exp-actions{display:flex;gap:8px;margin-top:16px;}
+.exp-actions .btn{flex:1;justify-content:center;}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:80px 20px;color:var(--text-3);}
+.empty h3{font-size:18px;color:var(--text-2);margin-bottom:8px;}
+.empty p{font-size:14px;}
+
+/* PAGINATION */
+.pagination{display:flex;justify-content:center;gap:8px;padding:48px 0 0;}
+.page-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:14px;font-weight:500;background:var(--surf);border:1px solid var(--border);color:var(--text-2);transition:all 180ms ease;}
+.page-btn:hover{border-color:var(--border-2);color:var(--text);}
+.page-btn.active{background:var(--v);border-color:var(--v);color:#fff;}
+
+/* REVEAL */
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);filter:blur(4px);}to{opacity:1;transform:none;filter:blur(0);}}
+.rv{opacity:0;animation:fade-up 600ms var(--ease) both;}
+.rv.in{animation:fade-up 600ms var(--ease) both;}
+
+/* CURSOR GLOW */
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.05) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+
+/* FOOTER */
+.footer-mini{border-top:1px solid var(--border);padding:28px 0;display:flex;align-items:center;justify-content:space-between;}
+.footer-mini a{font-size:13px;color:var(--text-3);transition:color 160ms;}
+.footer-mini a:hover{color:var(--text);}
+.footer-links{display:flex;gap:20px;}
+
+@media(max-width:980px){.experts-grid{grid-template-columns:repeat(2,1fr);}.nav-links{display:none;}}
+@media(max-width:640px){.wrap{padding:0 18px;}.experts-grid{grid-template-columns:1fr;}.filter-bar{flex-direction:column;}.filter-divider{display:none;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect, useRef, useMemo } = React;
+
+const PHOTOS = {
+  a1:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
+  a2:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces&q=80',
+  a3:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&h=240&fit=crop&crop=faces&q=80',
+  a4:'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=240&h=240&fit=crop&crop=faces&q=80',
+  a5:'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=240&h=240&fit=crop&crop=faces&q=80',
+  a6:'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=240&h=240&fit=crop&crop=faces&q=80',
+  a7:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=240&h=240&fit=crop&crop=faces&q=80',
+  a8:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&h=240&fit=crop&crop=faces&q=80',
+  a9:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=240&h=240&fit=crop&crop=faces&q=80',
+};
+
+const EXPERTS = [
+  {id:1,photo:PHOTOS.a1,name:'Amélie Dubois',role:'Architecte agents IA',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. 12 missions livrées en 2025.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:95,rating:4.9,reviews:47,cats:['Agents IA','Développement IA'],available:true},
+  {id:2,photo:PHOTOS.a2,name:'Julien Mercier',role:'Formateur IA pour équipes',bio:'Forme les équipes marketing et ops aux outils IA. 850+ collaborateurs accompagnés.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:120,rating:5.0,reviews:62,cats:['Formation IA'],available:true},
+  {id:3,photo:PHOTOS.a3,name:'Sarah Kassimi',role:'Consultante stratégie IA',bio:'Roadmap IA et audit pour scale-ups. Ex-McKinsey, certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:180,rating:4.9,reviews:31,cats:['Agents IA'],available:false},
+  {id:4,photo:PHOTOS.a4,name:'Léa Fontaine',role:'Spécialiste Prompt Engineering',bio:'Optimise les prompts pour GPT-4, Claude et Mistral. Réduction de 60% des coûts API.',skills:['Prompt Eng.','GPT-4','Claude','Fine-tuning'],rate:85,rating:4.8,reviews:28,cats:['Prompt Engineering'],available:true},
+  {id:5,photo:PHOTOS.a5,name:'Karim Benali',role:'Développeur IA & Automatisation',bio:'Pipelines n8n et Make pour e-commerce et SaaS. 40+ workflows déployés en production.',skills:['n8n','Make','Python','API'],rate:110,rating:4.9,reviews:54,cats:['Automatisation','Développement IA'],available:true},
+  {id:6,photo:PHOTOS.a6,name:'Nina Laroche',role:'Créatrice de contenu IA',bio:'Produit 50+ contenus/mois avec des workflows IA. YouTube, LinkedIn, newsletters.',skills:['Copy IA','Midjourney','CapCut AI','Canva'],rate:75,rating:4.7,reviews:19,cats:['Montage vidéo IA'],available:true},
+  {id:7,photo:PHOTOS.a7,name:'Camille Renard',role:'Chatbot & IA conversationnelle',bio:'Déploie des chatbots GPT sur sites e-commerce et applications. 30+ bots en production.',skills:['Chatbots','Voiceflow','Botpress','RAG'],rate:130,rating:5.0,reviews:41,cats:['Chatbots'],available:false},
+  {id:8,photo:PHOTOS.a8,name:'Thomas Girard',role:'Expert Branding & IA',bio:'Crée des identités visuelles augmentées par l\'IA. Dall-E, Midjourney, Stable Diffusion.',skills:['Midjourney','Dall-E','Figma','Branding'],rate:95,rating:4.8,reviews:23,cats:['Branding IA'],available:true},
+  {id:9,photo:PHOTOS.a9,name:'Yasmine Aouf',role:'Data Scientist & IA',bio:'Modèles prédictifs et dashboards augmentés pour fintech et retail. 8 ans d\'expérience.',skills:['Python','TensorFlow','Tableau','SQL'],rate:160,rating:4.9,reviews:36,cats:['Développement IA'],available:true},
+];
+
+const CATS = ['Toutes','Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
+
+const Ic = {
+  Star:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Check:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
+  Filter:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+};
+
+function Nav() {
+  const [stuck, setStuck] = useState(false);
+  useEffect(() => {
+    const h = () => setStuck(window.scrollY > 10);
+    window.addEventListener('scroll', h, { passive: true });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  return (
+    <nav className={`nav ${stuck ? 'stuck' : ''}`}>
+      <div className="wrap nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div className="nav-links">
+          <a href="experts.html" className="nav-link active">Experts</a>
+          <a href="brief.html" className="nav-link">Déposer un brief</a>
+          <a href="inscription.html" className="nav-link">Devenir expert</a>
+        </div>
+        <div className="nav-ctas">
+          <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
+          <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <Ic.Arrow/></a>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function ExpertCard({ expert, delay = 0 }) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current; if (!el) return;
+    const obs = new IntersectionObserver(e => {
+      e.forEach(en => { if (en.isIntersecting) { setTimeout(() => setShown(true), delay); obs.unobserve(el); } });
+    }, { threshold: 0.1 });
+    obs.observe(el); return () => obs.disconnect();
+  }, []);
+
+  function onTilt(e) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    const rx = ((y - r.height/2) / (r.height/2)) * -5;
+    const ry = ((x - r.width/2) / (r.width/2)) * 5;
+    e.currentTarget.style.transform = `translateY(-4px) perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  }
+  function offTilt(e) { e.currentTarget.style.transform = ''; }
+
+  return (
+    <div ref={ref} className={`expert-card ${shown ? 'in' : 'rv'}`} style={{ animationDelay: delay + 'ms' }}
+      onMouseMove={onTilt} onMouseLeave={offTilt}>
+      <div className="cert-badge"><Ic.Check/>Certifié</div>
+      <div className={`avail-badge ${expert.available ? '' : 'busy'}`}>
+        <div className="avail-dot"/>
+        {expert.available ? 'Disponible' : 'Occupé ce mois'}
+      </div>
+      <div className="exp-head">
+        <div className="exp-avt"><img src={expert.photo} alt={expert.name}/></div>
+        <div>
+          <div className="exp-name">{expert.name}</div>
+          <div className="exp-role">{expert.role}</div>
+        </div>
+      </div>
+      <p className="exp-bio">{expert.bio}</p>
+      <div className="tags">{expert.skills.map(s => <span className="tag" key={s}>{s}</span>)}</div>
+      <div className="exp-foot">
+        <div className="exp-rate">{expert.rate}€<small>/heure</small></div>
+        <div className="exp-stars"><span className="s"><Ic.Star/></span>{expert.rating}<span className="cnt">({expert.reviews})</span></div>
+      </div>
+      <div className="exp-actions">
+        <a href="profil.html" className="btn btn-ghost btn-sm">Voir le profil</a>
+        <a href="brief.html" className="btn btn-primary btn-sm">Contacter <Ic.Arrow/></a>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [cat, setCat] = useState('Toutes');
+  const [budget, setBudget] = useState('tous');
+  const [dispo, setDispo] = useState('tous');
+  const [sort, setSort] = useState('note');
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+  }, []);
+
+  const filtered = useMemo(() => {
+    let list = [...EXPERTS];
+    if (cat !== 'Toutes') list = list.filter(e => e.cats.includes(cat));
+    if (budget === 'moins100') list = list.filter(e => e.rate < 100);
+    if (budget === '100-150') list = list.filter(e => e.rate >= 100 && e.rate <= 150);
+    if (budget === 'plus150') list = list.filter(e => e.rate > 150);
+    if (dispo === 'dispo') list = list.filter(e => e.available);
+    if (sort === 'note') list.sort((a, b) => b.rating - a.rating);
+    if (sort === 'tarif-asc') list.sort((a, b) => a.rate - b.rate);
+    if (sort === 'tarif-desc') list.sort((a, b) => b.rate - a.rate);
+    if (sort === 'avis') list.sort((a, b) => b.reviews - a.reviews);
+    return list;
+  }, [cat, budget, dispo, sort]);
+
+  return (
+    <React.Fragment>
+      <Nav/>
+      <div className="page-header">
+        <div className="wrap">
+          <span className="eyebrow">120+ experts certifiés</span>
+          <h1 className="page-title">Trouvez votre expert <em>IA idéal.</em></h1>
+          <p className="page-sub">Chaque profil est vérifié par notre équipe. Compétences certifiées, références validées.</p>
+        </div>
+      </div>
+      <div className="wrap filter-wrap">
+        <div className="filter-bar">
+          <div className="filter-group">
+            <span className="filter-label"><Ic.Filter style={{display:'inline',marginRight:4}}/>Catégorie</span>
+            <select className="filter-select" value={cat} onChange={e => setCat(e.target.value)}>
+              {CATS.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="filter-divider"/>
+          <div className="filter-group">
+            <span className="filter-label">Budget / heure</span>
+            <select className="filter-select" value={budget} onChange={e => setBudget(e.target.value)}>
+              <option value="tous">Tous les budgets</option>
+              <option value="moins100">Moins de 100€</option>
+              <option value="100-150">100€ — 150€</option>
+              <option value="plus150">Plus de 150€</option>
+            </select>
+          </div>
+          <div className="filter-divider"/>
+          <div className="filter-group">
+            <span className="filter-label">Disponibilité</span>
+            <select className="filter-select" value={dispo} onChange={e => setDispo(e.target.value)}>
+              <option value="tous">Tous</option>
+              <option value="dispo">Disponibles uniquement</option>
+            </select>
+          </div>
+          <div className="filter-divider"/>
+          <div className="filter-group">
+            <span className="filter-label">Trier par</span>
+            <select className="filter-select" value={sort} onChange={e => setSort(e.target.value)}>
+              <option value="note">Meilleure note</option>
+              <option value="avis">Plus d'avis</option>
+              <option value="tarif-asc">Tarif croissant</option>
+              <option value="tarif-desc">Tarif décroissant</option>
+            </select>
+          </div>
+          <div className="filter-divider"/>
+          <span className="filter-count"><span>{filtered.length}</span> expert{filtered.length > 1 ? 's' : ''}</span>
+          <button className="filter-reset" onClick={() => { setCat('Toutes'); setBudget('tous'); setDispo('tous'); setSort('note'); }}>Réinitialiser</button>
+        </div>
+      </div>
+      <div className="wrap experts-section">
+        {filtered.length === 0
+          ? <div className="empty"><h3>Aucun expert trouvé</h3><p>Essaie de modifier tes filtres.</p></div>
+          : <div className="experts-grid">
+              {filtered.map((e, i) => <ExpertCard key={e.id} expert={e} delay={i * 60}/>)}
+            </div>
+        }
+      </div>
+      <footer>
+        <div className="wrap footer-mini">
+          <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
+          <div className="footer-links">
+            <a href="index.html">Accueil</a>
+            <a href="brief.html">Déposer un brief</a>
+            <a href="inscription.html">Devenir expert</a>
+          </div>
+        </div>
+      </footer>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

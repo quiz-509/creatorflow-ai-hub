@@ -699,12 +699,12 @@ function Nav() {
               </div>
             </div>
           ))}
-          <a className="nav-link" href="#experts" onClick={() => setOpenMenu(null)}>Experts</a>
+          <a className="nav-link" href="experts.html" onClick={() => setOpenMenu(null)}>Experts</a>
           <a className="nav-link" href="#academy" onClick={() => setOpenMenu(null)}>Académie</a>
         </div>
         <div className="nav-actions">
-          <button className="btn btn-outline" style={{padding:'9px 18px',fontSize:'13px',borderRadius:'999px'}}>Se connecter</button>
-          <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:'13px'}}>Démarrer <Ic.Arrow /></button>
+          <a href="connexion.html" className="btn btn-outline" style={{padding:'9px 18px',fontSize:'13px',borderRadius:'999px'}}>Se connecter</a>
+          <a href="brief.html" className="btn btn-primary" style={{padding:'9px 18px',fontSize:'13px'}}>Démarrer <Ic.Arrow /></a>
           <button className="mobile-toggle"><Ic.Menu /></button>
         </div>
       </div>
@@ -731,8 +731,8 @@ function Hero() {
           Connectez-vous à des experts IA certifiés, des automatisations puissantes et des solutions digitales prêtes à accélérer votre croissance.
         </p>
         <div className="hero-ctas">
-          <button className="btn btn-primary btn-lg"><Ic.Search />Je cherche un expert<Ic.Arrow /></button>
-          <button className="btn btn-ghost btn-lg">Je propose mes services</button>
+          <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Search />Je cherche un expert<Ic.Arrow /></a>
+          <a href="inscription.html" className="btn btn-ghost btn-lg">Je propose mes services</a>
         </div>
         <div className="hero-stats">
           {[{to:120,s:'+',l:'Experts certifiés'},{to:85,s:'+',l:'Projets livrés'},{to:30,s:'+',l:'Secteurs couverts'}].map((st,i)=>(
