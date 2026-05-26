@@ -21,14 +21,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
 .btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-primary:disabled{opacity:0.6;transform:none;cursor:not-allowed;}
 .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
 .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
-.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
-.btn-outline:hover{border-color:var(--border-3);color:var(--text);}
 @keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
 .btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
-
-/* MAIN */
 .login-page{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px 40px;position:relative;}
 .login-page::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 700px 500px at 50% 40%,rgba(124,58,237,0.10),transparent 70%);pointer-events:none;}
 @keyframes fade-up{from{opacity:0;transform:translateY(24px);filter:blur(4px);}to{opacity:1;transform:none;filter:blur(0);}}
@@ -49,41 +46,51 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .form-input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:11px 14px;outline:none;transition:border-color 180ms ease,box-shadow 180ms ease;}
 .form-input:focus{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
 .form-submit{width:100%;justify-content:center;padding:14px 20px;font-size:15px;margin-top:4px;}
-.divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--text-3);font-size:12px;}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
-.social-logins{display:flex;gap:10px;}
-.social-btn{flex:1;justify-content:center;padding:10px 16px;font-size:13px;}
 .form-footer{text-align:center;margin-top:22px;font-size:13px;color:var(--text-3);}
 .form-footer a{color:var(--vs);transition:color 160ms;}
 .form-footer a:hover{color:#fff;}
 .tab-row{display:flex;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:28px;}
 .tab-btn{flex:1;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);transition:all 200ms var(--ease);text-align:center;cursor:pointer;}
 .tab-btn.active{background:var(--v);color:#fff;box-shadow:0 0 16px var(--vg);}
-
 #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
   </style>
 </head>
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Google:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>,
-  LinkedIn:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>,
+  Eye:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+  EyeOff:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
 };
 
 function App() {
-  const [tab, setTab] = useState('client');
+  const [tab, setTab] = useState('expert');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [showPwd, setShowPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
+    sb.auth.getSession().then(({ data }) => {
+      if (data.session) window.location.href = 'dashboard-expert.html';
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -101,48 +108,123 @@ function App() {
     return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
   }, []);
 
+  const handleLogin = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const { data, error: loginError } = await sb.auth.signInWithPassword({ email, password: pass });
+      if (loginError) throw loginError;
+      const { data: profile } = await sb.from('profiles').select('type_utilisateur').eq('id', data.user.id).single();
+      window.location.href = profile?.type_utilisateur === 'client' ? 'dashboard-client.html' : 'dashboard-expert.html';
+    } catch(err) {
+      const msgs = {
+        'Invalid login credentials': 'Email ou mot de passe incorrect.',
+        'Email not confirmed': 'Veuillez confirmer votre email avant de vous connecter.',
+      };
+      setError(msgs[err.message] || 'Erreur : ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    const { error: resetError } = await sb.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin + '/connexion.html',
+    });
+    setLoading(false);
+    if (!resetError) setResetSent(true);
+    else setError('Erreur : ' + resetError.message);
+  };
+
+  if (showReset) return (
+    <React.Fragment>
+      <nav className="nav"><div className="nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+      </div></nav>
+      <div className="login-page">
+        <div className="login-card">
+          <div className="login-logo">
+            <div className="login-logo-text">CreatorFlow <em>Market</em></div>
+            <div className="login-logo-sub">Réinitialisation du mot de passe</div>
+          </div>
+          <div className="form-box">
+            {!resetSent ? (
+              <React.Fragment>
+                <h2 className="form-title">Mot de passe oublié</h2>
+                <p className="form-sub">Entrez votre email et nous vous enverrons un lien de réinitialisation.</p>
+                <form onSubmit={handleReset}>
+                  <div className="form-group">
+                    <label className="form-label">Adresse email</label>
+                    <input className="form-input" type="email" placeholder="votre@email.com" value={resetEmail} onChange={e => setResetEmail(e.target.value)} required/>
+                  </div>
+                  {error && <div style={{color:'#EF4444',fontSize:13,marginBottom:12,padding:'10px 14px',background:'rgba(239,68,68,0.08)',borderRadius:8}}>{error}</div>}
+                  <button type="submit" className="btn btn-primary form-submit" disabled={loading}>{loading ? 'Envoi…' : 'Envoyer le lien'}</button>
+                </form>
+                <div className="form-footer"><a href="#" onClick={e=>{e.preventDefault();setShowReset(false);}}>Retour a la connexion</a></div>
+              </React.Fragment>
+            ) : (
+              <div style={{textAlign:'center',padding:'20px 0'}}>
+                <div style={{fontSize:40,marginBottom:16}}>📧</div>
+                <h2 className="form-title">Email envoye !</h2>
+                <p style={{fontSize:14,color:'var(--text-2)',marginTop:8,marginBottom:24}}>Verifiez votre boite mail et cliquez sur le lien pour reinitialiser votre mot de passe.</p>
+                <a href="connexion.html" className="btn btn-ghost" style={{margin:'0 auto'}}>Retour a la connexion</a>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+
   return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
         <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
-        <a href="inscription.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Créer un compte</a>
+        <a href="inscription.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Creer un compte</a>
       </div></nav>
 
       <div className="login-page">
         <div className="login-card">
           <div className="login-logo">
             <div className="login-logo-text">CreatorFlow <em>Market</em></div>
-            <div className="login-logo-sub">Bienvenue 👋</div>
+            <div className="login-logo-sub">Bienvenue</div>
           </div>
           <div className="form-box">
             <div className="tab-row">
-              <div className={`tab-btn ${tab === 'client' ? 'active' : ''}`} onClick={() => setTab('client')}>Je suis client</div>
-              <div className={`tab-btn ${tab === 'expert' ? 'active' : ''}`} onClick={() => setTab('expert')}>Je suis expert</div>
+              <div className={`tab-btn ${tab==='client'?'active':''}`} onClick={()=>setTab('client')}>Je suis client</div>
+              <div className={`tab-btn ${tab==='expert'?'active':''}`} onClick={()=>setTab('expert')}>Je suis expert</div>
             </div>
             <h2 className="form-title">Se connecter</h2>
-            <p className="form-sub">{tab === 'client' ? 'Accédez à vos briefs et missions en cours.' : 'Gérez vos missions et votre profil expert.'}</p>
-            <form onSubmit={e => { e.preventDefault(); window.location.href = tab === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'; }}>
+            <p className="form-sub">{tab==='client' ? 'Accedez a vos briefs et missions en cours.' : 'Gerez vos missions et votre profil expert.'}</p>
+            <form onSubmit={handleLogin}>
               <div className="form-group">
                 <label className="form-label">Adresse email</label>
-                <input className="form-input" type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)} required/>
+                <input className="form-input" type="email" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
               </div>
               <div className="form-group">
                 <div className="form-label-row">
                   <span className="form-label" style={{margin:0}}>Mot de passe</span>
-                  <a href="#">Mot de passe oublié ?</a>
+                  <a href="#" onClick={e=>{e.preventDefault();setShowReset(true);setResetEmail(email);}}>Mot de passe oublie ?</a>
                 </div>
-                <input className="form-input" type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} required/>
+                <div style={{position:'relative'}}>
+                  <input className="form-input" type={showPwd?'text':'password'} placeholder="••••••••" value={pass} onChange={e=>setPass(e.target.value)} required style={{paddingRight:44}}/>
+                  <button type="button" onClick={()=>setShowPwd(s=>!s)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',color:'var(--text-3)',display:'flex',alignItems:'center'}}>
+                    {showPwd ? <Ic.EyeOff/> : <Ic.Eye/>}
+                  </button>
+                </div>
               </div>
-              <button type="submit" className="btn btn-primary form-submit">Se connecter <Ic.Arrow/></button>
+              {error && <div style={{color:'#EF4444',fontSize:13,marginBottom:12,padding:'10px 14px',background:'rgba(239,68,68,0.08)',borderRadius:8,border:'1px solid rgba(239,68,68,0.2)'}}>{error}</div>}
+              <button type="submit" className="btn btn-primary form-submit" disabled={loading}>
+                {loading ? 'Connexion…' : <React.Fragment>Se connecter <Ic.Arrow/></React.Fragment>}
+              </button>
             </form>
-            <div className="divider">ou continuer avec</div>
-            <div className="social-logins">
-              <button className="btn btn-outline social-btn"><Ic.Google/>Google</button>
-              <button className="btn btn-outline social-btn"><Ic.LinkedIn/>LinkedIn</button>
-            </div>
             <div className="form-footer">
               Pas encore de compte ?{' '}
-              <a href="inscription.html">{tab === 'expert' ? 'Devenir expert' : 'S\'inscrire gratuitement'}</a>
+              <a href="inscription.html">{tab==='expert' ? 'Devenir expert' : "S'inscrire gratuitement"}</a>
             </div>
           </div>
         </div>
