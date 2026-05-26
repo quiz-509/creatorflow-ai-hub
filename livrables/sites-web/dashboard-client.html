@@ -141,11 +141,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Grid:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
@@ -198,13 +204,35 @@ const NAV_ITEMS = [
 
 function App() {
   const [active, setActive] = useState('overview');
+  const [user, setUser] = useState(null);
+  const [initials, setInitials] = useState('??');
+  const [prenom, setPrenom] = useState('');
 
   useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { window.location.href = 'connexion.html'; return; }
+      const u = data.session.user;
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      if (profile) {
+        const p = profile.prenom || '';
+        const n = profile.nom || '';
+        setPrenom(p);
+        setInitials(((p[0]||'?')+(n[0]||'?')).toUpperCase());
+        setUser({ ...u, ...profile });
+      } else {
+        setUser(u);
+      }
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
     return () => window.removeEventListener('mousemove', move);
   }, []);
+
+  const handleLogout = async () => {
+    await sb.auth.signOut();
+    window.location.href = 'connexion.html';
+  };
 
   return (
     <React.Fragment>
@@ -220,8 +248,8 @@ function App() {
               <span className="notif-dot"/>
             </button>
             <div className="user-chip">
-              <div className="avatar">JD</div>
-              <span className="user-name">Jean Dupont</span>
+              <div className="avatar">{initials}</div>
+              <span className="user-name">{user ? `${user.prenom||''} ${user.nom||''}`.trim() : 'Chargement…'}</span>
             </div>
           </div>
         </div>
@@ -241,12 +269,12 @@ function App() {
         </div>
         <div className="sidebar-section">
           <div className="sidebar-label">Compte</div>
-          <div className="nav-item" onClick={() => setActive('settings')}><Ic.Settings/>Paramètres</div>
+          <a href="parametres.html" className="nav-item"><Ic.Settings/>Paramètres</a>
         </div>
         <div className="sidebar-bottom">
-          <a href="connexion.html" className="nav-item" style={{color:'var(--text-3)'}}>
+          <div className="nav-item" style={{color:'var(--text-3)',cursor:'pointer'}} onClick={handleLogout}>
             <Ic.Logout/>Déconnexion
-          </a>
+          </div>
         </div>
       </aside>
 
@@ -257,7 +285,7 @@ function App() {
           {/* HEADER */}
           <div className="page-header">
             <div>
-              <h1 className="page-title">Bonjour, Jean 👋</h1>
+              <h1 className="page-title">Bonjour, {prenom || 'Client'} 👋</h1>
               <p className="page-sub">Mardi 27 mai 2026 · 3 missions actives · 3 nouvelles propositions</p>
             </div>
             <a href="brief.html" className="btn btn-primary"><Ic.Plus/>Nouveau brief</a>
