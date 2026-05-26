@@ -81,6 +81,18 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 </head>
 <body>
 <div id="cursor-glow"></div>
+
+<!-- Formulaire statique requis par Netlify pour la détection au build -->
+<form name="inscription-expert" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="prenom"/>
+  <input type="text" name="nom"/>
+  <input type="email" name="email"/>
+  <input type="text" name="specialite"/>
+  <input type="text" name="niveau"/>
+  <input type="url" name="linkedin"/>
+  <textarea name="bio"></textarea>
+</form>
+
 <div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
@@ -99,8 +111,14 @@ const Ic = {
 
 const PHOTOS = ['https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=faces&q=80','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80','https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=faces&q=80'];
 
+function encode(data) {
+  return Object.keys(data).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])).join('&');
+}
+
 function App() {
   const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ prenom:'', nom:'', email:'', specialite:'', niveau:'', linkedin:'', bio:'' });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -163,7 +181,23 @@ function App() {
             <div className="form-card">
               <h2 className="form-title">Créer mon profil expert</h2>
               <p className="form-sub">Validation par notre équipe sous 48h · Accès gratuit</p>
-              <form name="inscription-expert" method="POST" data-netlify="true" onSubmit={e => { e.preventDefault(); setDone(true); }}>
+              <form name="inscription-expert" method="POST" data-netlify="true" onSubmit={async e => {
+                  e.preventDefault();
+                  setLoading(true);
+                  setError('');
+                  try {
+                    await fetch('/', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                      body: encode({ 'form-name': 'inscription-expert', ...form }),
+                    });
+                    setDone(true);
+                  } catch(err) {
+                    setError('Une erreur est survenue. Veuillez réessayer.');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}>
                 <input type="hidden" name="form-name" value="inscription-expert"/>
                 <div className="form-row">
                   <div className="form-group">
@@ -205,7 +239,10 @@ function App() {
                   <label className="form-label">Présentez-vous en quelques lignes *</label>
                   <textarea className="form-textarea" name="bio" placeholder="Votre parcours, vos compétences clés, ce que vous apportez à vos clients..." value={form.bio} onChange={e => set('bio', e.target.value)} required/>
                 </div>
-                <button type="submit" className="btn btn-primary form-submit">Soumettre ma candidature <Ic.Arrow/></button>
+                {error && <div style={{color:'#EF4444',fontSize:13,marginBottom:10,padding:'10px 14px',background:'rgba(239,68,68,0.08)',borderRadius:8,border:'1px solid rgba(239,68,68,0.2)'}}>{error}</div>}
+                <button type="submit" className="btn btn-primary form-submit" disabled={loading}>
+                  {loading ? 'Envoi en cours…' : <React.Fragment>Soumettre ma candidature <Ic.Arrow/></React.Fragment>}
+                </button>
                 <div className="form-login">Déjà un compte ? <a href="connexion.html">Se connecter</a></div>
               </form>
             </div>
