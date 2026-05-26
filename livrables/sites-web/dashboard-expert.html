@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dashboard Expert — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--sidebar:240px;--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
+.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.notif-btn{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);position:relative;transition:all 180ms;}
+.notif-btn:hover{color:var(--text);border-color:var(--border-3);}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--green);border:1.5px solid var(--bg);}
+.expert-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
+.expert-chip:hover{border-color:var(--border-3);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.badge-expert{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.25);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:0.06em;}
+
+.sidebar{position:fixed;top:var(--nav);left:0;bottom:0;width:var(--sidebar);background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-section{padding:16px 12px 8px;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 160ms;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nav-item.active{background:rgba(6,182,212,0.10);color:var(--c);}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--c);}
+.nav-badge{margin-left:auto;background:var(--c);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;}
+.nav-badge-amber{background:var(--amber);color:#000;}
+.sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid var(--border);}
+
+/* DISPONIBILITE TOGGLE */
+.dispo-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;margin:8px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;}
+.dispo-label{font-size:12px;font-weight:600;color:var(--green);}
+.dispo-sub{font-size:10px;color:var(--text-3);margin-top:1px;}
+.toggle{width:36px;height:20px;border-radius:99px;background:var(--green);position:relative;cursor:pointer;transition:background 180ms;flex-shrink:0;}
+.toggle-knob{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 180ms;transform:translateX(16px);}
+
+.main{margin-left:var(--sidebar);padding-top:var(--nav);min-height:100vh;}
+.main-inner{padding:32px 32px 80px;}
+
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--text-2);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#0891B2,var(--c));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px rgba(6,182,212,0.5);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(6,182,212,0.6);}
+.btn-purple{background:linear-gradient(135deg,#9333EA,var(--v));color:#fff;box-shadow:0 6px 20px -6px var(--vg);}
+.btn-purple:hover{transform:translateY(-1px);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:6px 13px;font-size:12px;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;transition:border-color 180ms;}
+.stat-card:hover{border-color:var(--border-2);}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-size:18px;}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text-3);font-weight:500;}
+.stat-trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:8px;padding:3px 8px;border-radius:99px;}
+.trend-up{background:rgba(16,185,129,0.1);color:var(--green);}
+.trend-cyan{background:rgba(6,182,212,0.1);color:var(--c);}
+
+.two-col{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+.section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.section-title{font-size:14px;font-weight:700;}
+.section-link{font-size:12px;color:var(--c);font-weight:500;}
+.section-link:hover{text-decoration:underline;}
+
+/* MISSIONS */
+.mission-item{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);transition:background 150ms;}
+.mission-item:last-child{border-bottom:none;}
+.mission-item:hover{background:rgba(255,255,255,0.02);}
+.mission-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;font-size:18px;}
+.mission-info{flex:1;min-width:0;}
+.mission-name{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mission-meta{font-size:11px;color:var(--text-3);}
+.mission-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-cyan{background:rgba(6,182,212,0.10);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.mission-price{font-size:12px;font-weight:700;color:var(--text-2);}
+.prog-bar{height:4px;background:var(--surf-3);border-radius:99px;overflow:hidden;margin-top:6px;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--c),var(--v));}
+
+/* OPPORTUNITÉS */
+.opp-item{padding:16px 20px;border-bottom:1px solid var(--border);transition:background 150ms;}
+.opp-item:last-child{border-bottom:none;}
+.opp-item:hover{background:rgba(255,255,255,0.02);}
+.opp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.opp-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.opp-meta{font-size:11px;color:var(--text-3);}
+.opp-desc{font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.opp-footer{display:flex;align-items:center;gap:8px;}
+.opp-budget{font-size:13px;font-weight:800;color:var(--vs);}
+.opp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;}
+.tag{padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600;background:var(--surf-2);color:var(--text-3);border:1px solid var(--border);}
+
+/* REVENUS */
+.rev-bars{display:flex;align-items:flex-end;gap:8px;height:80px;padding:0 20px 16px;}
+.rev-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.rev-bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--c),var(--v));opacity:0.7;transition:opacity 180ms;}
+.rev-bar:hover{opacity:1;}
+.rev-bar-label{font-size:9px;color:var(--text-3);}
+.rev-total{display:flex;align-items:baseline;gap:6px;padding:16px 20px 0;border-top:1px solid var(--border);}
+.rev-amount{font-size:26px;font-weight:800;letter-spacing:-0.04em;}
+.rev-period{font-size:12px;color:var(--text-3);}
+.rev-trend{font-size:11px;color:var(--green);font-weight:600;margin-left:auto;}
+
+/* MESSAGES */
+.msg-item{display:flex;align-items:flex-start;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background 150ms;cursor:pointer;}
+.msg-item:last-child{border-bottom:none;}
+.msg-item:hover{background:rgba(255,255,255,0.02);}
+.msg-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.msg-body{flex:1;min-width:0;}
+.msg-name{font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:2px;}
+.msg-preview{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-time{font-size:10px;color:var(--text-3);flex-shrink:0;margin-top:2px;}
+.msg-item.unread .msg-name{color:var(--text);}
+.msg-item.unread .msg-preview{color:var(--text-2);}
+.unread-dot{width:7px;height:7px;border-radius:50%;background:var(--c);flex-shrink:0;margin-top:6px;}
+
+/* AGENDA */
+.agenda-item{display:flex;gap:14px;padding:12px 20px;border-bottom:1px solid var(--border);align-items:center;}
+.agenda-item:last-child{border-bottom:none;}
+.agenda-date{width:38px;height:38px;border-radius:10px;background:var(--surf-2);border:1px solid var(--border-2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.agenda-day{font-size:14px;font-weight:800;line-height:1;color:var(--text);}
+.agenda-month{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.08em;}
+.agenda-info{flex:1;}
+.agenda-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.agenda-client{font-size:11px;color:var(--text-3);}
+.agenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* PROFIL CARD */
+.profil-card{background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(124,58,237,0.08));border:1px solid rgba(6,182,212,0.2);border-radius:var(--r-lg);padding:20px;text-align:center;}
+.profil-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;border:2px solid rgba(6,182,212,0.3);}
+.profil-name{font-size:16px;font-weight:800;margin-bottom:3px;}
+.profil-spec{font-size:12px;color:var(--text-3);margin-bottom:14px;}
+.stars{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:14px;}
+.profil-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.p-stat{background:var(--surf-2);padding:10px 6px;text-align:center;}
+.p-stat-val{font-size:15px;font-weight:800;}
+.p-stat-label{font-size:10px;color:var(--text-3);}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.04) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 80ms linear,top 80ms linear;}
+
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;}.main-inner{padding:20px 16px 60px;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Grid:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
+  Briefcase:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
+  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Msg:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  DollarSign:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
+  User:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  Calendar:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  Settings:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+  Bell:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  Arrow:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Check:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Logout:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  TrendUp:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+};
+
+const MISSIONS = [
+  {id:1, name:'Chatbot IA e-commerce', cat:'Chatbots', icon:'🤖', iconBg:'rgba(124,58,237,0.12)', status:'active', statusLabel:'En cours', badge:'badge-green', client:'TechCorp SAS', price:'1 800€', progress:65, deadline:'10 juin'},
+  {id:2, name:'Agent IA support RH', cat:'Agents IA', icon:'🧠', iconBg:'rgba(6,182,212,0.1)', status:'review', statusLabel:'En révision', badge:'badge-amber', client:'StartupRH', price:'2 400€', progress:92, deadline:'2 juin'},
+  {id:3, name:'Formation équipe IA', cat:'Formation IA', icon:'📚', iconBg:'rgba(16,185,129,0.1)', status:'new', statusLabel:'Nouveau', badge:'badge-cyan', client:'BankGroup', price:'3 500€', progress:10, deadline:'20 juin'},
+];
+
+const OPPS = [
+  {id:1, title:'Automatisation pipeline marketing', client:'Anonyme', budget:'800 — 1 500€', delai:'Dans 2 semaines', desc:'Nous cherchons un expert Make / Zapier pour automatiser notre séquence email + CRM + Notion. Environ 15 workflows à créer.', tags:['Make','Zapier','CRM']},
+  {id:2, title:'Développement agent IA sur mesure', client:'Anonyme', budget:'2 000 — 4 000€', delai:'Dans 1 mois', desc:'Besoin d\'un agent IA capable de scraper des données, les analyser et générer des rapports PDF automatiquement chaque semaine.', tags:['LangChain','Python','GPT-4']},
+  {id:3, title:'Prompt Engineering — suite de prompts', client:'Anonyme', budget:'400 — 800€', delai:'Flexible', desc:'Créer une bibliothèque de 50 prompts optimisés pour une équipe marketing. Inclut rédaction, design brief, reporting.', tags:['Prompts','GPT-4','Marketing']},
+];
+
+const MSGS = [
+  {id:1, name:'TechCorp SAS', preview:'Super, les tests fonctionnent ! On peut passer à...', time:'Il y a 5 min', unread:true, initials:'TC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)'},
+  {id:2, name:'StartupRH', preview:'Merci pour les modifications, j\'ai encore une question...', time:'Il y a 1h', unread:true, initials:'SR', color:'linear-gradient(135deg,#0891B2,#06B6D4)'},
+  {id:3, name:'CreatorFlow Market', preview:'Vous avez reçu 3 nouvelles opportunités qui correspondent...', time:'Hier', unread:false, initials:'CF', color:'linear-gradient(135deg,#6D28D9,#7C3AED)'},
+];
+
+const AGENDA = [
+  {day:'02', month:'Juin', title:'Livraison agent RH v2', client:'StartupRH', color:'var(--amber)'},
+  {day:'05', month:'Juin', title:'Appel découverte', client:'BankGroup', color:'var(--c)'},
+  {day:'10', month:'Juin', title:'Livraison chatbot final', client:'TechCorp SAS', color:'var(--green)'},
+  {day:'20', month:'Juin', title:'Début formation équipe', client:'BankGroup', color:'var(--vs)'},
+];
+
+const REV_DATA = [
+  {month:'Jan', h:30}, {month:'Fév', h:45}, {month:'Mar', h:35},
+  {month:'Avr', h:60}, {month:'Mai', h:80}, {month:'Juin', h:55},
+];
+
+const NAV_ITEMS = [
+  {id:'overview', label:'Vue d\'ensemble', icon:<Ic.Grid/>},
+  {id:'missions', label:'Mes missions', icon:<Ic.Briefcase/>, badge:3},
+  {id:'opps', label:'Opportunités', icon:<Ic.Search/>, badge:5, badgeClass:'nav-badge-amber'},
+  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2},
+  {id:'revenus', label:'Mes revenus', icon:<Ic.DollarSign/>},
+  {id:'agenda', label:'Agenda', icon:<Ic.Calendar/>},
+  {id:'profil', label:'Mon profil', icon:<Ic.User/>},
+];
+
+function App() {
+  const [active, setActive] = useState('overview');
+  const [dispo, setDispo] = useState(true);
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav">
+        <div className="nav-inner">
+          <div className="nav-brand">
+            <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          </div>
+          <div className="nav-right">
+            <button className="notif-btn"><Ic.Bell/><span className="notif-dot"/></button>
+            <div className="expert-chip">
+              <div className="avatar">AC</div>
+              <span style={{fontSize:13,fontWeight:600}}>Amélie Chen</span>
+              <span className="badge-expert">Expert</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* SIDEBAR */}
+      <aside className="sidebar">
+        <div className="sidebar-section">
+          <div className="sidebar-label">Menu</div>
+          {NAV_ITEMS.map(item => (
+            <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => setActive(item.id)}>
+              {item.icon}
+              {item.label}
+              {item.badge && <span className={`nav-badge ${item.badgeClass || ''}`}>{item.badge}</span>}
+            </div>
+          ))}
+        </div>
+
+        {/* DISPONIBILITÉ */}
+        <div className="dispo-row" onClick={() => setDispo(!dispo)} style={!dispo ? {background:'rgba(239,68,68,0.06)',borderColor:'rgba(239,68,68,0.2)'} : {}}>
+          <div>
+            <div className="dispo-label" style={!dispo ? {color:'var(--red)'} : {}}>{dispo ? 'Disponible' : 'Indisponible'}</div>
+            <div className="dispo-sub">{dispo ? 'Visible dans les recherches' : 'Masqué des résultats'}</div>
+          </div>
+          <div className="toggle" style={!dispo ? {background:'var(--red)'} : {}}>
+            <div className="toggle-knob" style={!dispo ? {transform:'translateX(0)'} : {}}/>
+          </div>
+        </div>
+
+        <div className="sidebar-section">
+          <div className="sidebar-label">Compte</div>
+          <div className="nav-item"><Ic.Settings/>Paramètres</div>
+        </div>
+        <div className="sidebar-bottom">
+          <a href="connexion.html" className="nav-item" style={{color:'var(--text-3)'}}><Ic.Logout/>Déconnexion</a>
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <main className="main">
+        <div className="main-inner">
+
+          {/* HEADER */}
+          <div className="page-header">
+            <div>
+              <h1 className="page-title">Bonjour, Amélie ✨</h1>
+              <p className="page-sub">Mardi 27 mai 2026 · 3 missions actives · 5 nouvelles opportunités</p>
+            </div>
+            <a href="profil.html" className="btn btn-primary">Voir mon profil <Ic.Arrow/></a>
+          </div>
+
+          {/* STATS */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
+              <div className="stat-val">3</div>
+              <div className="stat-label">Missions actives</div>
+              <div className="stat-trend trend-cyan"><Ic.TrendUp/>En hausse</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
+              <div className="stat-val">4 820€</div>
+              <div className="stat-label">Revenus ce mois</div>
+              <div className="stat-trend trend-up"><Ic.TrendUp/>+23% vs avril</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon" style={{background:'rgba(245,158,11,0.10)',color:'var(--amber)'}}>📨</div>
+              <div className="stat-val">5</div>
+              <div className="stat-label">Nouvelles opportunités</div>
+              <div className="stat-trend" style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)'}}>À postuler</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>⭐</div>
+              <div className="stat-val">4.9</div>
+              <div className="stat-label">Note moyenne</div>
+              <div className="stat-trend trend-up"><Ic.Check/>14 avis</div>
+            </div>
+          </div>
+
+          {/* 2 COL */}
+          <div className="two-col">
+
+            {/* COL GAUCHE */}
+            <div style={{display:'flex',flexDirection:'column',gap:20}}>
+
+              {/* MISSIONS */}
+              <div className="section-card">
+                <div className="section-head">
+                  <span className="section-title">Mes missions en cours</span>
+                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('missions');}}>Tout voir →</a>
+                </div>
+                {MISSIONS.map(m => (
+                  <div key={m.id} className="mission-item">
+                    <div className="mission-icon" style={{background:m.iconBg}}>{m.icon}</div>
+                    <div className="mission-info">
+                      <div className="mission-name">{m.name}</div>
+                      <div className="mission-meta">{m.cat} · {m.client}</div>
+                      <div className="prog-bar" style={{width:130}}>
+                        <div className="prog-fill" style={{width:m.progress+'%'}}/>
+                      </div>
+                    </div>
+                    <div className="mission-right">
+                      <span className={`badge ${m.badge}`}>{m.statusLabel}</span>
+                      <span className="mission-price">{m.price}</span>
+                      <span style={{fontSize:10,color:'var(--text-3)'}}>Livraison {m.deadline}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* OPPORTUNITÉS */}
+              <div className="section-card">
+                <div className="section-head">
+                  <span className="section-title">Nouvelles opportunités</span>
+                  <span style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)',fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:99}}>5 matchs</span>
+                </div>
+                {OPPS.map(o => (
+                  <div key={o.id} className="opp-item">
+                    <div className="opp-top">
+                      <div>
+                        <div className="opp-title">{o.title}</div>
+                        <div className="opp-meta">{o.client} · {o.delai}</div>
+                      </div>
+                      <div className="opp-budget">{o.budget}</div>
+                    </div>
+                    <p className="opp-desc">{o.desc}</p>
+                    <div className="opp-footer">
+                      <button className="btn btn-purple btn-sm">Postuler <Ic.Arrow/></button>
+                      <div className="opp-tags">
+                        {o.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+            {/* COL DROITE */}
+            <div style={{display:'flex',flexDirection:'column',gap:20}}>
+
+              {/* PROFIL CARD */}
+              <div className="profil-card">
+                <div className="profil-avatar-lg">AC</div>
+                <div className="profil-name">Amélie Chen</div>
+                <div className="profil-spec">Agents IA · Automatisation · LLM</div>
+                <div className="stars">
+                  {[1,2,3,4,5].map(i => <Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
+                  <span style={{fontSize:12,color:'var(--text-2)',marginLeft:4}}>4.9 (14 avis)</span>
+                </div>
+                <div className="profil-stats">
+                  <div className="p-stat"><div className="p-stat-val">18</div><div className="p-stat-label">Missions</div></div>
+                  <div className="p-stat"><div className="p-stat-val">100%</div><div className="p-stat-label">Succès</div></div>
+                  <div className="p-stat"><div className="p-stat-val">24h</div><div className="p-stat-label">Réponse</div></div>
+                </div>
+                <a href="profil.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Modifier le profil</a>
+              </div>
+
+              {/* REVENUS MINI CHART */}
+              <div className="section-card">
+                <div style={{padding:'18px 20px 0'}}>
+                  <div style={{fontSize:14,fontWeight:700,marginBottom:4}}>Revenus 2026</div>
+                  <div className="rev-total">
+                    <span className="rev-amount">18 640€</span>
+                    <span className="rev-period">depuis janv.</span>
+                    <span className="rev-trend"><Ic.TrendUp style={{display:'inline'}}/> +38%</span>
+                  </div>
+                </div>
+                <div className="rev-bars" style={{marginTop:16}}>
+                  {REV_DATA.map((d,i) => (
+                    <div key={i} className="rev-bar-wrap">
+                      <div className="rev-bar" style={{height:d.h+'%'}}/>
+                      <div className="rev-bar-label">{d.month}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* MESSAGES */}
+              <div className="section-card">
+                <div className="section-head">
+                  <span className="section-title">Messages récents</span>
+                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('messages');}}>Tout voir →</a>
+                </div>
+                {MSGS.map(m => (
+                  <div key={m.id} className={`msg-item ${m.unread ? 'unread' : ''}`}>
+                    <div className="msg-avatar" style={{background:m.color}}>{m.initials}</div>
+                    <div className="msg-body">
+                      <div className="msg-name">{m.name}</div>
+                      <div className="msg-preview">{m.preview}</div>
+                    </div>
+                    <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
+                      <span className="msg-time">{m.time}</span>
+                      {m.unread && <span className="unread-dot"/>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* AGENDA */}
+              <div className="section-card">
+                <div className="section-head">
+                  <span className="section-title">Agenda</span>
+                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('agenda');}}>Tout voir →</a>
+                </div>
+                {AGENDA.map((a,i) => (
+                  <div key={i} className="agenda-item">
+                    <div className="agenda-date">
+                      <div className="agenda-day" style={{color:a.color}}>{a.day}</div>
+                      <div className="agenda-month">{a.month}</div>
+                    </div>
+                    <div className="agenda-info">
+                      <div className="agenda-title">{a.title}</div>
+                      <div className="agenda-client">{a.client}</div>
+                    </div>
+                    <div className="agenda-dot" style={{background:a.color}}/>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

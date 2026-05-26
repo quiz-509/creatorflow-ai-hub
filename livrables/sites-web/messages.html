@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Messages — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 24px;}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* LAYOUT FULL HEIGHT */
+.app{display:flex;height:100vh;padding-top:var(--nav);}
+
+/* CONVERSATIONS LIST */
+.conv-panel{width:300px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100%;}
+.conv-header{padding:16px;border-bottom:1px solid var(--border);}
+.conv-title{font-size:15px;font-weight:700;margin-bottom:12px;}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:9px;padding:8px 12px;transition:border-color 180ms;}
+.search-box:focus-within{border-color:rgba(124,58,237,0.4);}
+.search-box input{background:none;border:none;outline:none;font-family:var(--f);font-size:13px;color:var(--text);flex:1;min-width:0;}
+.search-box input::placeholder{color:var(--text-3);}
+
+/* CONV TABS */
+.conv-tabs{display:flex;padding:10px 12px 0;gap:4px;border-bottom:1px solid var(--border);}
+.ctab{padding:6px 12px;border-radius:7px 7px 0 0;font-size:12px;font-weight:500;color:var(--text-3);cursor:pointer;transition:all 160ms;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.ctab:hover{color:var(--text-2);}
+.ctab.active{color:var(--vs);border-bottom-color:var(--v);}
+
+/* CONV LIST */
+.conv-list{flex:1;overflow-y:auto;}
+.conv-list::-webkit-scrollbar{width:4px;}
+.conv-list::-webkit-scrollbar-track{background:transparent;}
+.conv-list::-webkit-scrollbar-thumb{background:var(--surf-3);border-radius:99px;}
+.conv-item{display:flex;align-items:flex-start;gap:11px;padding:13px 16px;cursor:pointer;transition:background 150ms;border-bottom:1px solid var(--border);position:relative;}
+.conv-item:hover{background:rgba(255,255,255,0.03);}
+.conv-item.active{background:rgba(124,58,237,0.08);}
+.conv-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--v);border-radius:0 2px 2px 0;}
+.ca{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;position:relative;}
+.online-dot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--surf);}
+.conv-body{flex:1;min-width:0;}
+.conv-name{font-size:13px;font-weight:600;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between;}
+.conv-time{font-size:10px;color:var(--text-3);font-weight:400;}
+.conv-preview{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.conv-preview.unread{color:var(--text-2);}
+.unread-badge{background:var(--v);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;flex-shrink:0;}
+.mission-tag{font-size:10px;color:var(--vs);background:rgba(124,58,237,0.1);padding:1px 6px;border-radius:4px;margin-top:4px;display:inline-block;}
+
+/* CHAT AREA */
+.chat-area{flex:1;display:flex;flex-direction:column;min-width:0;}
+
+/* CHAT HEADER */
+.chat-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-shrink:0;background:rgba(4,4,10,0.6);backdrop-filter:blur(10px);}
+.ch-av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;position:relative;}
+.ch-name{font-size:14px;font-weight:700;}
+.ch-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;}
+.ch-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
+.chat-head-actions{margin-left:auto;display:flex;gap:8px;}
+.icon-btn{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:var(--surf-2);border:1px solid var(--border-2);color:var(--text-2);transition:all 160ms;cursor:pointer;}
+.icon-btn:hover{color:var(--text);border-color:var(--border-3);}
+
+/* MISSION BANNER */
+.mission-banner{display:flex;align-items:center;gap:12px;padding:10px 20px;background:rgba(124,58,237,0.06);border-bottom:1px solid rgba(124,58,237,0.12);flex-shrink:0;}
+.mission-banner-icon{font-size:16px;}
+.mission-banner-text{font-size:12px;color:var(--text-2);}
+.mission-banner-text strong{color:var(--vs);}
+.mission-banner-prog{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.mini-prog{width:80px;height:4px;background:var(--surf-3);border-radius:99px;overflow:hidden;}
+.mini-prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));}
+
+/* MESSAGES */
+.chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:4px;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-track{background:transparent;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--surf-3);border-radius:99px;}
+.day-sep{text-align:center;margin:16px 0 12px;position:relative;}
+.day-sep::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border);}
+.day-label{background:var(--bg);position:relative;display:inline-block;padding:0 12px;font-size:11px;color:var(--text-3);}
+
+/* BUBBLE */
+.msg-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:2px;}
+.msg-row.right{flex-direction:row-reverse;}
+.msg-row.right + .msg-row.right .row-av,
+.msg-row.left + .msg-row.left .row-av{visibility:hidden;}
+.row-av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.bubble-col{display:flex;flex-direction:column;max-width:68%;}
+.msg-row.right .bubble-col{align-items:flex-end;}
+.bubble{padding:9px 14px;border-radius:16px;font-size:13px;line-height:1.55;word-break:break-word;}
+.bubble.left{background:var(--surf-2);border:1px solid var(--border-2);border-bottom-left-radius:4px;}
+.bubble.right{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-bottom-right-radius:4px;}
+.bubble-meta{font-size:10px;color:var(--text-3);margin-top:3px;padding:0 2px;}
+.msg-row.right .bubble-meta{text-align:right;}
+
+/* FILE BUBBLE */
+.file-bubble{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--surf-3);border:1px solid var(--border-2);max-width:260px;}
+.file-icon{width:34px;height:34px;border-radius:8px;background:rgba(124,58,237,0.12);display:grid;place-items:center;flex-shrink:0;font-size:16px;}
+.file-name{font-size:12px;font-weight:600;margin-bottom:1px;}
+.file-size{font-size:10px;color:var(--text-3);}
+
+/* TYPING INDICATOR */
+.typing{display:flex;align-items:center;gap:8px;padding:8px 0;opacity:0.7;}
+.typing-dots{display:flex;gap:4px;}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--text-3);animation:blink 1.4s ease-in-out infinite;}
+.typing-dot:nth-child(2){animation-delay:0.2s;}
+.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0.3;}40%{opacity:1;}}
+
+/* INPUT */
+.chat-input-wrap{padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0;background:rgba(4,4,10,0.6);backdrop-filter:blur(10px);}
+.reply-preview{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surf-2);border-radius:8px;border-left:3px solid var(--v);margin-bottom:10px;font-size:12px;color:var(--text-2);}
+.input-row{display:flex;align-items:flex-end;gap:10px;}
+.input-actions{display:flex;gap:4px;flex-shrink:0;}
+.input-box{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:12px;padding:10px 14px;font-family:var(--f);font-size:13px;color:var(--text);outline:none;resize:none;min-height:42px;max-height:120px;transition:border-color 180ms;line-height:1.5;}
+.input-box:focus{border-color:rgba(124,58,237,0.5);}
+.input-box::placeholder{color:var(--text-3);}
+.send-btn{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--v),var(--v2));display:grid;place-items:center;color:#fff;flex-shrink:0;transition:all 180ms;}
+.send-btn:hover{transform:scale(1.05);box-shadow:0 4px 14px var(--vg);}
+.send-btn:disabled{opacity:0.4;transform:none;}
+
+/* EMPTY STATE */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-3);}
+.empty-icon{font-size:40px;opacity:0.4;}
+
+/* PROFILE PANEL */
+.profile-panel{width:260px;flex-shrink:0;border-left:1px solid var(--border);background:var(--surf);overflow-y:auto;display:flex;flex-direction:column;}
+.pp-header{padding:24px 20px;text-align:center;border-bottom:1px solid var(--border);}
+.pp-av{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:700;color:#fff;margin:0 auto 12px;}
+.pp-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.pp-spec{font-size:12px;color:var(--text-3);}
+.pp-online{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--green);margin-top:6px;}
+.pp-online::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
+.pp-section{padding:16px 20px;border-bottom:1px solid var(--border);}
+.pp-section-title{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;}
+.pp-stat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.pp-stat-label{font-size:12px;color:var(--text-3);}
+.pp-stat-val{font-size:12px;font-weight:700;color:var(--text-2);}
+.pp-mission-card{background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:12px;}
+.pp-m-title{font-size:12px;font-weight:600;margin-bottom:4px;}
+.pp-m-prog{height:3px;background:var(--surf-3);border-radius:99px;overflow:hidden;margin:6px 0;}
+.pp-m-prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));}
+.pp-m-meta{font-size:10px;color:var(--text-3);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;transition:all 200ms var(--ease);white-space:nowrap;cursor:pointer;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+
+@media(max-width:1100px){.profile-panel{display:none;}}
+@media(max-width:720px){.conv-panel{display:none;}.chat-area{width:100%;}}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const Ic = {
+  Search:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Send:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+  Attach:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>,
+  Emoji:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>,
+  Phone:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l1.7-1.7a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+  Video:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>,
+  Info:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+  Arrow:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Star:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Download:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+};
+
+const CONVS = [
+  {id:1, name:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', online:true, mission:'Chatbot IA e-commerce', preview:'Les maquettes sont parfaites !', time:'12 min', unread:1, note:4.9},
+  {id:2, name:'Karim Benali', initials:'KB', color:'linear-gradient(135deg,#0891B2,#06B6D4)', online:true, mission:'Automatisation RH', preview:'J\'ai besoin d\'un accès API...', time:'2h', unread:1, note:4.7},
+  {id:3, name:'Sofia Martins', initials:'SM', color:'linear-gradient(135deg,#059669,#10B981)', online:false, mission:'Agent IA données', preview:'Merci pour la collaboration !', time:'3j', unread:0, note:5.0},
+  {id:4, name:'Support CreatorFlow', initials:'CF', color:'linear-gradient(135deg,#6D28D9,#7C3AED)', online:true, mission:null, preview:'Mission #3 validée et archivée.', time:'3j', unread:0, note:null},
+  {id:5, name:'Lucas Bernard', initials:'LB', color:'linear-gradient(135deg,#9333EA,#7C3AED)', online:false, mission:'Brief Agent IA', preview:'Ma proposition est disponible.', time:'1j', unread:0, note:4.9},
+];
+
+const THREADS = {
+  1: [
+    {id:1, side:'left', text:'Bonjour ! J\'ai bien reçu l\'accès au back-office. Je commence l\'intégration du widget demain matin.', time:'Hier 14:22', type:'text'},
+    {id:2, side:'right', text:'Super ! Par contre j\'ai besoin de te donner l\'accès à l\'API de notre CRM pour les données clients. Tu as un email pour que je t\'invite ?', time:'Hier 15:05', type:'text'},
+    {id:3, side:'left', text:'Oui, tu peux utiliser amelie.chen@creatorflow.io. Merci !', time:'Hier 15:12', type:'text'},
+    {id:4, side:'right', text:'Invitation envoyée. Les maquettes du widget sont prêtes aussi, je les envoie ce soir.', time:'Hier 15:30', type:'text'},
+    {id:5, side:'left', text:'', time:'Hier 18:44', type:'file', file:{name:'widget-mockups-v2.fig', size:'4.2 MB', icon:'🎨'}},
+    {id:6, side:'right', text:'Wow, c\'est exactement ce qu\'on voulait ! J\'adore le style sombre avec l\'accent violet. Tu peux partir là-dessus.', time:'Hier 20:11', type:'text'},
+    {id:7, side:'left', text:'Les maquettes sont parfaites ! Je peux commencer l\'intégration cet après-midi. On sera bien dans les délais pour le 10 juin.', time:'Il y a 12 min', type:'text'},
+  ],
+  2: [
+    {id:1, side:'right', text:'Bonjour Karim, où en êtes-vous sur le pipeline RH ?', time:'Hier 09:00', type:'text'},
+    {id:2, side:'left', text:'Bonjour ! J\'ai bien avancé, les 3 premiers workflows sont terminés. Il me manque juste un accès à l\'API RH pour les 2 derniers.', time:'Hier 09:14', type:'text'},
+    {id:3, side:'left', text:'', time:'Hier 09:15', type:'file', file:{name:'rapport-avancement-v1.pdf', size:'1.1 MB', icon:'📄'}},
+    {id:4, side:'right', text:'Super travail ! Je t\'envoie les accès API aujourd\'hui.', time:'Hier 10:00', type:'text'},
+    {id:5, side:'left', text:'J\'ai besoin d\'un accès à l\'API RH pour continuer sur les modules 4 et 5. Tu me l\'envoies quand tu peux ?', time:'Il y a 2h', type:'text'},
+  ],
+  3: [
+    {id:1, side:'left', text:'Mission terminée et livrée ! Tout est documenté dans le rapport final. Un plaisir de travailler avec vous.', time:'Il y a 3j', type:'text'},
+    {id:2, side:'right', text:'Merci Sofia, excellent travail ! On va certainement refaire appel à vous.', time:'Il y a 3j', type:'text'},
+    {id:3, side:'left', text:'Merci pour la collaboration ! N\'hésitez pas si vous avez d\'autres besoins IA.', time:'Il y a 3j', type:'text'},
+  ],
+  4: [
+    {id:1, side:'left', text:'Votre mission #3 "Agent IA analyse données" a bien été validée et archivée. La facture finale est disponible dans votre espace.', time:'Il y a 3j', type:'text'},
+    {id:2, side:'left', text:'', time:'Il y a 3j', type:'file', file:{name:'facture-mission-3-mai2026.pdf', size:'0.3 MB', icon:'🧾'}},
+    {id:3, side:'right', text:'Reçu, merci !', time:'Il y a 2j', type:'text'},
+  ],
+  5: [
+    {id:1, side:'left', text:'Bonjour, j\'ai posté une proposition sur votre brief "Agent IA". Mon tarif est de 950€ avec livraison en 10 jours. Je suis disponible pour un appel.', time:'Il y a 1j', type:'text'},
+    {id:2, side:'right', text:'Merci Lucas, j\'examine votre profil et je reviens vers vous demain.', time:'Il y a 1j', type:'text'},
+  ],
+};
+
+function App() {
+  const [activeConv, setActiveConv] = useState(1);
+  const [search, setSearch] = useState('');
+  const [input, setInput] = useState('');
+  const [threads, setThreads] = useState(THREADS);
+  const [showProfile, setShowProfile] = useState(true);
+  const [convTab, setConvTab] = useState('all');
+  const messagesEndRef = useRef(null);
+
+  const conv = CONVS.find(c => c.id === activeConv);
+  const messages = threads[activeConv] || [];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeConv, threads]);
+
+  function sendMsg(e) {
+    e.preventDefault();
+    if (!input.trim()) return;
+    const newMsg = {id: Date.now(), side:'right', text:input, time:'À l\'instant', type:'text'};
+    setThreads(prev => ({...prev, [activeConv]: [...(prev[activeConv]||[]), newMsg]}));
+    setInput('');
+  }
+
+  const filtered = CONVS.filter(c => {
+    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase());
+    if (convTab === 'unread') return matchSearch && c.unread > 0;
+    if (convTab === 'missions') return matchSearch && c.mission;
+    return matchSearch;
+  });
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <div className="nav-right">
+            <a href="dashboard-client.html" style={{fontSize:13,color:'var(--text-3)',padding:'6px 12px',borderRadius:8,background:'var(--surf)',border:'1px solid var(--border-2)'}}>
+              ← Dashboard
+            </a>
+            <div className="user-chip">
+              <div className="av">JD</div>
+              <span style={{fontSize:13,fontWeight:600}}>Jean Dupont</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="app">
+
+        {/* PANEL CONVERSATIONS */}
+        <div className="conv-panel">
+          <div className="conv-header">
+            <div className="conv-title">Messages</div>
+            <div className="search-box">
+              <Ic.Search style={{color:'var(--text-3)',flexShrink:0}}/>
+              <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)}/>
+            </div>
+          </div>
+          <div className="conv-tabs">
+            {[{id:'all',label:'Tous'},{id:'unread',label:'Non lus'},{id:'missions',label:'Missions'}].map(t => (
+              <div key={t.id} className={`ctab ${convTab===t.id?'active':''}`} onClick={() => setConvTab(t.id)}>{t.label}</div>
+            ))}
+          </div>
+          <div className="conv-list">
+            {filtered.map(c => (
+              <div key={c.id} className={`conv-item ${activeConv===c.id?'active':''}`} onClick={() => setActiveConv(c.id)}>
+                <div className="ca" style={{background:c.color}}>
+                  {c.initials}
+                  {c.online && <span className="online-dot"/>}
+                </div>
+                <div className="conv-body">
+                  <div className="conv-name">
+                    {c.name}
+                    <span className="conv-time">{c.time}</span>
+                  </div>
+                  <div className={`conv-preview ${c.unread>0?'unread':''}`}>
+                    <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.preview}</span>
+                    {c.unread > 0 && <span className="unread-badge">{c.unread}</span>}
+                  </div>
+                  {c.mission && <div className="mission-tag">🚀 {c.mission}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ZONE CHAT */}
+        <div className="chat-area">
+
+          {/* EN-TÊTE CHAT */}
+          <div className="chat-head">
+            <div className="ch-av" style={{background:conv.color}}>{conv.initials}</div>
+            <div>
+              <div className="ch-name">{conv.name}</div>
+              {conv.online
+                ? <div className="ch-status">En ligne</div>
+                : <div style={{fontSize:11,color:'var(--text-3)'}}>Hors ligne</div>
+              }
+            </div>
+            <div className="chat-head-actions">
+              <button className="icon-btn"><Ic.Phone/></button>
+              <button className="icon-btn"><Ic.Video/></button>
+              <button className="icon-btn" onClick={() => setShowProfile(p => !p)}><Ic.Info/></button>
+            </div>
+          </div>
+
+          {/* BANDEAU MISSION */}
+          {conv.mission && (
+            <div className="mission-banner">
+              <span className="mission-banner-icon">🚀</span>
+              <div className="mission-banner-text">
+                Mission liée : <strong>{conv.mission}</strong>
+              </div>
+              <div className="mission-banner-prog">
+                <div className="mini-prog"><div className="mini-prog-fill" style={{width:'65%'}}/></div>
+                <span style={{fontSize:10,color:'var(--text-3)'}}>65%</span>
+                <a href="mission.html" style={{fontSize:11,color:'var(--vs)',fontWeight:600,display:'flex',alignItems:'center',gap:3}}>Voir <Ic.Arrow/></a>
+              </div>
+            </div>
+          )}
+
+          {/* MESSAGES */}
+          <div className="chat-messages">
+            <div className="day-sep"><span className="day-label">Hier</span></div>
+            {messages.map((m, i) => {
+              const prev = messages[i-1];
+              const sameAuthor = prev && prev.side === m.side;
+              return (
+                <div key={m.id} className={`msg-row ${m.side}`} style={{marginTop: sameAuthor ? 1 : 10}}>
+                  <div className="row-av" style={{background: m.side==='left' ? conv.color : 'linear-gradient(135deg,#7C3AED,#6D28D9)', visibility: sameAuthor ? 'hidden' : 'visible'}}>
+                    {m.side==='left' ? conv.initials : 'JD'}
+                  </div>
+                  <div className="bubble-col">
+                    {m.type === 'file' ? (
+                      <div className="file-bubble">
+                        <div className="file-icon">{m.file.icon}</div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div className="file-name">{m.file.name}</div>
+                          <div className="file-size">{m.file.size}</div>
+                        </div>
+                        <button className="icon-btn" style={{width:28,height:28}}><Ic.Download/></button>
+                      </div>
+                    ) : (
+                      <div className={`bubble ${m.side}`}>{m.text}</div>
+                    )}
+                    {!sameAuthor && <div className="bubble-meta">{m.time}</div>}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* TYPING */}
+            {conv.online && (
+              <div className="typing" style={{marginTop:8}}>
+                <div className="row-av" style={{background:conv.color,width:28,height:28,borderRadius:'50%',display:'grid',placeItems:'center',fontSize:10,fontWeight:700,color:'#fff'}}>{conv.initials}</div>
+                <div className="typing-dots">
+                  <div className="typing-dot"/>
+                  <div className="typing-dot"/>
+                  <div className="typing-dot"/>
+                </div>
+                <span style={{fontSize:11,color:'var(--text-3)'}}>{conv.name} est en train d'écrire...</span>
+              </div>
+            )}
+            <div ref={messagesEndRef}/>
+          </div>
+
+          {/* INPUT */}
+          <div className="chat-input-wrap">
+            <form className="input-row" onSubmit={sendMsg}>
+              <div className="input-actions">
+                <button type="button" className="icon-btn"><Ic.Attach/></button>
+                <button type="button" className="icon-btn"><Ic.Emoji/></button>
+              </div>
+              <textarea
+                className="input-box"
+                placeholder={`Message à ${conv.name}...`}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(e); }}}
+                rows={1}
+              />
+              <button type="submit" className="send-btn" disabled={!input.trim()}>
+                <Ic.Send/>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* PANEL PROFIL */}
+        {showProfile && (
+          <div className="profile-panel">
+            <div className="pp-header">
+              <div className="pp-av" style={{background:conv.color}}>{conv.initials}</div>
+              <div className="pp-name">{conv.name}</div>
+              {conv.mission && <div className="pp-spec">Expert certifié CreatorFlow</div>}
+              {conv.online && <div className="pp-online">En ligne maintenant</div>}
+            </div>
+
+            {conv.note && (
+              <div className="pp-section">
+                <div className="pp-section-title">Évaluation</div>
+                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:10}}>
+                  {[1,2,3,4,5].map(i => <Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
+                  <span style={{fontSize:13,fontWeight:700}}>{conv.note}</span>
+                </div>
+                <div className="pp-stat-row">
+                  <span className="pp-stat-label">Missions réalisées</span>
+                  <span className="pp-stat-val">18</span>
+                </div>
+                <div className="pp-stat-row">
+                  <span className="pp-stat-label">Taux de succès</span>
+                  <span className="pp-stat-val" style={{color:'var(--green)'}}>100%</span>
+                </div>
+                <div className="pp-stat-row">
+                  <span className="pp-stat-label">Temps de réponse</span>
+                  <span className="pp-stat-val">&lt; 2h</span>
+                </div>
+              </div>
+            )}
+
+            {conv.mission && (
+              <div className="pp-section">
+                <div className="pp-section-title">Mission en cours</div>
+                <div className="pp-mission-card">
+                  <div className="pp-m-title">{conv.mission}</div>
+                  <div className="pp-m-prog"><div className="pp-m-prog-fill" style={{width:'65%'}}/></div>
+                  <div className="pp-m-meta">65% · Livraison 10 juin</div>
+                </div>
+                <a href="mission.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:10}}>
+                  Voir la mission <Ic.Arrow/>
+                </a>
+              </div>
+            )}
+
+            {conv.note && (
+              <div className="pp-section">
+                <div className="pp-section-title">Actions</div>
+                <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                  <a href="profil.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center'}}>Voir le profil</a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

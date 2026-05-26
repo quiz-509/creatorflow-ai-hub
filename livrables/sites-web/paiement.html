@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Paiement — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.wrap{width:100%;max-width:1100px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-secure{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);}
+.nav-secure::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;cursor:pointer;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-green{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 6px 20px -6px rgba(16,185,129,0.45);}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 12px 28px -6px rgba(16,185,129,0.6);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:6px 13px;font-size:12px;}
+.btn-lg{padding:15px 28px;font-size:15px;border-radius:14px;width:100%;justify-content:center;}
+
+/* PAGE */
+.page-wrap{padding-top:88px;padding-bottom:80px;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3);margin-bottom:28px;}
+.breadcrumb a{color:var(--text-3);transition:color 160ms;}
+.breadcrumb a:hover{color:var(--text-2);}
+.bc-sep{opacity:0.4;}
+.page-title{font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.page-sub{font-size:14px;color:var(--text-2);margin-bottom:32px;}
+
+/* LAYOUT */
+.pay-layout{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start;}
+
+/* FORM CARD */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;position:relative;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
+.card-head{padding:20px 28px;border-bottom:1px solid var(--border);}
+.card-title{font-size:15px;font-weight:700;}
+.card-sub{font-size:12px;color:var(--text-3);margin-top:3px;}
+.card-body{padding:28px;}
+
+/* PAYMENT METHODS */
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px;}
+.pay-method{padding:14px;border:1px solid var(--border-2);border-radius:12px;text-align:center;cursor:pointer;transition:all 180ms;}
+.pay-method:hover{border-color:var(--border-3);}
+.pay-method.active{border-color:var(--v);background:rgba(124,58,237,0.08);}
+.pay-method-icon{font-size:22px;margin-bottom:6px;}
+.pay-method-label{font-size:11px;font-weight:600;color:var(--text-2);}
+.pay-method.active .pay-method-label{color:var(--vs);}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.form-input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:12px 16px;outline:none;transition:border-color 180ms,box-shadow 180ms;}
+.form-input:focus{border-color:rgba(124,58,237,0.55);box-shadow:0 0 0 3px rgba(124,58,237,0.10);}
+.form-input.error{border-color:rgba(239,68,68,0.5);}
+.form-input::placeholder{color:var(--text-3);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;}
+.input-with-icon{position:relative;}
+.input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:16px;}
+.card-type{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:20px;}
+
+/* CARD VISUAL */
+.card-visual{background:linear-gradient(135deg,#1a1a3a,#0f0f28);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:22px;margin-bottom:24px;position:relative;overflow:hidden;height:160px;}
+.card-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.08));pointer-events:none;}
+.card-visual-chip{width:36px;height:28px;border-radius:6px;background:linear-gradient(135deg,#d4af37,#f5cc5c);margin-bottom:18px;}
+.card-visual-number{font-size:17px;font-weight:600;letter-spacing:0.2em;color:rgba(255,255,255,0.9);margin-bottom:16px;font-variant-numeric:tabular-nums;}
+.card-visual-bottom{display:flex;align-items:flex-end;justify-content:space-between;}
+.card-visual-label{font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+.card-visual-val{font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);}
+.card-logo{position:absolute;top:22px;right:22px;font-size:26px;opacity:0.8;}
+
+/* VIREMENT */
+.virement-info{background:var(--surf-2);border:1px solid var(--border-2);border-radius:12px;padding:20px;}
+.virement-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.virement-row:last-child{border-bottom:none;}
+.vir-label{font-size:12px;color:var(--text-3);}
+.vir-val{font-size:13px;font-weight:600;font-family:monospace;letter-spacing:0.05em;}
+.copy-btn{padding:3px 10px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:6px;font-size:10px;font-weight:600;color:var(--vs);cursor:pointer;transition:all 160ms;}
+.copy-btn:hover{background:rgba(124,58,237,0.2);}
+
+/* PAYPAL */
+.paypal-wrap{text-align:center;padding:20px 0;}
+.paypal-btn{display:inline-flex;align-items:center;gap:10px;background:#003087;color:#fff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all 180ms;}
+.paypal-btn:hover{background:#002070;transform:translateY(-1px);}
+
+/* CHECKBOX */
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px;}
+.checkbox-row input{width:16px;height:16px;flex-shrink:0;margin-top:2px;accent-color:var(--v);}
+.checkbox-row label{font-size:12px;color:var(--text-3);line-height:1.5;}
+.checkbox-row a{color:var(--vs);}
+
+/* SECURITY BADGES */
+.security-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.sec-badge{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-3);font-weight:500;}
+
+/* SUMMARY CARD */
+.summary-mission{display:flex;align-items:center;gap:14px;padding:20px;border-bottom:1px solid var(--border);}
+.sm-icon{width:48px;height:48px;border-radius:13px;background:rgba(124,58,237,0.12);display:grid;place-items:center;font-size:22px;flex-shrink:0;border:1px solid rgba(124,58,237,0.2);}
+.sm-title{font-size:14px;font-weight:700;margin-bottom:3px;}
+.sm-meta{font-size:11px;color:var(--text-3);}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.expert-row{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
+.ex-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;}
+.ex-name{font-size:13px;font-weight:700;margin-bottom:1px;}
+.ex-spec{font-size:11px;color:var(--text-3);}
+.stars{display:flex;gap:2px;align-items:center;}
+
+/* PRICING */
+.pricing-block{padding:20px;}
+.price-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.price-row:last-child{border-bottom:none;}
+.price-label{font-size:13px;color:var(--text-2);}
+.price-val{font-size:13px;font-weight:600;}
+.price-total-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0 0;}
+.price-total-label{font-size:15px;font-weight:700;}
+.price-total-val{font-size:22px;font-weight:800;color:var(--vs);}
+.discount-tag{font-size:10px;background:rgba(16,185,129,0.12);color:var(--green);padding:2px 7px;border-radius:6px;font-weight:600;}
+
+/* PROTECTION */
+.protection-items{padding:16px 20px;border-top:1px solid var(--border);}
+.prot-item{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.prot-item:last-child{margin-bottom:0;}
+.prot-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.prot-text{font-size:12px;color:var(--text-3);}
+
+/* SUCCESS */
+.success-wrap{text-align:center;padding:60px 40px;}
+.success-ring{width:80px;height:80px;border-radius:50%;background:rgba(16,185,129,0.10);border:2px solid rgba(16,185,129,0.3);display:grid;place-items:center;margin:0 auto 24px;font-size:36px;animation:pop 400ms var(--ease) both;}
+@keyframes pop{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title{font-size:26px;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px;}
+.success-sub{font-size:14px;color:var(--text-2);max-width:380px;margin:0 auto 28px;line-height:1.6;}
+.success-details{background:var(--surf-2);border:1px solid var(--border-2);border-radius:14px;padding:20px;text-align:left;margin-bottom:28px;}
+.suc-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.suc-row:last-child{border-bottom:none;}
+.suc-label{color:var(--text-3);}
+.suc-val{font-weight:600;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.05) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+
+@media(max-width:960px){.pay-layout{grid-template-columns:1fr;}}
+@media(max-width:640px){.wrap{padding:0 18px;}.form-row,.form-row-3{grid-template-columns:1fr;}.pay-methods{grid-template-columns:1fr 1fr 1fr;}.card-body{padding:20px;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Shield:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  Lock:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+  Check:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Arrow:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
+  Star:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Info:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+};
+
+function formatCard(val) {
+  return val.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExpiry(val) {
+  return val.replace(/\D/g,'').slice(0,4).replace(/^(\d{2})(\d)/,'$1/$2');
+}
+function maskCard(num) {
+  const d = num.replace(/\s/g,'');
+  if (!d) return '•••• •••• •••• ••••';
+  const parts = [
+    d.slice(0,4)||'••••',
+    d.slice(4,8)||'••••',
+    d.slice(8,12)||'••••',
+    d.slice(12,16)||'••••',
+  ];
+  return parts.map((p,i) => i < 2 ? p.padEnd(4,'•') : (i===2 ? '••••' : p.padEnd(4,'•'))).join(' ');
+}
+
+function App() {
+  const [method, setMethod] = useState('card');
+  const [paid, setPaid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [copied, setCopied] = useState('');
+  const [card, setCard] = useState({number:'', name:'', expiry:'', cvv:''});
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
+  function copyText(text, field) {
+    navigator.clipboard?.writeText(text).catch(()=>{});
+    setCopied(field);
+    setTimeout(() => setCopied(''), 1800);
+  }
+
+  function validate() {
+    const e = {};
+    if (method === 'card') {
+      if (card.number.replace(/\s/g,'').length < 16) e.number = true;
+      if (!card.name.trim()) e.name = true;
+      if (card.expiry.length < 5) e.expiry = true;
+      if (card.cvv.length < 3) e.cvv = true;
+    }
+    if (!agreed) e.agreed = true;
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  }
+
+  function handlePay(e) {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
+    setTimeout(() => { setLoading(false); setPaid(true); }, 1800);
+  }
+
+  const cardType = card.number.startsWith('4') ? '💳 Visa' : card.number.startsWith('5') ? '💳 Mastercard' : card.number.startsWith('3') ? '💳 Amex' : '';
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav"><div className="wrap nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div className="nav-secure"><Ic.Lock/>Paiement sécurisé SSL</div>
+        <div className="user-chip">
+          <div className="av">JD</div>
+          <span style={{fontSize:13,fontWeight:600}}>Jean Dupont</span>
+        </div>
+      </div></nav>
+
+      <div className="page-wrap">
+        <div className="wrap">
+
+          {!paid ? (
+            <React.Fragment>
+              <div className="breadcrumb">
+                <a href="dashboard-client.html">Dashboard</a>
+                <span className="bc-sep">/</span>
+                <a href="mission.html">Chatbot IA e-commerce</a>
+                <span className="bc-sep">/</span>
+                <span style={{color:'var(--text-2)'}}>Paiement</span>
+              </div>
+              <h1 className="page-title">Valider le paiement</h1>
+              <p className="page-sub">Solde final de la mission · Paiement protégé par CreatorFlow Market</p>
+
+              <div className="pay-layout">
+
+                {/* FORMULAIRE */}
+                <form onSubmit={handlePay}>
+                  <div className="card" style={{marginBottom:0}}>
+                    <div className="card-head">
+                      <div className="card-title">Moyen de paiement</div>
+                      <div className="card-sub">Toutes vos données sont chiffrées et sécurisées</div>
+                    </div>
+                    <div className="card-body">
+
+                      {/* MÉTHODES */}
+                      <div className="pay-methods">
+                        {[
+                          {id:'card', icon:'💳', label:'Carte bancaire'},
+                          {id:'paypal', icon:'🅿', label:'PayPal'},
+                          {id:'virement', icon:'🏦', label:'Virement'},
+                        ].map(m => (
+                          <div key={m.id} className={`pay-method ${method===m.id?'active':''}`} onClick={() => setMethod(m.id)}>
+                            <div className="pay-method-icon">{m.icon}</div>
+                            <div className="pay-method-label">{m.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* CARTE */}
+                      {method === 'card' && (
+                        <React.Fragment>
+                          {/* VISUAL CARD */}
+                          <div className="card-visual">
+                            <div className="card-visual-chip"/>
+                            <div className="card-visual-number">
+                              {maskCard(card.number)}
+                            </div>
+                            <div className="card-visual-bottom">
+                              <div>
+                                <div className="card-visual-label">Titulaire</div>
+                                <div className="card-visual-val">{card.name || 'JEAN DUPONT'}</div>
+                              </div>
+                              <div style={{textAlign:'right'}}>
+                                <div className="card-visual-label">Expire</div>
+                                <div className="card-visual-val">{card.expiry || 'MM/AA'}</div>
+                              </div>
+                            </div>
+                            <div className="card-logo">{card.number.startsWith('4')?'VISA':card.number.startsWith('5')?'MC':'💳'}</div>
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label">Numéro de carte</label>
+                            <div className="input-with-icon">
+                              <input
+                                className={`form-input ${errors.number?'error':''}`}
+                                placeholder="1234 5678 9012 3456"
+                                value={card.number}
+                                onChange={e => setCard(c=>({...c, number:formatCard(e.target.value)}))}
+                                maxLength={19}
+                              />
+                              {cardType && <span className="card-type">{card.number.startsWith('4')?'VISA':card.number.startsWith('5')?'MC':''}</span>}
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Titulaire de la carte</label>
+                            <input
+                              className={`form-input ${errors.name?'error':''}`}
+                              placeholder="Jean Dupont"
+                              value={card.name}
+                              onChange={e => setCard(c=>({...c, name:e.target.value.toUpperCase()}))}
+                            />
+                          </div>
+                          <div className="form-row">
+                            <div className="form-group" style={{marginBottom:0}}>
+                              <label className="form-label">Date d'expiration</label>
+                              <input
+                                className={`form-input ${errors.expiry?'error':''}`}
+                                placeholder="MM/AA"
+                                value={card.expiry}
+                                onChange={e => setCard(c=>({...c, expiry:formatExpiry(e.target.value)}))}
+                                maxLength={5}
+                              />
+                            </div>
+                            <div className="form-group" style={{marginBottom:0}}>
+                              <label className="form-label">
+                                CVV
+                                <span style={{display:'flex',alignItems:'center',gap:4,color:'var(--text-3)',fontWeight:400}}><Ic.Info/>3 chiffres au dos</span>
+                              </label>
+                              <input
+                                className={`form-input ${errors.cvv?'error':''}`}
+                                placeholder="•••"
+                                value={card.cvv}
+                                onChange={e => setCard(c=>({...c, cvv:e.target.value.replace(/\D/g,'').slice(0,4)}))}
+                                maxLength={4}
+                                type="password"
+                              />
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      )}
+
+                      {/* VIREMENT */}
+                      {method === 'virement' && (
+                        <React.Fragment>
+                          <div style={{background:'rgba(245,158,11,0.06)',border:'1px solid rgba(245,158,11,0.15)',borderRadius:10,padding:'12px 14px',fontSize:12,color:'var(--amber)',marginBottom:18,display:'flex',gap:8}}>
+                            <Ic.Info style={{flexShrink:0,marginTop:1}}/>
+                            <span>Le virement peut prendre 1 à 3 jours ouvrés. La mission sera débloquée à réception.</span>
+                          </div>
+                          <div className="virement-info">
+                            {[
+                              {label:'Bénéficiaire', val:'CreatorFlow Market SAS'},
+                              {label:'IBAN', val:'FR76 3000 4000 0100 0000 0000 000', copy:true},
+                              {label:'BIC / SWIFT', val:'BNPAFRPPXXX', copy:true},
+                              {label:'Référence', val:'CFM-2026-00847', copy:true},
+                              {label:'Montant', val:'1 260,00 €'},
+                            ].map((r,i) => (
+                              <div key={i} className="virement-row">
+                                <span className="vir-label">{r.label}</span>
+                                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                                  <span className="vir-val">{r.val}</span>
+                                  {r.copy && (
+                                    <button type="button" className="copy-btn" onClick={() => copyText(r.val, r.label)}>
+                                      {copied === r.label ? '✓ Copié' : 'Copier'}
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </React.Fragment>
+                      )}
+
+                      {/* PAYPAL */}
+                      {method === 'paypal' && (
+                        <div className="paypal-wrap">
+                          <div style={{fontSize:13,color:'var(--text-2)',marginBottom:20}}>Vous serez redirigé vers PayPal pour finaliser le paiement de <strong style={{color:'var(--text)'}}>1 260€</strong>.</div>
+                          <div className="paypal-btn" onClick={handlePay}>
+                            <span style={{fontSize:22}}>🅿</span>
+                            Payer avec PayPal
+                          </div>
+                        </div>
+                      )}
+
+                      {/* CHECKBOX + SUBMIT */}
+                      {method !== 'paypal' && (
+                        <React.Fragment>
+                          <div style={{marginTop:24}}>
+                            <div className="checkbox-row">
+                              <input type="checkbox" id="agree" checked={agreed} onChange={e => setAgreed(e.target.checked)}/>
+                              <label htmlFor="agree">
+                                J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Market.
+                              </label>
+                            </div>
+                            {errors.agreed && <div style={{fontSize:11,color:'var(--red)',marginBottom:12}}>Vous devez accepter les conditions pour continuer.</div>}
+
+                            <button type="submit" className="btn btn-green btn-lg" disabled={loading} style={{position:'relative',overflow:'hidden'}}>
+                              {loading ? (
+                                <React.Fragment>
+                                  <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+                                  Traitement en cours...
+                                </React.Fragment>
+                              ) : (
+                                <React.Fragment>
+                                  <Ic.Lock/>
+                                  {method === 'card' ? 'Payer 1 260€ maintenant' : 'Confirmer le virement'}
+                                  <Ic.Arrow/>
+                                </React.Fragment>
+                              )}
+                            </button>
+                          </div>
+
+                          {/* BADGES SÉCURITÉ */}
+                          <div className="security-row">
+                            <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
+                            <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
+                            <div className="sec-badge">🔒 3D Secure</div>
+                            <div className="sec-badge">⚡ Stripe</div>
+                          </div>
+                        </React.Fragment>
+                      )}
+
+                    </div>
+                  </div>
+                </form>
+
+                {/* RÉSUMÉ */}
+                <div style={{display:'flex',flexDirection:'column',gap:16}}>
+
+                  <div className="card">
+                    <div className="summary-mission">
+                      <div className="sm-icon">🤖</div>
+                      <div>
+                        <div className="sm-title">Chatbot service client IA</div>
+                        <div className="sm-meta">Livraison · 10 juin 2026</div>
+                        <div style={{marginTop:5}}><span className="badge badge-amber">Solde final</span></div>
+                      </div>
+                    </div>
+
+                    <div className="expert-row">
+                      <div className="ex-av">AC</div>
+                      <div>
+                        <div className="ex-name">Amélie Chen</div>
+                        <div className="ex-spec">Agents IA · Chatbots</div>
+                      </div>
+                      <div className="stars" style={{marginLeft:'auto'}}>
+                        {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
+                        <span style={{fontSize:11,color:'var(--text-2)',marginLeft:4}}>4.9</span>
+                      </div>
+                    </div>
+
+                    <div className="pricing-block">
+                      <div className="price-row">
+                        <span className="price-label">Budget total convenu</span>
+                        <span className="price-val">1 800€</span>
+                      </div>
+                      <div className="price-row">
+                        <span className="price-label">Acompte déjà versé (30%)</span>
+                        <span className="price-val" style={{color:'var(--green)'}}>- 540€</span>
+                      </div>
+                      <div className="price-row">
+                        <span className="price-label">Commission plateforme</span>
+                        <span className="price-val" style={{color:'var(--text-3)'}}>0€ <span className="discount-tag">Incluse</span></span>
+                      </div>
+                      <div className="price-total-row">
+                        <span className="price-total-label">Total à payer</span>
+                        <span className="price-total-val">1 260€</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PROTECTION */}
+                  <div className="card" style={{overflow:'visible'}}>
+                    <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
+                      <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}>
+                        <Ic.Shield style={{color:'var(--green)'}}/>Paiement protégé
+                      </div>
+                    </div>
+                    <div className="protection-items">
+                      {[
+                        'Fonds bloqués jusqu\'à validation de la livraison',
+                        'Remboursement intégral si le livrable n\'est pas conforme',
+                        'Médiation CreatorFlow Market en cas de litige',
+                        'Historique et reçu de paiement disponibles',
+                      ].map((t,i) => (
+                        <div key={i} className="prot-item">
+                          <div className="prot-dot"/>
+                          <span className="prot-text">{t}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* QUESTIONS */}
+                  <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'var(--r-lg)',padding:'16px 18px',display:'flex',gap:10}}>
+                    <Ic.Info style={{color:'var(--text-3)',flexShrink:0,marginTop:2}}/>
+                    <div>
+                      <div style={{fontSize:12,fontWeight:600,marginBottom:3}}>Une question ?</div>
+                      <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.5}}>Notre support est disponible 7j/7 par chat ou email à <span style={{color:'var(--vs)'}}>support@creatorflow.io</span></div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </React.Fragment>
+
+          ) : (
+
+            /* SUCCESS */
+            <div style={{maxWidth:520,margin:'0 auto'}}>
+              <div className="card">
+                <div className="success-wrap">
+                  <div className="success-ring">✓</div>
+                  <h1 className="success-title">Paiement confirmé !</h1>
+                  <p className="success-sub">Votre paiement de <strong>1 260€</strong> a bien été enregistré. Amélie Chen a été notifiée et la livraison finale est prévue pour le <strong>10 juin 2026</strong>.</p>
+
+                  <div className="success-details">
+                    {[
+                      {label:'Référence', val:'CFM-2026-00847'},
+                      {label:'Mission', val:'Chatbot service client IA'},
+                      {label:'Expert', val:'Amélie Chen'},
+                      {label:'Montant payé', val:'1 260€'},
+                      {label:'Date', val:'27 mai 2026 · 14:32'},
+                      {label:'Statut', val:'✅ Confirmé'},
+                    ].map((r,i) => (
+                      <div key={i} className="suc-row">
+                        <span className="suc-label">{r.label}</span>
+                        <span className="suc-val">{r.val}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
+                    <a href="mission.html" className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
+                    <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
+                  </div>
+
+                  <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
+                    Un reçu a été envoyé à <span style={{color:'var(--vs)'}}>jean.dupont@entreprise.com</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mission — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;gap:4px;}
+.nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms;}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;}
+
+/* BTN */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;cursor:pointer;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(124,58,237,0.6);}
+.btn-green{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 6px 20px -6px rgba(16,185,129,0.4);}
+.btn-green:hover{transform:translateY(-1px);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-danger{background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.2);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,0.18);}
+.btn-sm{padding:6px 13px;font-size:12px;}
+
+/* PAGE */
+.page-wrap{padding-top:88px;padding-bottom:80px;}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3);margin-bottom:24px;}
+.breadcrumb a{color:var(--text-3);transition:color 160ms;}
+.breadcrumb a:hover{color:var(--text-2);}
+.breadcrumb-sep{opacity:0.4;}
+
+/* MISSION HEADER */
+.mission-header{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden;}
+.mission-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
+.mh-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;}
+.mh-icon{width:52px;height:52px;border-radius:14px;background:rgba(124,58,237,0.12);display:grid;place-items:center;font-size:26px;flex-shrink:0;border:1px solid rgba(124,58,237,0.2);}
+.mh-info{flex:1;}
+.mh-title{font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.mh-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.mh-meta-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-3);}
+.mh-actions{display:flex;gap:8px;flex-shrink:0;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-cyan{background:rgba(6,182,212,0.10);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+
+/* PROGRESS GLOBAL */
+.prog-global{display:flex;align-items:center;gap:14px;}
+.prog-bar{flex:1;height:6px;background:var(--surf-3);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));transition:width 600ms var(--ease);}
+.prog-pct{font-size:13px;font-weight:700;color:var(--vs);flex-shrink:0;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:20px;width:fit-content;}
+.tab{padding:8px 18px;border-radius:9px;font-size:13px;font-weight:500;color:var(--text-3);cursor:pointer;transition:all 180ms;}
+.tab:hover{color:var(--text-2);}
+.tab.active{background:var(--surf-2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:var(--v);color:#fff;font-size:9px;font-weight:700;border-radius:99px;margin-left:5px;}
+
+/* LAYOUT */
+.mission-layout{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;}
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:13px;font-weight:700;}
+.card-body{padding:20px;}
+
+/* DESCRIPTION */
+.desc-text{font-size:14px;color:var(--text-2);line-height:1.75;}
+.desc-text p{margin-bottom:12px;}
+.desc-text p:last-child{margin-bottom:0;}
+
+/* LIVRABLES */
+.livrable-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.livrable-item:last-child{border-bottom:none;}
+.livrable-check{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;flex-shrink:0;}
+.livrable-check.done{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.livrable-check.pending{background:var(--surf-2);border:1px solid var(--border-2);color:var(--text-3);}
+.livrable-text{flex:1;font-size:13px;}
+.livrable-text.done{color:var(--text-2);text-decoration:line-through;text-decoration-color:var(--text-3);}
+.livrable-date{font-size:11px;color:var(--text-3);}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:20px;}
+.timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--border-2);}
+.tl-item{position:relative;margin-bottom:20px;}
+.tl-item:last-child{margin-bottom:0;}
+.tl-dot{position:absolute;left:-20px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--border-2);background:var(--bg);}
+.tl-dot.done{background:var(--green);border-color:var(--green);box-shadow:0 0 8px rgba(16,185,129,0.4);}
+.tl-dot.active{background:var(--v);border-color:var(--v);box-shadow:0 0 8px var(--vg);}
+.tl-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.tl-title.done{color:var(--text-2);}
+.tl-date{font-size:11px;color:var(--text-3);}
+.tl-note{font-size:12px;color:var(--text-2);margin-top:4px;padding:8px 12px;background:var(--surf-2);border-radius:8px;border-left:2px solid var(--v);}
+
+/* MESSAGES THREAD */
+.msg-thread{display:flex;flex-direction:column;gap:14px;}
+.msg-bubble-wrap{display:flex;gap:10px;align-items:flex-end;}
+.msg-bubble-wrap.right{flex-direction:row-reverse;}
+.bubble-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.bubble{max-width:75%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;}
+.bubble.left{background:var(--surf-2);border:1px solid var(--border-2);color:var(--text);border-bottom-left-radius:4px;}
+.bubble.right{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-bottom-right-radius:4px;}
+.bubble-time{font-size:10px;color:var(--text-3);margin-top:4px;text-align:right;}
+.bubble-time.left{text-align:left;}
+.msg-input-row{display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+.msg-input{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:13px;padding:10px 14px;outline:none;transition:border-color 180ms;}
+.msg-input:focus{border-color:rgba(124,58,237,0.5);}
+
+/* SIDEBAR */
+.expert-card{padding:20px;display:flex;flex-direction:column;gap:14px;}
+.ex-top{display:flex;gap:12px;align-items:center;}
+.ex-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.ex-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+.ex-spec{font-size:11px;color:var(--text-3);}
+.ex-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ex-stat{background:var(--surf-2);border-radius:8px;padding:10px;text-align:center;}
+.ex-stat-val{font-size:15px;font-weight:800;color:var(--text);}
+.ex-stat-label{font-size:10px;color:var(--text-3);}
+.stars{display:flex;gap:2px;}
+
+.budget-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.budget-row:last-child{border-bottom:none;}
+.budget-label{font-size:12px;color:var(--text-3);}
+.budget-val{font-size:13px;font-weight:700;}
+.budget-total{font-size:16px;font-weight:800;color:var(--vs);}
+
+.date-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.date-row:last-child{border-bottom:none;}
+.date-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.date-info{flex:1;}
+.date-label{font-size:12px;color:var(--text-3);}
+.date-val{font-size:13px;font-weight:600;}
+
+.action-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:10px;font-size:13px;font-weight:600;transition:all 180ms;cursor:pointer;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.04) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 80ms linear,top 80ms linear;}
+
+@media(max-width:960px){.mission-layout{grid-template-columns:1fr;}.mh-actions{display:none;}}
+@media(max-width:640px){.wrap{padding:0 18px;}.mh-title{font-size:18px;}.tabs{overflow-x:auto;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const Ic = {
+  Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
+  Arrow:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
+  Check:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  Clock:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  Calendar:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  Tag:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>,
+  User:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  Star:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Send:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+  Download:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+  Flag:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>,
+  Shield:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+};
+
+const LIVRABLES = [
+  {id:1, text:'Analyse des besoins et spécifications techniques', done:true, date:'Livrée le 15 mai'},
+  {id:2, text:'Architecture du chatbot et choix des modèles IA', done:true, date:'Livrée le 20 mai'},
+  {id:3, text:'Prototype fonctionnel v1 avec 50 intentions', done:true, date:'Livrée le 28 mai'},
+  {id:4, text:'Intégration sur le site e-commerce (widget)', done:false, date:'Prévue le 4 juin'},
+  {id:5, text:'Tests, corrections et documentation', done:false, date:'Prévue le 8 juin'},
+  {id:6, text:'Formation de l\'équipe et livraison finale', done:false, date:'Prévue le 10 juin'},
+];
+
+const TIMELINE = [
+  {title:'Démarrage de la mission', date:'12 mai 2026', done:true, note:null},
+  {title:'Phase 1 — Analyse et architecture', date:'15 — 20 mai 2026', done:true, note:'Spécifications validées par le client le 21 mai.'},
+  {title:'Phase 2 — Développement du prototype', date:'21 — 28 mai 2026', done:true, note:'Prototype livré avec 50 intentions. 3 révisions effectuées.'},
+  {title:'Phase 3 — Intégration et tests', date:'1 — 8 juin 2026', done:false, active:true, note:'En cours — accès API en attente.'},
+  {title:'Phase 4 — Formation et livraison', date:'9 — 10 juin 2026', done:false, active:false, note:null},
+];
+
+const MESSAGES = [
+  {id:1, side:'left', author:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', text:'Bonjour ! J\'ai bien reçu l\'accès au back-office. Je commence l\'intégration du widget demain matin.', time:'Hier, 14h22'},
+  {id:2, side:'right', author:'Jean Dupont', initials:'JD', color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:'Super ! Par contre j\'ai besoin de te donner l\'accès à l\'API de notre CRM pour les données clients. Tu as un email pour que je t\'invite ?', time:'Hier, 15h05'},
+  {id:3, side:'left', author:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', text:'Oui, tu peux utiliser amelie.chen@creatorflow.io. Merci !', time:'Hier, 15h12'},
+  {id:4, side:'right', author:'Jean Dupont', initials:'JD', color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:'Invitation envoyée. Les maquettes du widget sont prêtes aussi, je les envoie ce soir.', time:'Hier, 15h30'},
+  {id:5, side:'left', author:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', text:'Les maquettes sont parfaites ! Je peux commencer l\'intégration cet après-midi. On sera bien dans les délais pour le 10 juin.', time:'Il y a 12 min'},
+];
+
+function App() {
+  const [tab, setTab] = useState('details');
+  const [msg, setMsg] = useState('');
+  const [messages, setMessages] = useState(MESSAGES);
+
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
+    window.addEventListener('mousemove', move, { passive: true });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+
+  function sendMsg(e) {
+    e.preventDefault();
+    if (!msg.trim()) return;
+    setMessages(prev => [...prev, {id:Date.now(), side:'right', author:'Jean Dupont', initials:'JD', color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:msg, time:'À l\'instant'}]);
+    setMsg('');
+  }
+
+  const doneCount = LIVRABLES.filter(l => l.done).length;
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav"><div className="wrap nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div className="nav-links">
+          <a href="experts.html" className="nav-link">Experts</a>
+          <a href="brief.html" className="nav-link">Déposer un brief</a>
+        </div>
+        <div className="user-chip">
+          <div className="avatar">JD</div>
+          <span style={{fontSize:13,fontWeight:600}}>Jean Dupont</span>
+        </div>
+      </div></nav>
+
+      <div className="page-wrap">
+        <div className="wrap">
+
+          {/* BREADCRUMB */}
+          <div className="breadcrumb">
+            <a href="dashboard-client.html">Dashboard</a>
+            <span className="breadcrumb-sep">/</span>
+            <a href="dashboard-client.html">Mes missions</a>
+            <span className="breadcrumb-sep">/</span>
+            <span style={{color:'var(--text-2)'}}>Chatbot service client IA</span>
+          </div>
+
+          {/* MISSION HEADER */}
+          <div className="mission-header">
+            <div className="mh-top">
+              <div className="mh-icon">🤖</div>
+              <div className="mh-info">
+                <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+                  <h1 className="mh-title">Chatbot service client IA</h1>
+                  <span className="badge badge-green">En cours</span>
+                </div>
+                <div className="mh-meta">
+                  <span className="mh-meta-item"><Ic.Tag/> Chatbots</span>
+                  <span className="mh-meta-item"><Ic.User/> Amélie Chen</span>
+                  <span className="mh-meta-item"><Ic.Calendar/> Démarré le 12 mai 2026</span>
+                  <span className="mh-meta-item"><Ic.Clock/> Livraison le 10 juin 2026</span>
+                </div>
+              </div>
+              <div className="mh-actions">
+                <a href="dashboard-client.html" className="btn btn-ghost btn-sm"><Ic.Back/>Retour</a>
+                <button className="btn btn-danger btn-sm"><Ic.Flag/>Signaler</button>
+              </div>
+            </div>
+            <div className="prog-global">
+              <span style={{fontSize:12,color:'var(--text-3)',flexShrink:0}}>Progression globale</span>
+              <div className="prog-bar">
+                <div className="prog-fill" style={{width:'65%'}}/>
+              </div>
+              <span className="prog-pct">65%</span>
+              <span style={{fontSize:12,color:'var(--text-3)',flexShrink:0}}>{doneCount}/{LIVRABLES.length} livrables</span>
+            </div>
+          </div>
+
+          {/* TABS */}
+          <div className="tabs">
+            {[
+              {id:'details', label:'Détails'},
+              {id:'livrables', label:'Livrables', count:doneCount+'/'+LIVRABLES.length},
+              {id:'timeline', label:'Timeline'},
+              {id:'messages', label:'Messages', count:1},
+            ].map(t => (
+              <div key={t.id} className={`tab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
+                {t.label}
+                {t.count !== undefined && <span className="tab-count" style={{background:tab===t.id?'var(--v)':'var(--surf-3)'}}>{t.count}</span>}
+              </div>
+            ))}
+          </div>
+
+          {/* LAYOUT */}
+          <div className="mission-layout">
+
+            {/* MAIN CONTENT */}
+            <div>
+              {tab === 'details' && (
+                <div className="card">
+                  <div className="card-head"><span className="card-title">Description du projet</span></div>
+                  <div className="card-body">
+                    <div className="desc-text">
+                      <p>Nous souhaitons intégrer un chatbot intelligent basé sur l'IA sur notre plateforme e-commerce pour automatiser le service client. Le chatbot doit être capable de répondre aux questions fréquentes, gérer les demandes de retour et d'échange, suivre les commandes en temps réel et escalader vers un agent humain si nécessaire.</p>
+                      <p>Le chatbot doit s'intégrer via un widget JavaScript sur notre site Shopify existant, avec une interface en français et une personnalisation aux couleurs de notre marque.</p>
+                      <p>Volume estimé : 500 à 1 000 conversations par mois. Nous utilisons Salesforce comme CRM — une intégration bidirectionnelle est souhaitée pour synchroniser les tickets clients.</p>
+                    </div>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:20}}>
+                      {['ChatGPT API','LangChain','Shopify','Salesforce CRM','Widget JS','French NLP'].map(t => (
+                        <span key={t} style={{padding:'4px 10px',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:7,fontSize:11,color:'var(--text-2)',fontWeight:500}}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {tab === 'livrables' && (
+                <div className="card">
+                  <div className="card-head">
+                    <span className="card-title">Livrables de la mission</span>
+                    <span style={{fontSize:12,color:'var(--text-3)'}}>{doneCount} sur {LIVRABLES.length} complétés</span>
+                  </div>
+                  <div className="card-body">
+                    {LIVRABLES.map(l => (
+                      <div key={l.id} className="livrable-item">
+                        <div className={`livrable-check ${l.done ? 'done' : 'pending'}`}>
+                          {l.done ? <Ic.Check/> : <span style={{fontSize:10,fontWeight:700}}>{l.id}</span>}
+                        </div>
+                        <div style={{flex:1}}>
+                          <div className={`livrable-text ${l.done ? 'done' : ''}`}>{l.text}</div>
+                          <div className="livrable-date">{l.date}</div>
+                        </div>
+                        {l.done && (
+                          <button className="btn btn-ghost btn-sm"><Ic.Download/>Télécharger</button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {tab === 'timeline' && (
+                <div className="card">
+                  <div className="card-head"><span className="card-title">Déroulement de la mission</span></div>
+                  <div className="card-body">
+                    <div className="timeline">
+                      {TIMELINE.map((t, i) => (
+                        <div key={i} className="tl-item">
+                          <div className={`tl-dot ${t.done ? 'done' : t.active ? 'active' : ''}`}/>
+                          <div className={`tl-title ${t.done && !t.active ? 'done' : ''}`}>{t.title}</div>
+                          <div className="tl-date">{t.date}</div>
+                          {t.note && <div className="tl-note">{t.note}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {tab === 'messages' && (
+                <div className="card">
+                  <div className="card-head">
+                    <span className="card-title">Discussion avec Amélie Chen</span>
+                    <span className="badge badge-green" style={{fontSize:10}}>En ligne</span>
+                  </div>
+                  <div className="card-body">
+                    <div className="msg-thread">
+                      {messages.map(m => (
+                        <div key={m.id}>
+                          <div className={`msg-bubble-wrap ${m.side}`}>
+                            <div className="bubble-avatar" style={{background:m.color}}>{m.initials}</div>
+                            <div>
+                              <div className={`bubble ${m.side}`}>{m.text}</div>
+                              <div className={`bubble-time ${m.side}`}>{m.time}</div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <form onSubmit={sendMsg} className="msg-input-row">
+                      <input
+                        className="msg-input"
+                        placeholder="Écrire un message..."
+                        value={msg}
+                        onChange={e => setMsg(e.target.value)}
+                      />
+                      <button type="submit" className="btn btn-primary btn-sm"><Ic.Send/>Envoyer</button>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* SIDEBAR */}
+            <div style={{display:'flex',flexDirection:'column',gap:16}}>
+
+              {/* EXPERT */}
+              <div className="card">
+                <div className="card-head"><span className="card-title">Expert assigné</span></div>
+                <div className="expert-card">
+                  <div className="ex-top">
+                    <div className="ex-avatar">AC</div>
+                    <div>
+                      <div className="ex-name">Amélie Chen</div>
+                      <div className="ex-spec">Agents IA · Chatbots · LLM</div>
+                      <div className="stars" style={{marginTop:4}}>
+                        {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
+                        <span style={{fontSize:10,color:'var(--text-3)',marginLeft:4}}>4.9</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="ex-stats">
+                    <div className="ex-stat"><div className="ex-stat-val">18</div><div className="ex-stat-label">Missions</div></div>
+                    <div className="ex-stat"><div className="ex-stat-val">100%</div><div className="ex-stat-label">Succès</div></div>
+                  </div>
+                  <button className="btn btn-ghost btn-sm action-btn" onClick={() => setTab('messages')}>
+                    Envoyer un message
+                  </button>
+                  <a href="profil.html" className="btn btn-ghost btn-sm action-btn">
+                    Voir le profil <Ic.Arrow/>
+                  </a>
+                </div>
+              </div>
+
+              {/* BUDGET */}
+              <div className="card">
+                <div className="card-head"><span className="card-title">Budget et paiement</span></div>
+                <div className="card-body" style={{padding:'16px 20px'}}>
+                  <div className="budget-row">
+                    <span className="budget-label">Budget convenu</span>
+                    <span className="budget-val">1 800€</span>
+                  </div>
+                  <div className="budget-row">
+                    <span className="budget-label">Acompte versé (30%)</span>
+                    <span className="budget-val" style={{color:'var(--green)'}}>540€ <Ic.Check style={{display:'inline',color:'var(--green)'}}/></span>
+                  </div>
+                  <div className="budget-row">
+                    <span className="budget-label">Solde à la livraison</span>
+                    <span className="budget-val">1 260€</span>
+                  </div>
+                  <div className="budget-row" style={{paddingTop:12,marginTop:4}}>
+                    <span className="budget-label" style={{fontWeight:700,color:'var(--text-2)'}}>Total</span>
+                    <span className="budget-total">1 800€</span>
+                  </div>
+                  <button className="btn btn-ghost btn-sm action-btn" style={{marginTop:12}}>
+                    <Ic.Download/>Télécharger la facture
+                  </button>
+                </div>
+              </div>
+
+              {/* DATES CLÉS */}
+              <div className="card">
+                <div className="card-head"><span className="card-title">Dates clés</span></div>
+                <div style={{padding:'12px 20px'}}>
+                  {[
+                    {color:'var(--green)', label:'Démarrage', val:'12 mai 2026'},
+                    {color:'var(--amber)', label:'Mi-parcours', val:'28 mai 2026'},
+                    {color:'var(--v)', label:'Livraison prévue', val:'10 juin 2026'},
+                  ].map((d,i) => (
+                    <div key={i} className="date-row">
+                      <div className="date-dot" style={{background:d.color}}/>
+                      <div className="date-info">
+                        <div className="date-label">{d.label}</div>
+                        <div className="date-val">{d.val}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* PROTECTION */}
+              <div style={{background:'rgba(16,185,129,0.06)',border:'1px solid rgba(16,185,129,0.15)',borderRadius:'var(--r-lg)',padding:'16px',display:'flex',gap:10}}>
+                <Ic.Shield style={{color:'var(--green)',flexShrink:0,marginTop:2}}/>
+                <div>
+                  <div style={{fontSize:12,fontWeight:700,color:'var(--green)',marginBottom:3}}>Mission protégée</div>
+                  <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.5}}>Paiement bloqué jusqu'à la livraison finale. Remboursement garanti en cas de litige.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
