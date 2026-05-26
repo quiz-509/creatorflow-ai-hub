@@ -127,11 +127,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   User:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
@@ -168,13 +174,15 @@ function App() {
   const [section, setSection] = useState('profil');
   const [toast, setToast] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [saving, setSaving] = useState(false);
   const toastTimer = useRef(null);
 
   // Profil state
-  const [profil, setProfil] = useState({ prenom:'Thomas', nom:'Richard', email:'thomas.richard@exemple.fr', phone:'06 12 34 56 78', company:'Richard Consulting', bio:'' });
+  const [profil, setProfil] = useState({ prenom:'', nom:'', email:'', phone:'', bio:'' });
+  const [expertData, setExpertData] = useState({ specialite:'', niveau:'', tarif:'', linkedin:'', disponible:true });
+  const [initials, setInitials] = useState('??');
 
   // Securite state
-  const [currentPass, setCurrentPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [passError, setPassError] = useState('');
@@ -183,9 +191,24 @@ function App() {
   const [notifSettings, setNotifSettings] = useState({ propositions:true, messages:true, missions:true, payments:true, reminders:true, marketing:false });
 
   // Prefs state
-  const [prefs, setPrefs] = useState({ lang:'fr', currency:'EUR', timezone:'Europe/Paris' });
+  const [prefs, setPrefs] = useState({ lang:'fr', currency:'EUR', timezone:'America/Montreal' });
 
   useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { window.location.href = 'connexion.html'; return; }
+      const u = data.session.user;
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
+      if (profile) {
+        const p = profile.prenom||''; const n = profile.nom||'';
+        setProfil(prev => ({ ...prev, prenom: p, nom: n, email: profile.email||u.email||'' }));
+        setInitials(((p[0]||'?')+(n[0]||'?')).toUpperCase());
+      }
+      if (exp) {
+        setProfil(prev => ({ ...prev, bio: exp.bio||'' }));
+        setExpertData({ specialite: exp.specialite||'', niveau: exp.niveau||'', tarif: exp.tarif_horaire||'', linkedin: exp.linkedin||'', disponible: exp.disponible??true });
+      }
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -209,14 +232,43 @@ function App() {
     toastTimer.current = setTimeout(() => setToast(false), 3000);
   };
 
-  const saveProfile = () => showToast();
+  const saveProfile = async () => {
+    setSaving(true);
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) return;
+      const uid = session.user.id;
+      await sb.from('profiles').update({ prenom: profil.prenom, nom: profil.nom }).eq('id', uid);
+      await sb.from('experts').update({
+        specialite: expertData.specialite,
+        niveau: expertData.niveau,
+        tarif_horaire: parseInt(expertData.tarif)||0,
+        linkedin: expertData.linkedin,
+        bio: profil.bio,
+        disponible: expertData.disponible,
+      }).eq('id', uid);
+      setInitials(((profil.prenom[0]||'?')+(profil.nom[0]||'?')).toUpperCase());
+      showToast();
+    } catch(e) { console.error(e); }
+    setSaving(false);
+  };
 
-  const savePassword = () => {
-    if (!currentPass) { setPassError('Entrez votre mot de passe actuel'); return; }
+  const savePassword = async () => {
     if (newPass.length < 8) { setPassError('Le nouveau mot de passe doit faire au moins 8 caractères'); return; }
     if (newPass !== confirmPass) { setPassError('Les mots de passe ne correspondent pas'); return; }
-    setPassError(''); setCurrentPass(''); setNewPass(''); setConfirmPass('');
-    showToast();
+    setSaving(true);
+    try {
+      const { error } = await sb.auth.updateUser({ password: newPass });
+      if (error) throw error;
+      setPassError(''); setNewPass(''); setConfirmPass('');
+      showToast();
+    } catch(e) { setPassError(e.message || 'Erreur lors de la mise à jour'); }
+    setSaving(false);
+  };
+
+  const handleLogout = async () => {
+    await sb.auth.signOut();
+    window.location.href = 'connexion.html';
   };
 
   return (
@@ -224,7 +276,7 @@ function App() {
       <nav className="nav">
         <div className="nav-inner">
           <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
-          <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+          <a href="dashboard-expert.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
         </div>
       </nav>
 
@@ -234,7 +286,7 @@ function App() {
           <div className="side-nav">
             <div style={{marginBottom:20}}>
               <div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 12px',marginBottom:12}}>
-                <div style={{width:36,height:36,borderRadius:'50%',background:'linear-gradient(135deg,var(--v),var(--c))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,color:'#fff',flexShrink:0}}>TR</div>
+                <div style={{width:36,height:36,borderRadius:'50%',background:'linear-gradient(135deg,var(--v),var(--c))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,color:'#fff',flexShrink:0}}>{initials}</div>
                 <div>
                   <div style={{fontSize:13,fontWeight:700}}>{profil.prenom} {profil.nom}</div>
                   <div style={{fontSize:11,color:'var(--text-3)'}}>Plan Pro</div>
@@ -249,10 +301,10 @@ function App() {
               </div>
             ))}
             <div className="nav-divider"/>
-            <a href="connexion.html" className="nav-item" style={{color:'var(--red)'}}>
+            <div className="nav-item" style={{color:'var(--red)'}} onClick={handleLogout}>
               <div className="nav-item-icon" style={{borderColor:'rgba(239,68,68,0.2)',background:'rgba(239,68,68,0.08)'}}><Ic.LogOut style={{color:'var(--red)'}}/></div>
               Se déconnecter
-            </a>
+            </div>
           </div>
 
           {/* CONTENT */}
@@ -266,13 +318,10 @@ function App() {
 
                 <div className="card">
                   <div className="avatar-row">
-                    <div className="avatar-big">TR</div>
+                    <div className="avatar-big">{initials}</div>
                     <div className="avatar-info">
                       <div className="avatar-name">{profil.prenom} {profil.nom}</div>
                       <div className="avatar-email">{profil.email}</div>
-                    </div>
-                    <div className="avatar-actions">
-                      <button className="btn btn-ghost" style={{padding:'7px 14px',fontSize:12}}><Ic.Edit/>Changer la photo</button>
                     </div>
                   </div>
                   <div className="input-grid">
@@ -287,26 +336,55 @@ function App() {
                   </div>
                   <div className="field">
                     <label className="label">Adresse email</label>
-                    <input className="input" type="email" value={profil.email} onChange={e=>setProfil(p=>({...p,email:e.target.value}))}/>
-                    <div className="hint">Utilisée pour les notifications et la connexion.</div>
+                    <input className="input" type="email" value={profil.email} disabled/>
+                    <div className="hint">L'email ne peut pas être modifié ici.</div>
+                  </div>
+                  <div className="field">
+                    <label className="label">Bio <span style={{color:'var(--text-3)',fontWeight:400}}>(visible sur votre profil)</span></label>
+                    <textarea className="input" rows={4} placeholder="Décrivez votre expertise, vos spécialités, ce qui vous différencie…" value={profil.bio} onChange={e=>setProfil(p=>({...p,bio:e.target.value}))}/>
+                  </div>
+                  <div className="save-row">
+                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile} disabled={saving}><Ic.Check/>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="card-title">Profil Expert</div>
+                  <div className="input-grid">
+                    <div className="field">
+                      <label className="label">Spécialité principale</label>
+                      <input className="input" placeholder="ex: Automatisation IA, Chatbots…" value={expertData.specialite} onChange={e=>setExpertData(p=>({...p,specialite:e.target.value}))}/>
+                    </div>
+                    <div className="field">
+                      <label className="label">Niveau</label>
+                      <select className="input" value={expertData.niveau} onChange={e=>setExpertData(p=>({...p,niveau:e.target.value}))}>
+                        <option value="">Sélectionner…</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Intermédiaire">Intermédiaire</option>
+                        <option value="Senior">Senior</option>
+                        <option value="Expert">Expert</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="input-grid">
                     <div className="field">
-                      <label className="label">Téléphone</label>
-                      <input className="input" value={profil.phone} onChange={e=>setProfil(p=>({...p,phone:e.target.value}))}/>
+                      <label className="label">Tarif horaire (€)</label>
+                      <input className="input" type="number" min="0" placeholder="ex: 80" value={expertData.tarif} onChange={e=>setExpertData(p=>({...p,tarif:e.target.value}))}/>
                     </div>
                     <div className="field">
-                      <label className="label">Entreprise</label>
-                      <input className="input" value={profil.company} onChange={e=>setProfil(p=>({...p,company:e.target.value}))}/>
+                      <label className="label">LinkedIn <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
+                      <input className="input" placeholder="https://linkedin.com/in/…" value={expertData.linkedin} onChange={e=>setExpertData(p=>({...p,linkedin:e.target.value}))}/>
                     </div>
                   </div>
-                  <div className="field">
-                    <label className="label">Bio <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                    <textarea className="input" rows={3} placeholder="Décrivez-vous en quelques mots…" value={profil.bio} onChange={e=>setProfil(p=>({...p,bio:e.target.value}))}/>
+                  <div className="toggle-row" style={{padding:'14px 0 0'}}>
+                    <div className="toggle-info">
+                      <div className="toggle-name">Disponible pour de nouvelles missions</div>
+                      <div className="toggle-desc">Visible dans les recherches clients</div>
+                    </div>
+                    <Toggle on={expertData.disponible} onChange={()=>setExpertData(p=>({...p,disponible:!p.disponible}))}/>
                   </div>
                   <div className="save-row">
-                    <button className="btn btn-ghost" style={{padding:'9px 18px',fontSize:13}}>Annuler</button>
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile}><Ic.Check/>Enregistrer</button>
+                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile} disabled={saving}><Ic.Check/>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
                   </div>
                 </div>
               </div>
@@ -320,19 +398,15 @@ function App() {
 
                 <div className="card">
                   <div className="card-title">Changer le mot de passe</div>
-                  <div className="field">
-                    <label className="label">Mot de passe actuel</label>
-                    <div style={{position:'relative'}}>
-                      <input className={`input ${passError && !currentPass ? 'error' : ''}`} type={showPass ? 'text' : 'password'} placeholder="••••••••" value={currentPass} onChange={e=>{setCurrentPass(e.target.value);setPassError('');}} style={{paddingRight:44}}/>
-                      <button style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',color:'var(--text-3)'}} onClick={()=>setShowPass(v=>!v)}>
-                        {showPass ? <Ic.EyeOff/> : <Ic.Eye/>}
-                      </button>
-                    </div>
-                  </div>
                   <div className="input-grid">
                     <div className="field">
                       <label className="label">Nouveau mot de passe</label>
-                      <input className="input" type="password" placeholder="••••••••" value={newPass} onChange={e=>{setNewPass(e.target.value);setPassError('');}}/>
+                      <div style={{position:'relative'}}>
+                        <input className="input" type={showPass ? 'text' : 'password'} placeholder="••••••••" value={newPass} onChange={e=>{setNewPass(e.target.value);setPassError('');}} style={{paddingRight:44}}/>
+                        <button style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',color:'var(--text-3)'}} onClick={()=>setShowPass(v=>!v)}>
+                          {showPass ? <Ic.EyeOff/> : <Ic.Eye/>}
+                        </button>
+                      </div>
                       <div className="hint">Minimum 8 caractères</div>
                     </div>
                     <div className="field">
@@ -356,7 +430,7 @@ function App() {
                   )}
                   {passError && <div className="error-msg" style={{marginBottom:12}}>{passError}</div>}
                   <div className="save-row" style={{borderTop:'none',paddingTop:0,marginTop:0}}>
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={savePassword}><Ic.Check/>Mettre à jour</button>
+                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={savePassword} disabled={saving}><Ic.Check/>{saving ? 'Mise à jour…' : 'Mettre à jour'}</button>
                   </div>
                 </div>
 
