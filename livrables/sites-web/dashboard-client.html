@@ -207,6 +207,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [initials, setInitials] = useState('??');
   const [prenom, setPrenom] = useState('');
+  const [briefs, setBriefs] = useState([]);
+  const [convs, setConvs] = useState([]);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -222,6 +224,10 @@ function App() {
       } else {
         setUser(u);
       }
+      const { data: b } = await sb.from('briefs').select('id,categorie,budget,delai,statut,created_at,description').eq('user_id', u.id).order('created_at', {ascending: false}).limit(4);
+      setBriefs(b || []);
+      const { data: c } = await sb.from('conversations').select('id,created_at').eq('client_id', u.id).order('created_at', {ascending: false}).limit(3);
+      setConvs(c || []);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -294,10 +300,10 @@ function App() {
           {/* STATS */}
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>🚀</div>
-              <div className="stat-val">3</div>
-              <div className="stat-label">Missions actives</div>
-              <div className="stat-trend trend-up"><Ic.Check/>En bonne voie</div>
+              <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>📋</div>
+              <div className="stat-val">{briefs.length}</div>
+              <div className="stat-label">Briefs déposés</div>
+              <div className="stat-trend trend-up"><Ic.Check/>{briefs.filter(b=>b.statut==='ouvert').length} ouverts</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(245,158,11,0.10)',color:'var(--amber)'}}>📥</div>
@@ -307,9 +313,9 @@ function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>💬</div>
-              <div className="stat-val">2</div>
-              <div className="stat-label">Messages non lus</div>
-              <div className="stat-trend trend-warn">Non lus</div>
+              <div className="stat-val">{convs.length}</div>
+              <div className="stat-label">Conversations actives</div>
+              <div className="stat-trend trend-warn">{convs.length > 0 ? 'En cours' : 'Aucune'}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
@@ -328,23 +334,25 @@ function App() {
               {/* MISSIONS */}
               <div className="section-card">
                 <div className="section-head">
-                  <span className="section-title">Mes missions en cours</span>
-                  <a href="#" className="section-link" onClick={e => {e.preventDefault(); setActive('missions');}}>Tout voir →</a>
+                  <span className="section-title">Mes briefs récents</span>
+                  <a href="brief.html" className="section-link">+ Nouveau brief</a>
                 </div>
-                {MISSIONS.map(m => (
-                  <div key={m.id} className="mission-item">
-                    <div className="mission-icon" style={{background:m.iconBg}}>{m.icon}</div>
+                {briefs.length === 0 ? (
+                  <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:32,marginBottom:8}}>📋</div>
+                    <div style={{fontSize:13,marginBottom:16}}>Aucun brief déposé pour le moment</div>
+                    <a href="brief.html" className="btn btn-primary btn-sm" style={{margin:'0 auto'}}>Déposer mon premier brief</a>
+                  </div>
+                ) : briefs.map(b => (
+                  <div key={b.id} className="mission-item">
+                    <div className="mission-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>📋</div>
                     <div className="mission-info">
-                      <div className="mission-name">{m.name}</div>
-                      <div className="mission-meta">{m.cat} · {m.expert}</div>
-                      <div className="prog-bar" style={{width:120}}>
-                        <div className="prog-fill" style={{width:m.progress+'%'}}/>
-                      </div>
+                      <div className="mission-name">{b.categorie || 'Projet'}</div>
+                      <div className="mission-meta">Budget : {b.budget} · Délai : {b.delai}</div>
                     </div>
                     <div className="mission-right">
-                      <span className={`badge ${m.badge}`}>{m.statusLabel}</span>
-                      <span className="mission-price">{m.price}</span>
-                      <span style={{fontSize:10,color:'var(--text-3)'}}>{m.date}</span>
+                      <span className={`badge ${b.statut === 'ouvert' ? 'badge-green' : 'badge-amber'}`}>{b.statut === 'ouvert' ? 'Ouvert' : b.statut}</span>
+                      <span style={{fontSize:10,color:'var(--text-3)'}}>{new Date(b.created_at).toLocaleDateString('fr-CA')}</span>
                     </div>
                   </div>
                 ))}
@@ -392,21 +400,25 @@ function App() {
                   <span className="section-title">Messages récents</span>
                   <a href="#" className="section-link" onClick={e => {e.preventDefault(); setActive('messages');}}>Tout voir →</a>
                 </div>
-                {MSGS.map(m => (
-                  <div key={m.id} className={`msg-item ${m.unread ? 'unread' : ''}`}>
-                    <div className="msg-avatar" style={{background:m.color}}>{m.initials}</div>
+                {convs.length === 0 ? (
+                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:28,marginBottom:8}}>💬</div>
+                    <div style={{fontSize:13}}>Aucune conversation active</div>
+                  </div>
+                ) : convs.map(c => (
+                  <div key={c.id} className="msg-item">
+                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#7C3AED,#A78BFA)'}}>EX</div>
                     <div className="msg-body">
-                      <div className="msg-name">{m.name}</div>
-                      <div className="msg-preview">{m.preview}</div>
+                      <div className="msg-name">Expert</div>
+                      <div className="msg-preview">Conversation en cours</div>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
-                      <span className="msg-time">{m.time}</span>
-                      {m.unread && <span className="unread-dot"/>}
+                      <span className="msg-time">{new Date(c.created_at).toLocaleDateString('fr-CA')}</span>
                     </div>
                   </div>
                 ))}
                 <div style={{padding:'12px 20px'}}>
-                  <a href="dashboard-messages.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Ouvrir la messagerie <Ic.Arrow/></a>
+                  <a href="messages.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Ouvrir la messagerie <Ic.Arrow/></a>
                 </div>
               </div>
 

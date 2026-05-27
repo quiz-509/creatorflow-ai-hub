@@ -239,6 +239,8 @@ function App() {
   const [dispo, setDispo] = useState(true);
   const [user, setUser] = useState(null);
   const [expert, setExpert] = useState(null);
+  const [opps, setOpps] = useState([]);
+  const [convs, setConvs] = useState([]);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -249,6 +251,10 @@ function App() {
       const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) setUser({ ...u, ...profile });
       if (exp) setExpert(exp);
+      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at').eq('statut', 'ouvert').order('created_at', {ascending: false}).limit(5);
+      setOpps(o || []);
+      const { data: c } = await sb.from('conversations').select('id,created_at').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
+      setConvs(c || []);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -346,9 +352,9 @@ function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(245,158,11,0.10)',color:'var(--amber)'}}>📨</div>
-              <div className="stat-val">5</div>
+              <div className="stat-val">{opps.length}</div>
               <div className="stat-label">Nouvelles opportunités</div>
-              <div className="stat-trend" style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)'}}>À postuler</div>
+              <div className="stat-trend" style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)'}}>{opps.length > 0 ? 'À postuler' : 'Aucune'}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>⭐</div>
@@ -393,23 +399,25 @@ function App() {
               <div className="section-card">
                 <div className="section-head">
                   <span className="section-title">Nouvelles opportunités</span>
-                  <span style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)',fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:99}}>5 matchs</span>
+                  {opps.length > 0 && <span style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)',fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:99}}>{opps.length} briefs</span>}
                 </div>
-                {OPPS.map(o => (
+                {opps.length === 0 ? (
+                  <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:32,marginBottom:8}}>📭</div>
+                    <div style={{fontSize:13}}>Aucune opportunité disponible pour le moment</div>
+                  </div>
+                ) : opps.map(o => (
                   <div key={o.id} className="opp-item">
                     <div className="opp-top">
                       <div>
-                        <div className="opp-title">{o.title}</div>
-                        <div className="opp-meta">{o.client} · {o.delai}</div>
+                        <div className="opp-title">{o.categorie || 'Projet IA'}</div>
+                        <div className="opp-meta">Anonyme · {o.delai}</div>
                       </div>
                       <div className="opp-budget">{o.budget}</div>
                     </div>
-                    <p className="opp-desc">{o.desc}</p>
+                    <p className="opp-desc">{(o.description||'').slice(0,120)}{(o.description||'').length > 120 ? '…' : ''}</p>
                     <div className="opp-footer">
-                      <button className="btn btn-purple btn-sm">Postuler <Ic.Arrow/></button>
-                      <div className="opp-tags">
-                        {o.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                      </div>
+                      <a href="messages.html" className="btn btn-purple btn-sm">Contacter <Ic.Arrow/></a>
                     </div>
                   </div>
                 ))}
@@ -463,16 +471,20 @@ function App() {
                   <span className="section-title">Messages récents</span>
                   <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('messages');}}>Tout voir →</a>
                 </div>
-                {MSGS.map(m => (
-                  <div key={m.id} className={`msg-item ${m.unread ? 'unread' : ''}`}>
-                    <div className="msg-avatar" style={{background:m.color}}>{m.initials}</div>
+                {convs.length === 0 ? (
+                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:28,marginBottom:8}}>💬</div>
+                    <div style={{fontSize:13}}>Aucune conversation active</div>
+                  </div>
+                ) : convs.map(c => (
+                  <div key={c.id} className="msg-item">
+                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#0891B2,#06B6D4)'}}>CL</div>
                     <div className="msg-body">
-                      <div className="msg-name">{m.name}</div>
-                      <div className="msg-preview">{m.preview}</div>
+                      <div className="msg-name">Client</div>
+                      <div className="msg-preview">Conversation en cours</div>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
-                      <span className="msg-time">{m.time}</span>
-                      {m.unread && <span className="unread-dot"/>}
+                      <span className="msg-time">{new Date(c.created_at).toLocaleDateString('fr-CA')}</span>
                     </div>
                   </div>
                 ))}
