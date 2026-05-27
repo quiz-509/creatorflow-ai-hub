@@ -260,7 +260,7 @@ function ExpertCard({ expert, delay = 0 }) {
         <div className="exp-stars"><span className="s"><Ic.Star/></span>{expert.rating}<span className="cnt">({expert.reviews})</span></div>
       </div>
       <div className="exp-actions">
-        <a href="profil.html" className="btn btn-ghost btn-sm">Voir le profil</a>
+        <a href={`profil-expert.html?id=${exp.id}`} className="btn btn-ghost btn-sm">Voir le profil</a>
         <a href="brief.html" className="btn btn-primary btn-sm">Contacter <Ic.Arrow/></a>
       </div>
     </div>

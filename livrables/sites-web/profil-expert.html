@@ -235,11 +235,13 @@ function App() {
   const [expert, setExpert] = useState(expertDefaut);
 
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) return;
-      const u = data.session.user;
-      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
-      const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const expertId = params.get('id');
+      const targetId = expertId || (await sb.auth.getSession()).data?.session?.user?.id;
+      if (!targetId) return;
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', targetId).single();
+      const { data: exp } = await sb.from('experts').select('*').eq('id', targetId).single();
       if (profile || exp) {
         const prenom = profile?.prenom || '';
         const nom = profile?.nom || '';
@@ -252,10 +254,11 @@ function App() {
           title: exp?.specialite ? `Expert ${exp.specialite}` : prev.title,
           about: exp?.bio || prev.about,
           available: exp?.disponible ?? prev.available,
-          tags: exp?.specialite ? [exp.specialite] : prev.tags,
+          tags: exp?.competences || (exp?.specialite ? [exp.specialite] : prev.tags),
+          rate: exp?.tarif_heure ? `${exp.tarif_heure}$` : prev.rate,
         }));
       }
-    });
+    })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
