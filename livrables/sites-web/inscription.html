@@ -3,7 +3,17 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Devenir expert — CreatorFlow Market</title>
+  <title>Créer un compte — CreatorFlow Market</title>
+  <meta name="description" content="Rejoignez CreatorFlow Market : créez votre compte expert IA ou client en 2 minutes. Accès gratuit à la marketplace d'experts IA certifiés."/>
+  <link rel="canonical" href="https://creatorflowmarket.com/inscription.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://creatorflowmarket.com/inscription.html"/>
+  <meta property="og:title" content="Rejoindre CreatorFlow Market — Experts IA & Entreprises"/>
+  <meta property="og:description" content="Créez votre compte expert ou client en 2 minutes. Accès immédiat à la marketplace IA #1 au Canada."/>
+  <meta property="og:site_name" content="CreatorFlow Market"/>
+  <meta property="og:locale" content="fr_CA"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="robots" content="index, follow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
@@ -171,7 +181,7 @@ function App() {
           bio: form.bio,
         });
       }
-      setDone(true);
+      window.location.href = 'onboarding.html';
     } catch(err) {
       const msgs = {
         'User already registered': 'Un compte existe déjà avec cet email.',
