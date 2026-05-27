@@ -119,11 +119,15 @@ const Ic = {
 const PHOTOS = ['https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=faces&q=80','https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80','https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=faces&q=80'];
 
 function App() {
+  const [tab, setTab] = useState(() => {
+    const p = new URLSearchParams(window.location.search).get('role');
+    return p === 'client' ? 'client' : 'expert';
+  });
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPwd, setShowPwd] = useState(false);
-  const [form, setForm] = useState({ prenom:'', nom:'', email:'', password:'', specialite:'', niveau:'', linkedin:'', bio:'' });
+  const [form, setForm] = useState({ prenom:'', nom:'', email:'', password:'', specialite:'', niveau:'', linkedin:'', bio:'', entreprise:'' });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   useEffect(() => {
@@ -153,12 +157,12 @@ function App() {
       const { data, error: signUpError } = await sb.auth.signUp({
         email: form.email,
         password: form.password,
-        options: { data: { prenom: form.prenom, nom: form.nom, type_utilisateur: 'expert' } }
+        options: { data: { prenom: form.prenom, nom: form.nom, type_utilisateur: tab } }
       });
       if (signUpError) throw signUpError;
 
       const userId = data.user?.id;
-      if (userId) {
+      if (userId && tab === 'expert') {
         await sb.from('experts').insert({
           id: userId,
           specialite: form.specialite,
@@ -194,32 +198,62 @@ function App() {
       <div className="page-layout">
         <div className="insc-left">
           <span className="eyebrow">Rejoindre la plateforme</span>
-          <h1>Monétisez votre<br/>expertise <em>IA.</em></h1>
-          <p>Accédez à des clients qualifiés, gérez vos missions et développez votre réputation sur la seule marketplace dédiée aux experts IA certifiés.</p>
-          <div className="benefit-list">
-            {[
-              {icon:<Ic.Rocket/>,title:'Missions dès l\'inscription',sub:'Accès immédiat au flux de briefs entrants'},
-              {icon:<Ic.Star/>,title:'Tarif fixé par vous',sub:'Vous choisissez votre taux horaire ou forfait'},
-              {icon:<Ic.Chart/>,title:'Visibilité & croissance',sub:'Profil SEO optimisé, badge certifié affiché'},
-              {icon:<Ic.Shield/>,title:'Paiements sécurisés',sub:'Escrow automatique, paiement à la livraison'},
-            ].map((b,i) => (
-              <div key={i} className="benefit">
-                <div className="benefit-icon">{b.icon}</div>
-                <div><b>{b.title}</b><span>{b.sub}</span></div>
+          {tab === 'expert' ? (
+            <React.Fragment>
+              <h1>Monétisez votre<br/>expertise <em>IA.</em></h1>
+              <p>Accédez à des clients qualifiés, gérez vos missions et développez votre réputation sur la seule marketplace dédiée aux experts IA certifiés.</p>
+              <div className="benefit-list">
+                {[
+                  {icon:<Ic.Rocket/>,title:'Missions dès l\'inscription',sub:'Accès immédiat au flux de briefs entrants'},
+                  {icon:<Ic.Star/>,title:'Tarif fixé par vous',sub:'Vous choisissez votre taux horaire ou forfait'},
+                  {icon:<Ic.Chart/>,title:'Visibilité & croissance',sub:'Profil SEO optimisé, badge certifié affiché'},
+                  {icon:<Ic.Shield/>,title:'Paiements sécurisés',sub:'Escrow automatique, paiement à la livraison'},
+                ].map((b,i) => (
+                  <div key={i} className="benefit">
+                    <div className="benefit-icon">{b.icon}</div>
+                    <div><b>{b.title}</b><span>{b.sub}</span></div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="social-proof">
-            <div className="sp-avts">{PHOTOS.map((p,i)=><div key={i} className="sp-avt"><img src={p} alt=""/></div>)}</div>
-            <div className="sp-text"><b>120+ experts</b> ont déjà rejoint la plateforme</div>
-          </div>
+              <div className="social-proof">
+                <div className="sp-avts">{PHOTOS.map((p,i)=><div key={i} className="sp-avt"><img src={p} alt=""/></div>)}</div>
+                <div className="sp-text"><b>120+ experts</b> ont déjà rejoint la plateforme</div>
+              </div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <h1>Trouvez l'expert IA<br/>qu'il vous <em>faut.</em></h1>
+              <p>Publiez votre besoin, recevez des propositions d'experts certifiés et lancez votre projet en toute sécurité.</p>
+              <div className="benefit-list">
+                {[
+                  {icon:<Ic.Rocket/>,title:'Brief publié en 5 minutes',sub:'Décrivez votre besoin, on fait le reste'},
+                  {icon:<Ic.Star/>,title:'Experts certifiés',sub:'Chaque profil est vérifié par notre équipe'},
+                  {icon:<Ic.Shield/>,title:'Paiements sécurisés',sub:'Votre budget est libéré à la livraison'},
+                  {icon:<Ic.Chart/>,title:'Suivi en temps réel',sub:'Tableau de bord missions dédié'},
+                ].map((b,i) => (
+                  <div key={i} className="benefit">
+                    <div className="benefit-icon">{b.icon}</div>
+                    <div><b>{b.title}</b><span>{b.sub}</span></div>
+                  </div>
+                ))}
+              </div>
+              <div className="social-proof">
+                <div className="sp-avts">{PHOTOS.map((p,i)=><div key={i} className="sp-avt"><img src={p} alt=""/></div>)}</div>
+                <div className="sp-text"><b>85+ entreprises</b> ont déjà trouvé leur expert</div>
+              </div>
+            </React.Fragment>
+          )}
         </div>
 
         <div className="insc-right">
           {!done ? (
             <div className="form-card">
-              <h2 className="form-title">Créer mon profil expert</h2>
-              <p className="form-sub">Validation par notre équipe sous 48h · Accès gratuit</p>
+              <div style={{display:'flex',background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:999,padding:3,marginBottom:22}}>
+                <div onClick={()=>setTab('client')} style={{flex:1,padding:'8px 16px',borderRadius:999,fontSize:13,fontWeight:600,textAlign:'center',cursor:'pointer',transition:'all 200ms',background:tab==='client'?'var(--v)':'transparent',color:tab==='client'?'#fff':'var(--text-3)',boxShadow:tab==='client'?'0 0 16px rgba(124,58,237,0.4)':'none'}}>Je suis client</div>
+                <div onClick={()=>setTab('expert')} style={{flex:1,padding:'8px 16px',borderRadius:999,fontSize:13,fontWeight:600,textAlign:'center',cursor:'pointer',transition:'all 200ms',background:tab==='expert'?'var(--v)':'transparent',color:tab==='expert'?'#fff':'var(--text-3)',boxShadow:tab==='expert'?'0 0 16px rgba(124,58,237,0.4)':'none'}}>Je suis expert</div>
+              </div>
+              <h2 className="form-title">{tab === 'client' ? 'Créer mon compte client' : 'Créer mon profil expert'}</h2>
+              <p className="form-sub">{tab === 'client' ? 'Gratuit · Accès immédiat à tous les experts' : 'Validation par notre équipe sous 48h · Accès gratuit'}</p>
               <form onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
@@ -244,35 +278,45 @@ function App() {
                     </button>
                   </div>
                 </div>
-                <div className="form-row">
+                {tab === 'client' && (
                   <div className="form-group">
-                    <label className="form-label">Spécialité principale *</label>
-                    <select className="form-select" value={form.specialite} onChange={e => set('specialite', e.target.value)} required>
-                      <option value="">Choisir...</option>
-                      <option>Agents IA</option><option>Automatisation</option><option>Chatbots</option>
-                      <option>Développement IA</option><option>Prompt Engineering</option>
-                      <option>Montage vidéo IA</option><option>Branding IA</option><option>Formation IA</option>
-                    </select>
+                    <label className="form-label">Entreprise</label>
+                    <input className="form-input" type="text" placeholder="Nom de votre entreprise (optionnel)" value={form.entreprise} onChange={e => set('entreprise', e.target.value)}/>
                   </div>
-                  <div className="form-group">
-                    <label className="form-label">Niveau d'expérience *</label>
-                    <select className="form-select" value={form.niveau} onChange={e => set('niveau', e.target.value)} required>
-                      <option value="">Choisir...</option>
-                      <option>1-2 ans</option><option>3-5 ans</option><option>5+ ans</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">LinkedIn ou site web</label>
-                  <input className="form-input" type="url" placeholder="https://..." value={form.linkedin} onChange={e => set('linkedin', e.target.value)}/>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Présentez-vous en quelques lignes *</label>
-                  <textarea className="form-textarea" placeholder="Votre parcours, vos compétences clés, ce que vous apportez à vos clients..." value={form.bio} onChange={e => set('bio', e.target.value)} required/>
-                </div>
+                )}
+                {tab === 'expert' && (
+                  <React.Fragment>
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label className="form-label">Spécialité principale *</label>
+                        <select className="form-select" value={form.specialite} onChange={e => set('specialite', e.target.value)} required>
+                          <option value="">Choisir...</option>
+                          <option>Agents IA</option><option>Automatisation</option><option>Chatbots</option>
+                          <option>Développement IA</option><option>Prompt Engineering</option>
+                          <option>Montage vidéo IA</option><option>Branding IA</option><option>Formation IA</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Niveau d'expérience *</label>
+                        <select className="form-select" value={form.niveau} onChange={e => set('niveau', e.target.value)} required>
+                          <option value="">Choisir...</option>
+                          <option>1-2 ans</option><option>3-5 ans</option><option>5+ ans</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">LinkedIn ou site web</label>
+                      <input className="form-input" type="url" placeholder="https://..." value={form.linkedin} onChange={e => set('linkedin', e.target.value)}/>
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Présentez-vous en quelques lignes *</label>
+                      <textarea className="form-textarea" placeholder="Votre parcours, vos compétences clés, ce que vous apportez à vos clients..." value={form.bio} onChange={e => set('bio', e.target.value)} required/>
+                    </div>
+                  </React.Fragment>
+                )}
                 {error && <div style={{color:'#EF4444',fontSize:13,marginBottom:10,padding:'10px 14px',background:'rgba(239,68,68,0.08)',borderRadius:8,border:'1px solid rgba(239,68,68,0.2)'}}>{error}</div>}
                 <button type="submit" className="btn btn-primary form-submit" disabled={loading}>
-                  {loading ? 'Création du compte…' : <React.Fragment>Créer mon compte expert <Ic.Arrow/></React.Fragment>}
+                  {loading ? 'Création du compte…' : <React.Fragment>{tab === 'client' ? 'Créer mon compte client' : 'Créer mon compte expert'} <Ic.Arrow/></React.Fragment>}
                 </button>
                 <div className="form-login">Déjà un compte ? <a href="connexion.html">Se connecter</a></div>
               </form>

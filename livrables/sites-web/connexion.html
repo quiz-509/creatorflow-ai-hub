@@ -184,7 +184,7 @@ function App() {
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
         <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
-        <a href="inscription.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Creer un compte</a>
+        <a href={`inscription.html?role=${tab}`} className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Creer un compte</a>
       </div></nav>
 
       <div className="login-page">
@@ -224,7 +224,7 @@ function App() {
             </form>
             <div className="form-footer">
               Pas encore de compte ?{' '}
-              <a href="inscription.html">{tab==='expert' ? 'Devenir expert' : "S'inscrire gratuitement"}</a>
+              <a href={`inscription.html?role=${tab}`}>{tab==='expert' ? 'Devenir expert' : "S'inscrire gratuitement"}</a>
             </div>
           </div>
         </div>
