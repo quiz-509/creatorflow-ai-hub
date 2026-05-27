@@ -98,11 +98,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
@@ -118,9 +124,22 @@ const CATS = ['Agents IA','Automatisation','Chatbots','Développement IA','Promp
 function App() {
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState(null);
   const [form, setForm] = useState({ cat:'', budget:'', delai:'', desc:'', nom:'', email:'', entreprise:'', tel:'' });
 
   useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (data.session) {
+        const u = data.session.user;
+        setUserId(u.id);
+        const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+        if (profile) {
+          const nom = `${profile.prenom || ''} ${profile.nom || ''}`.trim();
+          setForm(f => ({ ...f, nom, email: u.email }));
+        }
+      }
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -140,8 +159,22 @@ function App() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setSaving(true);
+    await sb.from('briefs').insert({
+      user_id: userId || null,
+      categorie: form.cat,
+      budget: form.budget,
+      delai: form.delai,
+      description: form.desc,
+      nom_contact: form.nom,
+      email_contact: form.email,
+      entreprise: form.entreprise,
+      telephone: form.tel,
+      statut: 'ouvert',
+    });
+    setSaving(false);
     setDone(true);
   }
 
@@ -275,7 +308,7 @@ function App() {
                         <input type="hidden" name="description" value={form.desc}/>
                         <div className="form-actions">
                           <button type="button" className="btn btn-ghost" onClick={() => setStep(2)}><Ic.Back/>Retour</button>
-                          <button type="submit" className="btn btn-primary">Envoyer mon brief <Ic.Arrow/></button>
+                          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Envoi en cours…' : <><span>Envoyer mon brief</span><Ic.Arrow/></>}</button>
                         </div>
                       </div>
                     )}

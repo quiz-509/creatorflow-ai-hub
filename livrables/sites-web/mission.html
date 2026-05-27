@@ -162,11 +162,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
@@ -212,18 +218,28 @@ function App() {
   const [tab, setTab] = useState('details');
   const [msg, setMsg] = useState('');
   const [messages, setMessages] = useState(MESSAGES);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { window.location.href = 'connexion.html'; return; }
+      const u = data.session.user;
+      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+      setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
+    });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
     return () => window.removeEventListener('mousemove', move);
   }, []);
 
+  const userInitials = user ? ((user.prenom||'?')[0]+(user.nom||'?')[0]).toUpperCase() : 'JD';
+  const userName = user ? `${user.prenom} ${user.nom}`.trim() || user.email : 'Jean Dupont';
+
   function sendMsg(e) {
     e.preventDefault();
     if (!msg.trim()) return;
-    setMessages(prev => [...prev, {id:Date.now(), side:'right', author:'Jean Dupont', initials:'JD', color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:msg, time:'À l\'instant'}]);
+    setMessages(prev => [...prev, {id:Date.now(), side:'right', author:userName, initials:userInitials, color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:msg, time:'À l\'instant'}]);
     setMsg('');
   }
 
@@ -239,8 +255,8 @@ function App() {
           <a href="brief.html" className="nav-link">Déposer un brief</a>
         </div>
         <div className="user-chip">
-          <div className="avatar">JD</div>
-          <span style={{fontSize:13,fontWeight:600}}>Jean Dupont</span>
+          <div className="avatar">{userInitials}</div>
+          <span style={{fontSize:13,fontWeight:600}}>{userName}</span>
         </div>
       </div></nav>
 

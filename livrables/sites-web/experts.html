@@ -132,11 +132,17 @@ img{display:block;max-width:100%;}
 <body>
 <div id="cursor-glow"></div>
 <div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect, useRef, useMemo } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const PHOTOS = {
   a1:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
@@ -251,8 +257,41 @@ function App() {
   const [budget, setBudget] = useState('tous');
   const [dispo, setDispo] = useState('tous');
   const [sort, setSort] = useState('note');
+  const [experts, setExperts] = useState(EXPERTS);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    (async () => {
+      const { data: expertsList } = await sb.from('experts').select('*');
+      if (expertsList?.length) {
+        const ids = expertsList.map(e => e.id);
+        const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
+        const pm = {};
+        profilesList?.forEach(p => pm[p.id] = p);
+        const merged = expertsList.map((exp, i) => {
+          const p = pm[exp.id] || {};
+          const prenom = p.prenom || '';
+          const nom = p.nom || '';
+          const name = `${prenom} ${nom}`.trim();
+          return {
+            id: exp.id,
+            photo: Object.values(PHOTOS)[i % 9],
+            name: name || `Expert IA ${i + 1}`,
+            role: exp.specialite || 'Expert IA',
+            bio: exp.bio || '',
+            skills: exp.competences || [],
+            rate: exp.tarif_heure || 100,
+            rating: exp.note || 5.0,
+            reviews: exp.nb_avis || 0,
+            cats: exp.categories || [exp.specialite || 'Agents IA'].filter(Boolean),
+            available: exp.disponible ?? true,
+          };
+        });
+        setExperts(merged);
+      }
+      setLoading(false);
+    })();
+
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -272,7 +311,7 @@ function App() {
   }, []);
 
   const filtered = useMemo(() => {
-    let list = [...EXPERTS];
+    let list = [...experts];
     if (cat !== 'Toutes') list = list.filter(e => e.cats.includes(cat));
     if (budget === 'moins100') list = list.filter(e => e.rate < 100);
     if (budget === '100-150') list = list.filter(e => e.rate >= 100 && e.rate <= 150);
@@ -290,7 +329,7 @@ function App() {
       <Nav/>
       <div className="page-header">
         <div className="wrap">
-          <span className="eyebrow">120+ experts certifiés</span>
+          <span className="eyebrow">{loading ? '...' : `${experts.length}+ experts certifiés`}</span>
           <h1 className="page-title">Trouvez votre expert <em>IA idéal.</em></h1>
           <p className="page-sub">Chaque profil est vérifié par notre équipe. Compétences certifiées, références validées.</p>
         </div>
@@ -337,11 +376,13 @@ function App() {
         </div>
       </div>
       <div className="wrap experts-section">
-        {filtered.length === 0
-          ? <div className="empty"><h3>Aucun expert trouvé</h3><p>Essaie de modifier tes filtres.</p></div>
-          : <div className="experts-grid">
-              {filtered.map((e, i) => <ExpertCard key={e.id} expert={e} delay={i * 60}/>)}
-            </div>
+        {loading
+          ? <div className="empty"><p style={{color:'var(--text-3)'}}>Chargement des experts…</p></div>
+          : filtered.length === 0
+            ? <div className="empty"><h3>Aucun expert trouvé</h3><p>Essaie de modifier tes filtres.</p></div>
+            : <div className="experts-grid">
+                {filtered.map((e, i) => <ExpertCard key={e.id} expert={e} delay={i * 60}/>)}
+              </div>
         }
       </div>
       <footer>
