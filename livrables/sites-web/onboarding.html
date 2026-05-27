@@ -239,17 +239,14 @@ function App() {
           tarif_heure: tarif ? parseInt(tarif) : null,
           disponible: disponible === 'oui',
         };
-        const { data: existing, error: selErr } = await sb.from('experts').select('id').eq('id', userId).single();
-        console.log('[onboarding] existing expert:', existing, 'selErr:', selErr);
+        const { data: existing } = await sb.from('experts').select('id').eq('id', userId).single();
         if (existing) {
-          const { error: updErr } = await sb.from('experts').update(expertData).eq('id', userId);
-          console.log('[onboarding] update error:', updErr);
+          await sb.from('experts').update(expertData).eq('id', userId);
         } else {
-          const { error: insErr } = await sb.from('experts').insert({ id: userId, ...expertData });
-          console.log('[onboarding] insert error:', insErr);
+          await sb.from('experts').insert({ id: userId, ...expertData });
         }
       }
-    } catch(e) { console.error('[onboarding] catch:', e); }
+    } catch(e) { console.error(e); }
     setSaving(false);
     setStep(totalSteps);
   }

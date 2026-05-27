@@ -277,8 +277,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const { data: expertsList, error: expertsError } = await sb.from('experts').select('*');
-      console.log('[experts.html] Supabase experts:', expertsList, 'error:', expertsError);
+      const { data: expertsList } = await sb.from('experts').select('*');
       if (expertsList?.length) {
         const ids = expertsList.map(e => e.id);
         const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
@@ -338,7 +337,7 @@ function App() {
     if (sort === 'tarif-desc') list.sort((a, b) => b.rate - a.rate);
     if (sort === 'avis') list.sort((a, b) => b.reviews - a.reviews);
     return list;
-  }, [cat, budget, dispo, sort]);
+  }, [experts, cat, budget, dispo, sort]);
 
   return (
     <React.Fragment>
