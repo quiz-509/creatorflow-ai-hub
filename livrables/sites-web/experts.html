@@ -277,7 +277,8 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const { data: expertsList } = await sb.from('experts').select('*');
+      const { data: expertsList, error: expertsError } = await sb.from('experts').select('*');
+      console.log('[experts.html] Supabase experts:', expertsList, 'error:', expertsError);
       if (expertsList?.length) {
         const ids = expertsList.map(e => e.id);
         const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
