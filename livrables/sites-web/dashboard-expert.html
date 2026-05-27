@@ -241,6 +241,7 @@ function App() {
   const [expert, setExpert] = useState(null);
   const [opps, setOpps] = useState([]);
   const [convs, setConvs] = useState([]);
+  const [missions, setMissions] = useState([]);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -255,6 +256,8 @@ function App() {
       setOpps(o || []);
       const { data: c } = await sb.from('conversations').select('id,created_at').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
       setConvs(c || []);
+      const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(4);
+      setMissions(m || []);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -340,9 +343,9 @@ function App() {
           <div className="stats-grid">
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
-              <div className="stat-val">3</div>
+              <div className="stat-val">{missions.length}</div>
               <div className="stat-label">Missions actives</div>
-              <div className="stat-trend trend-cyan"><Ic.TrendUp/>En hausse</div>
+              <div className="stat-trend trend-cyan"><Ic.TrendUp/>{missions.length > 0 ? 'En cours' : 'Aucune'}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
@@ -376,23 +379,30 @@ function App() {
                   <span className="section-title">Mes missions en cours</span>
                   <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('missions');}}>Tout voir →</a>
                 </div>
-                {MISSIONS.map(m => (
-                  <div key={m.id} className="mission-item">
-                    <div className="mission-icon" style={{background:m.iconBg}}>{m.icon}</div>
-                    <div className="mission-info">
-                      <div className="mission-name">{m.name}</div>
-                      <div className="mission-meta">{m.cat} · {m.client}</div>
-                      <div className="prog-bar" style={{width:130}}>
-                        <div className="prog-fill" style={{width:m.progress+'%'}}/>
+                {missions.length === 0 ? (
+                  <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:32,marginBottom:8}}>🚀</div>
+                    <div style={{fontSize:13}}>Aucune mission en cours</div>
+                  </div>
+                ) : missions.map(m => {
+                  const statusMap = {nouveau:'badge-green',en_cours:'badge-green',en_revision:'badge-amber',termine:'badge-green',annule:'badge-red'};
+                  const labelMap = {nouveau:'Nouveau',en_cours:'En cours',en_revision:'En révision',termine:'Terminé',annule:'Annulé'};
+                  return (
+                    <div key={m.id} className="mission-item">
+                      <div className="mission-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
+                      <div className="mission-info">
+                        <div className="mission-name">{m.titre}</div>
+                        <div className="mission-meta">{m.categorie}</div>
+                        {m.progression != null && <div className="prog-bar" style={{width:130}}><div className="prog-fill" style={{width:m.progression+'%'}}/></div>}
+                      </div>
+                      <div className="mission-right">
+                        <span className={`badge ${statusMap[m.statut] || 'badge-green'}`}>{labelMap[m.statut] || m.statut}</span>
+                        <span className="mission-price">{m.prix ? m.prix+'$' : ''}</span>
+                        <span style={{fontSize:10,color:'var(--text-3)'}}>{m.deadline ? 'Livraison ' + new Date(m.deadline).toLocaleDateString('fr-CA') : ''}</span>
                       </div>
                     </div>
-                    <div className="mission-right">
-                      <span className={`badge ${m.badge}`}>{m.statusLabel}</span>
-                      <span className="mission-price">{m.price}</span>
-                      <span style={{fontSize:10,color:'var(--text-3)'}}>Livraison {m.deadline}</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* OPPORTUNITÉS */}
