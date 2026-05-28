@@ -123,20 +123,26 @@ const Ic = {
   Settings:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
 };
 
-const NOTIFS_DATA = [
-  // Aujourd'hui
-  { id:1, group:'Aujourd\'hui', type:'mission', icon:'💼', iconClass:'icon-purple', unread:true, title:<>Nouvelle proposition sur <strong>Chatbot IA e-commerce</strong></>, desc:'Amélie Chen vous a envoyé une proposition de 1 800$ pour votre brief. Réponse sous 72h recommandée.', time:'Il y a 35 min', action:'Voir la proposition', href:'mission.html', badge:'Nouveau', badgeClass:'badge-purple' },
-  { id:2, group:'Aujourd\'hui', type:'message', icon:'💬', iconClass:'icon-cyan', unread:true, title:<>Nouveau message de <strong>Karim Benali</strong></>, desc:'« Bonjour ! J\'ai bien regardé votre brief et j\'aurais quelques questions avant de vous envoyer un devis… »', time:'Il y a 1h', action:'Lire le message', href:'messages.html', badge:null },
-  { id:3, group:'Aujourd\'hui', type:'payment', icon:'✅', iconClass:'icon-green', unread:true, title:<>Paiement confirmé — <strong>1 260$</strong></>, desc:'Votre virement pour la mission "Automatisation CRM" a été reçu et l\'acompte est libéré à l\'expert.', time:'Il y a 3h', action:'Voir la facture', href:'paiement.html', badge:'Confirmé', badgeClass:'badge-green' },
-  // Hier
-  { id:4, group:'Hier', type:'mission', icon:'🚀', iconClass:'icon-purple', unread:false, title:<>Mission <strong>Pipeline analytics IA</strong> — Livrable déposé</>, desc:'Sofia Martins a déposé le livrable #2 "Dashboard Power BI". Vérifiez et validez pour débloquer le prochain jalon.', time:'Hier, 16:42', action:'Valider le livrable', href:'mission.html', badge:'Action requise', badgeClass:'badge-orange' },
-  { id:5, group:'Hier', type:'review', icon:'⭐', iconClass:'icon-orange', unread:false, title:<>Évaluez votre mission avec <strong>Lucas Bernard</strong></>, desc:'La mission "Automatisation Slack & Notion" est terminée. Partagez votre avis pour aider la communauté.', time:'Hier, 10:15', action:'Laisser un avis', href:'dashboard-client.html', badge:null },
-  { id:6, group:'Hier', type:'alert', icon:'⚠️', iconClass:'icon-red', unread:false, title:<>Délai approaching — <strong>Chatbot IA e-commerce</strong></>, desc:'La date de livraison estimée est dans 3 jours. Pensez à relancer votre expert si besoin.', time:'Hier, 09:00', action:'Voir la mission', href:'mission.html', badge:null },
-  // Cette semaine
-  { id:7, group:'Cette semaine', type:'system', icon:'🔒', iconClass:'icon-green', unread:false, title:<>Votre profil est <strong>vérifié</strong></>, desc:'Votre identité et vos informations de facturation ont été vérifiées. Vous pouvez maintenant poster des briefs.', time:'Lun. 14:30', action:null, href:null, badge:'Compte vérifié', badgeClass:'badge-green' },
-  { id:8, group:'Cette semaine', type:'mission', icon:'📋', iconClass:'icon-purple', unread:false, title:<>Brief <strong>Agent IA service client</strong> publié</>, desc:'Votre brief est maintenant visible par les experts. 3 experts l\'ont déjà consulté ce matin.', time:'Lun. 09:05', action:'Voir le brief', href:'dashboard-client.html', badge:null },
-  { id:9, group:'Cette semaine', type:'payment', icon:'🧾', iconClass:'icon-cyan', unread:false, title:<>Facture disponible — <strong>Mission #BRF-2841</strong></>, desc:'La facture #FAC-0047 de 540$ est prête à télécharger pour votre comptabilité.', time:'Dim. 18:00', action:'Télécharger', href:'paiement.html', badge:null },
-];
+function getGroup(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return "Aujourd'hui";
+  if (diffDays === 1) return 'Hier';
+  if (diffDays <= 7) return 'Cette semaine';
+  return 'Plus ancien';
+}
+
+function getTimeAgo(dateStr) {
+  const d = new Date(dateStr);
+  const diff = Math.floor((Date.now() - d) / 1000);
+  if (diff < 60) return "À l'instant";
+  if (diff < 3600) return `Il y a ${Math.floor(diff/60)} min`;
+  if (diff < 86400) return `Il y a ${Math.floor(diff/3600)}h`;
+  if (diff < 172800) return `Hier, ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+  return d.toLocaleDateString('fr-FR', { weekday:'short', hour:'2-digit', minute:'2-digit' });
+}
 
 const SETTINGS_DATA = [
   { name:'Nouvelles propositions', desc:'Quand un expert répond à l\'un de vos briefs', key:'proposals', default:true },
@@ -149,7 +155,8 @@ const SETTINGS_DATA = [
 
 function App() {
   const [tab, setTab] = useState('toutes');
-  const [notifs, setNotifs] = useState(NOTIFS_DATA);
+  const [notifs, setNotifs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [settings, setSettings] = useState(() => {
     const s = {};
@@ -158,12 +165,28 @@ function App() {
   });
 
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
-      const u = data.session.user;
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = 'connexion.html'; return; }
+      const u = session.user;
       const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
       setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
-    });
+      const { data: rows } = await sb.from('notifications')
+        .select('*').eq('user_id', u.id).order('created_at', { ascending: false });
+      if (rows) {
+        setNotifs(rows.map(n => ({
+          ...n,
+          unread: !n.read,
+          group: getGroup(n.created_at),
+          time: getTimeAgo(n.created_at),
+          iconClass: n.icon_class || 'icon-purple',
+          badgeClass: n.badge_class || 'badge-purple',
+          desc: n.description,
+          action: n.href ? 'Voir' : null,
+        })));
+      }
+      setLoading(false);
+    })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -182,10 +205,24 @@ function App() {
   }, []);
 
   const unreadCount = notifs.filter(n => n.unread).length;
-  const markAllRead = () => setNotifs(n => n.map(x => ({...x, unread:false})));
-  const markRead = id => setNotifs(n => n.map(x => x.id===id ? {...x, unread:false} : x));
-  const deleteNotif = id => setNotifs(n => n.filter(x => x.id!==id));
-  const clearAll = () => setNotifs([]);
+  const markRead = async (id) => {
+    setNotifs(n => n.map(x => x.id===id ? {...x, unread:false, read:true} : x));
+    await sb.from('notifications').update({ read: true }).eq('id', id);
+  };
+  const markAllRead = async () => {
+    if (!user) return;
+    setNotifs(n => n.map(x => ({...x, unread:false, read:true})));
+    await sb.from('notifications').update({ read: true }).eq('user_id', user.id);
+  };
+  const deleteNotif = async (id) => {
+    setNotifs(n => n.filter(x => x.id!==id));
+    await sb.from('notifications').delete().eq('id', id);
+  };
+  const clearAll = async () => {
+    if (!user) return;
+    setNotifs([]);
+    await sb.from('notifications').delete().eq('user_id', user.id);
+  };
 
   const filtered = tab === 'non-lues' ? notifs.filter(n => n.unread)
     : tab === 'missions' ? notifs.filter(n => n.type === 'mission')
@@ -246,7 +283,9 @@ function App() {
               </div>
 
               <div className="fade-up">
-                {filtered.length === 0 ? (
+                {loading ? (
+                  <div className="empty"><div className="empty-emoji">⏳</div><div className="empty-title">Chargement…</div></div>
+                ) : filtered.length === 0 ? (
                   <div className="empty">
                     <div className="empty-emoji">🔔</div>
                     <div className="empty-title">Aucune notification</div>
