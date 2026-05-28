@@ -224,10 +224,10 @@ const STATUT_MAP = {
 function App() {
   const [tab, setTab] = useState('details');
   const [msg, setMsg] = useState('');
-  const [messages, setMessages] = useState(MESSAGES);
+  const [messages, setMessages] = useState([]);
   const [user, setUser] = useState(null);
   const [mission, setMission] = useState(null);
-  const [otherParty, setOtherParty] = useState({ name: '—', initials: '??' });
+  const [otherParty, setOtherParty] = useState({ name: '—', initials: '??', id: null, specialite: null, note: null, nb_avis: 0 });
   const [convId, setConvId] = useState(null);
   const [loadingMission, setLoadingMission] = useState(true);
 
@@ -249,7 +249,15 @@ function App() {
           if (otherId) {
             const { data: op } = await sb.from('profiles').select('prenom, nom').eq('id', otherId).single();
             const p = op?.prenom || ''; const n = op?.nom || '';
-            setOtherParty({ name: `${p} ${n}`.trim() || '—', initials: ((p[0]||'?')+(n[0]||'?')).toUpperCase() });
+            const { data: opExp } = await sb.from('experts').select('specialite, note, nb_avis').eq('id', otherId).maybeSingle();
+            setOtherParty({
+              name: `${p} ${n}`.trim() || '—',
+              initials: ((p[0]||'?')+(n[0]||'?')).toUpperCase(),
+              id: otherId,
+              specialite: opExp?.specialite || null,
+              note: opExp?.note || null,
+              nb_avis: opExp?.nb_avis || 0,
+            });
           }
           const { data: conv } = await sb.from('conversations').select('id').eq('client_id', m.client_id).eq('expert_id', m.expert_id).maybeSingle();
           if (conv) {
@@ -358,7 +366,7 @@ function App() {
               {id:'details', label:'Détails'},
               {id:'livrables', label:'Livrables', count:doneCount+'/'+LIVRABLES.length},
               {id:'timeline', label:'Timeline'},
-              {id:'messages', label:'Messages', count:1},
+              {id:'messages', label:'Messages', count:messages.length},
             ].map(t => (
               <div key={t.id} className={`tab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
                 {t.label}
@@ -377,15 +385,16 @@ function App() {
                   <div className="card-head"><span className="card-title">Description du projet</span></div>
                   <div className="card-body">
                     <div className="desc-text">
-                      <p>Nous souhaitons intégrer un chatbot intelligent basé sur l'IA sur notre plateforme e-commerce pour automatiser le service client. Le chatbot doit être capable de répondre aux questions fréquentes, gérer les demandes de retour et d'échange, suivre les commandes en temps réel et escalader vers un agent humain si nécessaire.</p>
-                      <p>Le chatbot doit s'intégrer via un widget JavaScript sur notre site Shopify existant, avec une interface en français et une personnalisation aux couleurs de notre marque.</p>
-                      <p>Volume estimé : 500 à 1 000 conversations par mois. Nous utilisons Salesforce comme CRM — une intégration bidirectionnelle est souhaitée pour synchroniser les tickets clients.</p>
+                      {mission?.titre
+                        ? <p><strong>{mission.titre}</strong>{missionCategorie !== '—' ? ` — ${missionCategorie}` : ''}</p>
+                        : <p style={{color:'var(--text-3)'}}>Aucune description disponible.</p>
+                      }
                     </div>
-                    <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:20}}>
-                      {['ChatGPT API','LangChain','Shopify','Salesforce CRM','Widget JS','French NLP'].map(t => (
-                        <span key={t} style={{padding:'4px 10px',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:7,fontSize:11,color:'var(--text-2)',fontWeight:500}}>{t}</span>
-                      ))}
-                    </div>
+                    {missionCategorie !== '—' && (
+                      <div style={{display:'flex',flexWrap:'wrap',gap:8,marginTop:20}}>
+                        <span style={{padding:'4px 10px',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:7,fontSize:11,color:'var(--text-2)',fontWeight:500}}>{missionCategorie}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -436,8 +445,7 @@ function App() {
               {tab === 'messages' && (
                 <div className="card">
                   <div className="card-head">
-                    <span className="card-title">Discussion avec Amélie Chen</span>
-                    <span className="badge badge-green" style={{fontSize:10}}>En ligne</span>
+                    <span className="card-title">Discussion avec {otherParty.name}</span>
                   </div>
                   <div className="card-body">
                     <div className="msg-thread">
@@ -472,29 +480,34 @@ function App() {
 
               {/* EXPERT */}
               <div className="card">
-                <div className="card-head"><span className="card-title">Expert assigné</span></div>
+                <div className="card-head"><span className="card-title">{user?.role === 'expert' ? 'Client' : 'Expert assigné'}</span></div>
                 <div className="expert-card">
                   <div className="ex-top">
-                    <div className="ex-avatar">AC</div>
+                    <div className="ex-avatar">{otherParty.initials}</div>
                     <div>
-                      <div className="ex-name">Amélie Chen</div>
-                      <div className="ex-spec">Agents IA · Chatbots · LLM</div>
-                      <div className="stars" style={{marginTop:4}}>
-                        {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
-                        <span style={{fontSize:10,color:'var(--text-3)',marginLeft:4}}>4.9</span>
-                      </div>
+                      <div className="ex-name">{otherParty.name}</div>
+                      {otherParty.specialite && <div className="ex-spec">{otherParty.specialite}</div>}
+                      {otherParty.note && (
+                        <div className="stars" style={{marginTop:4}}>
+                          {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
+                          <span style={{fontSize:10,color:'var(--text-3)',marginLeft:4}}>{otherParty.note}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="ex-stats">
-                    <div className="ex-stat"><div className="ex-stat-val">18</div><div className="ex-stat-label">Missions</div></div>
-                    <div className="ex-stat"><div className="ex-stat-val">100%</div><div className="ex-stat-label">Succès</div></div>
-                  </div>
+                  {otherParty.nb_avis > 0 && (
+                    <div className="ex-stats">
+                      <div className="ex-stat"><div className="ex-stat-val">{otherParty.nb_avis}</div><div className="ex-stat-label">Avis</div></div>
+                    </div>
+                  )}
                   <button className="btn btn-ghost btn-sm action-btn" onClick={() => setTab('messages')}>
                     Envoyer un message
                   </button>
-                  <a href="profil.html" className="btn btn-ghost btn-sm action-btn">
-                    Voir le profil <Ic.Arrow/>
-                  </a>
+                  {otherParty.id && (
+                    <a href={`profil-expert.html?id=${otherParty.id}`} className="btn btn-ghost btn-sm action-btn">
+                      Voir le profil <Ic.Arrow/>
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -502,22 +515,29 @@ function App() {
               <div className="card">
                 <div className="card-head"><span className="card-title">Budget et paiement</span></div>
                 <div className="card-body" style={{padding:'16px 20px'}}>
-                  <div className="budget-row">
-                    <span className="budget-label">Budget convenu</span>
-                    <span className="budget-val">1 800$</span>
-                  </div>
-                  <div className="budget-row">
-                    <span className="budget-label">Acompte versé (30%)</span>
-                    <span className="budget-val" style={{color:'var(--green)'}}>540$ <Ic.Check style={{display:'inline',color:'var(--green)'}}/></span>
-                  </div>
-                  <div className="budget-row">
-                    <span className="budget-label">Solde à la livraison</span>
-                    <span className="budget-val">1 260$</span>
-                  </div>
-                  <div className="budget-row" style={{paddingTop:12,marginTop:4}}>
-                    <span className="budget-label" style={{fontWeight:700,color:'var(--text-2)'}}>Total</span>
-                    <span className="budget-total">1 800$</span>
-                  </div>
+                  {mission?.prix ? (() => {
+                    const total = mission.prix;
+                    const acompte = Math.round(total * 0.3);
+                    const solde = total - acompte;
+                    return (<>
+                      <div className="budget-row">
+                        <span className="budget-label">Budget convenu</span>
+                        <span className="budget-val">{total}$</span>
+                      </div>
+                      <div className="budget-row">
+                        <span className="budget-label">Acompte versé (30%)</span>
+                        <span className="budget-val" style={{color:'var(--green)'}}>{acompte}$ <Ic.Check style={{display:'inline',color:'var(--green)'}}/></span>
+                      </div>
+                      <div className="budget-row">
+                        <span className="budget-label">Solde à la livraison</span>
+                        <span className="budget-val">{solde}$</span>
+                      </div>
+                      <div className="budget-row" style={{paddingTop:12,marginTop:4}}>
+                        <span className="budget-label" style={{fontWeight:700,color:'var(--text-2)'}}>Total</span>
+                        <span className="budget-total">{total}$</span>
+                      </div>
+                    </>);
+                  })() : <span style={{color:'var(--text-3)',fontSize:13}}>Budget non défini</span>}
                   <button className="btn btn-ghost btn-sm action-btn" style={{marginTop:12}}>
                     <Ic.Download/>Télécharger la facture
                   </button>
@@ -529,9 +549,8 @@ function App() {
                 <div className="card-head"><span className="card-title">Dates clés</span></div>
                 <div style={{padding:'12px 20px'}}>
                   {[
-                    {color:'var(--green)', label:'Démarrage', val:'12 mai 2026'},
-                    {color:'var(--amber)', label:'Mi-parcours', val:'28 mai 2026'},
-                    {color:'var(--v)', label:'Livraison prévue', val:'10 juin 2026'},
+                    {color:'var(--green)', label:'Démarrage', val: missionDebut},
+                    {color:'var(--v)', label:'Livraison prévue', val: missionDeadline},
                   ].map((d,i) => (
                     <div key={i} className="date-row">
                       <div className="date-dot" style={{background:d.color}}/>
