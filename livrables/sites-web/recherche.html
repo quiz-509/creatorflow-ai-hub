@@ -192,41 +192,42 @@ function App() {
   const PER_PAGE = 5;
 
   useEffect(() => {
-    sb.from('experts')
-      .select('*, profiles(*)')
-      .eq('disponible', true)
-      .then(({ data, error }) => {
-        if (!error && data && data.length > 0) {
-          const mapped = data.map((exp, i) => {
-            const p = exp.profiles;
-            const prenom = p?.prenom || '';
-            const nom = p?.nom || '';
-            const fullName = `${prenom} ${nom}`.trim() || 'Expert';
-            const initials = ((prenom[0]||'?')+(nom[0]||'?')).toUpperCase();
-            const tags = exp.specialite ? [exp.specialite] : [];
-            return {
-              id: exp.id,
-              name: fullName,
-              initials,
-              color: COLORS[i % COLORS.length],
-              spec: exp.specialite ? `Expert ${exp.specialite}` : 'Expert IA',
-              about: exp.bio || 'Expert disponible sur CreatorFlow Market.',
-              tags,
-              rating: 5.0,
-              reviews: 0,
-              missions: 0,
-              response: '< 24h',
-              location: 'Montréal',
-              available: exp.disponible ?? true,
-              featured: false,
-              rate: exp.tarif_horaire || 0,
-              category: exp.specialite || 'IA Généraliste',
-            };
-          });
-          setAllExperts([...mapped, ...EXPERTS_DEMO]);
-        }
-        setLoading(false);
-      });
+    (async () => {
+      const { data: expertsList } = await sb.from('experts').select('*');
+      if (expertsList?.length) {
+        const ids = expertsList.map(e => e.id);
+        const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
+        const pm = {};
+        profilesList?.forEach(p => pm[p.id] = p);
+        const mapped = expertsList.map((exp, i) => {
+          const p = pm[exp.id] || {};
+          const prenom = p.prenom || '';
+          const nom = p.nom || '';
+          const fullName = `${prenom} ${nom}`.trim() || 'Expert';
+          const initials = ((prenom[0]||'?')+(nom[0]||'?')).toUpperCase();
+          return {
+            id: exp.id,
+            name: fullName,
+            initials,
+            color: COLORS[i % COLORS.length],
+            spec: exp.specialite ? `Expert ${exp.specialite}` : 'Expert IA',
+            about: exp.bio || 'Expert disponible sur CreatorFlow Market.',
+            tags: exp.competences || (exp.specialite ? [exp.specialite] : []),
+            rating: exp.note || 5.0,
+            reviews: exp.nb_avis || 0,
+            missions: 0,
+            response: '< 24h',
+            location: 'Montréal',
+            available: exp.disponible ?? true,
+            featured: false,
+            rate: exp.tarif_heure || 0,
+            category: exp.specialite || 'IA Généraliste',
+          };
+        });
+        setAllExperts(mapped);
+      }
+      setLoading(false);
+    })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
