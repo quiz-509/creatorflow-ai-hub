@@ -377,7 +377,7 @@ function App() {
                   const statusMap = {nouveau:'badge-green',en_cours:'badge-green',en_revision:'badge-amber',termine:'badge-green',annule:'badge-red'};
                   const labelMap = {nouveau:'Nouveau',en_cours:'En cours',en_revision:'En révision',termine:'Terminé',annule:'Annulé'};
                   return (
-                    <div key={m.id} className="mission-item">
+                    <a key={m.id} className="mission-item" href={`mission.html?id=${m.id}`} style={{cursor:'pointer',textDecoration:'none',color:'inherit'}}>
                       <div className="mission-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>🚀</div>
                       <div className="mission-info">
                         <div className="mission-name">{m.titre}</div>
@@ -389,7 +389,7 @@ function App() {
                         <span className="mission-price">{m.prix ? m.prix+'$' : ''}</span>
                         <span style={{fontSize:10,color:'var(--text-3)'}}>{m.deadline ? new Date(m.deadline).toLocaleDateString('fr-CA') : ''}</span>
                       </div>
-                    </div>
+                    </a>
                   );
                 })}
               </div>

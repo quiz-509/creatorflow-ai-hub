@@ -214,34 +214,83 @@ const MESSAGES = [
   {id:5, side:'left', author:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', text:'Les maquettes sont parfaites ! Je peux commencer l\'intégration cet après-midi. On sera bien dans les délais pour le 10 juin.', time:'Il y a 12 min'},
 ];
 
+const STATUT_MAP = {
+  'en_cours': { label: 'En cours', cls: 'badge-green' },
+  'termine': { label: 'Terminée', cls: 'badge-purple' },
+  'en_attente': { label: 'En attente', cls: 'badge-orange' },
+  'annule': { label: 'Annulée', cls: 'badge-red' },
+};
+
 function App() {
   const [tab, setTab] = useState('details');
   const [msg, setMsg] = useState('');
   const [messages, setMessages] = useState(MESSAGES);
   const [user, setUser] = useState(null);
+  const [mission, setMission] = useState(null);
+  const [otherParty, setOtherParty] = useState({ name: '—', initials: '??' });
+  const [convId, setConvId] = useState(null);
+  const [loadingMission, setLoadingMission] = useState(true);
 
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
-      const u = data.session.user;
-      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
-      setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
-    });
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = 'connexion.html'; return; }
+      const u = session.user;
+      const { data: profile } = await sb.from('profiles').select('prenom, nom, type_utilisateur').eq('id', u.id).single();
+      setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '', role: profile?.type_utilisateur || 'client' });
+
+      const params = new URLSearchParams(window.location.search);
+      const missionId = params.get('id');
+      if (missionId) {
+        const { data: m } = await sb.from('missions').select('*').eq('id', missionId).single();
+        if (m) {
+          setMission(m);
+          const otherId = profile?.type_utilisateur === 'expert' ? m.client_id : m.expert_id;
+          if (otherId) {
+            const { data: op } = await sb.from('profiles').select('prenom, nom').eq('id', otherId).single();
+            const p = op?.prenom || ''; const n = op?.nom || '';
+            setOtherParty({ name: `${p} ${n}`.trim() || '—', initials: ((p[0]||'?')+(n[0]||'?')).toUpperCase() });
+          }
+          const { data: conv } = await sb.from('conversations').select('id').eq('client_id', m.client_id).eq('expert_id', m.expert_id).maybeSingle();
+          if (conv) {
+            setConvId(conv.id);
+            const { data: msgs } = await sb.from('messages').select('*').eq('conversation_id', conv.id).order('created_at', { ascending: true }).limit(50);
+            if (msgs?.length) setMessages(msgs.map(msg => ({
+              id: msg.id, side: msg.sender_id === u.id ? 'right' : 'left',
+              author: msg.sender_id === u.id ? `${profile?.prenom||''} ${profile?.nom||''}`.trim() : otherParty.name,
+              initials: msg.sender_id === u.id ? ((profile?.prenom||'?')[0]+(profile?.nom||'?')[0]).toUpperCase() : '??',
+              color: msg.sender_id === u.id ? 'linear-gradient(135deg,#7C3AED,#6D28D9)' : 'linear-gradient(135deg,#7C3AED,#A78BFA)',
+              text: msg.contenu, time: new Date(msg.created_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),
+            })));
+          }
+        }
+      }
+      setLoadingMission(false);
+    })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
     return () => window.removeEventListener('mousemove', move);
   }, []);
 
-  const userInitials = user ? ((user.prenom||'?')[0]+(user.nom||'?')[0]).toUpperCase() : 'JD';
-  const userName = user ? `${user.prenom} ${user.nom}`.trim() || user.email : 'Jean Dupont';
+  const userInitials = user ? ((user.prenom||'?')[0]+(user.nom||'?')[0]).toUpperCase() : '??';
+  const userName = user ? `${user.prenom} ${user.nom}`.trim() || user.email : '—';
 
-  function sendMsg(e) {
+  const sendMsg = async (e) => {
     e.preventDefault();
-    if (!msg.trim()) return;
-    setMessages(prev => [...prev, {id:Date.now(), side:'right', author:userName, initials:userInitials, color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text:msg, time:'À l\'instant'}]);
-    setMsg('');
-  }
+    if (!msg.trim() || !user) return;
+    const text = msg; setMsg('');
+    setMessages(prev => [...prev, {id:Date.now(), side:'right', author:userName, initials:userInitials, color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text, time:"À l'instant"}]);
+    if (convId) await sb.from('messages').insert({ conversation_id: convId, sender_id: user.id, contenu: text });
+  };
+
+  const missionTitre = mission?.titre || 'Mission';
+  const missionStatut = STATUT_MAP[mission?.statut] || { label: 'En cours', cls: 'badge-green' };
+  const missionProgression = mission?.progression ?? 0;
+  const missionDeadline = mission?.deadline ? new Date(mission.deadline).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'}) : '—';
+  const missionDebut = mission?.created_at ? new Date(mission.created_at).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'}) : '—';
+  const missionCategorie = mission?.categorie || '—';
+  const missionPrix = mission?.prix ? `${mission.prix}$` : '—';
 
   const doneCount = LIVRABLES.filter(l => l.done).length;
 
@@ -265,40 +314,40 @@ function App() {
 
           {/* BREADCRUMB */}
           <div className="breadcrumb">
-            <a href="dashboard-client.html">Dashboard</a>
+            <a href={user?.role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'}>Dashboard</a>
             <span className="breadcrumb-sep">/</span>
-            <a href="dashboard-client.html">Mes missions</a>
+            <a href={user?.role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'}>Mes missions</a>
             <span className="breadcrumb-sep">/</span>
-            <span style={{color:'var(--text-2)'}}>Chatbot service client IA</span>
+            <span style={{color:'var(--text-2)'}}>{missionTitre}</span>
           </div>
 
           {/* MISSION HEADER */}
           <div className="mission-header">
             <div className="mh-top">
-              <div className="mh-icon">🤖</div>
+              <div className="mh-icon">💼</div>
               <div className="mh-info">
                 <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
-                  <h1 className="mh-title">Chatbot service client IA</h1>
-                  <span className="badge badge-green">En cours</span>
+                  <h1 className="mh-title">{missionTitre}</h1>
+                  <span className={`badge ${missionStatut.cls}`}>{missionStatut.label}</span>
                 </div>
                 <div className="mh-meta">
-                  <span className="mh-meta-item"><Ic.Tag/> Chatbots</span>
-                  <span className="mh-meta-item"><Ic.User/> Amélie Chen</span>
-                  <span className="mh-meta-item"><Ic.Calendar/> Démarré le 12 mai 2026</span>
-                  <span className="mh-meta-item"><Ic.Clock/> Livraison le 10 juin 2026</span>
+                  <span className="mh-meta-item"><Ic.Tag/> {missionCategorie}</span>
+                  <span className="mh-meta-item"><Ic.User/> {otherParty.name}</span>
+                  <span className="mh-meta-item"><Ic.Calendar/> Démarré le {missionDebut}</span>
+                  <span className="mh-meta-item"><Ic.Clock/> Livraison le {missionDeadline}</span>
                 </div>
               </div>
               <div className="mh-actions">
-                <a href="dashboard-client.html" className="btn btn-ghost btn-sm"><Ic.Back/>Retour</a>
+                <a href={user?.role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'} className="btn btn-ghost btn-sm"><Ic.Back/>Retour</a>
                 <button className="btn btn-danger btn-sm"><Ic.Flag/>Signaler</button>
               </div>
             </div>
             <div className="prog-global">
               <span style={{fontSize:12,color:'var(--text-3)',flexShrink:0}}>Progression globale</span>
               <div className="prog-bar">
-                <div className="prog-fill" style={{width:'65%'}}/>
+                <div className="prog-fill" style={{width:`${missionProgression}%`}}/>
               </div>
-              <span className="prog-pct">65%</span>
+              <span className="prog-pct">{missionProgression}%</span>
               <span style={{fontSize:12,color:'var(--text-3)',flexShrink:0}}>{doneCount}/{LIVRABLES.length} livrables</span>
             </div>
           </div>
