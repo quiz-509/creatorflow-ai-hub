@@ -178,9 +178,10 @@ function App() {
   const toastTimer = useRef(null);
 
   // Profil state
-  const [profil, setProfil] = useState({ prenom:'', nom:'', email:'', phone:'', bio:'' });
-  const [expertData, setExpertData] = useState({ specialite:'', niveau:'', tarif:'', linkedin:'', disponible:true });
+  const [profil, setProfil] = useState({ prenom:'', nom:'', email:'', phone:'', bio:'', linkedin:'', entreprise:'' });
+  const [expertData, setExpertData] = useState({ specialite:'', niveau:'', tarif:'', disponible:true });
   const [initials, setInitials] = useState('??');
+  const [role, setRole] = useState('client');
 
   // Securite state
   const [newPass, setNewPass] = useState('');
@@ -194,21 +195,29 @@ function App() {
   const [prefs, setPrefs] = useState({ lang:'fr', currency:'CAD', timezone:'America/Montreal' });
 
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
-      const u = data.session.user;
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = 'connexion.html'; return; }
+      const u = session.user;
       const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
       const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) {
         const p = profile.prenom||''; const n = profile.nom||'';
-        setProfil(prev => ({ ...prev, prenom: p, nom: n, email: profile.email||u.email||'' }));
+        setRole(profile.type_utilisateur || 'client');
+        setProfil(prev => ({
+          ...prev,
+          prenom: p, nom: n,
+          email: profile.email || u.email || '',
+          linkedin: profile.linkedin || '',
+          entreprise: profile.entreprise || '',
+        }));
         setInitials(((p[0]||'?')+(n[0]||'?')).toUpperCase());
       }
       if (exp) {
-        setProfil(prev => ({ ...prev, bio: exp.bio||'' }));
-        setExpertData({ specialite: exp.specialite||'', niveau: exp.niveau||'', tarif: exp.tarif_horaire||'', linkedin: exp.linkedin||'', disponible: exp.disponible??true });
+        setProfil(prev => ({ ...prev, bio: exp.bio || '' }));
+        setExpertData({ specialite: exp.specialite||'', niveau: exp.niveau||'', tarif: exp.tarif_heure||'', disponible: exp.disponible??true });
       }
-    });
+    })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
     window.addEventListener('mousemove', move, { passive: true });
@@ -238,15 +247,21 @@ function App() {
       const { data: { session } } = await sb.auth.getSession();
       if (!session) return;
       const uid = session.user.id;
-      await sb.from('profiles').update({ prenom: profil.prenom, nom: profil.nom }).eq('id', uid);
-      await sb.from('experts').update({
-        specialite: expertData.specialite,
-        niveau: expertData.niveau,
-        tarif_horaire: parseInt(expertData.tarif)||0,
-        linkedin: expertData.linkedin,
-        bio: profil.bio,
-        disponible: expertData.disponible,
+      await sb.from('profiles').update({
+        prenom: profil.prenom,
+        nom: profil.nom,
+        linkedin: profil.linkedin,
+        entreprise: profil.entreprise,
       }).eq('id', uid);
+      if (role === 'expert') {
+        await sb.from('experts').update({
+          specialite: expertData.specialite,
+          niveau: expertData.niveau,
+          tarif_heure: parseInt(expertData.tarif) || null,
+          bio: profil.bio,
+          disponible: expertData.disponible,
+        }).eq('id', uid);
+      }
       setInitials(((profil.prenom[0]||'?')+(profil.nom[0]||'?')).toUpperCase());
       showToast();
     } catch(e) { console.error(e); }
@@ -373,7 +388,7 @@ function App() {
                     </div>
                     <div className="field">
                       <label className="label">LinkedIn <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                      <input className="input" placeholder="https://linkedin.com/in/…" value={expertData.linkedin} onChange={e=>setExpertData(p=>({...p,linkedin:e.target.value}))}/>
+                      <input className="input" placeholder="https://linkedin.com/in/…" value={profil.linkedin} onChange={e=>setProfil(p=>({...p,linkedin:e.target.value}))}/>
                     </div>
                   </div>
                   <div className="toggle-row" style={{padding:'14px 0 0'}}>
