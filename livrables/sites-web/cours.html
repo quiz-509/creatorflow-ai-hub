@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cours — CreatorFlow Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
+.nav-logo{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(124,58,237,0.6);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-lg{padding:14px 32px;font-size:15px;font-weight:700;}
+
+/* HERO COURSE */
+.course-hero{background:linear-gradient(180deg,rgba(124,58,237,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);padding:calc(var(--nav) + 40px) 24px 40px;}
+.course-hero-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:48px;align-items:start;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-3);margin-bottom:16px;}
+.breadcrumb a{color:var(--vs);}
+.course-cat-badge{display:inline-block;background:rgba(6,182,212,0.12);color:var(--c);font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;}
+.course-hero-title{font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:12px;}
+.course-hero-desc{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:20px;}
+.course-meta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.meta-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text-2);}
+.meta-item strong{color:var(--text);}
+.stars-row{display:flex;align-items:center;gap:3px;color:var(--amber);}
+.instructor-mini{display:flex;align-items:center;gap:10px;margin-top:20px;padding:14px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r);max-width:480px;}
+.instr-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.instr-name{font-size:14px;font-weight:600;}
+.instr-spec{font-size:12px;color:var(--text-2);}
+
+/* STICKY CARD */
+.sticky-card{position:sticky;top:calc(var(--nav) + 16px);background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;}
+.card-preview{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--surf-3),var(--surf-2));position:relative;display:grid;place-items:center;cursor:pointer;}
+.card-preview img{width:100%;height:100%;object-fit:cover;}
+.play-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.4);display:grid;place-items:center;transition:background 200ms;}
+.play-overlay:hover{background:rgba(0,0,0,0.3);}
+.play-btn{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.95);display:grid;place-items:center;color:var(--v);}
+.card-body{padding:20px;}
+.card-price{font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.card-price.free{color:var(--green);}
+.card-includes{margin:16px 0;display:flex;flex-direction:column;gap:8px;}
+.include-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);}
+.include-item svg{color:var(--green);flex-shrink:0;}
+.card-enroll-btn{width:100%;justify-content:center;font-size:15px;font-weight:700;padding:14px;border-radius:12px;margin-bottom:12px;}
+.card-guarantee{text-align:center;font-size:12px;color:var(--text-3);}
+
+/* TABS */
+.course-tabs{max-width:1280px;margin:0 auto;padding:0 24px;border-bottom:1px solid var(--border);display:flex;gap:0;}
+.tab-btn{padding:16px 20px;font-size:14px;font-weight:600;color:var(--text-3);border-bottom:2px solid transparent;transition:all 150ms;cursor:pointer;}
+.tab-btn:hover{color:var(--text-2);}
+.tab-btn.active{color:var(--vs);border-bottom-color:var(--v);}
+
+/* TAB CONTENT */
+.tab-content{max-width:860px;margin:0 auto;padding:36px 24px 80px;}
+
+/* WHAT YOU LEARN */
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.learn-item{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--text-2);}
+.learn-item svg{color:var(--green);flex-shrink:0;margin-top:3px;}
+
+/* CURRICULUM */
+.module-block{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px;}
+.module-header{background:var(--surf-2);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+.module-title{font-size:14px;font-weight:700;}
+.module-meta{font-size:12px;color:var(--text-3);}
+.lesson-list{border-top:1px solid var(--border);}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);font-size:13px;}
+.lesson-item:last-child{border-bottom:none;}
+.lesson-icon{width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.1);display:grid;place-items:center;color:var(--vs);flex-shrink:0;}
+.lesson-title{flex:1;color:var(--text-2);}
+.lesson-title.free{color:var(--c);}
+.lesson-duration{font-size:11px;color:var(--text-3);}
+.lesson-free-badge{font-size:10px;font-weight:700;color:var(--c);background:rgba(6,182,212,0.1);padding:2px 8px;border-radius:99px;}
+
+/* DESCRIPTION */
+.desc-content{font-size:15px;color:var(--text-2);line-height:1.8;white-space:pre-wrap;}
+
+/* INSTRUCTOR FULL */
+.instructor-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;}
+.instr-header{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.instr-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:22px;font-weight:700;color:#fff;}
+.instr-bio{font-size:14px;color:var(--text-2);line-height:1.7;}
+
+/* SECTION */
+.content-section{margin-bottom:40px;}
+.content-section h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;}
+
+@media(max-width:1024px){
+  .course-hero-inner{grid-template-columns:1fr;}
+  .sticky-card{position:static;max-width:480px;}
+}
+@media(max-width:768px){
+  .learn-grid{grid-template-columns:1fr;}
+  .tab-btn{padding:12px 14px;font-size:13px;}
+}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+
+const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+);
+const PlayIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+);
+const DocIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+);
+const StarIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+);
+
+function App() {
+  const courseId = new URLSearchParams(window.location.search).get('id');
+  const [user, setUser] = useState(null);
+  const [course, setCourse] = useState(null);
+  const [instructor, setInstructor] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [enrolled, setEnrolled] = useState(false);
+  const [enrolling, setEnrolling] = useState(false);
+  const [activeTab, setActiveTab] = useState('programme');
+  const [openModules, setOpenModules] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!courseId) { window.location.href = 'academie.html'; return; }
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    const { data: c } = await sb.from('courses').select('*').eq('id', courseId).single();
+    if (!c) { window.location.href = 'academie.html'; return; }
+    setCourse(c);
+
+    const { data: p } = await sb.from('profiles').select('prenom,nom,specialite').eq('id', c.instructor_id).single();
+    const { data: ex } = await sb.from('experts').select('specialite,note,nb_avis,bio').eq('id', c.instructor_id).single();
+    setInstructor({ ...p, ...ex });
+
+    const { data: mods } = await sb.from('modules').select('*').eq('course_id', courseId).order('ordre');
+    setModules(mods || []);
+    if (mods?.length) setOpenModules({ [mods[0].id]: true });
+
+    const { data: lsns } = await sb.from('lessons').select('*').eq('course_id', courseId).order('ordre');
+    setLessons(lsns || []);
+
+    const { data: sess } = await sb.auth.getSession();
+    if (sess.session) {
+      const u = sess.session.user;
+      const { data: pr } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
+      setUser({ ...u, ...pr });
+      const { data: enr } = await sb.from('enrollments').select('id').eq('user_id', u.id).eq('course_id', courseId).single();
+      setEnrolled(!!enr);
+    }
+    setLoading(false);
+  };
+
+  const handleEnroll = async () => {
+    if (!user) { window.location.href = `connexion.html?redirect=cours.html?id=${courseId}`; return; }
+    if (enrolled) { window.location.href = `lecteur.html?id=${courseId}`; return; }
+    if (course.prix > 0) { alert('Paiement Stripe bientôt disponible !'); return; }
+    setEnrolling(true);
+    const { error } = await sb.from('enrollments').insert({ user_id: user.id, course_id: courseId, prix_paye: 0 });
+    if (!error) { setEnrolled(true); window.location.href = `lecteur.html?id=${courseId}`; }
+    setEnrolling(false);
+  };
+
+  const toggleModule = (id) => setOpenModules(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const totalLessons = lessons.length;
+  const totalDuration = lessons.reduce((s, l) => s + (l.duree || 0), 0);
+
+  if (loading) return (
+    <div style={{display:'grid',placeItems:'center',minHeight:'100vh',color:'var(--text-3)'}}>
+      <div style={{textAlign:'center'}}>
+        <div style={{fontSize:36,marginBottom:12}}>⏳</div>
+        <div>Chargement du cours…</div>
+      </div>
+    </div>
+  );
+
+  if (!course) return null;
+
+  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $CAD`;
+  const instrName = instructor ? `${instructor.prenom||''} ${instructor.nom||''}`.trim() : 'Expert';
+  const instrInitials = instrName ? (instrName.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2) : 'EX';
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="academie.html" className="nav-logo">← <em>Académie</em></a>
+          <div className="nav-right">
+            {user
+              ? <span style={{fontSize:13,color:'var(--text-2)'}}>Bonjour, {user.prenom || 'Apprenant'}</span>
+              : <a href="connexion.html" className="btn btn-ghost btn-sm">Se connecter</a>
+            }
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <div className="course-hero">
+        <div className="course-hero-inner">
+          <div>
+            <div className="breadcrumb">
+              <a href="academie.html">Académie</a> / <span>{course.categorie || 'Formation'}</span>
+            </div>
+            <div className="course-cat-badge">{course.categorie || 'Formation IA'}</div>
+            <h1 className="course-hero-title">{course.titre}</h1>
+            <p className="course-hero-desc">{course.description_courte || course.description?.slice(0,200)}</p>
+            <div className="course-meta-row">
+              <div className="meta-item">
+                <div className="stars-row">{[1,2,3,4,5].map(i=><StarIcon key={i}/>)}</div>
+                <strong>{course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—'}</strong>
+                <span style={{color:'var(--text-3)'}}>({course.nb_avis||0} avis)</span>
+              </div>
+              <div className="meta-item">👥 <strong>{course.nb_inscrits||0}</strong> inscrits</div>
+              <div className="meta-item">📚 <strong>{totalLessons}</strong> leçons</div>
+              {totalDuration > 0 && <div className="meta-item">⏱ <strong>{Math.floor(totalDuration/60)}h{totalDuration%60 > 0 ? totalDuration%60+'min' : ''}</strong></div>}
+              <div className="meta-item">🎯 <strong>{course.niveau || 'Débutant'}</strong></div>
+              <div className="meta-item">🌐 <strong>{course.langue || 'Français'}</strong></div>
+            </div>
+            {instructor && (
+              <div className="instructor-mini">
+                <div className="instr-avatar">{instrInitials}</div>
+                <div>
+                  <div className="instr-name">{instrName}</div>
+                  <div className="instr-spec">{instructor.specialite || 'Expert IA certifié'}</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* STICKY CARD */}
+          <div className="sticky-card">
+            <div className="card-preview">
+              {course.image_url
+                ? <img src={course.image_url} alt={course.titre}/>
+                : <div style={{fontSize:52}}>{course.categorie==='Agents IA'?'🤖':course.categorie==='Prompt Engineering'?'✍️':'📚'}</div>
+              }
+              <div className="play-overlay">
+                <div className="play-btn"><PlayIcon/></div>
+              </div>
+            </div>
+            <div className="card-body">
+              <div className={`card-price ${course.prix===0?'free':''}`}>{prix}</div>
+              <div className="card-includes">
+                {totalLessons > 0 && <div className="include-item"><CheckIcon/>{totalLessons} leçon{totalLessons>1?'s':''}</div>}
+                {totalDuration > 0 && <div className="include-item"><CheckIcon/>{Math.floor(totalDuration/60)}h de contenu</div>}
+                <div className="include-item"><CheckIcon/>Accès à vie</div>
+                <div className="include-item"><CheckIcon/>Certificat de complétion</div>
+                <div className="include-item"><CheckIcon/>Accès mobile</div>
+              </div>
+              <button className="btn btn-primary card-enroll-btn" onClick={handleEnroll} disabled={enrolling}>
+                {enrolling ? 'Inscription…' : enrolled ? '▶ Continuer le cours' : course.prix===0 ? 'S\'inscrire gratuitement' : `S'inscrire · ${prix}`}
+              </button>
+              <div className="card-guarantee">
+                {course.prix > 0 ? '✓ Satisfait ou remboursé 30 jours' : '✓ 100% gratuit, aucune carte requise'}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="course-tabs">
+        {[{id:'programme',label:'Programme'},{id:'description',label:'Description'},{id:'instructeur',label:'Instructeur'}].map(t => (
+          <button key={t.id} className={`tab-btn ${activeTab===t.id?'active':''}`} onClick={() => setActiveTab(t.id)}>{t.label}</button>
+        ))}
+      </div>
+
+      {/* TAB CONTENT */}
+      <div className="tab-content">
+        {activeTab === 'programme' && (
+          <div>
+            <div className="content-section">
+              <h2>Ce que vous apprendrez</h2>
+              {course.description ? (
+                <div className="learn-grid">
+                  {course.description.split('\n').filter(l=>l.trim()).slice(0,8).map((item,i) => (
+                    <div key={i} className="learn-item"><CheckIcon/><span>{item.replace(/^[-•*]\s*/,'')}</span></div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{color:'var(--text-3)',fontSize:14}}>Détails du programme à venir.</p>
+              )}
+            </div>
+
+            <div className="content-section">
+              <h2>Contenu du cours</h2>
+              <div style={{fontSize:13,color:'var(--text-3)',marginBottom:16}}>
+                {modules.length} section{modules.length>1?'s':''} · {totalLessons} leçon{totalLessons>1?'s':''}{totalDuration>0?` · ${Math.floor(totalDuration/60)}h de contenu`:''}
+              </div>
+              {modules.length === 0 ? (
+                <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',background:'var(--surf)',borderRadius:'var(--r)',border:'1px solid var(--border)'}}>
+                  <div style={{fontSize:28,marginBottom:8}}>📦</div>
+                  <div>Le contenu du cours sera ajouté prochainement.</div>
+                </div>
+              ) : modules.map(mod => {
+                const modLessons = lessons.filter(l => l.module_id === mod.id);
+                const isOpen = openModules[mod.id];
+                return (
+                  <div key={mod.id} className="module-block">
+                    <div className="module-header" onClick={() => toggleModule(mod.id)}>
+                      <div className="module-title">{mod.titre}</div>
+                      <div className="module-meta">{modLessons.length} leçon{modLessons.length>1?'s':''} · {isOpen?'▲':'▼'}</div>
+                    </div>
+                    {isOpen && (
+                      <div className="lesson-list">
+                        {modLessons.map(l => (
+                          <div key={l.id} className="lesson-item">
+                            <div className="lesson-icon">
+                              {l.type==='video' ? <PlayIcon/> : <DocIcon/>}
+                            </div>
+                            <div className={`lesson-title ${l.gratuite?'free':''}`}>{l.titre}</div>
+                            {l.gratuite && <span className="lesson-free-badge">Aperçu</span>}
+                            {l.duree > 0 && <div className="lesson-duration">{l.duree} min</div>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'description' && (
+          <div className="content-section">
+            <h2>À propos de ce cours</h2>
+            <div className="desc-content">{course.description || 'Description complète à venir.'}</div>
+          </div>
+        )}
+
+        {activeTab === 'instructeur' && instructor && (
+          <div className="content-section">
+            <h2>Votre instructeur</h2>
+            <div className="instructor-card">
+              <div className="instr-header">
+                <div className="instr-avatar-lg">{instrInitials}</div>
+                <div>
+                  <div style={{fontSize:18,fontWeight:700}}>{instrName}</div>
+                  <div style={{fontSize:13,color:'var(--text-2)'}}>{instructor.specialite || 'Expert IA certifié'}</div>
+                  {instructor.note && (
+                    <div style={{display:'flex',alignItems:'center',gap:6,marginTop:4,fontSize:13,color:'var(--amber)'}}>
+                      <StarIcon/> {instructor.note} · {instructor.nb_avis||0} avis
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="instr-bio">{instructor.bio || 'Expert certifié CreatorFlow AI Academy.'}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

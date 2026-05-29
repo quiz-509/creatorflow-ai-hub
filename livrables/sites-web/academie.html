@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Académie — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{display:block;max-width:100%;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
+.nav-logo{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:24px;}
+.nav-link{font-size:14px;color:var(--text-2);font-weight:500;transition:color 150ms;}
+.nav-link:hover{color:var(--text);}
+.nav-link.active{color:var(--vs);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(124,58,237,0.6);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
+.btn-outline:hover{border-color:var(--vs);color:var(--vs);}
+.user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+
+/* HERO */
+.hero{padding:calc(var(--nav) + 64px) 24px 56px;text-align:center;max-width:800px;margin:0 auto;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);color:var(--vs);font-size:12px;font-weight:600;padding:5px 14px;border-radius:999px;margin-bottom:20px;letter-spacing:0.04em;text-transform:uppercase;}
+.hero-title{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px;}
+.hero-title span{background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-sub{font-size:16px;color:var(--text-2);margin-bottom:32px;line-height:1.6;}
+.search-bar{display:flex;align-items:center;background:var(--surf);border:1px solid var(--border-2);border-radius:14px;padding:6px 6px 6px 18px;gap:10px;max-width:520px;margin:0 auto;transition:border-color 200ms;}
+.search-bar:focus-within{border-color:var(--v);}
+.search-bar input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text);font-family:var(--f);}
+.search-bar input::placeholder{color:var(--text-3);}
+
+/* STATS */
+.stats-row{display:flex;align-items:center;justify-content:center;gap:32px;padding:24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:48px;}
+.stat-item{text-align:center;}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat-lbl{font-size:12px;color:var(--text-3);margin-top:2px;}
+
+/* FILTERS */
+.filters-bar{max-width:1280px;margin:0 auto 36px;padding:0 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filter-pill{padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);cursor:pointer;transition:all 150ms;}
+.filter-pill:hover{border-color:var(--border-3);color:var(--text);}
+.filter-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:var(--vs);}
+.filters-sep{width:1px;height:20px;background:var(--border-2);}
+.select-filter{background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);font-family:var(--f);font-size:13px;padding:7px 12px;border-radius:999px;cursor:pointer;outline:none;}
+.select-filter:focus{border-color:var(--v);}
+
+/* COURSE GRID */
+.courses-section{max-width:1280px;margin:0 auto;padding:0 24px 80px;}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.section-title{font-size:18px;font-weight:700;letter-spacing:-0.02em;}
+.section-count{font-size:13px;color:var(--text-3);}
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+
+/* COURSE CARD */
+.course-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 240ms var(--ease);cursor:pointer;}
+.course-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 16px 40px -12px rgba(0,0,0,0.5);}
+.course-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--surf-3),var(--surf-2));position:relative;overflow:hidden;}
+.course-thumb img{width:100%;height:100%;object-fit:cover;}
+.course-thumb-placeholder{width:100%;height:100%;display:grid;place-items:center;font-size:36px;}
+.course-badge{position:absolute;top:10px;left:10px;background:rgba(124,58,237,0.9);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:0.04em;text-transform:uppercase;}
+.course-badge.free{background:rgba(16,185,129,0.9);}
+.course-body{padding:16px;}
+.course-cat{font-size:11px;font-weight:600;color:var(--c);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
+.course-title{font-size:15px;font-weight:700;line-height:1.35;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.course-instructor{font-size:12px;color:var(--text-2);margin-bottom:10px;}
+.course-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.course-rating{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--amber);}
+.course-rating span{color:var(--text-3);font-weight:400;}
+.course-tag{font-size:11px;color:var(--text-3);background:var(--surf-2);padding:2px 8px;border-radius:99px;}
+.course-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
+.course-price{font-size:18px;font-weight:800;letter-spacing:-0.02em;}
+.course-price.free{color:var(--green);}
+.course-price-sub{font-size:11px;color:var(--text-3);}
+.enroll-btn{padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;transition:all 200ms;}
+.enroll-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px -4px var(--vg);}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:80px 24px;color:var(--text-3);}
+.empty-icon{font-size:52px;margin-bottom:16px;}
+.empty-title{font-size:18px;font-weight:700;color:var(--text-2);margin-bottom:8px;}
+.empty-sub{font-size:14px;line-height:1.6;max-width:400px;margin:0 auto 24px;}
+
+/* FEATURED BANNER */
+.featured-banner{max-width:1280px;margin:0 auto 48px;padding:0 24px;}
+.banner-inner{background:linear-gradient(135deg,rgba(124,58,237,0.15) 0%,rgba(6,182,212,0.08) 100%);border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-xl);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+.banner-text h2{font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.banner-text p{font-size:14px;color:var(--text-2);max-width:480px;line-height:1.6;}
+.banner-actions{display:flex;gap:10px;flex-shrink:0;}
+
+/* CATEGORIES SECTION */
+.categories-section{max-width:1280px;margin:0 auto 48px;padding:0 24px;}
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+.cat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:20px 16px;text-align:center;cursor:pointer;transition:all 200ms;}
+.cat-card:hover{border-color:var(--v);background:rgba(124,58,237,0.06);}
+.cat-icon{font-size:28px;margin-bottom:8px;}
+.cat-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.cat-count{font-size:11px;color:var(--text-3);}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;color:var(--text-3);font-size:13px;}
+
+@media(max-width:768px){
+  .hero{padding:calc(var(--nav) + 40px) 20px 40px;}
+  .hero-title{font-size:28px;}
+  .stats-row{gap:20px;padding:20px;}
+  .banner-inner{flex-direction:column;}
+  .banner-actions{width:100%;}
+  .nav-links{display:none;}
+}
+  </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+
+const { useState, useEffect, useMemo } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
+
+const CATEGORIES = ['Tous','Agents IA','Prompt Engineering','Data & Analytics','Automatisation','Marketing IA','Développement','Design IA','Autre'];
+const NIVEAUX = ['Tous niveaux','Débutant','Intermédiaire','Avancé'];
+
+const StarIcon = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+  </svg>
+);
+
+const PlayIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="5 3 19 12 5 21 5 3"/>
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+);
+
+function CourseCard({ course, onEnroll }) {
+  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')}$`;
+  const emoji = {
+    'Agents IA':'🤖','Prompt Engineering':'✍️','Data & Analytics':'📊',
+    'Automatisation':'⚡','Marketing IA':'📈','Développement':'💻','Design IA':'🎨'
+  }[course.categorie] || '📚';
+
+  return (
+    <div className="course-card" onClick={() => window.location.href = `cours.html?id=${course.id}`}>
+      <div className="course-thumb">
+        {course.image_url
+          ? <img src={course.image_url} alt={course.titre}/>
+          : <div className="course-thumb-placeholder">{emoji}</div>
+        }
+        <span className={`course-badge ${course.prix === 0 ? 'free' : ''}`}>
+          {course.prix === 0 ? 'Gratuit' : 'Payant'}
+        </span>
+      </div>
+      <div className="course-body">
+        <div className="course-cat">{course.categorie || 'Formation IA'}</div>
+        <div className="course-title">{course.titre}</div>
+        <div className="course-instructor">Par {course.nom_instructeur || 'Expert certifié'}</div>
+        <div className="course-meta">
+          <div className="course-rating">
+            <StarIcon/>
+            {course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—'}
+            <span>({course.nb_avis || 0})</span>
+          </div>
+          <span className="course-tag">{course.niveau || 'Débutant'}</span>
+          {course.duree_totale > 0 && (
+            <span className="course-tag">{Math.floor(course.duree_totale/60)}h{course.duree_totale%60 > 0 ? course.duree_totale%60+'min' : ''}</span>
+          )}
+        </div>
+        <div className="course-footer">
+          <div>
+            <div className={`course-price ${course.prix === 0 ? 'free' : ''}`}>{prix}</div>
+            {course.nb_inscrits > 0 && <div className="course-price-sub">{course.nb_inscrits} inscrits</div>}
+          </div>
+          <button className="enroll-btn" onClick={e => { e.stopPropagation(); onEnroll(course); }}>
+            <PlayIcon/> {course.prix === 0 ? 'Accéder' : 'S\'inscrire'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [initials, setInitials] = useState('??');
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [activeCat, setActiveCat] = useState('Tous');
+  const [activeNiveau, setActiveNiveau] = useState('Tous niveaux');
+  const [activeSort, setActiveSort] = useState('recent');
+  const [enrolledIds, setEnrolledIds] = useState(new Set());
+  const [stats, setStats] = useState({ courses: 0, inscrits: 0, instructeurs: 0 });
+
+  useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (data.session) {
+        const u = data.session.user;
+        const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
+        if (p) {
+          setInitials(((p.prenom||'?')[0]+(p.nom||'?')[0]).toUpperCase());
+          setUser({ ...u, ...p });
+        } else setUser(u);
+        const { data: enrolls } = await sb.from('enrollments').select('course_id').eq('user_id', u.id);
+        setEnrolledIds(new Set((enrolls||[]).map(e => e.course_id)));
+      }
+    });
+    loadCourses();
+  }, []);
+
+  const loadCourses = async () => {
+    setLoading(true);
+    const { data } = await sb.from('courses')
+      .select('id,titre,description_courte,categorie,niveau,prix,image_url,note_moyenne,nb_avis,nb_inscrits,duree_totale,instructor_id,created_at')
+      .eq('statut', 'publié')
+      .order('created_at', { ascending: false });
+    const list = data || [];
+
+    // Fetch instructor names
+    const withNames = await Promise.all(list.map(async (c) => {
+      const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id', c.instructor_id).single();
+      return { ...c, nom_instructeur: p ? `${p.prenom||''} ${p.nom||''}`.trim() : 'Expert' };
+    }));
+    setCourses(withNames);
+
+    const inscrits = withNames.reduce((s, c) => s + (c.nb_inscrits || 0), 0);
+    const instructeursUniques = new Set(withNames.map(c => c.instructor_id)).size;
+    setStats({ courses: withNames.length, inscrits, instructeurs: instructeursUniques });
+    setLoading(false);
+  };
+
+  const handleEnroll = async (course) => {
+    if (!user) { window.location.href = 'connexion.html'; return; }
+    if (enrolledIds.has(course.id)) { window.location.href = `lecteur.html?id=${course.id}`; return; }
+    if (course.prix === 0) {
+      const { error } = await sb.from('enrollments').insert({ user_id: user.id, course_id: course.id, prix_paye: 0 });
+      if (!error) {
+        setEnrolledIds(prev => new Set([...prev, course.id]));
+        window.location.href = `lecteur.html?id=${course.id}`;
+      }
+    } else {
+      window.location.href = `cours.html?id=${course.id}`;
+    }
+  };
+
+  const filtered = useMemo(() => {
+    let list = [...courses];
+    if (activeCat !== 'Tous') list = list.filter(c => c.categorie === activeCat);
+    if (activeNiveau !== 'Tous niveaux') list = list.filter(c => (c.niveau||'Débutant').toLowerCase() === activeNiveau.toLowerCase());
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(c => c.titre.toLowerCase().includes(q) || (c.categorie||'').toLowerCase().includes(q));
+    }
+    if (activeSort === 'recent') list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    if (activeSort === 'populaire') list.sort((a,b) => (b.nb_inscrits||0) - (a.nb_inscrits||0));
+    if (activeSort === 'note') list.sort((a,b) => (b.note_moyenne||0) - (a.note_moyenne||0));
+    if (activeSort === 'prix-asc') list.sort((a,b) => a.prix - b.prix);
+    return list;
+  }, [courses, activeCat, activeNiveau, search, activeSort]);
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <div className="nav-links">
+            <a href="index.html" className="nav-link">Plateforme</a>
+            <a href="experts.html" className="nav-link">Experts</a>
+            <a href="academie.html" className="nav-link active">Académie</a>
+          </div>
+          <div className="nav-right">
+            {user ? (
+              <React.Fragment>
+                <a href="dashboard-client.html" className="btn btn-ghost btn-sm">Mon espace</a>
+                <div className="user-chip">
+                  <div className="avatar">{initials}</div>
+                </div>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <a href="connexion.html" className="btn btn-ghost btn-sm">Se connecter</a>
+                <a href="inscription.html" className="btn btn-primary btn-sm">Démarrer</a>
+              </React.Fragment>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <div className="hero">
+        <div className="hero-badge">✨ CreatorFlow AI Academy</div>
+        <h1 className="hero-title">Maîtrisez <span>l'intelligence artificielle</span> avec les meilleurs experts</h1>
+        <p className="hero-sub">Des formations créées par des experts certifiés, pour entrepreneurs, créateurs et professionnels.</p>
+        <div className="search-bar">
+          <SearchIcon/>
+          <input
+            type="text"
+            placeholder="Rechercher un cours : Prompt Engineering, Agents IA…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <button className="btn btn-primary btn-sm">Rechercher</button>
+        </div>
+      </div>
+
+      {/* STATS */}
+      <div className="stats-row">
+        <div className="stat-item">
+          <div className="stat-num">{stats.courses > 0 ? stats.courses : '—'}</div>
+          <div className="stat-lbl">Cours disponibles</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-num">{stats.inscrits > 0 ? stats.inscrits.toLocaleString('fr-CA') : '—'}</div>
+          <div className="stat-lbl">Apprenants</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-num">{stats.instructeurs > 0 ? stats.instructeurs : '—'}</div>
+          <div className="stat-lbl">Instructeurs</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-num">100%</div>
+          <div className="stat-lbl">En ligne</div>
+        </div>
+      </div>
+
+      {/* CATEGORIES */}
+      <div className="categories-section">
+        <div className="section-header" style={{marginBottom:20}}>
+          <div className="section-title">Parcourir par domaine</div>
+        </div>
+        <div className="categories-grid">
+          {[
+            {name:'Agents IA',icon:'🤖'},{name:'Prompt Engineering',icon:'✍️'},
+            {name:'Data & Analytics',icon:'📊'},{name:'Automatisation',icon:'⚡'},
+            {name:'Marketing IA',icon:'📈'},{name:'Développement',icon:'💻'},
+            {name:'Design IA',icon:'🎨'},{name:'Autre',icon:'📚'}
+          ].map(cat => (
+            <div key={cat.name} className="cat-card" onClick={() => { setActiveCat(cat.name); window.scrollTo({top:600,behavior:'smooth'}); }}>
+              <div className="cat-icon">{cat.icon}</div>
+              <div className="cat-name">{cat.name}</div>
+              <div className="cat-count">{courses.filter(c=>c.categorie===cat.name).length} cours</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* BANNER INSTRUCTEUR */}
+      <div className="featured-banner">
+        <div className="banner-inner">
+          <div className="banner-text">
+            <h2>Vous êtes expert IA ? Partagez votre savoir.</h2>
+            <p>Créez et vendez vos formations sur CreatorFlow Academy. Rejoignez les instructeurs certifiés et générez des revenus passifs.</p>
+          </div>
+          <div className="banner-actions">
+            <a href="creer-cours.html" className="btn btn-primary">Créer un cours</a>
+            <a href="inscription.html?role=expert" className="btn btn-ghost">Devenir instructeur</a>
+          </div>
+        </div>
+      </div>
+
+      {/* FILTERS */}
+      <div className="filters-bar">
+        {CATEGORIES.map(cat => (
+          <button key={cat} className={`filter-pill ${activeCat === cat ? 'active' : ''}`} onClick={() => setActiveCat(cat)}>{cat}</button>
+        ))}
+        <div className="filters-sep"/>
+        <select className="select-filter" value={activeNiveau} onChange={e => setActiveNiveau(e.target.value)}>
+          {NIVEAUX.map(n => <option key={n}>{n}</option>)}
+        </select>
+        <select className="select-filter" value={activeSort} onChange={e => setActiveSort(e.target.value)}>
+          <option value="recent">Plus récents</option>
+          <option value="populaire">Plus populaires</option>
+          <option value="note">Mieux notés</option>
+          <option value="prix-asc">Prix croissant</option>
+        </select>
+      </div>
+
+      {/* COURSES */}
+      <div className="courses-section">
+        <div className="section-header">
+          <div className="section-title">
+            {activeCat === 'Tous' ? 'Tous les cours' : activeCat}
+          </div>
+          <div className="section-count">{filtered.length} cours trouvés</div>
+        </div>
+
+        {loading ? (
+          <div className="empty-state">
+            <div className="empty-icon">⏳</div>
+            <div className="empty-title">Chargement des cours…</div>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">📭</div>
+            <div className="empty-title">Aucun cours disponible</div>
+            <div className="empty-sub">
+              {courses.length === 0
+                ? "Les premiers cours seront publiés très prochainement. Revenez bientôt !"
+                : "Aucun cours ne correspond à vos filtres. Essayez une autre catégorie."}
+            </div>
+            {courses.length === 0 && (
+              <a href="creer-cours.html" className="btn btn-primary">Être le premier instructeur</a>
+            )}
+          </div>
+        ) : (
+          <div className="courses-grid">
+            {filtered.map(course => (
+              <CourseCard
+                key={course.id}
+                course={course}
+                enrolled={enrolledIds.has(course.id)}
+                onEnroll={handleEnroll}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        © 2026 CreatorFlow Market · Tous droits réservés · <a href="index.html" style={{color:'var(--vs)'}}>Retour à la plateforme</a>
+      </footer>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

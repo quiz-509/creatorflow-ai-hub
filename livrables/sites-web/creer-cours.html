@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Créer un cours — CreatorFlow Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1100px;margin:0 auto;padding:0 24px;}
+.nav-logo{font-size:15px;font-weight:800;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(124,58,237,0.6);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:7px 14px;font-size:12px;}
+.btn-danger{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,0.15);}
+
+/* STEPS */
+.steps-header{position:fixed;top:var(--nav);left:0;right:0;z-index:100;background:var(--surf);border-bottom:1px solid var(--border);padding:0 24px;}
+.steps-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px;}
+.step-item{display:flex;align-items:center;gap:8px;padding:0 20px;height:100%;font-size:13px;font-weight:600;color:var(--text-3);border-bottom:2px solid transparent;cursor:pointer;transition:all 150ms;white-space:nowrap;}
+.step-item:hover{color:var(--text-2);}
+.step-item.active{color:var(--vs);border-bottom-color:var(--v);}
+.step-item.done{color:var(--green);}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--surf-3);display:grid;place-items:center;font-size:11px;font-weight:800;flex-shrink:0;}
+.step-item.active .step-num{background:var(--v);color:#fff;}
+.step-item.done .step-num{background:var(--green);color:#fff;}
+
+/* MAIN */
+.main{padding:calc(var(--nav) + 52px + 32px) 24px 80px;max-width:760px;margin:0 auto;}
+
+/* FORM */
+.form-section{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;margin-bottom:24px;}
+.form-section-title{font-size:16px;font-weight:800;margin-bottom:4px;}
+.form-section-sub{font-size:13px;color:var(--text-2);margin-bottom:24px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-field{margin-bottom:0;}
+.form-field.full{grid-column:1/-1;}
+.label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;display:block;}
+.input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--text);font-family:var(--f);transition:border-color 150ms;outline:none;}
+.input:focus{border-color:var(--v);}
+.input::placeholder{color:var(--text-3);}
+textarea.input{resize:vertical;min-height:100px;}
+select.input{cursor:pointer;}
+.input-hint{font-size:11px;color:var(--text-3);margin-top:4px;}
+.price-row{display:flex;align-items:center;gap:10px;}
+.price-free-toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);cursor:pointer;}
+.toggle{width:36px;height:20px;border-radius:99px;background:var(--surf-3);position:relative;transition:background 200ms;flex-shrink:0;}
+.toggle.on{background:var(--green);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 200ms;}
+.toggle.on .toggle-knob{transform:translateX(16px);}
+
+/* MODULES */
+.modules-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.module-item{background:var(--surf-2);border:1px solid var(--border-2);border-radius:var(--r);overflow:hidden;}
+.module-item-header{display:flex;align-items:center;gap:10px;padding:12px 16px;}
+.module-drag{color:var(--text-3);cursor:grab;font-size:16px;}
+.module-name-input{flex:1;background:none;border:none;outline:none;font-size:14px;font-weight:600;color:var(--text);font-family:var(--f);}
+.module-name-input::placeholder{color:var(--text-3);}
+.lessons-list{border-top:1px solid var(--border);padding:8px;}
+.lesson-item{display:flex;align-items:center;gap:8px;padding:8px 8px;border-radius:8px;margin-bottom:4px;}
+.lesson-item:hover{background:var(--surf-3);}
+.lesson-type-select{background:var(--surf-3);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11px;font-weight:600;color:var(--text-2);font-family:var(--f);outline:none;cursor:pointer;}
+.lesson-title-input{flex:1;background:none;border:none;border-bottom:1px solid var(--border);outline:none;font-size:13px;color:var(--text);font-family:var(--f);padding:4px 0;}
+.lesson-title-input::placeholder{color:var(--text-3);}
+.lesson-url-input{width:200px;background:var(--surf-3);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11px;color:var(--text-2);font-family:var(--f);outline:none;}
+.lesson-url-input::placeholder{color:var(--text-3);}
+.lesson-dur-input{width:60px;background:var(--surf-3);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11px;color:var(--text);font-family:var(--f);outline:none;text-align:center;}
+.add-lesson-btn{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;color:var(--c);background:rgba(6,182,212,0.06);border:1px dashed rgba(6,182,212,0.3);width:100%;justify-content:center;margin-top:4px;transition:all 150ms;}
+.add-lesson-btn:hover{background:rgba(6,182,212,0.1);}
+.add-module-btn{display:flex;align-items:center;gap:8px;padding:12px;border-radius:var(--r);font-size:13px;font-weight:600;color:var(--vs);background:rgba(124,58,237,0.06);border:1px dashed rgba(124,58,237,0.3);width:100%;justify-content:center;transition:all 150ms;}
+.add-module-btn:hover{background:rgba(124,58,237,0.1);}
+
+/* PUBLISH */
+.publish-card{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.06));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-xl);padding:32px;text-align:center;}
+.publish-icon{font-size:48px;margin-bottom:12px;}
+.publish-title{font-size:20px;font-weight:800;margin-bottom:8px;}
+.publish-sub{font-size:14px;color:var(--text-2);margin-bottom:24px;line-height:1.6;}
+.publish-checklist{text-align:left;max-width:380px;margin:0 auto 24px;display:flex;flex-direction:column;gap:8px;}
+.check-item{display:flex;align-items:center;gap:8px;font-size:13px;}
+.check-item.ok{color:var(--green);}
+.check-item.missing{color:var(--text-3);}
+.publish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* SUCCESS */
+.success-screen{text-align:center;padding:60px 24px;}
+.success-icon{font-size:64px;margin-bottom:16px;}
+.success-title{font-size:24px;font-weight:800;margin-bottom:8px;}
+.success-sub{font-size:15px;color:var(--text-2);margin-bottom:32px;}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+
+const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
+
+function newLesson(moduleId) {
+  return { _id: Math.random().toString(36).slice(2), module_id: moduleId, titre: '', type: 'video', contenu_url: '', duree: '', gratuite: false };
+}
+function newModule() {
+  const id = Math.random().toString(36).slice(2);
+  return { _id: id, titre: '', lessons: [newLesson(id)] };
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [step, setStep] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [savedCourseId, setSavedCourseId] = useState(null);
+  const [published, setPublished] = useState(false);
+
+  // ÉTAPE 1 — Infos de base
+  const [titre, setTitre] = useState('');
+  const [descCourte, setDescCourte] = useState('');
+  const [description, setDescription] = useState('');
+  const [categorie, setCategorie] = useState('Agents IA');
+  const [niveau, setNiveau] = useState('Débutant');
+  const [langue, setLangue] = useState('Français');
+  const [prix, setPrix] = useState('');
+  const [gratuit, setGratuit] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+
+  // ÉTAPE 2 — Contenu
+  const [modules, setModules] = useState([newModule()]);
+
+  useEffect(() => {
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) { window.location.href = 'connexion.html'; return; }
+      setUser(data.session.user);
+    });
+  }, []);
+
+  // Module helpers
+  const updateModuleTitle = (idx, val) => {
+    setModules(prev => prev.map((m,i) => i===idx ? {...m, titre:val} : m));
+  };
+  const addModule = () => setModules(prev => [...prev, newModule()]);
+  const removeModule = (idx) => setModules(prev => prev.filter((_,i) => i!==idx));
+  const addLesson = (mIdx) => {
+    setModules(prev => prev.map((m,i) => i===mIdx ? {...m, lessons:[...m.lessons, newLesson(m._id)]} : m));
+  };
+  const updateLesson = (mIdx, lIdx, field, val) => {
+    setModules(prev => prev.map((m,i) => i!==mIdx ? m : {
+      ...m, lessons: m.lessons.map((l,j) => j!==lIdx ? l : {...l, [field]:val})
+    }));
+  };
+  const removeLesson = (mIdx, lIdx) => {
+    setModules(prev => prev.map((m,i) => i!==mIdx ? m : {
+      ...m, lessons: m.lessons.filter((_,j) => j!==lIdx)
+    }));
+  };
+
+  const handleSaveCourse = async (status = 'brouillon') => {
+    if (!titre.trim()) { alert('Le titre est obligatoire.'); return; }
+    setSaving(true);
+    const courseData = {
+      instructor_id: user.id,
+      titre: titre.trim(),
+      description_courte: descCourte.trim(),
+      description: description.trim(),
+      categorie,
+      niveau,
+      langue,
+      prix: gratuit ? 0 : (parseInt(prix, 10) || 0),
+      image_url: imageUrl.trim() || null,
+      statut: status,
+    };
+
+    let courseId = savedCourseId;
+    if (!courseId) {
+      const { data, error } = await sb.from('courses').insert(courseData).select('id').single();
+      if (error || !data) { alert('Erreur lors de la sauvegarde.'); setSaving(false); return; }
+      courseId = data.id;
+      setSavedCourseId(courseId);
+    } else {
+      await sb.from('courses').update(courseData).eq('id', courseId);
+    }
+
+    // Sauvegarder modules et leçons
+    if (step >= 1) {
+      await sb.from('modules').delete().eq('course_id', courseId);
+      for (let mIdx = 0; mIdx < modules.length; mIdx++) {
+        const mod = modules[mIdx];
+        if (!mod.titre.trim()) continue;
+        const { data: modData } = await sb.from('modules').insert({ course_id: courseId, titre: mod.titre, ordre: mIdx + 1 }).select('id').single();
+        if (!modData) continue;
+        for (let lIdx = 0; lIdx < mod.lessons.length; lIdx++) {
+          const l = mod.lessons[lIdx];
+          if (!l.titre.trim()) continue;
+          await sb.from('lessons').insert({
+            course_id: courseId,
+            module_id: modData.id,
+            titre: l.titre,
+            type: l.type,
+            contenu_url: l.contenu_url || null,
+            duree: parseInt(l.duree, 10) || 0,
+            ordre: lIdx + 1,
+            gratuite: l.gratuite || false,
+          });
+        }
+      }
+    }
+
+    if (status === 'publié') setPublished(true);
+    setSaving(false);
+    return courseId;
+  };
+
+  const checks = {
+    titre: titre.trim().length > 0,
+    description: descCourte.trim().length > 0,
+    modules: modules.some(m => m.titre.trim() && m.lessons.some(l => l.titre.trim())),
+  };
+
+  if (published) return (
+    <React.Fragment>
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="academie.html" className="nav-logo">CreatorFlow <em>Academy</em></a>
+        </div>
+      </nav>
+      <div className="main" style={{textAlign:'center',paddingTop:'calc(var(--nav) + 80px)'}}>
+        <div className="success-icon">🎉</div>
+        <div className="success-title">Cours publié avec succès !</div>
+        <div className="success-sub">Votre cours est maintenant visible dans l'académie et disponible pour les apprenants.</div>
+        <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
+          <a href={`cours.html?id=${savedCourseId}`} className="btn btn-primary">Voir mon cours</a>
+          <a href="academie.html" className="btn btn-ghost">Retour à l'académie</a>
+          <button className="btn btn-ghost" onClick={() => { setPublished(false); setStep(0); setSavedCourseId(null); }}>Créer un autre cours</button>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+
+  return (
+    <React.Fragment>
+      {/* NAV */}
+      <nav className="nav">
+        <div className="nav-inner">
+          <a href="academie.html" className="nav-logo">← <em>Académie</em></a>
+          <div style={{fontSize:14,fontWeight:700}}>Créer un cours</div>
+          <button className="btn btn-ghost btn-sm" onClick={() => handleSaveCourse('brouillon')} disabled={saving}>
+            {saving ? 'Sauvegarde…' : 'Sauvegarder brouillon'}
+          </button>
+        </div>
+      </nav>
+
+      {/* STEPS */}
+      <div className="steps-header">
+        <div className="steps-inner">
+          {[{label:'Informations',icon:'📋'},{label:'Contenu',icon:'📚'},{label:'Publication',icon:'🚀'}].map((s,i) => (
+            <div key={i} className={`step-item ${step===i?'active':''} ${step>i?'done':''}`} onClick={() => step>i && setStep(i)}>
+              <div className="step-num">{step>i?'✓':i+1}</div>
+              <span>{s.icon} {s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="main">
+
+        {/* ÉTAPE 0 — INFOS */}
+        {step === 0 && (
+          <React.Fragment>
+            <div className="form-section">
+              <div className="form-section-title">Informations du cours</div>
+              <div className="form-section-sub">Ces informations seront visibles par tous les apprenants dans l'académie.</div>
+              <div className="form-grid">
+                <div className="form-field full">
+                  <label className="label">Titre du cours *</label>
+                  <input className="input" type="text" placeholder="ex: Maîtriser les Agents IA de A à Z" value={titre} onChange={e=>setTitre(e.target.value)}/>
+                </div>
+                <div className="form-field full">
+                  <label className="label">Description courte (affichée dans les cards)</label>
+                  <input className="input" type="text" placeholder="En 1-2 phrases, ce que les apprenants vont acquérir" value={descCourte} onChange={e=>setDescCourte(e.target.value)} maxLength={200}/>
+                  <div className="input-hint">{descCourte.length}/200 caractères</div>
+                </div>
+                <div className="form-field full">
+                  <label className="label">Description complète</label>
+                  <textarea className="input" placeholder="Décrivez en détail le contenu, les prérequis, à qui ce cours est destiné…" value={description} onChange={e=>setDescription(e.target.value)} rows={6}/>
+                </div>
+                <div className="form-field">
+                  <label className="label">Catégorie</label>
+                  <select className="input" value={categorie} onChange={e=>setCategorie(e.target.value)}>
+                    {['Agents IA','Prompt Engineering','Data & Analytics','Automatisation','Marketing IA','Développement','Design IA','Autre'].map(c=><option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label className="label">Niveau</label>
+                  <select className="input" value={niveau} onChange={e=>setNiveau(e.target.value)}>
+                    {['Débutant','Intermédiaire','Avancé'].map(n=><option key={n}>{n}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label className="label">Langue</label>
+                  <select className="input" value={langue} onChange={e=>setLangue(e.target.value)}>
+                    {['Français','English','Créole haïtien','Espagnol','Portugais'].map(l=><option key={l}>{l}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label className="label">Prix (CAD $)</label>
+                  <div className="price-row">
+                    <input className="input" type="number" min="0" placeholder="ex: 79" value={gratuit ? '' : prix} onChange={e=>setPrix(e.target.value)} disabled={gratuit} style={{flex:1}}/>
+                    <div className="price-free-toggle" onClick={() => setGratuit(!gratuit)}>
+                      <div className={`toggle ${gratuit?'on':''}`}><div className="toggle-knob"/></div>
+                      Gratuit
+                    </div>
+                  </div>
+                </div>
+                <div className="form-field full">
+                  <label className="label">Image de couverture (URL)</label>
+                  <input className="input" type="url" placeholder="https://exemple.com/image.jpg" value={imageUrl} onChange={e=>setImageUrl(e.target.value)}/>
+                  <div className="input-hint">Recommandé : 1280×720px, format 16:9</div>
+                </div>
+              </div>
+            </div>
+            <div style={{display:'flex',justifyContent:'flex-end'}}>
+              <button className="btn btn-primary" onClick={() => { if(!titre.trim()){alert('Titre obligatoire');return;} setStep(1); }}>
+                Continuer → Contenu
+              </button>
+            </div>
+          </React.Fragment>
+        )}
+
+        {/* ÉTAPE 1 — CONTENU */}
+        {step === 1 && (
+          <React.Fragment>
+            <div className="form-section">
+              <div className="form-section-title">Structure du cours</div>
+              <div className="form-section-sub">Organisez votre cours en modules (sections) et leçons. Vous pouvez ajouter les URLs des vidéos (YouTube, Vimeo, Loom…).</div>
+
+              <div className="modules-list">
+                {modules.map((mod, mIdx) => (
+                  <div key={mod._id} className="module-item">
+                    <div className="module-item-header">
+                      <span className="module-drag">⠿</span>
+                      <span style={{fontSize:11,fontWeight:700,color:'var(--text-3)',minWidth:70}}>MODULE {mIdx+1}</span>
+                      <input
+                        className="module-name-input"
+                        type="text"
+                        placeholder="Titre du module (ex: Introduction, Les bases, Projets pratiques…)"
+                        value={mod.titre}
+                        onChange={e=>updateModuleTitle(mIdx, e.target.value)}
+                      />
+                      {modules.length > 1 && (
+                        <button className="btn btn-danger btn-sm" style={{padding:'4px 10px',fontSize:11}} onClick={()=>removeModule(mIdx)}>✕</button>
+                      )}
+                    </div>
+                    <div className="lessons-list">
+                      {mod.lessons.map((l, lIdx) => (
+                        <div key={l._id} className="lesson-item">
+                          <select className="lesson-type-select" value={l.type} onChange={e=>updateLesson(mIdx,lIdx,'type',e.target.value)}>
+                            <option value="video">🎬 Vidéo</option>
+                            <option value="texte">📄 Texte</option>
+                          </select>
+                          <input
+                            className="lesson-title-input"
+                            type="text"
+                            placeholder="Titre de la leçon…"
+                            value={l.titre}
+                            onChange={e=>updateLesson(mIdx,lIdx,'titre',e.target.value)}
+                          />
+                          <input
+                            className="lesson-url-input"
+                            type="url"
+                            placeholder="URL vidéo (optionnel)"
+                            value={l.contenu_url}
+                            onChange={e=>updateLesson(mIdx,lIdx,'contenu_url',e.target.value)}
+                          />
+                          <input
+                            className="lesson-dur-input"
+                            type="number"
+                            min="0"
+                            placeholder="min"
+                            value={l.duree}
+                            onChange={e=>updateLesson(mIdx,lIdx,'duree',e.target.value)}
+                          />
+                          <label style={{display:'flex',alignItems:'center',gap:4,fontSize:11,color:'var(--text-3)',cursor:'pointer',whiteSpace:'nowrap'}}>
+                            <input type="checkbox" checked={l.gratuite} onChange={e=>updateLesson(mIdx,lIdx,'gratuite',e.target.checked)} style={{accentColor:'var(--c)'}}/>
+                            Aperçu
+                          </label>
+                          {mod.lessons.length > 1 && (
+                            <button style={{color:'var(--text-3)',fontSize:14,padding:'0 4px'}} onClick={()=>removeLesson(mIdx,lIdx)}>✕</button>
+                          )}
+                        </div>
+                      ))}
+                      <button className="add-lesson-btn" onClick={()=>addLesson(mIdx)}>+ Ajouter une leçon</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button className="add-module-btn" onClick={addModule}>+ Ajouter un module</button>
+            </div>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+              <button className="btn btn-ghost" onClick={()=>setStep(0)}>← Retour</button>
+              <button className="btn btn-primary" onClick={()=>setStep(2)}>Continuer → Publication</button>
+            </div>
+          </React.Fragment>
+        )}
+
+        {/* ÉTAPE 2 — PUBLICATION */}
+        {step === 2 && (
+          <React.Fragment>
+            <div className="publish-card">
+              <div className="publish-icon">🚀</div>
+              <div className="publish-title">Prêt à publier votre cours ?</div>
+              <div className="publish-sub">Vérifiez que tout est en ordre avant de le rendre public. Vous pourrez le modifier à tout moment.</div>
+              <div className="publish-checklist">
+                <div className={`check-item ${checks.titre?'ok':'missing'}`}>
+                  {checks.titre?'✓':'○'} Titre du cours renseigné
+                </div>
+                <div className={`check-item ${checks.description?'ok':'missing'}`}>
+                  {checks.description?'✓':'○'} Description courte renseignée
+                </div>
+                <div className={`check-item ${checks.modules?'ok':'missing'}`}>
+                  {checks.modules?'✓':'○'} Au moins un module avec une leçon
+                </div>
+                <div className={`check-item ok`}>
+                  ✓ Catégorie : {categorie}
+                </div>
+                <div className={`check-item ok`}>
+                  ✓ Prix : {gratuit ? 'Gratuit' : prix ? `${prix}$ CAD` : 'Non défini'}
+                </div>
+              </div>
+              <div className="publish-actions">
+                <button className="btn btn-ghost" onClick={()=>setStep(1)}>← Retour</button>
+                <button className="btn btn-ghost" onClick={()=>handleSaveCourse('brouillon')} disabled={saving}>
+                  Sauvegarder en brouillon
+                </button>
+                <button
+                  className="btn btn-primary"
+                  disabled={saving || !checks.titre || !checks.description}
+                  onClick={() => handleSaveCourse('publié')}
+                >
+                  {saving ? 'Publication…' : '🚀 Publier le cours'}
+                </button>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+      </div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
