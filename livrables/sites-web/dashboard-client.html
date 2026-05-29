@@ -168,31 +168,6 @@ const Ic = {
   Star:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
 };
 
-const MISSIONS = [
-  {id:1, name:'Chatbot service client IA', cat:'Chatbots', icon:'🤖', iconBg:'rgba(124,58,237,0.12)', status:'active', statusLabel:'En cours', badge:'badge-green', expert:'Amélie Chen', price:'1 800$', progress:65, date:'Livraison 10 juin'},
-  {id:2, name:'Automatisation pipeline RH', cat:'Automatisation', icon:'⚡', iconBg:'rgba(6,182,212,0.1)', status:'review', statusLabel:'En révision', badge:'badge-amber', expert:'Karim Benali', price:'3 200$', progress:90, date:'Livraison 2 juin'},
-  {id:3, name:'Agent IA analyse données', cat:'Agents IA', icon:'🧠', iconBg:'rgba(16,185,129,0.1)', status:'done', statusLabel:'Terminée', badge:'badge-purple', expert:'Sofia Martins', price:'2 500$', progress:100, date:'Livrée le 18 mai'},
-];
-
-const PROPS = [
-  {id:1, name:'Lucas Bernard', spec:'Prompt Engineering · Agent IA', price:'950$', initials:'LB', color:'linear-gradient(135deg,#7C3AED,#6D28D9)', note:4.9, msg:'Bonjour, j\'ai lu votre brief avec attention. Mon approche sera de construire un système d\'agents en cascade avec mémoire contextuelle. Je peux livrer en 10 jours.'},
-  {id:2, name:'Yasmine Traoré', spec:'Développement IA · LLM', price:'1 200$', initials:'YT', color:'linear-gradient(135deg,#0891B2,#06B6D4)', note:5.0, msg:'Votre projet est exactement dans mon domaine. J\'ai réalisé 3 projets similaires avec GPT-4 et LangChain. Je propose un appel découverte gratuit de 30 min.'},
-  {id:3, name:'Antoine Dubois', spec:'Automatisation · Make · n8n', price:'780$', initials:'AD', color:'linear-gradient(135deg,#059669,#10B981)', note:4.8, msg:'Spécialiste Make et n8n, je peux automatiser l\'intégralité de votre pipeline en moins d\'une semaine. Résultats garantis ou remboursé.'},
-];
-
-const MSGS = [
-  {id:1, name:'Amélie Chen', preview:'Les maquettes sont prêtes, tu peux les valider avant...', time:'Il y a 12 min', unread:true, initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)'},
-  {id:2, name:'Karim Benali', preview:'J\'ai besoin d\'un accès à l\'API RH pour continuer...', time:'Il y a 2h', unread:true, initials:'KB', color:'linear-gradient(135deg,#0891B2,#06B6D4)'},
-  {id:3, name:'Support CreatorFlow', preview:'Votre mission #3 a bien été validée et archivée.', time:'Hier', unread:false, initials:'CF', color:'linear-gradient(135deg,#6D28D9,#7C3AED)'},
-  {id:4, name:'Sofia Martins', preview:'Merci pour la collaboration ! N\'hésitez pas...', time:'Il y a 3j', unread:false, initials:'SM', color:'linear-gradient(135deg,#059669,#10B981)'},
-];
-
-const ACTIVITY = [
-  {color:'var(--green)', text:<>Nouvelle proposition de <strong>Lucas Bernard</strong> sur votre brief "Agent IA"</>, time:'Il y a 20 min'},
-  {color:'var(--amber)', text:<><strong>Karim Benali</strong> a soumis la version finale pour révision</>, time:'Il y a 2h'},
-  {color:'var(--v)', text:<>Brief <strong>"Chatbot e-commerce"</strong> publié — 3 experts notifiés</>, time:'Il y a 1j'},
-  {color:'var(--c)', text:<>Mission <strong>"Analyse données IA"</strong> marquée comme terminée</>, time:'Il y a 3j'},
-];
 
 const NAV_ITEMS = [
   {id:'overview', label:'Vue d\'ensemble', icon:<Ic.Grid/>},
@@ -210,6 +185,8 @@ function App() {
   const [briefs, setBriefs] = useState([]);
   const [convs, setConvs] = useState([]);
   const [missions, setMissions] = useState([]);
+  const [missionCount, setMissionCount] = useState(0);
+  const [budgetTotal, setBudgetTotal] = useState(0);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -229,8 +206,12 @@ function App() {
       setBriefs(b || []);
       const { data: c } = await sb.from('conversations').select('id,created_at').eq('client_id', u.id).order('created_at', {ascending: false}).limit(3);
       setConvs(c || []);
-      const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,expert_id').eq('client_id', u.id).order('created_at', {ascending: false}).limit(4);
+      const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,expert_id,created_at').eq('client_id', u.id).order('created_at', {ascending: false}).limit(4);
       setMissions(m || []);
+      const { count: totalM } = await sb.from('missions').select('id', { count: 'exact', head: true }).eq('client_id', u.id);
+      setMissionCount(totalM || 0);
+      const { data: mPrix } = await sb.from('missions').select('prix').eq('client_id', u.id);
+      setBudgetTotal((mPrix||[]).reduce((s, r) => s + (r.prix||0), 0));
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -242,6 +223,8 @@ function App() {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
   };
+
+  const todayStr = (() => { const s = new Date().toLocaleDateString('fr-FR', {weekday:'long',day:'numeric',month:'long',year:'numeric'}); return s.charAt(0).toUpperCase()+s.slice(1); })();
 
   return (
     <React.Fragment>
@@ -272,7 +255,7 @@ function App() {
             <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => setActive(item.id)}>
               {item.icon}
               {item.label}
-              {item.badge && <span className="nav-badge">{item.badge}</span>}
+              {item.badge && <span className="nav-badge">{item.id==='missions' ? missionCount : item.id==='messages' ? convs.length : item.badge}</span>}
             </div>
           ))}
         </div>
@@ -295,7 +278,7 @@ function App() {
           <div className="page-header">
             <div>
               <h1 className="page-title">Bonjour, {prenom || 'Client'} 👋</h1>
-              <p className="page-sub">Mardi 27 mai 2026 · 3 missions actives · 3 nouvelles propositions</p>
+              <p className="page-sub">{todayStr} · {missionCount} mission{missionCount !== 1 ? 's' : ''} active{missionCount !== 1 ? 's' : ''} · {briefs.length} brief{briefs.length !== 1 ? 's' : ''} déposé{briefs.length !== 1 ? 's' : ''}</p>
             </div>
             <a href="brief.html" className="btn btn-primary"><Ic.Plus/>Nouveau brief</a>
           </div>
@@ -309,10 +292,10 @@ function App() {
               <div className="stat-trend trend-up"><Ic.Check/>{briefs.filter(b=>b.statut==='ouvert').length} ouverts</div>
             </div>
             <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(245,158,11,0.10)',color:'var(--amber)'}}>📥</div>
-              <div className="stat-val">3</div>
-              <div className="stat-label">Nouvelles propositions</div>
-              <div className="stat-trend trend-warn">À examiner</div>
+              <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
+              <div className="stat-val">{missionCount}</div>
+              <div className="stat-label">Missions en cours</div>
+              <div className="stat-trend trend-warn">{missionCount > 0 ? 'En cours' : 'Aucune'}</div>
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>💬</div>
@@ -322,9 +305,9 @@ function App() {
             </div>
             <div className="stat-card">
               <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
-              <div className="stat-val">7 500$</div>
+              <div className="stat-val">{budgetTotal > 0 ? budgetTotal.toLocaleString('fr-CA')+'$' : '—'}</div>
               <div className="stat-label">Budget engagé (total)</div>
-              <div className="stat-trend trend-up"><Ic.Check/>3 missions</div>
+              <div className="stat-trend trend-up"><Ic.Check/>{missionCount} mission{missionCount !== 1 ? 's' : ''}</div>
             </div>
           </div>
 
@@ -432,12 +415,17 @@ function App() {
                 <div className="section-head">
                   <span className="section-title">Activité récente</span>
                 </div>
-                {ACTIVITY.map((a, i) => (
+                {briefs.length === 0 && missions.length === 0 ? (
+                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:28,marginBottom:8}}>📊</div>
+                    <div style={{fontSize:13}}>Aucune activité récente</div>
+                  </div>
+                ) : [...briefs.map(b=>({color:'var(--vs)',label:`Brief "${b.categorie||'Projet'}" déposé — ${b.budget}`,time:b.created_at})), ...missions.map(m=>({color:'var(--c)',label:`Mission "${m.titre}" — ${m.statut}`,time:m.created_at}))].sort((a,b)=>new Date(b.time)-new Date(a.time)).slice(0,4).map((a,i)=>(
                   <div key={i} className="activity-item">
                     <div className="act-dot" style={{background:a.color}}/>
                     <div>
-                      <div className="act-text">{a.text}</div>
-                      <div className="act-time">{a.time}</div>
+                      <div className="act-text">{a.label}</div>
+                      <div className="act-time">{new Date(a.time).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</div>
                     </div>
                   </div>
                 ))}
