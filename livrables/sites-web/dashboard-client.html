@@ -420,7 +420,7 @@ function App() {
                     <div style={{fontSize:28,marginBottom:8}}>📊</div>
                     <div style={{fontSize:13}}>Aucune activité récente</div>
                   </div>
-                ) : [...briefs.map(b=>({color:'var(--vs)',label:`Brief "${b.categorie||'Projet'}" déposé — ${b.budget}`,time:b.created_at})), ...missions.map(m=>({color:'var(--c)',label:`Mission "${m.titre}" — ${m.statut}`,time:m.created_at}))].sort((a,b)=>new Date(b.time)-new Date(a.time)).slice(0,4).map((a,i)=>(
+                ) : [...briefs.map(b=>({color:'var(--vs)',label:`Brief "${b.categorie||'Projet'}" déposé — ${b.budget}`,time:b.created_at})), ...missions.map(m=>({color:'var(--c)',label:`Mission "${m.titre}" — ${{nouveau:'Nouveau',en_cours:'En cours',en_revision:'En révision',termine:'Terminé',annule:'Annulé'}[m.statut]||m.statut}`,time:m.created_at}))].sort((a,b)=>new Date(b.time)-new Date(a.time)).slice(0,4).map((a,i)=>(
                   <div key={i} className="activity-item">
                     <div className="act-dot" style={{background:a.color}}/>
                     <div>
