@@ -158,6 +158,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.04) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 80ms linear,top 80ms linear;}
 
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:32px;width:100%;max-width:480px;position:relative;}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:4px;}
+.modal-sub{font-size:13px;color:var(--text-2);margin-bottom:24px;}
+.modal-field{margin-bottom:16px;}
+.modal-label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;display:block;}
+.modal-input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--text);font-family:var(--f);transition:border-color 150ms;}
+.modal-input:focus{outline:none;border-color:var(--v);}
+.modal-textarea{resize:vertical;min-height:90px;}
+.modal-actions{display:flex;gap:10px;margin-top:24px;}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;background:var(--surf-2);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;color:var(--text-2);}
+.modal-close:hover{color:var(--text);}
+
 @media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
 @media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;}.main-inner{padding:20px 16px 60px;}}
   </style>
@@ -214,6 +227,13 @@ function App() {
   const [convs, setConvs] = useState([]);
   const [missions, setMissions] = useState([]);
   const [missionCount, setMissionCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBrief, setSelectedBrief] = useState(null);
+  const [montantForm, setMontantForm] = useState('');
+  const [messageForm, setMessageForm] = useState('');
+  const [delaiForm, setDelaiForm] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [postuleDone, setPostuleDone] = useState(false);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -224,7 +244,7 @@ function App() {
       const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) setUser({ ...u, ...profile });
       if (exp) setExpert(exp);
-      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at').eq('statut', 'ouvert').order('created_at', {ascending: false}).limit(5);
+      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').order('created_at', {ascending: false}).limit(5);
       setOpps(o || []);
       const { data: c } = await sb.from('conversations').select('id,created_at').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
       setConvs(c || []);
@@ -242,6 +262,32 @@ function App() {
   const handleLogout = async () => {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
+  };
+
+  const openModal = (brief) => {
+    setSelectedBrief(brief);
+    setMontantForm('');
+    setMessageForm('');
+    setDelaiForm('');
+    setPostuleDone(false);
+    setShowModal(true);
+  };
+
+  const handlePostuler = async (e) => {
+    e.preventDefault();
+    if (!montantForm || !messageForm) return;
+    setSubmitting(true);
+    const { data: { session } } = await sb.auth.getSession();
+    const { error } = await sb.from('propositions').insert({
+      brief_id: selectedBrief.id,
+      expert_id: session.user.id,
+      client_id: selectedBrief.user_id,
+      montant: parseInt(montantForm, 10),
+      message: messageForm,
+      delai: delaiForm || null,
+    });
+    setSubmitting(false);
+    if (!error) setPostuleDone(true);
   };
 
   const initials = user ? ((user.prenom||'?')[0] + (user.nom||'?')[0]).toUpperCase() : '??';
@@ -402,7 +448,7 @@ function App() {
                     </div>
                     <p className="opp-desc">{(o.description||'').slice(0,120)}{(o.description||'').length > 120 ? '…' : ''}</p>
                     <div className="opp-footer">
-                      <a href="messages.html" className="btn btn-purple btn-sm">Contacter <Ic.Arrow/></a>
+                      <button className="btn btn-purple btn-sm" onClick={() => openModal(o)}>Postuler <Ic.Arrow/></button>
                     </div>
                   </div>
                 ))}
@@ -500,6 +546,45 @@ function App() {
           </div>
         </div>
       </main>
+      {/* MODAL POSTULER */}
+      {showModal && (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
+          <div className="modal-box">
+            <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+            {postuleDone ? (
+              <div style={{textAlign:'center',padding:'20px 0'}}>
+                <div style={{fontSize:40,marginBottom:12}}>🎉</div>
+                <div className="modal-title" style={{marginBottom:8}}>Proposition envoyée !</div>
+                <div style={{fontSize:13,color:'var(--text-2)',marginBottom:24}}>Le client recevra ta candidature et pourra l'accepter ou la refuser.</div>
+                <button className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}>Fermer</button>
+              </div>
+            ) : (
+              <form onSubmit={handlePostuler}>
+                <div className="modal-title">Postuler sur ce brief</div>
+                <div className="modal-sub">{selectedBrief?.categorie || 'Projet IA'} · {selectedBrief?.budget}</div>
+                <div className="modal-field">
+                  <label className="modal-label">Ton tarif (CAD $) *</label>
+                  <input className="modal-input" type="number" min="1" placeholder="ex: 1200" value={montantForm} onChange={e => setMontantForm(e.target.value)} required/>
+                </div>
+                <div className="modal-field">
+                  <label className="modal-label">Délai proposé</label>
+                  <input className="modal-input" type="text" placeholder="ex: 2 semaines" value={delaiForm} onChange={e => setDelaiForm(e.target.value)}/>
+                </div>
+                <div className="modal-field">
+                  <label className="modal-label">Message au client *</label>
+                  <textarea className="modal-input modal-textarea" placeholder="Présente ton approche, ton expérience, pourquoi tu es le bon expert…" value={messageForm} onChange={e => setMessageForm(e.target.value)} required/>
+                </div>
+                <div className="modal-actions">
+                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}>Annuler</button>
+                  <button type="submit" className="btn btn-primary btn-sm" disabled={submitting} style={{flex:1,justifyContent:'center'}}>
+                    {submitting ? 'Envoi…' : 'Envoyer ma proposition'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </React.Fragment>
   );
 }

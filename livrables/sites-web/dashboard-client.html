@@ -187,6 +187,7 @@ function App() {
   const [missions, setMissions] = useState([]);
   const [missionCount, setMissionCount] = useState(0);
   const [budgetTotal, setBudgetTotal] = useState(0);
+  const [propositions, setPropositions] = useState([]);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -212,6 +213,12 @@ function App() {
       setMissionCount(totalM || 0);
       const { data: mPrix } = await sb.from('missions').select('prix').eq('client_id', u.id);
       setBudgetTotal((mPrix||[]).reduce((s, r) => s + (r.prix||0), 0));
+      const { data: props } = await sb.from('propositions')
+        .select('id,montant,message,delai,statut,created_at,expert_id,brief_id,profiles(prenom,nom,specialite)')
+        .eq('client_id', u.id)
+        .order('created_at', {ascending: false})
+        .limit(10);
+      setPropositions(props || []);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -255,7 +262,7 @@ function App() {
             <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => setActive(item.id)}>
               {item.icon}
               {item.label}
-              {item.badge && <span className="nav-badge">{item.id==='missions' ? missionCount : item.id==='messages' ? convs.length : item.badge}</span>}
+              {item.badge && <span className="nav-badge">{item.id==='missions' ? missionCount : item.id==='messages' ? convs.length : item.id==='props' ? propositions.filter(p=>p.statut==='en_attente').length : item.badge}</span>}
             </div>
           ))}
         </div>
@@ -408,6 +415,51 @@ function App() {
                 <div style={{padding:'12px 20px'}}>
                   <a href="messages.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Ouvrir la messagerie <Ic.Arrow/></a>
                 </div>
+              </div>
+
+              {/* PROPOSITIONS */}
+              <div className="section-card">
+                <div className="section-head">
+                  <span className="section-title">Propositions reçues</span>
+                  {propositions.filter(p=>p.statut==='en_attente').length > 0 && (
+                    <span style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)',fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:99}}>
+                      {propositions.filter(p=>p.statut==='en_attente').length} en attente
+                    </span>
+                  )}
+                </div>
+                {propositions.length === 0 ? (
+                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
+                    <div style={{fontSize:28,marginBottom:8}}>📬</div>
+                    <div style={{fontSize:13}}>Aucune proposition reçue</div>
+                  </div>
+                ) : propositions.slice(0,4).map(p => {
+                  const expertName = p.profiles ? `${p.profiles.prenom||''} ${p.profiles.nom||''}`.trim() : 'Expert';
+                  const expertSpec = p.profiles?.specialite || '';
+                  const statutColor = {en_attente:'var(--amber)',acceptee:'var(--green)',refusee:'var(--red)'}[p.statut] || 'var(--text-2)';
+                  const statutLabel = {en_attente:'En attente',acceptee:'Acceptée',refusee:'Refusée'}[p.statut] || p.statut;
+                  return (
+                    <div key={p.id} className="msg-item" style={{alignItems:'flex-start'}}>
+                      <div className="msg-avatar" style={{background:'linear-gradient(135deg,var(--v),var(--vs))',flexShrink:0,marginTop:2}}>
+                        {expertName ? (expertName[0]||'E').toUpperCase() : 'E'}
+                      </div>
+                      <div className="msg-body" style={{flex:1,minWidth:0}}>
+                        <div className="msg-name">{expertName || 'Expert'}{expertSpec ? ` · ${expertSpec}` : ''}</div>
+                        <div className="msg-preview">{p.montant ? p.montant.toLocaleString('fr-CA')+'$ CAD' : ''}{p.delai ? ` · ${p.delai}` : ''}</div>
+                        <div style={{fontSize:11,color:'var(--text-3)',marginTop:2,lineHeight:1.4}}>{(p.message||'').slice(0,80)}{(p.message||'').length>80?'…':''}</div>
+                      </div>
+                      <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:4,flexShrink:0}}>
+                        <span style={{fontSize:10,fontWeight:700,color:statutColor}}>{statutLabel}</span>
+                        <span style={{fontSize:10,color:'var(--text-3)'}}>{new Date(p.created_at).toLocaleDateString('fr-CA')}</span>
+                        {p.statut==='en_attente' && (
+                          <button className="btn btn-primary btn-sm" style={{fontSize:10,padding:'4px 10px',marginTop:4}} onClick={async()=>{
+                            await sb.from('propositions').update({statut:'acceptee'}).eq('id',p.id);
+                            setPropositions(prev=>prev.map(x=>x.id===p.id?{...x,statut:'acceptee'}:x));
+                          }}>Accepter</button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* ACTIVITÉ */}
