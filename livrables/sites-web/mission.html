@@ -347,6 +347,7 @@ function App() {
               </div>
               <div className="mh-actions">
                 <a href={user?.role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'} className="btn btn-ghost btn-sm"><Ic.Back/>Retour</a>
+                <a href={`rapport-mission.html?id=${mission?.id||''}`} className="btn btn-ghost btn-sm">📄 Rapport</a>
                 <button className="btn btn-danger btn-sm"><Ic.Flag/>Signaler</button>
               </div>
             </div>

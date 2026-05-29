@@ -144,9 +144,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
 const Ic = {
   Download:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
@@ -156,6 +162,11 @@ const Ic = {
 };
 
 function App() {
+  const [mission, setMission] = useState(null);
+  const [client, setClient] = useState(null);
+  const [expert, setExpert] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -174,12 +185,48 @@ function App() {
     return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = 'connexion.html'; return; }
+      const params = new URLSearchParams(window.location.search);
+      const missionId = params.get('id');
+      if (!missionId) { setLoading(false); return; }
+      const { data: m } = await sb.from('missions').select('*').eq('id', missionId).single();
+      if (m) {
+        setMission(m);
+        const [{ data: cp }, { data: ep }] = await Promise.all([
+          sb.from('profiles').select('prenom, nom').eq('id', m.client_id).single(),
+          sb.from('profiles').select('prenom, nom').eq('id', m.expert_id).single(),
+        ]);
+        const mk = n => n ? ((n.prenom||'?')[0]+(n.nom||'?')[0]).toUpperCase() : '??';
+        setClient({ name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim() : '—', initials: mk(cp) });
+        setExpert({ name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim() : '—', initials: mk(ep) });
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) return <div style={{paddingTop:100,textAlign:'center',color:'var(--text-3)'}}>Chargement...</div>;
+  if (!mission) return <div style={{paddingTop:100,textAlign:'center',color:'var(--text-3)'}}>Mission introuvable.</div>;
+
+  const dateDebut = mission.created_at ? new Date(mission.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}) : '—';
+  const dateFin = mission.deadline ? new Date(mission.deadline).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}) : '—';
+  const ref = mission.id.split('-')[0].toUpperCase();
+  const today = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  const prix = mission.prix || 0;
+  const acompte = Math.round(prix * 0.3);
+  const solde = prix - acompte;
+  const commission = Math.round(prix * 0.05);
+  const missionUrl = `mission.html?id=${mission.id}`;
+
   return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
         <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
         <div style={{display:'flex',gap:10}}>
-          <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+          <a href={missionUrl} className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>← Mission</a>
+          <a href="dashboard-expert.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
         </div>
       </div></nav>
 
@@ -188,20 +235,17 @@ function App() {
           <div className="toolbar no-print">
             <div className="toolbar-left">
               <div className="breadcrumb">
-                <a href="dashboard-client.html">Dashboard</a>
+                <a href="dashboard-expert.html">Dashboard</a>
                 <span>/</span>
-                <a href="mission.html">Mission</a>
+                <a href={missionUrl}>Mission</a>
                 <span>/</span>
                 <span style={{color:'var(--text-2)'}}>Rapport final</span>
               </div>
-              <div className="page-title">Rapport de mission</div>
+              <div className="page-title">Rapport de mission — {mission.titre}</div>
             </div>
             <div className="toolbar-actions">
               <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>window.print()}>
                 <Ic.Printer/>Imprimer
-              </button>
-              <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}}>
-                <Ic.Share/>Partager
               </button>
               <button className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}} onClick={()=>window.print()}>
                 <Ic.Download/>Télécharger PDF
@@ -214,15 +258,15 @@ function App() {
             <div className="report-header">
               <div className="report-header-top">
                 <div className="report-brand">CreatorFlow <em>Market</em></div>
-                <div className="status-chip">✓ Mission terminée</div>
+                <div className="status-chip">✓ {mission.statut === 'termine' ? 'Mission terminée' : 'En cours'}</div>
               </div>
-              <div className="report-title">Rapport de mission finale</div>
-              <div className="report-ref">Référence : #MSN-2841 · Généré le 26 mai 2026</div>
+              <div className="report-title">{mission.titre}</div>
+              <div className="report-ref">Référence : #{ref} · Généré le {today}</div>
               <div className="report-meta-row">
-                <div className="report-meta-item">Début : <strong>3 avril 2026</strong></div>
-                <div className="report-meta-item">Fin : <strong>25 mai 2026</strong></div>
-                <div className="report-meta-item">Durée : <strong>52 jours</strong></div>
-                <div className="report-meta-item">Catégorie : <strong>Chatbot & IA</strong></div>
+                <div className="report-meta-item">Début : <strong>{dateDebut}</strong></div>
+                <div className="report-meta-item">Livraison prévue : <strong>{dateFin}</strong></div>
+                {mission.categorie && <div className="report-meta-item">Catégorie : <strong>{mission.categorie}</strong></div>}
+                {mission.progression !== undefined && <div className="report-meta-item">Progression : <strong>{mission.progression}%</strong></div>}
               </div>
             </div>
 
@@ -231,20 +275,20 @@ function App() {
               <div className="party-card">
                 <div className="party-label">Client</div>
                 <div className="party-avatar">
-                  <div className="av" style={{background:'#2563EB'}}>TR</div>
+                  <div className="av" style={{background:'#2563EB'}}>{client?.initials}</div>
                   <div>
-                    <div className="party-name">Thomas Richard</div>
-                    <div className="party-sub">Richard Consulting · Paris</div>
+                    <div className="party-name">{client?.name}</div>
+                    <div className="party-sub">Client CreatorFlow Market</div>
                   </div>
                 </div>
               </div>
               <div className="party-card">
                 <div className="party-label">Expert</div>
                 <div className="party-avatar">
-                  <div className="av" style={{background:'#7C3AED'}}>AC</div>
+                  <div className="av" style={{background:'#7C3AED'}}>{expert?.initials}</div>
                   <div>
-                    <div className="party-name">Amélie Chen</div>
-                    <div className="party-sub">Experte IA & Automatisation · Certifiée</div>
+                    <div className="party-name">{expert?.name}</div>
+                    <div className="party-sub">Expert IA certifié CreatorFlow</div>
                   </div>
                 </div>
               </div>
@@ -254,68 +298,10 @@ function App() {
             <div className="stats-section">
               <div className="section-title"><span className="section-icon" style={{background:'rgba(124,58,237,0.12)'}}>📊</span>Résumé de la mission</div>
               <div className="stats-grid">
-                <div className="stat-box"><div className="stat-val green">100%</div><div className="stat-lbl">Livrables validés</div></div>
-                <div className="stat-box"><div className="stat-val purple">6/6</div><div className="stat-lbl">Jalons complétés</div></div>
-                <div className="stat-box"><div className="stat-val cyan">-3 j.</div><div className="stat-lbl">En avance sur planning</div></div>
-                <div className="stat-box"><div className="stat-val orange">1 800$</div><div className="stat-lbl">Budget final</div></div>
-              </div>
-            </div>
-
-            {/* LIVRABLES */}
-            <div className="rep-section">
-              <div className="section-title"><span className="section-icon" style={{background:'rgba(16,185,129,0.10)'}}>📦</span>Livrables</div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Livrable</th>
-                    <th>Date de livraison</th>
-                    <th>Validé par</th>
-                    <th>Statut</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ['Audit des besoins + spécifications', '8 avr. 2026', 'Thomas R.', 'done'],
-                    ['Architecture technique du chatbot', '15 avr. 2026', 'Thomas R.', 'done'],
-                    ['Prototype v1 — flux principaux', '25 avr. 2026', 'Thomas R.', 'done'],
-                    ['Intégration CRM (HubSpot)', '5 mai 2026', 'Thomas R.', 'done'],
-                    ['Tests & corrections', '15 mai 2026', 'Thomas R.', 'done'],
-                    ['Livraison finale + documentation', '25 mai 2026', 'Thomas R.', 'done'],
-                  ].map(([nom, date, val, s], i) => (
-                    <tr key={i}>
-                      <td style={{fontWeight:600}}>{nom}</td>
-                      <td style={{color:'var(--text-2)'}}>{date}</td>
-                      <td style={{color:'var(--text-2)'}}>{val}</td>
-                      <td><span className={`status-badge ${s==='done'?'s-done':'s-review'}`}>{s==='done'?'Validé':'En révision'}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* TIMELINE */}
-            <div className="rep-section">
-              <div className="section-title"><span className="section-icon" style={{background:'rgba(6,182,212,0.10)'}}>🗓️</span>Chronologie</div>
-              <div className="timeline">
-                {[
-                  { label:'Démarrage de la mission', date:'3 avr. 2026', done:true },
-                  { label:'Phase 1 — Audit & Architecture', date:'3 – 15 avr. 2026', done:true },
-                  { label:'Phase 2 — Développement', date:'15 – 30 avr. 2026', done:true },
-                  { label:'Phase 3 — Intégrations', date:'1 – 10 mai 2026', done:true },
-                  { label:'Phase 4 — Tests & Recette', date:'10 – 20 mai 2026', done:true },
-                  { label:'Livraison finale & clôture', date:'25 mai 2026', done:true },
-                ].map((t,i,arr)=>(
-                  <div key={i} className="tl-item">
-                    <div className="tl-left">
-                      <div className={`tl-dot ${t.done?'done':'pending'}`}/>
-                      {i < arr.length-1 && <div className="tl-line"/>}
-                    </div>
-                    <div className="tl-content">
-                      <div className="tl-title">{t.label}</div>
-                      <div className="tl-date">{t.date}</div>
-                    </div>
-                  </div>
-                ))}
+                <div className="stat-box"><div className="stat-val purple">{mission.progression}%</div><div className="stat-lbl">Progression</div></div>
+                <div className="stat-box"><div className="stat-val cyan">{mission.categorie || '—'}</div><div className="stat-lbl">Catégorie</div></div>
+                <div className="stat-box"><div className="stat-val green">{mission.statut === 'termine' ? '✓ Terminé' : 'En cours'}</div><div className="stat-lbl">Statut</div></div>
+                <div className="stat-box"><div className="stat-val orange">{prix}$</div><div className="stat-lbl">Budget</div></div>
               </div>
             </div>
 
@@ -324,11 +310,10 @@ function App() {
               <div className="section-title"><span className="section-icon" style={{background:'rgba(124,58,237,0.10)'}}>💰</span>Récapitulatif financier</div>
               <div style={{maxWidth:400}}>
                 {[
-                  ['Montant total de la mission', '1 800,00$'],
-                  ['Acompte versé (30%)', '540,00$'],
-                  ['Solde versé à la livraison (70%)', '1 260,00$'],
-                  ['Commission CreatorFlow Market (5%)', '90,00$'],
-                  ['TVA (20%)', '360,00$'],
+                  [`Montant total de la mission`, `${prix},00$`],
+                  [`Acompte versé (30%)`, `${acompte},00$`],
+                  [`Solde à la livraison (70%)`, `${solde},00$`],
+                  [`Commission CreatorFlow Market (5%)`, `${commission},00$`],
                 ].map(([l,v])=>(
                   <div key={l} className="fin-row">
                     <span className="fin-label">{l}</span>
@@ -336,19 +321,10 @@ function App() {
                   </div>
                 ))}
                 <div className="fin-total">
-                  <span className="fin-total-label">Total TTC réglé</span>
-                  <span className="fin-total-val">2 160,00$</span>
+                  <span className="fin-total-label">Total réglé</span>
+                  <span className="fin-total-val">{prix},00$</span>
                 </div>
               </div>
-            </div>
-
-            {/* SATISFACTION */}
-            <div className="rep-section">
-              <div className="section-title"><span className="section-icon" style={{background:'rgba(245,158,11,0.10)'}}>⭐</span>Évaluation client</div>
-              <div className="stars-row">{'⭐⭐⭐⭐⭐'.split('').map((s,i)=><span key={i} className="big-star">{s}</span>)}</div>
-              <div style={{fontSize:14,fontWeight:700,marginBottom:12}}>Note : 5/5 — Exceptionnel</div>
-              <div className="review-quote">"Amélie a livré un travail remarquable, bien au-delà de mes attentes. Le chatbot est opérationnel, intégré parfaitement à notre HubSpot, et l'équipe a été formée. Je recommande sans hésitation et je reviendrai certainement pour un prochain projet."</div>
-              <div style={{fontSize:12,color:'var(--text-3)',marginTop:10}}>— Thomas Richard, Richard Consulting</div>
             </div>
 
             {/* SIGNATURES */}
@@ -357,21 +333,21 @@ function App() {
               <div className="sig-row">
                 <div className="sig-box">
                   <div className="sig-label">Client</div>
-                  <div className="sig-name">Thomas Richard</div>
-                  <div className="sig-date">Richard Consulting · Paris</div>
+                  <div className="sig-name">{client?.name}</div>
+                  <div className="sig-date">Client CreatorFlow Market</div>
                   <div className="sig-line"/>
-                  <div className="sig-stamp">✓ Validé électroniquement le 25 mai 2026</div>
+                  <div className="sig-stamp">✓ Validé électroniquement le {today}</div>
                 </div>
                 <div className="sig-box">
                   <div className="sig-label">Expert</div>
-                  <div className="sig-name">Amélie Chen</div>
-                  <div className="sig-date">Experte IA certifiée CreatorFlow</div>
+                  <div className="sig-name">{expert?.name}</div>
+                  <div className="sig-date">Expert IA certifié CreatorFlow</div>
                   <div className="sig-line"/>
-                  <div className="sig-stamp">✓ Livraison confirmée le 25 mai 2026</div>
+                  <div className="sig-stamp">✓ Livraison confirmée le {today}</div>
                 </div>
               </div>
               <div style={{marginTop:16,padding:12,background:'rgba(16,185,129,0.07)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--r)',fontSize:12,color:'var(--text-2)',textAlign:'center'}}>
-                Document officiel généré par CreatorFlow Market · Référence #MSN-2841 · Valeur contractuelle
+                Document officiel généré par CreatorFlow Market · Référence #{ref} · Valeur contractuelle
               </div>
             </div>
           </div>
