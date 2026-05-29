@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Académie — CreatorFlow Market</title>
+  <title>Académie IA — CreatorFlow Market</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet">
   <style>
-:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--pink:#EC4899;--orange:#F97316;--blue:#3B82F6;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
@@ -16,8 +16,15 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 img{display:block;max-width:100%;}
 
+/* AMBIENT ORBS */
+.bg-mesh{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);}
+.orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 70%);top:-250px;left:-200px;}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(6,182,212,0.14) 0%,transparent 70%);top:25%;right:-150px;}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,0.09) 0%,transparent 70%);bottom:15%;left:15%;}
+
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
 .nav-logo{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
 .nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -32,30 +39,142 @@ img{display:block;max-width:100%;}
 .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
 .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
 .btn-sm{padding:7px 14px;font-size:12px;}
-.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
-.btn-outline:hover{border-color:var(--vs);color:var(--vs);}
+.btn-lg{padding:14px 28px;font-size:15px;font-weight:700;}
 .user-chip{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 6px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;}
 .avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
 
 /* HERO */
-.hero{padding:calc(var(--nav) + 64px) 24px 56px;text-align:center;max-width:800px;margin:0 auto;}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);color:var(--vs);font-size:12px;font-weight:600;padding:5px 14px;border-radius:999px;margin-bottom:20px;letter-spacing:0.04em;text-transform:uppercase;}
-.hero-title{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:16px;}
-.hero-title span{background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
-.hero-sub{font-size:16px;color:var(--text-2);margin-bottom:32px;line-height:1.6;}
-.search-bar{display:flex;align-items:center;background:var(--surf);border:1px solid var(--border-2);border-radius:14px;padding:6px 6px 6px 18px;gap:10px;max-width:520px;margin:0 auto;transition:border-color 200ms;}
-.search-bar:focus-within{border-color:var(--v);}
+.hero-section{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--nav) + 60px) 24px 80px;text-align:center;z-index:1;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.04) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 0%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 0%,transparent 100%);pointer-events:none;}
+.hero-inner{max-width:840px;margin:0 auto;}
+
+/* Hero elements start hidden — GSAP reveals them */
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.10);border:1px solid rgba(124,58,237,0.28);color:var(--vs);font-size:12px;font-weight:600;padding:6px 16px;border-radius:999px;margin-bottom:32px;letter-spacing:0.05em;text-transform:uppercase;opacity:0;will-change:transform,opacity;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulseDot 2s ease-in-out infinite;}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.75);}}
+.hero-title{font-size:clamp(38px,6.5vw,72px);font-weight:900;letter-spacing:-0.05em;line-height:1.0;margin-bottom:24px;}
+.hero-line{display:block;}
+.hero-word{display:inline-block;opacity:0;will-change:transform,opacity;}
+.hero-accent{background:linear-gradient(135deg,var(--vs) 0%,var(--c) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-sub{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);margin-bottom:40px;line-height:1.75;max-width:540px;margin-left:auto;margin-right:auto;opacity:0;will-change:transform,opacity;}
+.hero-cta-group{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:40px;flex-wrap:wrap;opacity:0;will-change:transform,opacity;}
+.search-bar{display:flex;align-items:center;background:var(--surf);border:1px solid var(--border-2);border-radius:14px;padding:6px 6px 6px 18px;gap:10px;max-width:560px;margin:0 auto 28px;transition:border-color 200ms,box-shadow 200ms;opacity:0;will-change:transform,opacity;}
+.search-bar:focus-within{border-color:var(--v);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
 .search-bar input{flex:1;background:none;border:none;outline:none;font-size:14px;color:var(--text);font-family:var(--f);}
 .search-bar input::placeholder{color:var(--text-3);}
+.hero-pills{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;opacity:0;will-change:transform,opacity;}
+.hero-pill{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-3);}
+.hero-pill-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.2);}
 
-/* STATS */
-.stats-row{display:flex;align-items:center;justify-content:center;gap:32px;padding:24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:48px;}
-.stat-item{text-align:center;}
-.stat-num{font-size:22px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
-.stat-lbl{font-size:12px;color:var(--text-3);margin-top:2px;}
+/* TRUST BAR */
+.trust-bar{display:flex;align-items:center;justify-content:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:88px;overflow-x:auto;scrollbar-width:none;z-index:1;position:relative;}
+.trust-bar::-webkit-scrollbar{display:none;}
+.trust-item{display:flex;align-items:center;gap:12px;padding:18px 32px;border-right:1px solid var(--border);white-space:nowrap;flex-shrink:0;}
+.trust-item:last-child{border-right:none;}
+.trust-icon{font-size:20px;}
+.trust-text strong{font-size:13px;font-weight:700;display:block;letter-spacing:-0.01em;}
+.trust-text span{font-size:11px;color:var(--text-3);}
+
+/* SECTION PRIMITIVES */
+.section{position:relative;z-index:1;max-width:1280px;margin:0 auto 96px;padding:0 24px;}
+.section-label{font-size:11px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--vs);margin-bottom:12px;}
+.section-heading{font-size:clamp(26px,3.2vw,40px);font-weight:800;letter-spacing:-0.04em;line-height:1.15;margin-bottom:14px;}
+.section-sub{font-size:15px;color:var(--text-2);line-height:1.75;max-width:520px;}
+
+/* CATEGORIES */
+.categories-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:36px;}
+.cat-card{position:relative;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 20px;cursor:pointer;transition:transform 280ms var(--ease),border-color 280ms,box-shadow 280ms;overflow:hidden;will-change:transform;}
+.cat-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--cat-clr,var(--v)) 0%,transparent 55%);opacity:0;transition:opacity 300ms;pointer-events:none;}
+.cat-card:hover{transform:translateY(-5px);border-color:var(--cat-clr,var(--v));box-shadow:0 0 0 1px var(--cat-clr,var(--v)),0 24px 48px -12px rgba(0,0,0,0.6);}
+.cat-card:hover::after{opacity:0.06;}
+.cat-icon-wrap{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);display:grid;place-items:center;font-size:22px;margin-bottom:14px;transition:transform 280ms var(--ease),background 280ms;flex-shrink:0;}
+.cat-card:hover .cat-icon-wrap{transform:scale(1.08);background:rgba(255,255,255,0.08);}
+.cat-name{font-size:14px;font-weight:700;margin-bottom:4px;letter-spacing:-0.01em;}
+.cat-desc{font-size:12px;color:var(--text-3);line-height:1.4;margin-bottom:12px;}
+.cat-count-pill{display:inline-flex;align-items:center;font-size:11px;font-weight:600;color:var(--text-3);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:3px 10px;border-radius:99px;}
+
+/* WHY SECTION */
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:40px;}
+.why-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;transition:border-color 300ms,transform 300ms var(--ease);}
+.why-card:hover{border-color:var(--border-2);transform:translateY(-2px);}
+.why-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:24px;margin-bottom:20px;}
+.why-title{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.why-desc{font-size:14px;color:var(--text-2);line-height:1.75;}
+
+/* COURSE CARDS */
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:32px;}
+.course-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;cursor:pointer;transition:transform 280ms var(--ease),border-color 280ms,box-shadow 280ms;will-change:transform;}
+.course-card:hover{border-color:var(--border-2);transform:translateY(-5px);box-shadow:0 24px 52px -12px rgba(0,0,0,0.65);}
+.course-thumb{width:100%;aspect-ratio:16/9;background:var(--surf-3);position:relative;overflow:hidden;}
+.course-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 500ms var(--ease);}
+.course-card:hover .course-thumb img{transform:scale(1.05);}
+.course-badge{position:absolute;top:10px;left:10px;background:rgba(124,58,237,0.9);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:8px;letter-spacing:0.04em;text-transform:uppercase;}
+.course-badge.free{background:rgba(16,185,129,0.9);}
+.course-body{padding:18px;}
+.course-cat{font-size:11px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.course-title{font-size:15px;font-weight:700;line-height:1.35;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;letter-spacing:-0.01em;}
+.course-instructor{font-size:12px;color:var(--text-2);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.course-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.course-rating{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--amber);}
+.course-rating span{color:var(--text-3);font-weight:400;}
+.course-tag{font-size:11px;color:var(--text-3);background:rgba(255,255,255,0.04);padding:3px 9px;border-radius:99px;border:1px solid var(--border);}
+.course-footer{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border);}
+.course-price{font-size:18px;font-weight:900;letter-spacing:-0.03em;}
+.course-price.free{color:var(--green);}
+.course-price-sub{font-size:11px;color:var(--text-3);margin-top:1px;}
+.enroll-btn{padding:8px 18px;border-radius:999px;font-size:12px;font-weight:700;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;transition:all 200ms var(--ease);display:inline-flex;align-items:center;gap:5px;}
+.enroll-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px -4px var(--vg);}
+
+/* COMING SOON CARD */
+.mock-card-wrap{position:relative;}
+.coming-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;}
+.coming-badge{background:rgba(12,12,24,0.88);backdrop-filter:blur(10px);border:1px solid var(--border-2);border-radius:999px;padding:10px 22px;font-size:13px;font-weight:700;color:var(--text);}
+
+/* TESTIMONIALS */
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+.testimonial-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;transition:border-color 300ms;}
+.testimonial-card:hover{border-color:var(--border-2);}
+.t-stars{display:flex;gap:3px;color:var(--amber);margin-bottom:16px;}
+.t-text{font-size:14px;color:var(--text-2);line-height:1.78;margin-bottom:20px;font-style:italic;}
+.t-author{display:flex;align-items:center;gap:12px;}
+.t-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--surf-3);}
+.t-avatar img{width:100%;height:100%;object-fit:cover;}
+.t-name{font-size:14px;font-weight:700;}
+.t-role{font-size:12px;color:var(--text-3);}
+
+/* INSTRUCTOR CTA */
+.instr-cta{position:relative;z-index:1;padding:0 24px;margin-bottom:96px;}
+.instr-cta-inner{max-width:1280px;margin:0 auto;background:linear-gradient(135deg,rgba(124,58,237,0.11) 0%,rgba(6,182,212,0.05) 100%);border:1px solid rgba(124,58,237,0.22);border-radius:var(--r-xl);padding:64px;display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:center;overflow:hidden;position:relative;}
+.instr-cta-inner::before{content:'';position:absolute;top:-80px;right:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%);pointer-events:none;}
+.cta-label{font-size:11px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--vs);margin-bottom:16px;}
+.cta-title{font-size:clamp(22px,2.8vw,34px);font-weight:900;letter-spacing:-0.04em;line-height:1.15;margin-bottom:16px;}
+.cta-sub{font-size:15px;color:var(--text-2);line-height:1.75;margin-bottom:32px;}
+.cta-steps{display:flex;flex-direction:column;gap:18px;margin-bottom:36px;}
+.cta-step{display:flex;align-items:flex-start;gap:14px;}
+.cta-step-num{width:28px;height:28px;border-radius:50%;background:rgba(124,58,237,0.14);border:1px solid rgba(124,58,237,0.28);color:var(--vs);font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0;margin-top:1px;}
+.cta-step-text strong{font-size:14px;font-weight:700;display:block;margin-bottom:2px;}
+.cta-step-text span{font-size:13px;color:var(--text-3);}
+.cta-actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* CTA VISUAL (fake dashboard) */
+.cta-visual{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-lg);overflow:hidden;}
+.cta-visual-bar{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.dot-r{width:10px;height:10px;border-radius:50%;background:#FF5F56;}
+.dot-y{width:10px;height:10px;border-radius:50%;background:#FFBD2E;}
+.dot-g{width:10px;height:10px;border-radius:50%;background:#27C93F;}
+.cta-visual-body{padding:20px 18px;}
+.stat-row{display:flex;gap:10px;margin-bottom:18px;}
+.stat-box{flex:1;background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;}
+.stat-box .n{font-size:20px;font-weight:900;letter-spacing:-0.03em;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.stat-box .l{font-size:11px;color:var(--text-3);margin-top:2px;}
+.bar-row{margin-bottom:10px;}
+.bar-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);margin-bottom:5px;}
+.bar-track{height:6px;background:var(--surf-3);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--v),var(--c));border-radius:99px;}
+.cta-alert{margin-top:16px;padding:11px 14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);border-radius:var(--r);font-size:12px;color:var(--green);}
 
 /* FILTERS */
-.filters-bar{max-width:1280px;margin:0 auto 36px;padding:0 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.filters-bar{max-width:1280px;margin:0 auto 32px;padding:0 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;z-index:1;position:relative;}
 .filter-pill{padding:7px 16px;border-radius:999px;font-size:13px;font-weight:500;background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);cursor:pointer;transition:all 150ms;}
 .filter-pill:hover{border-color:var(--border-3);color:var(--text);}
 .filter-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:var(--vs);}
@@ -63,75 +182,63 @@ img{display:block;max-width:100%;}
 .select-filter{background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);font-family:var(--f);font-size:13px;padding:7px 12px;border-radius:999px;cursor:pointer;outline:none;}
 .select-filter:focus{border-color:var(--v);}
 
-/* COURSE GRID */
-.courses-section{max-width:1280px;margin:0 auto;padding:0 24px 80px;}
-.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
-.section-title{font-size:18px;font-weight:700;letter-spacing:-0.02em;}
-.section-count{font-size:13px;color:var(--text-3);}
-.courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
-
-/* COURSE CARD */
-.course-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 240ms var(--ease);cursor:pointer;}
-.course-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 16px 40px -12px rgba(0,0,0,0.5);}
-.course-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--surf-3),var(--surf-2));position:relative;overflow:hidden;}
-.course-thumb img{width:100%;height:100%;object-fit:cover;}
-.course-thumb-placeholder{width:100%;height:100%;display:grid;place-items:center;font-size:36px;}
-.course-badge{position:absolute;top:10px;left:10px;background:rgba(124,58,237,0.9);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:0.04em;text-transform:uppercase;}
-.course-badge.free{background:rgba(16,185,129,0.9);}
-.course-body{padding:16px;}
-.course-cat{font-size:11px;font-weight:600;color:var(--c);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;}
-.course-title{font-size:15px;font-weight:700;line-height:1.35;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.course-instructor{font-size:12px;color:var(--text-2);margin-bottom:10px;}
-.course-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.course-rating{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--amber);}
-.course-rating span{color:var(--text-3);font-weight:400;}
-.course-tag{font-size:11px;color:var(--text-3);background:var(--surf-2);padding:2px 8px;border-radius:99px;}
-.course-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
-.course-price{font-size:18px;font-weight:800;letter-spacing:-0.02em;}
-.course-price.free{color:var(--green);}
-.course-price-sub{font-size:11px;color:var(--text-3);}
-.enroll-btn{padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;transition:all 200ms;}
-.enroll-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px -4px var(--vg);}
-
 /* EMPTY STATE */
-.empty-state{text-align:center;padding:80px 24px;color:var(--text-3);}
+.empty-state{text-align:center;padding:80px 24px;color:var(--text-3);z-index:1;position:relative;}
 .empty-icon{font-size:52px;margin-bottom:16px;}
 .empty-title{font-size:18px;font-weight:700;color:var(--text-2);margin-bottom:8px;}
 .empty-sub{font-size:14px;line-height:1.6;max-width:400px;margin:0 auto 24px;}
-
-/* FEATURED BANNER */
-.featured-banner{max-width:1280px;margin:0 auto 48px;padding:0 24px;}
-.banner-inner{background:linear-gradient(135deg,rgba(124,58,237,0.15) 0%,rgba(6,182,212,0.08) 100%);border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-xl);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
-.banner-text h2{font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
-.banner-text p{font-size:14px;color:var(--text-2);max-width:480px;line-height:1.6;}
-.banner-actions{display:flex;gap:10px;flex-shrink:0;}
-
-/* CATEGORIES SECTION */
-.categories-section{max-width:1280px;margin:0 auto 48px;padding:0 24px;}
-.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
-.cat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:20px 16px;text-align:center;cursor:pointer;transition:all 200ms;}
-.cat-card:hover{border-color:var(--v);background:rgba(124,58,237,0.06);}
-.cat-icon{font-size:28px;margin-bottom:8px;}
-.cat-name{font-size:13px;font-weight:600;margin-bottom:2px;}
-.cat-count{font-size:11px;color:var(--text-3);}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.section-title{font-size:18px;font-weight:700;letter-spacing:-0.02em;}
+.section-count{font-size:13px;color:var(--text-3);}
 
 /* FOOTER */
-.footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;color:var(--text-3);font-size:13px;}
+.footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px 24px;margin-top:80px;}
+.footer-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-logo{font-size:15px;font-weight:800;letter-spacing:-0.02em;}
+.footer-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.footer-links{display:flex;gap:20px;}
+.footer-link{font-size:13px;color:var(--text-3);transition:color 150ms;}
+.footer-link:hover{color:var(--text-2);}
+.footer-copy{font-size:12px;color:var(--text-3);}
 
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .categories-grid{grid-template-columns:repeat(4,1fr);}
+  .why-grid{grid-template-columns:repeat(2,1fr);}
+  .testimonials-grid{grid-template-columns:repeat(2,1fr);}
+  .instr-cta-inner{grid-template-columns:1fr;gap:40px;padding:40px;}
+}
 @media(max-width:768px){
-  .hero{padding:calc(var(--nav) + 40px) 20px 40px;}
-  .hero-title{font-size:28px;}
-  .stats-row{gap:20px;padding:20px;}
-  .banner-inner{flex-direction:column;}
-  .banner-actions{width:100%;}
+  .hero-section{min-height:auto;padding-top:calc(var(--nav)+40px);}
+  .hero-title{font-size:36px;}
+  .categories-grid{grid-template-columns:repeat(2,1fr);}
+  .why-grid{grid-template-columns:1fr;}
+  .testimonials-grid{grid-template-columns:1fr;}
+  .trust-item{padding:14px 18px;}
+  .instr-cta-inner{padding:28px;gap:28px;}
   .nav-links{display:none;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .footer-links{flex-wrap:wrap;justify-content:center;}
+}
+@media(max-width:480px){
+  .hero-cta-group{flex-direction:column;}
+  .hero-cta-group .btn{width:100%;justify-content:center;}
+  .hero-pills{gap:14px;}
 }
   </style>
 </head>
 <body>
 
+<div class="bg-mesh">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
 <div id="root"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
@@ -148,24 +255,6 @@ const sb = createClient(
 const CATEGORIES = ['Tous','Agents IA','Prompt Engineering','Data & Analytics','Automatisation','Marketing IA','Développement','Design IA','Autre'];
 const NIVEAUX = ['Tous niveaux','Débutant','Intermédiaire','Avancé'];
 
-const StarIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-  </svg>
-);
-
-const PlayIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="5 3 19 12 5 21 5 3"/>
-  </svg>
-);
-
-const SearchIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-  </svg>
-);
-
 const THUMB_IMGS = {
   'Agents IA':          'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
   'Prompt Engineering': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=640&q=80',
@@ -177,44 +266,72 @@ const THUMB_IMGS = {
 };
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
 
-function CourseCard({ course, onEnroll }) {
-  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')}$`;
+const MOCK_COURSES = [
+  { id:'m1', titre:"Maîtriser les Agents IA : De Zéro à l'Autonomie", categorie:'Agents IA', niveau:'Intermédiaire', prix:97, image_url:THUMB_IMGS['Agents IA'], is_mock:true },
+  { id:'m2', titre:'Prompt Engineering Pro : L\'Art de Parler aux LLMs', categorie:'Prompt Engineering', niveau:'Débutant', prix:0, image_url:THUMB_IMGS['Prompt Engineering'], is_mock:true },
+  { id:'m3', titre:'Marketing IA : Croissance 10x en 30 jours', categorie:'Marketing IA', niveau:'Débutant', prix:67, image_url:THUMB_IMGS['Marketing IA'], is_mock:true },
+];
+
+const TESTIMONIALS = [
+  { text:"En 3 semaines j'ai automatisé 80% de ma production de contenu. Mon agence génère maintenant 3x plus de revenus avec la même équipe.", name:'Marie L.', role:'Créatrice de contenu · Montréal', seed:'MarieLavallee' },
+  { text:"La formation Agents IA a transformé mon business. J'automatise des tâches qui prenaient 20h/semaine. ROI en moins de 2 semaines.", name:'Karim B.', role:'Entrepreneur · Paris', seed:'KarimBenali' },
+  { text:"J'avais peur que l'IA remplace mon travail. CreatorFlow m'a appris à l'utiliser comme superpower. Je suis maintenant irremplaçable.", name:'Sophia W.', role:'Consultante Marketing · Lyon', seed:'SophiaWilliams' },
+];
+
+const CAT_CONFIG = [
+  { name:'Agents IA',          icon:'🤖', color:'#7C3AED', desc:'Automatisation intelligente' },
+  { name:'Prompt Engineering', icon:'✍️', color:'#3B82F6', desc:'Maîtrise des LLMs' },
+  { name:'Data & Analytics',   icon:'📊', color:'#06B6D4', desc:'Décisions basées sur les données' },
+  { name:'Automatisation',     icon:'⚡', color:'#F59E0B', desc:'Workflows sans effort' },
+  { name:'Marketing IA',       icon:'📈', color:'#10B981', desc:'Croissance accélérée' },
+  { name:'Développement',      icon:'💻', color:'#F97316', desc:'Code augmenté par l\'IA' },
+  { name:'Design IA',          icon:'🎨', color:'#EC4899', desc:'Créativité amplifiée' },
+  { name:'Autre',              icon:'📚', color:'#6B7280', desc:'Compétences transversales' },
+];
+
+const WHY_ITEMS = [
+  { icon:'⚡', bg:'rgba(245,158,11,0.10)', border:'rgba(245,158,11,0.18)', title:'Apprenez ce qui génère du revenu', desc:'Pas de théorie inutile. Chaque module est actionnable le jour même et conçu pour produire des résultats mesurables dans votre business.' },
+  { icon:'🎯', bg:'rgba(16,185,129,0.10)', border:'rgba(16,185,129,0.18)', title:'Formés par des entrepreneurs IA', desc:'Nos instructeurs ont construit leurs business avec l\'IA. Ils partagent leurs vrais résultats, leurs échecs, et uniquement ce qui fonctionne.' },
+  { icon:'🔧', bg:'rgba(124,58,237,0.10)', border:'rgba(124,58,237,0.18)', title:'Projets concrets à chaque cours', desc:'Chaque formation se conclut par un livrable utilisable : agent IA, automatisation, stratégie ou contenu prêt à déployer immédiatement.' },
+  { icon:'🌐', bg:'rgba(6,182,212,0.10)', border:'rgba(6,182,212,0.18)', title:'Communauté et support continu', desc:'Accès au Discord privé CreatorFlow, sessions live mensuelles et feedback personnalisé sur vos projets pendant toute la durée.' },
+];
+
+/* === ICONS === */
+const StarIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>;
+const PlayIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+const SearchIcon = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>;
+
+/* === COURSE CARD (real) === */
+function CourseCard({ course, enrolled, onEnroll }) {
+  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $`;
   const thumbSrc = course.image_url || THUMB_IMGS[course.categorie] || DEFAULT_THUMB;
   const instrAvatar = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(course.nom_instructeur||'Expert')}`;
 
   return (
-    <div className="course-card" onClick={() => window.location.href = `cours.html?id=${course.id}`}>
+    <div className="course-card" onClick={() => window.location.href=`cours.html?id=${course.id}`}>
       <div className="course-thumb">
-        <img src={thumbSrc} alt={course.titre} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-        <span className={`course-badge ${course.prix === 0 ? 'free' : ''}`}>
-          {course.prix === 0 ? 'Gratuit' : 'Payant'}
-        </span>
+        <img src={thumbSrc} alt={course.titre}/>
+        <span className={`course-badge${course.prix===0?' free':''}`}>{course.prix===0?'Gratuit':'Premium'}</span>
       </div>
       <div className="course-body">
-        <div className="course-cat">{course.categorie || 'Formation IA'}</div>
+        <div className="course-cat">{course.categorie||'Formation IA'}</div>
         <div className="course-title">{course.titre}</div>
-        <div className="course-instructor" style={{display:'flex',alignItems:'center',gap:6}}>
+        <div className="course-instructor">
           <img src={instrAvatar} alt="" style={{width:20,height:20,borderRadius:'50%',background:'var(--surf-3)',flexShrink:0}}/>
-          <span>Par {course.nom_instructeur || 'Expert certifié'}</span>
+          <span>Par {course.nom_instructeur||'Expert certifié'}</span>
         </div>
         <div className="course-meta">
-          <div className="course-rating">
-            <StarIcon/>
-            {course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—'}
-            <span>({course.nb_avis || 0})</span>
-          </div>
-          <span className="course-tag">{course.niveau || 'Débutant'}</span>
-          {course.duree_totale > 0 && (
-            <span className="course-tag">{Math.floor(course.duree_totale/60)}h{course.duree_totale%60 > 0 ? course.duree_totale%60+'min' : ''}</span>
-          )}
+          <div className="course-rating"><StarIcon/>{course.note_moyenne>0?course.note_moyenne.toFixed(1):'—'}<span>({course.nb_avis||0})</span></div>
+          <span className="course-tag">{course.niveau||'Débutant'}</span>
+          {course.duree_totale>0&&<span className="course-tag">{Math.floor(course.duree_totale/60)}h</span>}
         </div>
         <div className="course-footer">
           <div>
-            <div className={`course-price ${course.prix === 0 ? 'free' : ''}`}>{prix}</div>
-            {course.nb_inscrits > 0 && <div className="course-price-sub">{course.nb_inscrits} inscrits</div>}
+            <div className={`course-price${course.prix===0?' free':''}`}>{prix}</div>
+            {course.nb_inscrits>0&&<div className="course-price-sub">{course.nb_inscrits} inscrits</div>}
           </div>
-          <button className="enroll-btn" onClick={e => { e.stopPropagation(); onEnroll(course); }}>
-            <PlayIcon/> {course.prix === 0 ? 'Accéder' : 'S\'inscrire'}
+          <button className="enroll-btn" onClick={e=>{e.stopPropagation();onEnroll(course);}}>
+            <PlayIcon/> {enrolled?'Continuer':course.prix===0?'Accéder':'S\'inscrire'}
           </button>
         </div>
       </div>
@@ -222,6 +339,28 @@ function CourseCard({ course, onEnroll }) {
   );
 }
 
+/* === MOCK CARD (coming soon) === */
+function MockCourseCard({ course }) {
+  return (
+    <div className="mock-card-wrap">
+      <div className="course-card" style={{opacity:0.7,pointerEvents:'none',userSelect:'none'}}>
+        <div className="course-thumb"><img src={course.image_url} alt={course.titre}/></div>
+        <div className="course-body">
+          <div className="course-cat">{course.categorie}</div>
+          <div className="course-title">{course.titre}</div>
+          <div className="course-footer">
+            <div className={`course-price${course.prix===0?' free':''}`}>{course.prix===0?'Gratuit':`${course.prix} $`}</div>
+          </div>
+        </div>
+      </div>
+      <div className="coming-overlay">
+        <div className="coming-badge">🚀 Bientôt disponible</div>
+      </div>
+    </div>
+  );
+}
+
+/* === MAIN APP === */
 function App() {
   const [user, setUser] = useState(null);
   const [initials, setInitials] = useState('??');
@@ -232,77 +371,130 @@ function App() {
   const [activeNiveau, setActiveNiveau] = useState('Tous niveaux');
   const [activeSort, setActiveSort] = useState('recent');
   const [enrolledIds, setEnrolledIds] = useState(new Set());
-  const [stats, setStats] = useState({ courses: 0, inscrits: 0, instructeurs: 0 });
 
+  /* Auth + courses */
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
       if (data.session) {
         const u = data.session.user;
-        const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
-        if (p) {
-          setInitials(((p.prenom||'?')[0]+(p.nom||'?')[0]).toUpperCase());
-          setUser({ ...u, ...p });
-        } else setUser(u);
-        const { data: enrolls } = await sb.from('enrollments').select('course_id').eq('user_id', u.id);
-        setEnrolledIds(new Set((enrolls||[]).map(e => e.course_id)));
+        const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',u.id).single();
+        if (p) { setInitials(((p.prenom||'?')[0]+(p.nom||'?')[0]).toUpperCase()); setUser({...u,...p}); }
+        else setUser(u);
+        const { data: enrolls } = await sb.from('enrollments').select('course_id').eq('user_id',u.id);
+        setEnrolledIds(new Set((enrolls||[]).map(e=>e.course_id)));
       }
     });
     loadCourses();
   }, []);
 
+  /* Hero animation — runs once after mount */
+  useEffect(() => {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tl = gsap.timeline({ delay: 0.12 });
+    tl.to('.hero-badge',     { opacity:1, y:0, duration:0.55, ease:'power3.out' })
+      .to('.hero-word',      { opacity:1, y:0, stagger:0.05, duration:0.7, ease:'power4.out' }, '-=0.25')
+      .to('.hero-sub',       { opacity:1, y:0, duration:0.7, ease:'power3.out' }, '-=0.45')
+      .to('.search-bar',     { opacity:1, y:0, duration:0.6, ease:'power3.out' }, '-=0.4')
+      .to('.hero-cta-group', { opacity:1, y:0, duration:0.6, ease:'power3.out' }, '-=0.45')
+      .to('.hero-pills',     { opacity:1, y:0, duration:0.5, ease:'power3.out' }, '-=0.35');
+
+    /* Fallback: ensure everything is visible after 2s even if GSAP hiccups */
+    setTimeout(() => {
+      document.querySelectorAll('.hero-badge,.hero-word,.hero-sub,.search-bar,.hero-cta-group,.hero-pills').forEach(el => {
+        el.style.opacity='1'; el.style.transform='none';
+      });
+    }, 2000);
+
+    return () => tl.kill();
+  }, []);
+
+  /* Scroll animations — runs after courses load */
+  useEffect(() => {
+    if (loading || typeof gsap === 'undefined') return;
+
+    /* Ensure gsap.set initial y for scroll items */
+    gsap.set('.cat-card', { y: 24 });
+    gsap.set('.why-card', { y: 28 });
+    gsap.set('.testimonial-card', { y: 24 });
+    gsap.set('.instr-cta-inner', { y: 32, opacity: 0 });
+
+    const makeScrollAnim = (selector, options = {}) => {
+      const els = document.querySelectorAll(selector);
+      if (!els.length) return;
+      gsap.to(selector, {
+        scrollTrigger: { trigger: selector, start: 'top 82%' },
+        opacity: 1, y: 0,
+        stagger: options.stagger ?? 0.08,
+        duration: options.duration ?? 0.65,
+        ease: options.ease ?? 'power3.out',
+      });
+    };
+
+    makeScrollAnim('.trust-item', { stagger:0.07, duration:0.5 });
+    makeScrollAnim('.cat-card',   { stagger:0.06, duration:0.6 });
+    makeScrollAnim('.why-card',   { stagger:0.09, duration:0.7 });
+    makeScrollAnim('.testimonial-card', { stagger:0.10, duration:0.65 });
+
+    gsap.to('.instr-cta-inner', {
+      scrollTrigger: { trigger:'.instr-cta-inner', start:'top 82%' },
+      opacity:1, y:0, duration:0.8, ease:'power3.out',
+    });
+
+    gsap.utils.toArray('.section-heading').forEach(el => {
+      gsap.from(el, {
+        scrollTrigger: { trigger:el, start:'top 88%' },
+        opacity:0, y:20, duration:0.65, ease:'power3.out',
+      });
+    });
+
+    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+  }, [loading]);
+
   const loadCourses = async () => {
     setLoading(true);
     const { data } = await sb.from('courses')
       .select('id,titre,description_courte,categorie,niveau,prix,image_url,note_moyenne,nb_avis,nb_inscrits,duree_totale,instructor_id,created_at')
-      .eq('statut', 'publié')
-      .order('created_at', { ascending: false });
+      .eq('statut','publié')
+      .order('created_at',{ascending:false});
     const list = data || [];
-
-    // Fetch instructor names
-    const withNames = await Promise.all(list.map(async (c) => {
-      const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id', c.instructor_id).single();
+    const withNames = await Promise.all(list.map(async c => {
+      const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',c.instructor_id).single();
       return { ...c, nom_instructeur: p ? `${p.prenom||''} ${p.nom||''}`.trim() : 'Expert' };
     }));
     setCourses(withNames);
-
-    const inscrits = withNames.reduce((s, c) => s + (c.nb_inscrits || 0), 0);
-    const instructeursUniques = new Set(withNames.map(c => c.instructor_id)).size;
-    setStats({ courses: withNames.length, inscrits, instructeurs: instructeursUniques });
     setLoading(false);
   };
 
   const handleEnroll = async (course) => {
-    if (!user) { window.location.href = 'connexion.html'; return; }
-    if (enrolledIds.has(course.id)) { window.location.href = `lecteur.html?id=${course.id}`; return; }
-    if (course.prix === 0) {
-      const { error } = await sb.from('enrollments').insert({ user_id: user.id, course_id: course.id, prix_paye: 0 });
-      if (!error) {
-        setEnrolledIds(prev => new Set([...prev, course.id]));
-        window.location.href = `lecteur.html?id=${course.id}`;
-      }
+    if (course.is_mock) { window.location.href='inscription.html'; return; }
+    if (!user) { window.location.href='connexion.html'; return; }
+    if (enrolledIds.has(course.id)) { window.location.href=`lecteur.html?id=${course.id}`; return; }
+    if (course.prix===0) {
+      const { error } = await sb.from('enrollments').insert({user_id:user.id,course_id:course.id,prix_paye:0});
+      if (!error) { setEnrolledIds(prev=>new Set([...prev,course.id])); window.location.href=`lecteur.html?id=${course.id}`; }
     } else {
-      window.location.href = `cours.html?id=${course.id}`;
+      window.location.href=`cours.html?id=${course.id}`;
     }
   };
 
   const filtered = useMemo(() => {
     let list = [...courses];
-    if (activeCat !== 'Tous') list = list.filter(c => c.categorie === activeCat);
-    if (activeNiveau !== 'Tous niveaux') list = list.filter(c => (c.niveau||'Débutant').toLowerCase() === activeNiveau.toLowerCase());
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(c => c.titre.toLowerCase().includes(q) || (c.categorie||'').toLowerCase().includes(q));
-    }
-    if (activeSort === 'recent') list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-    if (activeSort === 'populaire') list.sort((a,b) => (b.nb_inscrits||0) - (a.nb_inscrits||0));
-    if (activeSort === 'note') list.sort((a,b) => (b.note_moyenne||0) - (a.note_moyenne||0));
-    if (activeSort === 'prix-asc') list.sort((a,b) => a.prix - b.prix);
+    if (activeCat!=='Tous') list=list.filter(c=>c.categorie===activeCat);
+    if (activeNiveau!=='Tous niveaux') list=list.filter(c=>(c.niveau||'Débutant').toLowerCase()===activeNiveau.toLowerCase());
+    if (search.trim()) { const q=search.toLowerCase(); list=list.filter(c=>c.titre.toLowerCase().includes(q)||(c.categorie||'').toLowerCase().includes(q)); }
+    if (activeSort==='recent')    list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    if (activeSort==='populaire') list.sort((a,b)=>(b.nb_inscrits||0)-(a.nb_inscrits||0));
+    if (activeSort==='note')      list.sort((a,b)=>(b.note_moyenne||0)-(a.note_moyenne||0));
+    if (activeSort==='prix-asc')  list.sort((a,b)=>a.prix-b.prix);
     return list;
-  }, [courses, activeCat, activeNiveau, search, activeSort]);
+  }, [courses,activeCat,activeNiveau,search,activeSort]);
 
   return (
     <React.Fragment>
-      {/* NAV */}
+
+      {/* ── NAV ── */}
       <nav className="nav">
         <div className="nav-inner">
           <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
@@ -315,9 +507,7 @@ function App() {
             {user ? (
               <React.Fragment>
                 <a href="dashboard-client.html" className="btn btn-ghost btn-sm">Mon espace</a>
-                <div className="user-chip">
-                  <div className="avatar">{initials}</div>
-                </div>
+                <div className="user-chip"><div className="avatar">{initials}</div></div>
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -329,140 +519,255 @@ function App() {
         </div>
       </nav>
 
-      {/* HERO */}
-      <div className="hero">
-        <div className="hero-badge">✨ CreatorFlow AI Academy</div>
-        <h1 className="hero-title">Maîtrisez <span>l'intelligence artificielle</span> avec les meilleurs experts</h1>
-        <p className="hero-sub">Des formations créées par des experts certifiés, pour entrepreneurs, créateurs et professionnels.</p>
-        <div className="search-bar">
-          <SearchIcon/>
-          <input
-            type="text"
-            placeholder="Rechercher un cours : Prompt Engineering, Agents IA…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-          <button className="btn btn-primary btn-sm">Rechercher</button>
+      {/* ── HERO ── */}
+      <section className="hero-section">
+        <div className="hero-grid"/>
+        <div className="hero-inner">
+          <div className="hero-badge">
+            <span className="badge-dot"/>
+            🎓 Lancement Beta · En avant-première
+          </div>
+          <h1 className="hero-title">
+            <span className="hero-line">
+              <span className="hero-word" style={{transform:'translateY(32px)'}}>Maîtrisez</span>
+              {' '}
+              <span className="hero-word hero-accent" style={{transform:'translateY(32px)'}}>l'IA.</span>
+            </span>
+            <span className="hero-line">
+              <span className="hero-word" style={{transform:'translateY(32px)'}}>Multipliez</span>
+              {' '}
+              <span className="hero-word" style={{transform:'translateY(32px)'}}>vos</span>
+              {' '}
+              <span className="hero-word hero-accent" style={{transform:'translateY(32px)'}}>revenus.</span>
+            </span>
+          </h1>
+          <p className="hero-sub" style={{transform:'translateY(20px)'}}>
+            Les compétences pratiques que les écoles n'enseignent pas. Des formateurs entrepreneurs qui partagent ce qui génère de vrais résultats.
+          </p>
+          <div className="search-bar" style={{transform:'translateY(16px)'}}>
+            <SearchIcon/>
+            <input type="text" placeholder="Rechercher : Agents IA, Prompt Engineering, Automatisation…" value={search} onChange={e=>setSearch(e.target.value)}/>
+            <button className="btn btn-primary btn-sm">Rechercher</button>
+          </div>
+          <div className="hero-cta-group" style={{transform:'translateY(16px)'}}>
+            <a href="#cours-section" className="btn btn-primary btn-lg">Explorer les cours →</a>
+            <a href="#pourquoi" className="btn btn-ghost btn-lg">Comment ça marche</a>
+          </div>
+          <div className="hero-pills" style={{transform:'translateY(10px)'}}>
+            {['100% en ligne','Certificat inclus','Accès à vie','Projets pratiques'].map(t=>(
+              <div key={t} className="hero-pill"><div className="hero-pill-dot"/>{t}</div>
+            ))}
+          </div>
         </div>
+      </section>
+
+      {/* ── TRUST BAR ── */}
+      <div className="trust-bar">
+        {[
+          { icon:'🎯', strong:'Résultats en 30 jours', sub:'Ou remboursé' },
+          { icon:'🏆', strong:'Formateurs experts', sub:'Sélectionnés sur résultats' },
+          { icon:'🔓', strong:'Accès à vie', sub:'Mises à jour incluses' },
+          { icon:'💬', strong:'Communauté Discord', sub:'Support et feedback' },
+          { icon:'📱', strong:'100% en ligne', sub:'Desktop & mobile' },
+        ].map((item,i) => (
+          <div key={i} className="trust-item">
+            <span className="trust-icon">{item.icon}</span>
+            <div className="trust-text"><strong>{item.strong}</strong><span>{item.sub}</span></div>
+          </div>
+        ))}
       </div>
 
-      {/* STATS */}
-      <div className="stats-row">
-        <div className="stat-item">
-          <div className="stat-num">{stats.courses > 0 ? stats.courses : '—'}</div>
-          <div className="stat-lbl">Cours disponibles</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-num">{stats.inscrits > 0 ? stats.inscrits.toLocaleString('fr-CA') : '—'}</div>
-          <div className="stat-lbl">Apprenants</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-num">{stats.instructeurs > 0 ? stats.instructeurs : '—'}</div>
-          <div className="stat-lbl">Instructeurs</div>
-        </div>
-        <div className="stat-item">
-          <div className="stat-num">100%</div>
-          <div className="stat-lbl">En ligne</div>
-        </div>
-      </div>
-
-      {/* CATEGORIES */}
-      <div className="categories-section">
-        <div className="section-header" style={{marginBottom:20}}>
-          <div className="section-title">Parcourir par domaine</div>
-        </div>
+      {/* ── CATEGORIES ── */}
+      <div className="section">
+        <div className="section-label">Domaines</div>
+        <h2 className="section-heading">Parcourir par domaine</h2>
+        <p className="section-sub">De la formation Agents IA au Marketing automatisé, chaque domaine vous donne un avantage compétitif immédiat.</p>
         <div className="categories-grid">
-          {[
-            {name:'Agents IA',icon:'🤖'},{name:'Prompt Engineering',icon:'✍️'},
-            {name:'Data & Analytics',icon:'📊'},{name:'Automatisation',icon:'⚡'},
-            {name:'Marketing IA',icon:'📈'},{name:'Développement',icon:'💻'},
-            {name:'Design IA',icon:'🎨'},{name:'Autre',icon:'📚'}
-          ].map(cat => (
-            <div key={cat.name} className="cat-card" onClick={() => { setActiveCat(cat.name); window.scrollTo({top:600,behavior:'smooth'}); }}>
-              <div className="cat-icon">{cat.icon}</div>
+          {CAT_CONFIG.map(cat => (
+            <div
+              key={cat.name}
+              className="cat-card"
+              style={{'--cat-clr':cat.color}}
+              onClick={() => { setActiveCat(cat.name); document.getElementById('cours-section')?.scrollIntoView({behavior:'smooth'}); }}
+            >
+              <div className="cat-icon-wrap">{cat.icon}</div>
               <div className="cat-name">{cat.name}</div>
-              <div className="cat-count">{courses.filter(c=>c.categorie===cat.name).length} cours</div>
+              <div className="cat-desc">{cat.desc}</div>
+              <div className="cat-count-pill">{courses.filter(c=>c.categorie===cat.name).length} cours</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* BANNER INSTRUCTEUR */}
-      <div className="featured-banner">
-        <div className="banner-inner">
-          <div className="banner-text">
-            <h2>Vous êtes expert IA ? Partagez votre savoir.</h2>
-            <p>Créez et vendez vos formations sur CreatorFlow Academy. Rejoignez les instructeurs certifiés et générez des revenus passifs.</p>
-          </div>
-          <div className="banner-actions">
-            <a href="creer-cours.html" className="btn btn-primary">Créer un cours</a>
-            <a href="inscription.html?role=expert" className="btn btn-ghost">Devenir instructeur</a>
-          </div>
-        </div>
-      </div>
-
-      {/* FILTERS */}
-      <div className="filters-bar">
-        {CATEGORIES.map(cat => (
-          <button key={cat} className={`filter-pill ${activeCat === cat ? 'active' : ''}`} onClick={() => setActiveCat(cat)}>{cat}</button>
-        ))}
-        <div className="filters-sep"/>
-        <select className="select-filter" value={activeNiveau} onChange={e => setActiveNiveau(e.target.value)}>
-          {NIVEAUX.map(n => <option key={n}>{n}</option>)}
-        </select>
-        <select className="select-filter" value={activeSort} onChange={e => setActiveSort(e.target.value)}>
-          <option value="recent">Plus récents</option>
-          <option value="populaire">Plus populaires</option>
-          <option value="note">Mieux notés</option>
-          <option value="prix-asc">Prix croissant</option>
-        </select>
-      </div>
-
-      {/* COURSES */}
-      <div className="courses-section">
-        <div className="section-header">
-          <div className="section-title">
-            {activeCat === 'Tous' ? 'Tous les cours' : activeCat}
-          </div>
-          <div className="section-count">{filtered.length} cours trouvés</div>
-        </div>
-
-        {loading ? (
-          <div className="empty-state">
-            <div className="empty-icon">⏳</div>
-            <div className="empty-title">Chargement des cours…</div>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">📭</div>
-            <div className="empty-title">Aucun cours disponible</div>
-            <div className="empty-sub">
-              {courses.length === 0
-                ? "Les premiers cours seront publiés très prochainement. Revenez bientôt !"
-                : "Aucun cours ne correspond à vos filtres. Essayez une autre catégorie."}
+      {/* ── WHY SECTION ── */}
+      <div className="section" id="pourquoi">
+        <div className="section-label">Pourquoi nous</div>
+        <h2 className="section-heading">L'académie IA faite pour les entrepreneurs</h2>
+        <p className="section-sub">Chaque formation est conçue pour générer des résultats mesurables dans votre business, pas pour remplir un CV.</p>
+        <div className="why-grid">
+          {WHY_ITEMS.map((item,i) => (
+            <div key={i} className="why-card">
+              <div className="why-icon" style={{background:item.bg,border:`1px solid ${item.border}`}}>
+                <span style={{fontSize:24}}>{item.icon}</span>
+              </div>
+              <div className="why-title">{item.title}</div>
+              <div className="why-desc">{item.desc}</div>
             </div>
-            {courses.length === 0 && (
-              <a href="creer-cours.html" className="btn btn-primary">Être le premier instructeur</a>
-            )}
-          </div>
-        ) : (
-          <div className="courses-grid">
-            {filtered.map(course => (
-              <CourseCard
-                key={course.id}
-                course={course}
-                enrolled={enrolledIds.has(course.id)}
-                onEnroll={handleEnroll}
-              />
-            ))}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
 
-      {/* FOOTER */}
+      {/* ── FEATURED (mock preview) ── */}
+      <div className="section">
+        <div className="section-label">À venir</div>
+        <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',flexWrap:'wrap',gap:16,marginBottom:8}}>
+          <h2 className="section-heading" style={{marginBottom:0}}>Formations en préparation</h2>
+          <a href="#cours-section" className="btn btn-ghost btn-sm">Voir tous les cours ↓</a>
+        </div>
+        <p className="section-sub">Nos premières formations sont en cours de production par des experts sélectionnés.</p>
+        <div className="courses-grid">
+          {MOCK_COURSES.map(c => <MockCourseCard key={c.id} course={c}/>)}
+        </div>
+      </div>
+
+      {/* ── TESTIMONIALS ── */}
+      <div className="section">
+        <div className="section-label">Témoignages</div>
+        <h2 className="section-heading">Ce que disent nos apprenants</h2>
+        <p className="section-sub">Des entrepreneurs et créateurs qui ont transformé leur rapport à l'IA.</p>
+        <div className="testimonials-grid">
+          {TESTIMONIALS.map((t,i) => (
+            <div key={i} className="testimonial-card">
+              <div className="t-stars">{[1,2,3,4,5].map(s=><StarIcon key={s}/>)}</div>
+              <p className="t-text">"{t.text}"</p>
+              <div className="t-author">
+                <div className="t-avatar">
+                  <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${t.seed}`} alt={t.name}/>
+                </div>
+                <div>
+                  <div className="t-name">{t.name}</div>
+                  <div className="t-role">{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── INSTRUCTOR CTA ── */}
+      <div className="instr-cta">
+        <div className="instr-cta-inner">
+          <div>
+            <div className="cta-label">Rejoindre l'équipe</div>
+            <h2 className="cta-title">Vous avez des compétences IA ? Elles valent de l'argent.</h2>
+            <p className="cta-sub">Rejoignez les premiers instructeurs de CreatorFlow Academy. Créez votre formation en 2h avec notre outil guidé et commencez à générer des revenus passifs.</p>
+            <div className="cta-steps">
+              {[
+                { t:'Créez votre cours', d:'Notre outil guidé vous accompagne étape par étape en moins de 2h.' },
+                { t:'On certifie votre contenu', d:'Notre équipe vérifie la qualité et vous aide à optimiser votre formation.' },
+                { t:'Générez des revenus', d:'Chaque inscription = revenu passif. Vous gardez 70% du prix de vente.' },
+              ].map((step,i) => (
+                <div key={i} className="cta-step">
+                  <div className="cta-step-num">{i+1}</div>
+                  <div className="cta-step-text">
+                    <strong>{step.t}</strong>
+                    <span>{step.d}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="cta-actions">
+              <a href="creer-cours.html" className="btn btn-primary btn-lg">Créer mon premier cours →</a>
+              <a href="inscription.html?role=expert" className="btn btn-ghost btn-lg">Devenir instructeur</a>
+            </div>
+          </div>
+          <div className="cta-visual">
+            <div className="cta-visual-bar">
+              <div className="dot-r"/><div className="dot-y"/><div className="dot-g"/>
+              <span style={{fontSize:12,color:'var(--text-3)',marginLeft:8}}>Dashboard instructeur</span>
+            </div>
+            <div className="cta-visual-body">
+              <div className="stat-row">
+                <div className="stat-box"><div className="n">70%</div><div className="l">Vos revenus</div></div>
+                <div className="stat-box"><div className="n">∞</div><div className="l">Accès à vie</div></div>
+                <div className="stat-box"><div className="n">2h</div><div className="l">Pour créer</div></div>
+              </div>
+              {[{lbl:'Marketing IA',pct:91},{lbl:'Agents IA',pct:74},{lbl:'Prompt Engineering',pct:58}].map((bar,i)=>(
+                <div key={i} className="bar-row">
+                  <div className="bar-lbl"><span>{bar.lbl}</span><span>{bar.pct}%</span></div>
+                  <div className="bar-track"><div className="bar-fill" style={{width:`${bar.pct}%`}}/></div>
+                </div>
+              ))}
+              <div className="cta-alert">📈 Forte demande pour les formateurs IA francophones</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── CATALOG (real DB) ── */}
+      <div id="cours-section" style={{position:'relative',zIndex:1}}>
+        <div className="filters-bar">
+          {CATEGORIES.map(cat=>(
+            <button key={cat} className={`filter-pill${activeCat===cat?' active':''}`} onClick={()=>setActiveCat(cat)}>{cat}</button>
+          ))}
+          <div className="filters-sep"/>
+          <select className="select-filter" value={activeNiveau} onChange={e=>setActiveNiveau(e.target.value)}>
+            {NIVEAUX.map(n=><option key={n}>{n}</option>)}
+          </select>
+          <select className="select-filter" value={activeSort} onChange={e=>setActiveSort(e.target.value)}>
+            <option value="recent">Plus récents</option>
+            <option value="populaire">Plus populaires</option>
+            <option value="note">Mieux notés</option>
+            <option value="prix-asc">Prix croissant</option>
+          </select>
+        </div>
+
+        <div className="section" style={{marginBottom:0}}>
+          <div className="section-header">
+            <div className="section-title">{activeCat==='Tous'?'Tous les cours':activeCat}</div>
+            <div className="section-count">{filtered.length} cours disponibles</div>
+          </div>
+
+          {loading ? (
+            <div className="empty-state">
+              <div className="empty-icon">⏳</div>
+              <div className="empty-title">Chargement des cours…</div>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">🚀</div>
+              <div className="empty-title">{courses.length===0?'Soyez parmi les premiers !':'Aucun cours dans cette catégorie'}</div>
+              <div className="empty-sub">
+                {courses.length===0
+                  ? "Les premiers cours arrivent bientôt. En attendant, devenez instructeur et publiez le vôtre."
+                  : "Essayez une autre catégorie ou réinitialisez les filtres."}
+              </div>
+              {courses.length===0&&<a href="creer-cours.html" className="btn btn-primary">Publier le premier cours →</a>}
+            </div>
+          ) : (
+            <div className="courses-grid">
+              {filtered.map(course=>(
+                <CourseCard key={course.id} course={course} enrolled={enrolledIds.has(course.id)} onEnroll={handleEnroll}/>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── FOOTER ── */}
       <footer className="footer">
-        © 2026 CreatorFlow Market · Tous droits réservés · <a href="index.html" style={{color:'var(--vs)'}}>Retour à la plateforme</a>
+        <div className="footer-inner">
+          <div className="footer-logo">CreatorFlow <em>Market</em></div>
+          <div className="footer-links">
+            <a href="index.html" className="footer-link">Plateforme</a>
+            <a href="experts.html" className="footer-link">Experts</a>
+            <a href="academie.html" className="footer-link">Académie</a>
+            <a href="creer-cours.html" className="footer-link">Créer un cours</a>
+          </div>
+          <div className="footer-copy">© 2026 CreatorFlow Market · Tous droits réservés</div>
+        </div>
       </footer>
+
     </React.Fragment>
   );
 }
