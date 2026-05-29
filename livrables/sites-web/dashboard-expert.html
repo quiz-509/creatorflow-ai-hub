@@ -285,6 +285,7 @@ function App() {
       montant: parseInt(montantForm, 10),
       message: messageForm,
       delai: delaiForm || null,
+      nom_expert: `${user?.prenom || ''} ${user?.nom || ''}`.trim() || 'Expert',
     });
     setSubmitting(false);
     if (!error) setPostuleDone(true);

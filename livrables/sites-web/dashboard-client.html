@@ -214,15 +214,11 @@ function App() {
       const { data: mPrix } = await sb.from('missions').select('prix').eq('client_id', u.id);
       setBudgetTotal((mPrix||[]).reduce((s, r) => s + (r.prix||0), 0));
       const { data: props } = await sb.from('propositions')
-        .select('id,montant,message,delai,statut,created_at,expert_id,brief_id')
+        .select('id,montant,message,delai,statut,created_at,expert_id,brief_id,nom_expert')
         .eq('client_id', u.id)
         .order('created_at', {ascending: false})
         .limit(10);
-      const propsWithProfile = await Promise.all((props||[]).map(async (prop) => {
-        const { data: ep } = await sb.from('profiles').select('prenom,nom,specialite').eq('id', prop.expert_id).single();
-        return { ...prop, profiles: ep || null };
-      }));
-      setPropositions(propsWithProfile);
+      setPropositions(props || []);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -437,17 +433,16 @@ function App() {
                     <div style={{fontSize:13}}>Aucune proposition reçue</div>
                   </div>
                 ) : propositions.slice(0,4).map(p => {
-                  const expertName = p.profiles ? `${p.profiles.prenom||''} ${p.profiles.nom||''}`.trim() : 'Expert';
-                  const expertSpec = p.profiles?.specialite || '';
+                  const expertName = p.nom_expert || 'Expert';
                   const statutColor = {en_attente:'var(--amber)',acceptee:'var(--green)',refusee:'var(--red)'}[p.statut] || 'var(--text-2)';
                   const statutLabel = {en_attente:'En attente',acceptee:'Acceptée',refusee:'Refusée'}[p.statut] || p.statut;
                   return (
                     <div key={p.id} className="msg-item" style={{alignItems:'flex-start'}}>
                       <div className="msg-avatar" style={{background:'linear-gradient(135deg,var(--v),var(--vs))',flexShrink:0,marginTop:2}}>
-                        {expertName ? (expertName[0]||'E').toUpperCase() : 'E'}
+                        {(expertName[0]||'E').toUpperCase()}
                       </div>
                       <div className="msg-body" style={{flex:1,minWidth:0}}>
-                        <div className="msg-name">{expertName || 'Expert'}{expertSpec ? ` · ${expertSpec}` : ''}</div>
+                        <div className="msg-name">{expertName}</div>
                         <div className="msg-preview">{p.montant ? p.montant.toLocaleString('fr-CA')+'$ CAD' : ''}{p.delai ? ` · ${p.delai}` : ''}</div>
                         <div style={{fontSize:11,color:'var(--text-3)',marginTop:2,lineHeight:1.4}}>{(p.message||'').slice(0,80)}{(p.message||'').length>80?'…':''}</div>
                       </div>
