@@ -214,11 +214,15 @@ function App() {
       const { data: mPrix } = await sb.from('missions').select('prix').eq('client_id', u.id);
       setBudgetTotal((mPrix||[]).reduce((s, r) => s + (r.prix||0), 0));
       const { data: props } = await sb.from('propositions')
-        .select('id,montant,message,delai,statut,created_at,expert_id,brief_id,profiles(prenom,nom,specialite)')
+        .select('id,montant,message,delai,statut,created_at,expert_id,brief_id')
         .eq('client_id', u.id)
         .order('created_at', {ascending: false})
         .limit(10);
-      setPropositions(props || []);
+      const propsWithProfile = await Promise.all((props||[]).map(async (prop) => {
+        const { data: ep } = await sb.from('profiles').select('prenom,nom,specialite').eq('id', prop.expert_id).single();
+        return { ...prop, profiles: ep || null };
+      }));
+      setPropositions(propsWithProfile);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
