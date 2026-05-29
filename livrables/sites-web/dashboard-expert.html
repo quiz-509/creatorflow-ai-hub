@@ -244,7 +244,7 @@ function App() {
       const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) setUser({ ...u, ...profile });
       if (exp) setExpert(exp);
-      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').order('created_at', {ascending: false}).limit(5);
+      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').neq('user_id', u.id).order('created_at', {ascending: false}).limit(5);
       setOpps(o || []);
       const { data: c } = await sb.from('conversations').select('id,created_at').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
       setConvs(c || []);
