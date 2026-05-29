@@ -280,7 +280,7 @@ function App() {
               <h1 className="page-title">Bonjour, {prenom || 'Client'} 👋</h1>
               <p className="page-sub">{todayStr} · {missionCount} mission{missionCount !== 1 ? 's' : ''} active{missionCount !== 1 ? 's' : ''} · {briefs.length} brief{briefs.length !== 1 ? 's' : ''} déposé{briefs.length !== 1 ? 's' : ''}</p>
             </div>
-            <a href="brief.html" className="btn btn-primary"><Ic.Plus/>Nouveau brief</a>
+            <a href="nouveau-brief.html" className="btn btn-primary"><Ic.Plus/>Nouveau brief</a>
           </div>
 
           {/* STATS */}
@@ -321,13 +321,13 @@ function App() {
               <div className="section-card">
                 <div className="section-head">
                   <span className="section-title">Mes briefs récents</span>
-                  <a href="brief.html" className="section-link">+ Nouveau brief</a>
+                  <a href="nouveau-brief.html" className="section-link">+ Nouveau brief</a>
                 </div>
                 {briefs.length === 0 ? (
                   <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
                     <div style={{fontSize:32,marginBottom:8}}>📋</div>
                     <div style={{fontSize:13,marginBottom:16}}>Aucun brief déposé pour le moment</div>
-                    <a href="brief.html" className="btn btn-primary btn-sm" style={{margin:'0 auto'}}>Déposer mon premier brief</a>
+                    <a href="nouveau-brief.html" className="btn btn-primary btn-sm" style={{margin:'0 auto'}}>Déposer mon premier brief</a>
                   </div>
                 ) : briefs.map(b => (
                   <div key={b.id} className="mission-item">
@@ -436,7 +436,7 @@ function App() {
                 <div style={{fontSize:24,marginBottom:10}}>✨</div>
                 <div style={{fontSize:14,fontWeight:700,marginBottom:6}}>Nouveau projet en tête ?</div>
                 <div style={{fontSize:12,color:'var(--text-2)',marginBottom:16,lineHeight:1.5}}>Déposez un brief et recevez des propositions d'experts certifiés sous 24h.</div>
-                <a href="brief.html" className="btn btn-primary" style={{width:'100%',justifyContent:'center'}}>Déposer un brief <Ic.Arrow/></a>
+                <a href="nouveau-brief.html" className="btn btn-primary" style={{width:'100%',justifyContent:'center'}}>Déposer un brief <Ic.Arrow/></a>
               </div>
 
             </div>
