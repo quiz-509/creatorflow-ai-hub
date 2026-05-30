@@ -159,29 +159,18 @@ const sb = createClient(
   'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
 );
 
-const PHOTOS = {
-  a1:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
-  a2:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces&q=80',
-  a3:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&h=240&fit=crop&crop=faces&q=80',
-  a4:'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=240&h=240&fit=crop&crop=faces&q=80',
-  a5:'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=240&h=240&fit=crop&crop=faces&q=80',
-  a6:'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=240&h=240&fit=crop&crop=faces&q=80',
-  a7:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=240&h=240&fit=crop&crop=faces&q=80',
-  a8:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&h=240&fit=crop&crop=faces&q=80',
-  a9:'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=240&h=240&fit=crop&crop=faces&q=80',
-};
-
-const EXPERTS = [
-  {id:1,photo:PHOTOS.a1,name:'Amélie Dubois',role:'Architecte agents IA',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. 12 missions livrées en 2025.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:95,rating:4.9,reviews:47,cats:['Agents IA','Développement IA'],available:true},
-  {id:2,photo:PHOTOS.a2,name:'Julien Mercier',role:'Formateur IA pour équipes',bio:'Forme les équipes marketing et ops aux outils IA. 850+ collaborateurs accompagnés.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:120,rating:5.0,reviews:62,cats:['Formation IA'],available:true},
-  {id:3,photo:PHOTOS.a3,name:'Sarah Kassimi',role:'Consultante stratégie IA',bio:'Roadmap IA et audit pour scale-ups. Ex-McKinsey, certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:180,rating:4.9,reviews:31,cats:['Agents IA'],available:false},
-  {id:4,photo:PHOTOS.a4,name:'Léa Fontaine',role:'Spécialiste Prompt Engineering',bio:'Optimise les prompts pour GPT-4, Claude et Mistral. Réduction de 60% des coûts API.',skills:['Prompt Eng.','GPT-4','Claude','Fine-tuning'],rate:85,rating:4.8,reviews:28,cats:['Prompt Engineering'],available:true},
-  {id:5,photo:PHOTOS.a5,name:'Karim Benali',role:'Développeur IA & Automatisation',bio:'Pipelines n8n et Make pour e-commerce et SaaS. 40+ workflows déployés en production.',skills:['n8n','Make','Python','API'],rate:110,rating:4.9,reviews:54,cats:['Automatisation','Développement IA'],available:true},
-  {id:6,photo:PHOTOS.a6,name:'Nina Laroche',role:'Créatrice de contenu IA',bio:'Produit 50+ contenus/mois avec des workflows IA. YouTube, LinkedIn, newsletters.',skills:['Copy IA','Midjourney','CapCut AI','Canva'],rate:75,rating:4.7,reviews:19,cats:['Montage vidéo IA'],available:true},
-  {id:7,photo:PHOTOS.a7,name:'Camille Renard',role:'Chatbot & IA conversationnelle',bio:'Déploie des chatbots GPT sur sites e-commerce et applications. 30+ bots en production.',skills:['Chatbots','Voiceflow','Botpress','RAG'],rate:130,rating:5.0,reviews:41,cats:['Chatbots'],available:false},
-  {id:8,photo:PHOTOS.a8,name:'Thomas Girard',role:'Expert Branding & IA',bio:'Crée des identités visuelles augmentées par l\'IA. Dall-E, Midjourney, Stable Diffusion.',skills:['Midjourney','Dall-E','Figma','Branding'],rate:95,rating:4.8,reviews:23,cats:['Branding IA'],available:true},
-  {id:9,photo:PHOTOS.a9,name:'Yasmine Aouf',role:'Data Scientist & IA',bio:'Modèles prédictifs et dashboards augmentés pour fintech et retail. 8 ans d\'expérience.',skills:['Python','TensorFlow','Tableau','SQL'],rate:160,rating:4.9,reviews:36,cats:['Développement IA'],available:true},
+const AVATAR_GRADS = [
+  'linear-gradient(135deg,#7C3AED,#A78BFA)',
+  'linear-gradient(135deg,#0891B2,#06B6D4)',
+  'linear-gradient(135deg,#059669,#10B981)',
+  'linear-gradient(135deg,#9333EA,#C084FC)',
+  'linear-gradient(135deg,#DC2626,#F87171)',
+  'linear-gradient(135deg,#D97706,#FCD34D)',
 ];
+function avatarGrad(name) {
+  const code = (name||'').charCodeAt(0) || 0;
+  return AVATAR_GRADS[code % AVATAR_GRADS.length];
+}
 
 const CATS = ['Toutes','Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
 
@@ -247,7 +236,14 @@ function ExpertCard({ expert, delay = 0 }) {
         {expert.available ? 'Disponible' : 'Occupé ce mois'}
       </div>
       <div className="exp-head">
-        <div className="exp-avt"><img src={expert.photo} alt={expert.name}/></div>
+        <div className="exp-avt" style={{overflow:'hidden'}}>
+          {expert.photoUrl
+            ? <img src={expert.photoUrl} alt={expert.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+            : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:avatarGrad(expert.name),color:'#fff',fontWeight:700,fontSize:18}}>
+                {expert.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}
+              </div>
+          }
+        </div>
         <div>
           <div className="exp-name">{expert.name}</div>
           <div className="exp-role">{expert.role}</div>
@@ -272,33 +268,42 @@ function App() {
   const [budget, setBudget] = useState('tous');
   const [dispo, setDispo] = useState('tous');
   const [sort, setSort] = useState('note');
-  const [experts, setExperts] = useState(EXPERTS);
+  const [experts, setExperts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const { data: expertsList } = await sb.from('experts').select('*');
-      if (expertsList?.length) {
+      const { data: expertsList, error } = await sb
+        .from('experts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && expertsList?.length) {
         const ids = expertsList.map(e => e.id);
-        const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
+        const { data: profilesList } = await sb
+          .from('profiles')
+          .select('id, prenom, nom, photo_url')
+          .in('id', ids);
         const pm = {};
-        profilesList?.forEach(p => pm[p.id] = p);
-        const merged = expertsList.map((exp, i) => {
+        (profilesList || []).forEach(p => { pm[p.id] = p; });
+        const merged = expertsList.map(exp => {
           const p = pm[exp.id] || {};
           const prenom = p.prenom || '';
           const nom = p.nom || '';
-          const name = `${prenom} ${nom}`.trim();
+          const name = `${prenom} ${nom}`.trim() || 'Expert IA';
           return {
             id: exp.id,
-            photo: Object.values(PHOTOS)[i % 9],
-            name: name || `Expert IA ${i + 1}`,
+            photoUrl: p.photo_url || null,
+            name,
             role: exp.specialite || 'Expert IA',
             bio: exp.bio || '',
-            skills: exp.competences || [],
-            rate: exp.tarif_heure || 100,
-            rating: exp.note || 5.0,
+            skills: Array.isArray(exp.competences) ? exp.competences : [],
+            rate: exp.tarif_heure || 0,
+            rating: parseFloat(exp.note_moyenne) || 0,
             reviews: exp.nb_avis || 0,
-            cats: exp.categories || [exp.specialite || 'Agents IA'].filter(Boolean),
+            cats: Array.isArray(exp.categories) && exp.categories.length > 0
+              ? exp.categories
+              : exp.specialite ? [exp.specialite] : [],
             available: exp.disponible ?? true,
           };
         });
@@ -394,7 +399,18 @@ function App() {
         {loading
           ? <div className="empty"><p style={{color:'var(--text-3)'}}>Chargement des experts…</p></div>
           : filtered.length === 0
-            ? <div className="empty"><h3>Aucun expert trouvé</h3><p>Essaie de modifier tes filtres.</p></div>
+            ? <div className="empty">
+                {experts.length === 0
+                  ? <React.Fragment>
+                      <h3>Aucun expert disponible pour l'instant</h3>
+                      <p>La plateforme accueille ses premiers experts. <a href="landing-expert.html" style={{color:'var(--vs)'}}>Rejoindre en tant qu'expert →</a></p>
+                    </React.Fragment>
+                  : <React.Fragment>
+                      <h3>Aucun expert trouvé</h3>
+                      <p>Essaie de modifier tes filtres.</p>
+                    </React.Fragment>
+                }
+              </div>
             : <div className="experts-grid">
                 {filtered.map((e, i) => <ExpertCard key={e.id} expert={e} delay={i * 60}/>)}
               </div>

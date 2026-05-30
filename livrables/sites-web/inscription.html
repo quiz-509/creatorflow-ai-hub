@@ -176,6 +176,16 @@ function App() {
       if (signUpError) throw signUpError;
 
       const userId = data.user?.id;
+      if (userId) {
+        await sb.from('profiles').upsert({
+          id: userId,
+          prenom: form.prenom,
+          nom: form.nom,
+          email: form.email,
+          type_utilisateur: tab,
+          entreprise: tab === 'client' ? (form.entreprise || null) : null,
+        }, { onConflict: 'id', ignoreDuplicates: true });
+      }
       if (userId && tab === 'expert') {
         await sb.from('experts').insert({
           id: userId,
@@ -183,6 +193,10 @@ function App() {
           niveau: form.niveau,
           linkedin: form.linkedin,
           bio: form.bio,
+          competences: form.specialite ? [form.specialite] : [],
+          categories: form.specialite ? [form.specialite] : [],
+          disponible: true,
+          tarif_heure: 0,
         });
       }
       window.location.href = 'onboarding.html';

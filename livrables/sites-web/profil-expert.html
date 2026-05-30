@@ -181,40 +181,21 @@ const expertDefaut = {
   name: 'Chargement…',
   initials: '??',
   title: 'Expert IA',
-  rating: 4.9,
+  rating: 0,
   reviewCount: 0,
   location: 'Montréal, Canada',
   timezone: 'America/Montreal (UTC-4)',
-  languages: 'Français, Anglais',
+  languages: 'Français',
   memberSince: 'Nouveau membre',
   available: true,
   tags: [],
+  tarif_heure: 0,
   stats: { missions: 0, success: '—', response: '—', satisfaction: '—' },
   about: '',
-  skills: [
-    { name: 'ChatGPT / GPT-4', pct: 98 },
-    { name: 'Make.com / Zapier', pct: 95 },
-    { name: 'LangChain', pct: 88 },
-    { name: 'Python', pct: 85 },
-    { name: 'API & Webhooks', pct: 92 },
-    { name: 'Prompt Engineering', pct: 97 },
-  ],
-  portfolio: [
-    { emoji: '🤖', name: 'Chatbot service client', desc: 'Chatbot IA multilingue intégré au CRM d\'un e-commerce, réduisant les tickets support de 60%.', tags: ['ChatGPT','Zapier','Shopify'] },
-    { emoji: '📊', name: 'Dashboard analytics IA', desc: 'Pipeline de données + prédictions ventes avec LangChain et visualisation Notion automatisée.', tags: ['LangChain','Python','Notion'] },
-    { emoji: '✉️', name: 'Automatisation email', desc: 'Séquences email intelligentes avec scoring IA — +35% de taux d\'ouverture pour une SaaS B2B.', tags: ['Make.com','GPT-4','HubSpot'] },
-    { emoji: '🔍', name: 'Veille concurrentielle', desc: 'Agent IA de veille automatique — scraping, synthèse et rapport quotidien via n8n.', tags: ['n8n','Python','Telegram'] },
-  ],
-  reviews: [
-    { name: 'Thomas R.', initials: 'TR', color: '#7C3AED', date: 'Il y a 2 semaines', rating: 5, mission: 'Automatisation CRM + ChatGPT', body: 'Amélie est exceptionnelle. Elle a su comprendre nos besoins en quelques échanges et livré un chatbot bluffant. Disponible, réactive et force de proposition. Je recommande sans hésitation !' },
-    { name: 'Sarah M.', initials: 'SM', color: '#0891B2', date: 'Il y a 1 mois', rating: 5, mission: 'Pipeline IA analytics', body: 'Mission réalisée dans les délais, avec une qualité de code irréprochable. Amélie a aussi pris le temps de former mon équipe. Un vrai plus.' },
-    { name: 'Karim B.', initials: 'KB', color: '#059669', date: 'Il y a 6 semaines', rating: 5, mission: 'Chatbot multilingue e-commerce', body: 'Très professionnel. Le projet était complexe et Amélie a géré tous les imprévus avec calme. Le résultat dépasse nos attentes.' },
-  ],
-  similar: [
-    { name: 'Lucas Bernard', initials: 'LB', color: '#7C3AED', spec: 'Automatisation & No-Code', rate: '95$/h' },
-    { name: 'Sofia Martins', initials: 'SM', color: '#0891B2', spec: 'Machine Learning', rate: '110$/h' },
-    { name: 'Karim Benali', initials: 'KB', color: '#059669', spec: 'Chatbots & NLP', rate: '85$/h' },
-  ]
+  skills: [],
+  portfolio: [],
+  reviews: [],
+  similar: [],
 };
 
 function Stars({ rating, size=13 }) {
@@ -240,24 +221,77 @@ function App() {
       const expertId = params.get('id');
       const targetId = expertId || (await sb.auth.getSession()).data?.session?.user?.id;
       if (!targetId) return;
-      const { data: profile } = await sb.from('profiles').select('*').eq('id', targetId).single();
-      const { data: exp } = await sb.from('experts').select('*').eq('id', targetId).single();
-      if (profile || exp) {
-        const prenom = profile?.prenom || '';
-        const nom = profile?.nom || '';
-        const fullName = `${prenom} ${nom}`.trim();
-        const initials = ((prenom[0]||'?') + (nom[0]||'?')).toUpperCase();
-        setExpert(prev => ({
-          ...prev,
-          name: fullName || prev.name,
-          initials,
-          title: exp?.specialite ? `Expert ${exp.specialite}` : prev.title,
-          about: exp?.bio || prev.about,
-          available: exp?.disponible ?? prev.available,
-          tags: exp?.competences || (exp?.specialite ? [exp.specialite] : prev.tags),
-          rate: exp?.tarif_heure ? `${exp.tarif_heure}$` : prev.rate,
-        }));
-      }
+
+      const [
+        { data: profile },
+        { data: exp },
+        { data: reviewsList },
+        { count: missionsTotal },
+      ] = await Promise.all([
+        sb.from('profiles').select('*').eq('id', targetId).single(),
+        sb.from('experts').select('*').eq('id', targetId).single(),
+        sb.from('reviews')
+          .select('note, commentaire, client_prenom, client_nom, created_at')
+          .eq('expert_id', targetId)
+          .order('created_at', { ascending: false })
+          .limit(20),
+        sb.from('missions')
+          .select('id', { count: 'exact', head: true })
+          .eq('expert_id', targetId)
+          .eq('statut', 'termine'),
+      ]);
+
+      const prenom = profile?.prenom || '';
+      const nom = profile?.nom || '';
+      const fullName = `${prenom} ${nom}`.trim();
+      const initials = ((prenom[0]||'?') + (nom[0]||'?')).toUpperCase();
+
+      const CHIP_COLORS = ['#7C3AED','#0891B2','#059669','#9333EA','#DC2626','#D97706'];
+      const mappedReviews = (reviewsList || []).map((r, i) => {
+        const clientPrenom = r.client_prenom || '';
+        const clientNom = r.client_nom || '';
+        const clientName = `${clientPrenom} ${clientNom}`.trim() || 'Client';
+        const clientInitials = clientName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'CL';
+        return {
+          name: clientName,
+          initials: clientInitials,
+          color: CHIP_COLORS[i % CHIP_COLORS.length],
+          date: new Date(r.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+          rating: r.note,
+          body: r.commentaire || '',
+          mission: '',
+        };
+      });
+
+      const competences = Array.isArray(exp?.competences) ? exp.competences : [];
+      const realSkills = competences.length > 0
+        ? competences.map((s, i) => ({ name: s, pct: Math.max(75, 98 - i * 4) }))
+        : [];
+
+      const avgNote = parseFloat(exp?.note_moyenne) || 0;
+      const reviewCount = exp?.nb_avis || 0;
+      const mCount = missionsTotal || 0;
+
+      setExpert(prev => ({
+        ...prev,
+        name: fullName || prev.name,
+        initials,
+        title: exp?.specialite ? `Expert ${exp.specialite}` : prev.title,
+        about: exp?.bio || '',
+        available: exp?.disponible ?? prev.available,
+        tags: competences.slice(0, 6),
+        tarif_heure: exp?.tarif_heure || 0,
+        rating: avgNote,
+        reviewCount,
+        reviews: mappedReviews,
+        skills: realSkills,
+        stats: {
+          missions: mCount,
+          success: mCount > 0 ? '100%' : '—',
+          response: '< 2h',
+          satisfaction: avgNote > 0 ? avgNote.toFixed(1) + '/5' : '—',
+        },
+      }));
     })();
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -385,64 +419,77 @@ function App() {
                   <div className="section">
                     <div className="section-title">À propos</div>
                     <div className="card">
-                      {expert.about.split('\n\n').map((p,i) => (
-                        <p key={i} className="about-text" style={{marginBottom: i < 2 ? 14 : 0}}>{p}</p>
-                      ))}
+                      {expert.about
+                        ? expert.about.split('\n\n').map((p,i) => (
+                            <p key={i} className="about-text" style={{marginBottom: i < expert.about.split('\n\n').length - 1 ? 14 : 0}}>{p}</p>
+                          ))
+                        : <p className="about-text" style={{color:'var(--text-3)'}}>Ce profil est en cours de configuration.</p>
+                      }
                     </div>
                   </div>
                   <div className="section">
                     <div className="section-title">Derniers avis <span>{expert.reviewCount} au total</span></div>
-                    {expert.reviews.slice(0,2).map((r,i) => (
-                      <div key={i} className="review-card">
-                        <div className="review-header">
-                          <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
-                          <div className="review-meta">
-                            <div className="review-name">{r.name}</div>
-                            <div className="review-date">{r.date}</div>
+                    {expert.reviews.length === 0
+                      ? <div style={{padding:'24px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r)'}}>Aucun avis pour le moment.</div>
+                      : expert.reviews.slice(0,2).map((r,i) => (
+                          <div key={i} className="review-card">
+                            <div className="review-header">
+                              <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
+                              <div className="review-meta">
+                                <div className="review-name">{r.name}</div>
+                                <div className="review-date">{r.date}</div>
+                              </div>
+                              <Stars rating={r.rating} size={12}/>
+                            </div>
+                            <div className="review-body">{r.body}</div>
+                            {r.mission && <div className="review-mission">Mission : {r.mission}</div>}
                           </div>
-                          <Stars rating={r.rating} size={12}/>
-                        </div>
-                        <div className="review-body">{r.body}</div>
-                        <div className="review-mission">Mission : {r.mission}</div>
-                      </div>
-                    ))}
-                    <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:4}} onClick={()=>setTab('avis')}>
-                      Voir tous les avis <Ic.Arrow/>
-                    </button>
+                        ))
+                    }
+                    {expert.reviews.length > 0 && (
+                      <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:4}} onClick={()=>setTab('avis')}>
+                        Voir tous les avis <Ic.Arrow/>
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
 
               {tab === 'competences' && (
                 <div className="fade-up">
-                  <div className="section">
-                    <div className="section-title">Niveaux de compétence</div>
-                    <div className="card">
-                      <div className="skill-bar-wrap">
-                        {expert.skills.map((s,i) => (
-                          <div key={i} className="skill-row">
-                            <div className="skill-name">{s.name}</div>
-                            <div className="skill-bar">
-                              <div className="skill-fill" style={{width:`${s.pct}%`}}/>
+                  {expert.skills.length === 0
+                    ? <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)'}}>Compétences non renseignées.</div>
+                    : <React.Fragment>
+                        <div className="section">
+                          <div className="section-title">Niveaux de compétence</div>
+                          <div className="card">
+                            <div className="skill-bar-wrap">
+                              {expert.skills.map((s,i) => (
+                                <div key={i} className="skill-row">
+                                  <div className="skill-name">{s.name}</div>
+                                  <div className="skill-bar">
+                                    <div className="skill-fill" style={{width:`${s.pct}%`}}/>
+                                  </div>
+                                  <div className="skill-pct">{s.pct}%</div>
+                                </div>
+                              ))}
                             </div>
-                            <div className="skill-pct">{s.pct}%</div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="section">
-                    <div className="section-title">Technologies maîtrisées</div>
-                    <div className="card">
-                      <div className="skills-grid">
-                        {['ChatGPT','GPT-4','Claude','Make.com','Zapier','n8n','LangChain','Python','FastAPI','Notion','Airtable','HubSpot','Slack','Telegram','Webhook'].map(s => (
-                          <div key={s} className="skill-chip">
-                            <Ic.Check style={{color:'var(--green)',width:12,height:12}}/>{s}
+                        </div>
+                        <div className="section">
+                          <div className="section-title">Technologies déclarées</div>
+                          <div className="card">
+                            <div className="skills-grid">
+                              {expert.skills.map((s,i) => (
+                                <div key={i} className="skill-chip">
+                                  <Ic.Check style={{color:'var(--green)',width:12,height:12}}/>{s.name}
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                        </div>
+                      </React.Fragment>
+                  }
                 </div>
               )}
 
@@ -450,20 +497,23 @@ function App() {
                 <div className="fade-up">
                   <div className="section">
                     <div className="section-title">Réalisations <span>{expert.portfolio.length} projets</span></div>
-                    <div className="portfolio-grid">
-                      {expert.portfolio.map((p,i) => (
-                        <div key={i} className="portfolio-card">
-                          <div className="portfolio-thumb">{p.emoji}</div>
-                          <div className="portfolio-body">
-                            <div className="portfolio-name">{p.name}</div>
-                            <div className="portfolio-desc">{p.desc}</div>
-                            <div className="portfolio-tags">
-                              {p.tags.map(t => <span key={t} className="ptag">{t}</span>)}
+                    {expert.portfolio.length === 0
+                      ? <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)'}}>Aucun projet ajouté pour le moment.</div>
+                      : <div className="portfolio-grid">
+                          {expert.portfolio.map((p,i) => (
+                            <div key={i} className="portfolio-card">
+                              <div className="portfolio-thumb">{p.emoji}</div>
+                              <div className="portfolio-body">
+                                <div className="portfolio-name">{p.name}</div>
+                                <div className="portfolio-desc">{p.desc}</div>
+                                <div className="portfolio-tags">
+                                  {p.tags.map(t => <span key={t} className="ptag">{t}</span>)}
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                    }
                   </div>
                 </div>
               )}
@@ -492,20 +542,23 @@ function App() {
                         ))}
                       </div>
                     </div>
-                    {expert.reviews.map((r,i) => (
-                      <div key={i} className="review-card">
-                        <div className="review-header">
-                          <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
-                          <div className="review-meta">
-                            <div className="review-name">{r.name}</div>
-                            <div className="review-date">{r.date}</div>
+                    {expert.reviews.length === 0
+                      ? <div style={{padding:'24px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r)'}}>Cet expert n'a pas encore d'avis.</div>
+                      : expert.reviews.map((r,i) => (
+                          <div key={i} className="review-card">
+                            <div className="review-header">
+                              <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
+                              <div className="review-meta">
+                                <div className="review-name">{r.name}</div>
+                                <div className="review-date">{r.date}</div>
+                              </div>
+                              <Stars rating={r.rating} size={12}/>
+                            </div>
+                            <div className="review-body">{r.body}</div>
+                            {r.mission && <div className="review-mission">Mission : {r.mission}</div>}
                           </div>
-                          <Stars rating={r.rating} size={12}/>
-                        </div>
-                        <div className="review-body">{r.body}</div>
-                        <div className="review-mission">Mission : {r.mission}</div>
-                      </div>
-                    ))}
+                        ))
+                    }
                   </div>
                 </div>
               )}
@@ -515,11 +568,14 @@ function App() {
             <div>
               <div className="sidebar-card">
                 <div style={{textAlign:'center',marginBottom:20}}>
-                  <div style={{fontSize:13,color:'var(--text-3)',marginBottom:4}}>Tarif journalier</div>
-                  <div style={{fontSize:32,fontWeight:800,letterSpacing:'-0.03em'}}>120<span style={{fontSize:16,color:'var(--text-3)'}}>$/h</span></div>
+                  <div style={{fontSize:13,color:'var(--text-3)',marginBottom:4}}>Tarif horaire</div>
+                  <div style={{fontSize:32,fontWeight:800,letterSpacing:'-0.03em'}}>
+                    {expert.tarif_heure > 0 ? expert.tarif_heure : '—'}
+                    <span style={{fontSize:16,color:'var(--text-3)'}}>$/h</span>
+                  </div>
                   <div style={{fontSize:12,color:'var(--text-3)'}}>ou sur devis pour les projets forfait</div>
                 </div>
-                <a href="nouveau-brief.html" className="btn btn-primary" style={{width:'100%',justifyContent:'center',marginBottom:10}}>
+                <a href={`nouveau-brief.html?expert_id=${new URLSearchParams(window.location.search).get('id')||''}`} className="btn btn-primary" style={{width:'100%',justifyContent:'center',marginBottom:10}}>
                   <Ic.Briefcase/>Poster un brief
                 </a>
                 <a href="messages.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center'}}>
