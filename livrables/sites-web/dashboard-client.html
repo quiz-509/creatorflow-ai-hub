@@ -490,6 +490,15 @@ function App() {
                             if (newMission) {
                               const { error: convErr } = await sb.from('conversations').insert({ client_id: user.id, expert_id: p.expert_id });
                               if (convErr) console.warn('Conversation:', convErr.message);
+                              const { data: expertProfile } = await sb.from('profiles').select('email').eq('id', p.expert_id).single();
+                              const { data: { session: authSession } } = await sb.auth.getSession();
+                              if (expertProfile?.email) {
+                                fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${authSession.access_token}` },
+                                  body: JSON.stringify({ type: 'proposition_acceptee', to: expertProfile.email, data: { client_name: `${user.prenom||''} ${user.nom||''}`.trim()||'Client', mission_titre: titre, montant: p.montant||0 } }),
+                                }).catch(() => {});
+                              }
                             }
                             if (p.brief_id) {
                               await sb.from('propositions').update({statut:'refusee'}).eq('brief_id',p.brief_id).neq('id',p.id).eq('statut','en_attente');

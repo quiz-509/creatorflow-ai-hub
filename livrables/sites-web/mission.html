@@ -290,7 +290,21 @@ function App() {
     if (!msg.trim() || !user) return;
     const text = msg; setMsg('');
     setMessages(prev => [...prev, {id:Date.now(), side:'right', author:userName, initials:userInitials, color:'linear-gradient(135deg,#7C3AED,#6D28D9)', text, time:"À l'instant"}]);
-    if (convId) await sb.from('messages').insert({ conversation_id: convId, sender_id: user.id, contenu: text });
+    if (convId) {
+      await sb.from('messages').insert({ conversation_id: convId, sender_id: user.id, contenu: text });
+      const recipientId = user.role === 'expert' ? mission?.client_id : mission?.expert_id;
+      if (recipientId) {
+        const { data: recipProfile } = await sb.from('profiles').select('email').eq('id', recipientId).single();
+        const { data: { session: authSess } } = await sb.auth.getSession();
+        if (recipProfile?.email && authSess) {
+          fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${authSess.access_token}` },
+            body: JSON.stringify({ type: 'nouveau_message', to: recipProfile.email, data: { sender_name: userName, message_preview: text.slice(0,120), mission_titre: missionTitre } }),
+          }).catch(() => {});
+        }
+      }
+    }
   };
 
   const missionTitre = mission?.titre || 'Mission';

@@ -171,8 +171,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:8px;background:var(--surf-2);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;color:var(--text-2);}
 .modal-close:hover{color:var(--text);}
 
+.sidebar{transition:transform 280ms cubic-bezier(0.16,1,0.3,1);}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99;}
+.hamburger{display:none;width:36px;height:36px;border-radius:9px;background:var(--surf);border:1px solid var(--border-2);place-items:center;color:var(--text-2);flex-shrink:0;}
+.hamburger:hover{color:var(--text);border-color:var(--border-3);}
 @media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
-@media(max-width:768px){.sidebar{transform:translateX(-100%);}.main{margin-left:0;}.main-inner{padding:20px 16px 60px;}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.sidebar-backdrop.open{display:block;}.main{margin-left:0;}.main-inner{padding:20px 16px 60px;}.hamburger{display:grid;}.nav-brand{width:auto;}}
   </style>
 </head>
 <body>
@@ -220,6 +224,7 @@ const NAV_ITEMS = [
 
 function App() {
   const [active, setActive] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [dispo, setDispo] = useState(true);
   const [user, setUser] = useState(null);
   const [expert, setExpert] = useState(null);
@@ -287,8 +292,18 @@ function App() {
       delai: delaiForm || null,
       nom_expert: `${user?.prenom || ''} ${user?.nom || ''}`.trim() || 'Expert',
     });
+    if (!error) {
+      setPostuleDone(true);
+      const { data: clientProfile } = await sb.from('profiles').select('email').eq('id', selectedBrief.user_id).single();
+      if (clientProfile?.email) {
+        fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${session.access_token}` },
+          body: JSON.stringify({ type: 'nouvelle_proposition', to: clientProfile.email, data: { expert_name: `${user?.prenom||''} ${user?.nom||''}`.trim()||'Expert', montant: montantForm, categorie: selectedBrief.categorie||'Projet', message: messageForm, delai: delaiForm } }),
+        }).catch(() => {});
+      }
+    }
     setSubmitting(false);
-    if (!error) setPostuleDone(true);
   };
 
   const initials = user ? ((user.prenom||'?')[0] + (user.nom||'?')[0]).toUpperCase() : '??';
@@ -298,10 +313,14 @@ function App() {
 
   return (
     <React.Fragment>
+      <div className={`sidebar-backdrop${sidebarOpen?' open':''}`} onClick={()=>setSidebarOpen(false)}/>
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner">
           <div className="nav-brand">
+            <button className="hamburger" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Menu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
             <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
           </div>
           <div className="nav-right">
@@ -316,11 +335,11 @@ function App() {
       </nav>
 
       {/* SIDEBAR */}
-      <aside className="sidebar">
+      <aside className={`sidebar${sidebarOpen?' open':''}`}>
         <div className="sidebar-section">
           <div className="sidebar-label">Menu</div>
           {NAV_ITEMS.map(item => (
-            <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => setActive(item.id)}>
+            <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
               {item.icon}
               {item.label}
               {item.badge && <span className={`nav-badge ${item.badgeClass || ''}`}>{item.id==='missions' ? missionCount : item.id==='opps' ? opps.length : item.badge}</span>}

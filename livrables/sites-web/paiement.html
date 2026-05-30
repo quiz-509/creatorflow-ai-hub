@@ -235,8 +235,21 @@ function App() {
             setExpert({ ...(ep||{}), ...(pp||{}) });
           }
         }
-        if (isSuccess) {
+        if (isSuccess && m) {
           await sb.from('missions').update({ statut: 'en_cours' }).eq('id', missionId);
+          const { data: { session: authSess } } = await sb.auth.getSession();
+          const [{ data: cp }, { data: ep }] = await Promise.all([
+            sb.from('profiles').select('email, prenom, nom').eq('id', m.client_id).single(),
+            sb.from('profiles').select('email, prenom, nom').eq('id', m.expert_id).single(),
+          ]);
+          const recipients = [cp?.email, ep?.email].filter(Boolean);
+          if (recipients.length && authSess) {
+            fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${authSess.access_token}` },
+              body: JSON.stringify({ type: 'paiement_confirme', to: recipients, data: { mission_titre: m.titre||'Mission', montant: m.prix||0, client_name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim()||'Client' : 'Client', expert_name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim()||'Expert' : 'Expert' } }),
+            }).catch(() => {});
+          }
         }
       }
       setLoading(false);
