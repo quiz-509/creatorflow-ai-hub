@@ -166,6 +166,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
 const { createClient } = supabase;
@@ -301,6 +302,188 @@ function App() {
   const missionPrix = mission?.prix ? `${mission.prix}$` : '—';
 
   const doneCount = LIVRABLES.filter(l => l.done).length;
+
+  function downloadInvoice() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const prix = mission?.prix || 0;
+    const invoiceNum = 'CFM-' + (mission?.id || '').replace(/-/g,'').slice(0,8).toUpperCase();
+    const dateStr = new Date().toLocaleDateString('fr-CA');
+    const clientName = user ? `${user.prenom||''} ${user.nom||''}`.trim() || user.email : '—';
+    const expertName = otherParty.name || '—';
+
+    // Header background
+    doc.setFillColor(7, 0, 20);
+    doc.rect(0, 0, 210, 40, 'F');
+
+    // Brand name
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(167, 139, 250);
+    doc.text('CreatorFlow', 20, 20);
+    doc.setTextColor(6, 182, 212);
+    doc.text('Market', 72, 20);
+
+    // Tagline
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 180);
+    doc.text('Marketplace de talents IA certifiés', 20, 28);
+
+    // FACTURE title (right side)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(255, 255, 255);
+    doc.text('FACTURE', 190, 22, { align: 'right' });
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 180);
+    doc.text(invoiceNum, 190, 30, { align: 'right' });
+
+    // Separator line
+    doc.setDrawColor(124, 58, 237);
+    doc.setLineWidth(0.5);
+    doc.line(20, 44, 190, 44);
+
+    // Date + statut
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 140);
+    doc.text('Date d\'émission :', 20, 52);
+    doc.setTextColor(30, 30, 50);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(50, 50, 80);
+    doc.text(dateStr, 60, 52);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 140);
+    doc.text('Statut :', 130, 52);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(16, 185, 129);
+    doc.text('Payée', 150, 52);
+
+    // Parties
+    doc.setFillColor(248, 247, 255);
+    doc.roundedRect(20, 58, 80, 35, 3, 3, 'F');
+    doc.roundedRect(110, 58, 80, 35, 3, 3, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(124, 58, 237);
+    doc.text('CLIENT', 25, 65);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(20, 20, 40);
+    doc.text(clientName, 25, 72);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 140);
+    doc.text(user?.email || '—', 25, 78);
+    doc.text('Canada', 25, 84);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(124, 58, 237);
+    doc.text('EXPERT ASSIGNÉ', 115, 65);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(20, 20, 40);
+    doc.text(expertName, 115, 72);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 140);
+    doc.text(otherParty.specialite || 'Expert IA', 115, 78);
+
+    // Mission details table header
+    doc.setFillColor(124, 58, 237);
+    doc.rect(20, 100, 170, 9, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(255, 255, 255);
+    doc.text('DESCRIPTION', 25, 106);
+    doc.text('CATÉGORIE', 105, 106);
+    doc.text('MONTANT', 180, 106, { align: 'right' });
+
+    // Mission row
+    doc.setFillColor(245, 243, 255);
+    doc.rect(20, 109, 170, 12, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(20, 20, 40);
+    doc.text(missionTitre.slice(0, 38), 25, 117);
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 140);
+    doc.text(missionCategorie.slice(0, 20), 105, 117);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(124, 58, 237);
+    doc.text(`${prix.toLocaleString('fr-CA')} $CA`, 180, 117, { align: 'right' });
+
+    // Total section
+    doc.setDrawColor(200, 195, 220);
+    doc.setLineWidth(0.3);
+    doc.line(110, 130, 190, 130);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 140);
+    doc.text('Commission plateforme', 110, 138);
+    doc.setTextColor(16, 185, 129);
+    doc.text('0 $CA (incluse)', 190, 138, { align: 'right' });
+
+    doc.setFillColor(7, 0, 20);
+    doc.roundedRect(110, 143, 80, 14, 2, 2, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(255, 255, 255);
+    doc.text('TOTAL PAYÉ', 115, 152);
+    doc.setTextColor(167, 139, 250);
+    doc.text(`${prix.toLocaleString('fr-CA')} $CA`, 187, 152, { align: 'right' });
+
+    // Dates section
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(124, 58, 237);
+    doc.text('INFORMATIONS DE LA MISSION', 20, 165);
+    doc.setDrawColor(124, 58, 237);
+    doc.setLineWidth(0.3);
+    doc.line(20, 167, 100, 167);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 140);
+    doc.text('ID Mission :', 20, 174);
+    doc.setTextColor(30, 30, 50);
+    doc.text(mission?.id?.slice(0,18)+'…' || '—', 55, 174);
+    doc.setTextColor(100, 100, 140);
+    doc.text('Date de démarrage :', 20, 181);
+    doc.setTextColor(30, 30, 50);
+    doc.text(missionDebut, 65, 181);
+    doc.setTextColor(100, 100, 140);
+    doc.text('Statut :', 20, 188);
+    doc.setTextColor(16, 185, 129);
+    doc.setFont('helvetica', 'bold');
+    doc.text(missionStatut.label, 40, 188);
+
+    // Protection note
+    doc.setFillColor(240, 253, 244);
+    doc.roundedRect(20, 196, 170, 14, 2, 2, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(16, 185, 129);
+    doc.text('✓ Paiement protégé CreatorFlow Market — Fonds sécurisés · Remboursement garanti si livrable non conforme', 25, 202);
+    doc.setTextColor(100, 140, 100);
+    doc.text('✓ Reçu Stripe envoyé automatiquement par email', 25, 208);
+
+    // Footer
+    doc.setFillColor(7, 0, 20);
+    doc.rect(0, 270, 210, 27, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 140);
+    doc.text('CreatorFlow Market · support@creatorflow.io · creatorflowmarket.com', 105, 278, { align: 'center' });
+    doc.text('Ce document est une facture officielle générée automatiquement.', 105, 284, { align: 'center' });
+    doc.setTextColor(124, 58, 237);
+    doc.text(invoiceNum, 105, 290, { align: 'center' });
+
+    doc.save(`facture-${invoiceNum}.pdf`);
+  }
 
   return (
     <React.Fragment>
@@ -539,7 +722,7 @@ function App() {
                       </div>
                     </>);
                   })() : <span style={{color:'var(--text-3)',fontSize:13}}>Budget non défini</span>}
-                  <button className="btn btn-ghost btn-sm action-btn" style={{marginTop:12}}>
+                  <button className="btn btn-ghost btn-sm action-btn" style={{marginTop:12}} onClick={downloadInvoice} disabled={!mission}>
                     <Ic.Download/>Télécharger la facture
                   </button>
                 </div>
