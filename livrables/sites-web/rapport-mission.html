@@ -120,9 +120,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .fin-total-label{font-size:14px;font-weight:700;}
 .fin-total-val{font-size:20px;font-weight:800;color:var(--vs);}
 
-/* SATISFACTION */
-.stars-row{display:flex;gap:6px;margin-bottom:12px;}
-.big-star{font-size:24px;}
+/* REVIEW */
+.stars-interactive{display:flex;gap:8px;margin-bottom:16px;}
+.star-btn{font-size:28px;cursor:pointer;transition:transform 150ms;background:none;border:none;padding:0;line-height:1;}
+.star-btn:hover{transform:scale(1.2);}
+.review-textarea{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:13px;padding:12px 14px;outline:none;resize:vertical;min-height:90px;transition:border-color 180ms;}
+.review-textarea:focus{border-color:rgba(124,58,237,0.5);}
+.review-submitted{background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.2);border-radius:var(--r);padding:16px 20px;}
+.review-stars-display{display:flex;gap:4px;margin-bottom:8px;}
 .review-quote{font-size:14px;color:var(--text-2);line-height:1.7;font-style:italic;border-left:3px solid var(--v);padding-left:16px;}
 
 /* SIGNATURE */
@@ -166,6 +171,14 @@ function App() {
   const [client, setClient] = useState(null);
   const [expert, setExpert] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [existingReview, setExistingReview] = useState(null);
+  const [reviewSuccess, setReviewSuccess] = useState(false);
 
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
@@ -189,6 +202,11 @@ function App() {
     (async () => {
       const { data: { session } } = await sb.auth.getSession();
       if (!session) { window.location.href = 'connexion.html'; return; }
+      const u = session.user;
+      const { data: profile } = await sb.from('profiles').select('prenom, nom, type_utilisateur').eq('id', u.id).single();
+      setCurrentUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
+      setUserRole(profile?.type_utilisateur || 'client');
+
       const params = new URLSearchParams(window.location.search);
       const missionId = params.get('id');
       if (!missionId) { setLoading(false); return; }
@@ -202,6 +220,8 @@ function App() {
         const mk = n => n ? ((n.prenom||'?')[0]+(n.nom||'?')[0]).toUpperCase() : '??';
         setClient({ name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim() : '—', initials: mk(cp) });
         setExpert({ name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim() : '—', initials: mk(ep) });
+        const { data: rev } = await sb.from('reviews').select('*').eq('mission_id', missionId).eq('client_id', u.id).maybeSingle();
+        if (rev) setExistingReview(rev);
       }
       setLoading(false);
     })();
@@ -219,6 +239,28 @@ function App() {
   const solde = prix - acompte;
   const commission = Math.round(prix * 0.05);
   const missionUrl = `mission.html?id=${mission.id}`;
+
+  async function submitReview() {
+    if (!rating || !currentUser || !mission) return;
+    setSubmitting(true);
+    const { data, error } = await sb.from('reviews').insert({
+      client_id: currentUser.id,
+      expert_id: mission.expert_id,
+      mission_id: mission.id,
+      note: rating,
+      commentaire: reviewComment.trim() || null,
+    }).select().single();
+    if (!error && data) {
+      setExistingReview(data);
+      setReviewSuccess(true);
+      const { data: allRevs } = await sb.from('reviews').select('note').eq('expert_id', mission.expert_id);
+      if (allRevs && allRevs.length > 0) {
+        const avg = allRevs.reduce((s, r) => s + r.note, 0) / allRevs.length;
+        await sb.from('experts').update({ note_moyenne: Math.round(avg * 10) / 10, nb_avis: allRevs.length }).eq('id', mission.expert_id);
+      }
+    }
+    setSubmitting(false);
+  }
 
   return (
     <React.Fragment>
@@ -326,6 +368,60 @@ function App() {
                 </div>
               </div>
             </div>
+
+            {/* REVIEW */}
+            {userRole === 'client' && (
+              <div className="rep-section">
+                <div className="section-title"><span className="section-icon" style={{background:'rgba(245,158,11,0.10)'}}>⭐</span>Évaluer l'expert</div>
+                {existingReview ? (
+                  <div className="review-submitted">
+                    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                      <div className="review-stars-display">
+                        {[1,2,3,4,5].map(i => <span key={i} style={{fontSize:20}}>{i <= existingReview.note ? '⭐' : '☆'}</span>)}
+                      </div>
+                      <span style={{fontSize:13,fontWeight:700,color:'var(--green)'}}>✓ Avis soumis</span>
+                    </div>
+                    {existingReview.commentaire && (
+                      <div className="review-quote">{existingReview.commentaire}</div>
+                    )}
+                    <div style={{fontSize:11,color:'var(--text-3)',marginTop:8}}>
+                      Soumis le {new Date(existingReview.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{fontSize:13,color:'var(--text-2)',marginBottom:14}}>
+                      Votre avis aide la communauté à identifier les meilleurs experts.
+                    </div>
+                    <div style={{marginBottom:6,fontSize:12,fontWeight:600,color:'var(--text-3)'}}>Note globale</div>
+                    <div className="stars-interactive">
+                      {[1,2,3,4,5].map(i => (
+                        <button key={i} className="star-btn"
+                          onMouseEnter={() => setHoverRating(i)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          onClick={() => setRating(i)}>
+                          {i <= (hoverRating || rating) ? '⭐' : '☆'}
+                        </button>
+                      ))}
+                      {rating > 0 && (
+                        <span style={{fontSize:13,color:'var(--vs)',fontWeight:700,alignSelf:'center',marginLeft:6}}>
+                          {['','Très décevant','Décevant','Correct','Bien','Excellent !'][rating]}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{marginBottom:6,fontSize:12,fontWeight:600,color:'var(--text-3)'}}>Commentaire (optionnel)</div>
+                    <textarea className="review-textarea" placeholder="Décrivez votre expérience avec cet expert..." value={reviewComment} onChange={e=>setReviewComment(e.target.value)} maxLength={500}/>
+                    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:12}}>
+                      <span style={{fontSize:11,color:'var(--text-3)'}}>{reviewComment.length}/500</span>
+                      <button className="btn btn-primary" style={{padding:'9px 20px',fontSize:13}} disabled={!rating || submitting} onClick={submitReview}>
+                        {submitting ? 'Envoi...' : '⭐ Soumettre mon avis'}
+                      </button>
+                    </div>
+                    {reviewSuccess && <div style={{marginTop:10,fontSize:13,color:'var(--green)',fontWeight:600}}>✓ Merci ! Votre avis a bien été enregistré.</div>}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* SIGNATURES */}
             <div className="rep-section">
