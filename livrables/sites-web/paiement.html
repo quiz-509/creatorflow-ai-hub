@@ -176,6 +176,8 @@ const sb = createClient(
   'https://cjtglfutckaogsmwhfsv.supabase.co',
   'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
 );
+const EDGE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/create-checkout-session';
+const ANON_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
 
 const Ic = {
   Shield:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
@@ -185,35 +187,31 @@ const Ic = {
   Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
   Star:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
   Info:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+  Stripe:(p)=><svg {...p} width="40" height="17" viewBox="0 0 468 222" fill="none"><path d="M414 114c0-37-18-66-52-66-34 0-55 29-55 66 0 44 25 66 60 66 17 0 30-4 40-10v-29c-10 5-21 8-35 8-14 0-26-5-28-22h70c0-2 0-11 0-13zm-71-14c0-16 10-23 19-23s18 7 18 23h-37zM224 48c-14 0-23 7-28 11l-2-9h-31v168l36-8 1-41c5 4 13 9 25 9 25 0 48-20 48-66 0-42-23-64-49-64zm-9 98c-8 0-13-3-17-7l-1-56c4-4 9-7 18-7 14 0 23 16 23 35 0 20-9 35-23 35zM113 39l-36 8v146h36V39zM75 14C63 14 55 22 55 34s8 20 20 20 20-8 20-20S87 14 75 14zM468 87c0-36-18-39-44-39-14 0-28 4-37 8l5 26c8-3 19-6 30-6 12 0 15 3 15 12v2h-8c-28 0-56 10-56 43 0 27 17 40 40 40 17 0 28-7 35-15l2 13h32l-14-84zm-31 54c-4 4-10 7-17 7-9 0-14-5-14-13 0-13 10-18 27-18h4v24zM0 127c0 21 9 40 34 40 14 0 22-3 29-6l-5-27c-5 2-11 4-17 4-10 0-14-6-14-21V75h30V48H27V18L0 26v101z" fill="#635BFF"/></svg>,
 };
 
-function formatCard(val) {
-  return val.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
-}
-function formatExpiry(val) {
-  return val.replace(/\D/g,'').slice(0,4).replace(/^(\d{2})(\d)/,'$1/$2');
-}
-function maskCard(num) {
-  const d = num.replace(/\s/g,'');
-  if (!d) return '•••• •••• •••• ••••';
-  const parts = [
-    d.slice(0,4)||'••••',
-    d.slice(4,8)||'••••',
-    d.slice(8,12)||'••••',
-    d.slice(12,16)||'••••',
-  ];
-  return parts.map((p,i) => i < 2 ? p.padEnd(4,'•') : (i===2 ? '••••' : p.padEnd(4,'•'))).join(' ');
+function Stars({ n }) {
+  const r = Math.round(parseFloat(n) || 0);
+  return (
+    <div className="stars">
+      {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color: i<=r ? 'var(--amber)' : 'var(--surf-3)'}}/>)}
+      <span style={{fontSize:11,color:'var(--text-2)',marginLeft:4}}>{n || '—'}</span>
+    </div>
+  );
 }
 
 function App() {
-  const [method, setMethod] = useState('card');
-  const [paid, setPaid] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [agreed, setAgreed] = useState(false);
-  const [copied, setCopied] = useState('');
-  const [card, setCard] = useState({number:'', name:'', expiry:'', cvv:''});
-  const [errors, setErrors] = useState({});
+  const params = new URLSearchParams(window.location.search);
+  const missionId = params.get('mission_id');
+  const isSuccess = params.get('payment') === 'success';
+
   const [user, setUser] = useState(null);
+  const [mission, setMission] = useState(null);
+  const [expert, setExpert] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [paying, setPaying] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -221,10 +219,27 @@ function App() {
       const u = data.session.user;
       const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
       setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
-      if (profile) {
-        const nom = `${profile.prenom || ''} ${profile.nom || ''}`.trim();
-        setCard(c => ({ ...c, name: nom }));
+
+      if (missionId) {
+        const [{ data: m }, { data: profileRes }] = await Promise.all([
+          sb.from('missions').select('*').eq('id', missionId).single(),
+          Promise.resolve({ data: null }),
+        ]);
+        if (m) {
+          setMission(m);
+          if (m.expert_id) {
+            const [{ data: ep }, { data: pp }] = await Promise.all([
+              sb.from('experts').select('specialite, note_moyenne, nb_avis').eq('id', m.expert_id).single(),
+              sb.from('profiles').select('prenom, nom').eq('id', m.expert_id).single(),
+            ]);
+            setExpert({ ...(ep||{}), ...(pp||{}) });
+          }
+        }
+        if (isSuccess) {
+          await sb.from('missions').update({ statut: 'en_cours' }).eq('id', missionId);
+        }
       }
+      setLoading(false);
     });
     const el = document.getElementById('cursor-glow');
     const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
@@ -232,33 +247,55 @@ function App() {
     return () => window.removeEventListener('mousemove', move);
   }, []);
 
-  function copyText(text, field) {
-    navigator.clipboard?.writeText(text).catch(()=>{});
-    setCopied(field);
-    setTimeout(() => setCopied(''), 1800);
-  }
-
-  function validate() {
-    const e = {};
-    if (method === 'card') {
-      if (card.number.replace(/\s/g,'').length < 16) e.number = true;
-      if (!card.name.trim()) e.name = true;
-      if (card.expiry.length < 5) e.expiry = true;
-      if (card.cvv.length < 3) e.cvv = true;
-    }
-    if (!agreed) e.agreed = true;
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
-
-  function handlePay(e) {
+  async function handlePay(e) {
     e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
-    setTimeout(() => { setLoading(false); setPaid(true); }, 1800);
+    if (!agreed) { setError('Vous devez accepter les conditions pour continuer.'); return; }
+    if (!missionId || !mission) return;
+    setPaying(true);
+    setError('');
+    try {
+      const { data: { session: auth } } = await sb.auth.getSession();
+      const amountCents = Math.round((mission.prix || 0) * 100);
+      const base = window.location.origin + window.location.pathname;
+      const resp = await fetch(EDGE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.access_token}`,
+          'apikey': ANON_KEY,
+        },
+        body: JSON.stringify({
+          mission_id: missionId,
+          amount_cents: amountCents,
+          mission_titre: mission.titre || 'Mission CreatorFlow Market',
+          success_url: `${base}?mission_id=${missionId}&payment=success`,
+          cancel_url: `${base}?mission_id=${missionId}`,
+        }),
+      });
+      const json = await resp.json();
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        setError(json.error || 'Erreur lors de la création de la session de paiement.');
+        setPaying(false);
+      }
+    } catch (err) {
+      setError('Erreur de connexion. Veuillez réessayer.');
+      setPaying(false);
+    }
   }
 
-  const cardType = card.number.startsWith('4') ? '💳 Visa' : card.number.startsWith('5') ? '💳 Mastercard' : card.number.startsWith('3') ? '💳 Amex' : '';
+  const expertName = expert ? `${expert.prenom||''} ${expert.nom||''}`.trim() || 'Expert' : '…';
+  const expertInitials = expertName.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || 'EX';
+  const prix = mission?.prix || 0;
+  const prixStr = prix > 0 ? `${prix.toLocaleString('fr-CA')}$` : '—';
+
+  if (loading) return (
+    <div style={{minHeight:'100vh',display:'grid',placeItems:'center'}}>
+      <div style={{width:32,height:32,border:'3px solid var(--surf-3)',borderTopColor:'var(--v)',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
+    </div>
+  );
 
   return (
     <React.Fragment>
@@ -275,196 +312,122 @@ function App() {
       <div className="page-wrap">
         <div className="wrap">
 
-          {!paid ? (
+          {isSuccess ? (
+            /* SUCCESS */
+            <div style={{maxWidth:520,margin:'0 auto'}}>
+              <div className="card">
+                <div className="success-wrap">
+                  <div className="success-ring">✓</div>
+                  <h1 className="success-title">Paiement confirmé !</h1>
+                  <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été enregistré. {expertName} a été notifié et la mission est maintenant active.</p>
+                  <div className="success-details">
+                    {[
+                      {label:'Mission', val: mission?.titre || '—'},
+                      {label:'Expert', val: expertName},
+                      {label:'Montant payé', val: prixStr},
+                      {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
+                      {label:'Statut', val:'✅ Confirmé'},
+                    ].map((r,i) => (
+                      <div key={i} className="suc-row">
+                        <span className="suc-label">{r.label}</span>
+                        <span className="suc-val">{r.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
+                    <a href={`mission.html?id=${missionId}`} className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
+                    <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
+                  </div>
+                  <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
+                    Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          ) : !missionId || !mission ? (
+            /* MISSION INTROUVABLE */
+            <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
+              <div style={{fontSize:40,marginBottom:16}}>🔍</div>
+              <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Mission introuvable</h2>
+              <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission associée à ce lien. Vérifiez l'URL ou revenez au dashboard.</p>
+              <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
+            </div>
+
+          ) : (
+            /* FORMULAIRE PAIEMENT */
             <React.Fragment>
               <div className="breadcrumb">
                 <a href="dashboard-client.html">Dashboard</a>
                 <span className="bc-sep">/</span>
-                <a href="mission.html">Chatbot IA e-commerce</a>
+                <a href={`mission.html?id=${missionId}`}>{mission.titre || 'Mission'}</a>
                 <span className="bc-sep">/</span>
                 <span style={{color:'var(--text-2)'}}>Paiement</span>
               </div>
               <h1 className="page-title">Valider le paiement</h1>
-              <p className="page-sub">Solde final de la mission · Paiement protégé par CreatorFlow Market</p>
+              <p className="page-sub">Mission · Paiement sécurisé via Stripe</p>
 
               <div className="pay-layout">
 
-                {/* FORMULAIRE */}
+                {/* FORMULAIRE STRIPE */}
                 <form onSubmit={handlePay}>
                   <div className="card" style={{marginBottom:0}}>
                     <div className="card-head">
-                      <div className="card-title">Moyen de paiement</div>
-                      <div className="card-sub">Toutes vos données sont chiffrées et sécurisées</div>
+                      <div className="card-title">Paiement sécurisé</div>
+                      <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
                     </div>
                     <div className="card-body">
 
-                      {/* MÉTHODES */}
-                      <div className="pay-methods">
+                      <div style={{background:'rgba(99,91,255,0.06)',border:'1px solid rgba(99,91,255,0.2)',borderRadius:12,padding:'20px',marginBottom:24,display:'flex',gap:16,alignItems:'center'}}>
+                        <Ic.Stripe style={{flexShrink:0}}/>
+                        <div>
+                          <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>Stripe Checkout</div>
+                          <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.5}}>En cliquant sur "Payer", vous serez redirigé vers la page de paiement sécurisée de Stripe pour saisir vos informations de carte.</div>
+                        </div>
+                      </div>
+
+                      <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
                         {[
-                          {id:'card', icon:'💳', label:'Carte bancaire'},
-                          {id:'paypal', icon:'🅿', label:'PayPal'},
-                          {id:'virement', icon:'🏦', label:'Virement'},
-                        ].map(m => (
-                          <div key={m.id} className={`pay-method ${method===m.id?'active':''}`} onClick={() => setMethod(m.id)}>
-                            <div className="pay-method-icon">{m.icon}</div>
-                            <div className="pay-method-label">{m.label}</div>
+                          {label:'Mission', val: mission.titre || '—'},
+                          {label:'Montant', val: prixStr, bold:true},
+                          {label:'Devise', val:'CAD (dollar canadien)'},
+                        ].map((r,i)=>(
+                          <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<2 ? '1px solid var(--border)' : 'none',fontSize:13}}>
+                            <span style={{color:'var(--text-2)'}}>{r.label}</span>
+                            <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
                           </div>
                         ))}
                       </div>
 
-                      {/* CARTE */}
-                      {method === 'card' && (
-                        <React.Fragment>
-                          {/* VISUAL CARD */}
-                          <div className="card-visual">
-                            <div className="card-visual-chip"/>
-                            <div className="card-visual-number">
-                              {maskCard(card.number)}
-                            </div>
-                            <div className="card-visual-bottom">
-                              <div>
-                                <div className="card-visual-label">Titulaire</div>
-                                <div className="card-visual-val">{card.name || 'JEAN DUPONT'}</div>
-                              </div>
-                              <div style={{textAlign:'right'}}>
-                                <div className="card-visual-label">Expire</div>
-                                <div className="card-visual-val">{card.expiry || 'MM/AA'}</div>
-                              </div>
-                            </div>
-                            <div className="card-logo">{card.number.startsWith('4')?'VISA':card.number.startsWith('5')?'MC':'💳'}</div>
-                          </div>
+                      <div className="checkbox-row" style={{marginBottom:16}}>
+                        <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
+                        <label htmlFor="agree">
+                          J'accepte les <a href="#" style={{color:'var(--vs)'}}>conditions générales</a> et la <a href="#" style={{color:'var(--vs)'}}>politique de remboursement</a> de CreatorFlow Market.
+                        </label>
+                      </div>
+                      {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
 
-                          <div className="form-group">
-                            <label className="form-label">Numéro de carte</label>
-                            <div className="input-with-icon">
-                              <input
-                                className={`form-input ${errors.number?'error':''}`}
-                                placeholder="1234 5678 9012 3456"
-                                value={card.number}
-                                onChange={e => setCard(c=>({...c, number:formatCard(e.target.value)}))}
-                                maxLength={19}
-                              />
-                              {cardType && <span className="card-type">{card.number.startsWith('4')?'VISA':card.number.startsWith('5')?'MC':''}</span>}
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Titulaire de la carte</label>
-                            <input
-                              className={`form-input ${errors.name?'error':''}`}
-                              placeholder="Jean Dupont"
-                              value={card.name}
-                              onChange={e => setCard(c=>({...c, name:e.target.value.toUpperCase()}))}
-                            />
-                          </div>
-                          <div className="form-row">
-                            <div className="form-group" style={{marginBottom:0}}>
-                              <label className="form-label">Date d'expiration</label>
-                              <input
-                                className={`form-input ${errors.expiry?'error':''}`}
-                                placeholder="MM/AA"
-                                value={card.expiry}
-                                onChange={e => setCard(c=>({...c, expiry:formatExpiry(e.target.value)}))}
-                                maxLength={5}
-                              />
-                            </div>
-                            <div className="form-group" style={{marginBottom:0}}>
-                              <label className="form-label">
-                                CVV
-                                <span style={{display:'flex',alignItems:'center',gap:4,color:'var(--text-3)',fontWeight:400}}><Ic.Info/>3 chiffres au dos</span>
-                              </label>
-                              <input
-                                className={`form-input ${errors.cvv?'error':''}`}
-                                placeholder="•••"
-                                value={card.cvv}
-                                onChange={e => setCard(c=>({...c, cvv:e.target.value.replace(/\D/g,'').slice(0,4)}))}
-                                maxLength={4}
-                                type="password"
-                              />
-                            </div>
-                          </div>
-                        </React.Fragment>
-                      )}
+                      <button type="submit" className="btn btn-green btn-lg" disabled={paying} style={{position:'relative',overflow:'hidden'}}>
+                        {paying ? (
+                          <React.Fragment>
+                            <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+                            Redirection vers Stripe...
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <Ic.Lock/>
+                            Payer {prixStr} via Stripe
+                            <Ic.Arrow/>
+                          </React.Fragment>
+                        )}
+                      </button>
 
-                      {/* VIREMENT */}
-                      {method === 'virement' && (
-                        <React.Fragment>
-                          <div style={{background:'rgba(245,158,11,0.06)',border:'1px solid rgba(245,158,11,0.15)',borderRadius:10,padding:'12px 14px',fontSize:12,color:'var(--amber)',marginBottom:18,display:'flex',gap:8}}>
-                            <Ic.Info style={{flexShrink:0,marginTop:1}}/>
-                            <span>Le virement peut prendre 1 à 3 jours ouvrés. La mission sera débloquée à réception.</span>
-                          </div>
-                          <div className="virement-info">
-                            {[
-                              {label:'Bénéficiaire', val:'CreatorFlow Market SAS'},
-                              {label:'IBAN', val:'FR76 3000 4000 0100 0000 0000 000', copy:true},
-                              {label:'BIC / SWIFT', val:'BNPAFRPPXXX', copy:true},
-                              {label:'Référence', val:'CFM-2026-00847', copy:true},
-                              {label:'Montant', val:'1 260,00 $'},
-                            ].map((r,i) => (
-                              <div key={i} className="virement-row">
-                                <span className="vir-label">{r.label}</span>
-                                <div style={{display:'flex',alignItems:'center',gap:8}}>
-                                  <span className="vir-val">{r.val}</span>
-                                  {r.copy && (
-                                    <button type="button" className="copy-btn" onClick={() => copyText(r.val, r.label)}>
-                                      {copied === r.label ? '✓ Copié' : 'Copier'}
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </React.Fragment>
-                      )}
-
-                      {/* PAYPAL */}
-                      {method === 'paypal' && (
-                        <div className="paypal-wrap">
-                          <div style={{fontSize:13,color:'var(--text-2)',marginBottom:20}}>Vous serez redirigé vers PayPal pour finaliser le paiement de <strong style={{color:'var(--text)'}}>1 260$</strong>.</div>
-                          <div className="paypal-btn" onClick={handlePay}>
-                            <span style={{fontSize:22}}>🅿</span>
-                            Payer avec PayPal
-                          </div>
-                        </div>
-                      )}
-
-                      {/* CHECKBOX + SUBMIT */}
-                      {method !== 'paypal' && (
-                        <React.Fragment>
-                          <div style={{marginTop:24}}>
-                            <div className="checkbox-row">
-                              <input type="checkbox" id="agree" checked={agreed} onChange={e => setAgreed(e.target.checked)}/>
-                              <label htmlFor="agree">
-                                J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Market.
-                              </label>
-                            </div>
-                            {errors.agreed && <div style={{fontSize:11,color:'var(--red)',marginBottom:12}}>Vous devez accepter les conditions pour continuer.</div>}
-
-                            <button type="submit" className="btn btn-green btn-lg" disabled={loading} style={{position:'relative',overflow:'hidden'}}>
-                              {loading ? (
-                                <React.Fragment>
-                                  <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
-                                  Traitement en cours...
-                                </React.Fragment>
-                              ) : (
-                                <React.Fragment>
-                                  <Ic.Lock/>
-                                  {method === 'card' ? 'Payer 1 260$ maintenant' : 'Confirmer le virement'}
-                                  <Ic.Arrow/>
-                                </React.Fragment>
-                              )}
-                            </button>
-                          </div>
-
-                          {/* BADGES SÉCURITÉ */}
-                          <div className="security-row">
-                            <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
-                            <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
-                            <div className="sec-badge">🔒 3D Secure</div>
-                            <div className="sec-badge">⚡ Stripe</div>
-                          </div>
-                        </React.Fragment>
-                      )}
-
+                      <div className="security-row">
+                        <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
+                        <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
+                        <div className="sec-badge">🔒 3D Secure</div>
+                        <div className="sec-badge">⚡ Stripe</div>
+                      </div>
                     </div>
                   </div>
                 </form>
@@ -474,34 +437,31 @@ function App() {
 
                   <div className="card">
                     <div className="summary-mission">
-                      <div className="sm-icon">🤖</div>
+                      <div className="sm-icon">💼</div>
                       <div>
-                        <div className="sm-title">Chatbot service client IA</div>
-                        <div className="sm-meta">Livraison · 10 juin 2026</div>
-                        <div style={{marginTop:5}}><span className="badge badge-amber">Solde final</span></div>
+                        <div className="sm-title">{mission.titre || 'Mission'}</div>
+                        <div className="sm-meta">{mission.categorie || ''}{mission.deadline ? ` · Livraison ${new Date(mission.deadline).toLocaleDateString('fr-CA')}` : ''}</div>
+                        <div style={{marginTop:5}}><span className="badge badge-amber">Paiement en attente</span></div>
                       </div>
                     </div>
 
-                    <div className="expert-row">
-                      <div className="ex-av">AC</div>
-                      <div>
-                        <div className="ex-name">Amélie Chen</div>
-                        <div className="ex-spec">Agents IA · Chatbots</div>
+                    {expert && (
+                      <div className="expert-row">
+                        <div className="ex-av">{expertInitials}</div>
+                        <div>
+                          <div className="ex-name">{expertName}</div>
+                          <div className="ex-spec">{expert.specialite || 'Expert IA'}</div>
+                        </div>
+                        <div style={{marginLeft:'auto'}}>
+                          <Stars n={expert.note_moyenne}/>
+                        </div>
                       </div>
-                      <div className="stars" style={{marginLeft:'auto'}}>
-                        {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
-                        <span style={{fontSize:11,color:'var(--text-2)',marginLeft:4}}>4.9</span>
-                      </div>
-                    </div>
+                    )}
 
                     <div className="pricing-block">
                       <div className="price-row">
-                        <span className="price-label">Budget total convenu</span>
-                        <span className="price-val">1 800$</span>
-                      </div>
-                      <div className="price-row">
-                        <span className="price-label">Acompte déjà versé (30%)</span>
-                        <span className="price-val" style={{color:'var(--green)'}}>- 540$</span>
+                        <span className="price-label">Montant total de la mission</span>
+                        <span className="price-val">{prixStr}</span>
                       </div>
                       <div className="price-row">
                         <span className="price-label">Commission plateforme</span>
@@ -509,12 +469,11 @@ function App() {
                       </div>
                       <div className="price-total-row">
                         <span className="price-total-label">Total à payer</span>
-                        <span className="price-total-val">1 260$</span>
+                        <span className="price-total-val">{prixStr}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* PROTECTION */}
                   <div className="card" style={{overflow:'visible'}}>
                     <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
                       <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}>
@@ -523,10 +482,10 @@ function App() {
                     </div>
                     <div className="protection-items">
                       {[
-                        'Fonds bloqués jusqu\'à validation de la livraison',
+                        'Fonds sécurisés jusqu\'à validation de la livraison',
                         'Remboursement intégral si le livrable n\'est pas conforme',
                         'Médiation CreatorFlow Market en cas de litige',
-                        'Historique et reçu de paiement disponibles',
+                        'Reçu Stripe envoyé automatiquement',
                       ].map((t,i) => (
                         <div key={i} className="prot-item">
                           <div className="prot-dot"/>
@@ -536,56 +495,17 @@ function App() {
                     </div>
                   </div>
 
-                  {/* QUESTIONS */}
                   <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'var(--r-lg)',padding:'16px 18px',display:'flex',gap:10}}>
                     <Ic.Info style={{color:'var(--text-3)',flexShrink:0,marginTop:2}}/>
                     <div>
                       <div style={{fontSize:12,fontWeight:600,marginBottom:3}}>Une question ?</div>
-                      <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.5}}>Notre support est disponible 7j/7 par chat ou email à <span style={{color:'var(--vs)'}}>support@creatorflow.io</span></div>
+                      <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.5}}>Support disponible 7j/7 à <span style={{color:'var(--vs)'}}>support@creatorflow.io</span></div>
                     </div>
                   </div>
 
                 </div>
               </div>
             </React.Fragment>
-
-          ) : (
-
-            /* SUCCESS */
-            <div style={{maxWidth:520,margin:'0 auto'}}>
-              <div className="card">
-                <div className="success-wrap">
-                  <div className="success-ring">✓</div>
-                  <h1 className="success-title">Paiement confirmé !</h1>
-                  <p className="success-sub">Votre paiement de <strong>1 260$</strong> a bien été enregistré. Amélie Chen a été notifiée et la livraison finale est prévue pour le <strong>10 juin 2026</strong>.</p>
-
-                  <div className="success-details">
-                    {[
-                      {label:'Référence', val:'CFM-2026-00847'},
-                      {label:'Mission', val:'Chatbot service client IA'},
-                      {label:'Expert', val:'Amélie Chen'},
-                      {label:'Montant payé', val:'1 260$'},
-                      {label:'Date', val:'27 mai 2026 · 14:32'},
-                      {label:'Statut', val:'✅ Confirmé'},
-                    ].map((r,i) => (
-                      <div key={i} className="suc-row">
-                        <span className="suc-label">{r.label}</span>
-                        <span className="suc-val">{r.val}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
-                    <a href="mission.html" className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
-                    <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
-                  </div>
-
-                  <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
-                    Un reçu a été envoyé à <span style={{color:'var(--vs)'}}>jean.dupont@entreprise.com</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           )}
 
         </div>
