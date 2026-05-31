@@ -429,7 +429,7 @@ function App() {
                     <div style={{fontSize:13}}>Aucune conversation active</div>
                   </div>
                 ) : convs.map(c => (
-                  <div key={c.id} className="msg-item">
+                  <a key={c.id} className="msg-item" href={`messages.html?conv=${c.id}`} style={{textDecoration:'none',color:'inherit'}}>
                     <div className="msg-avatar" style={{background:'linear-gradient(135deg,#7C3AED,#A78BFA)'}}>{c.expertInitials}</div>
                     <div className="msg-body">
                       <div className="msg-name">{c.expertName}</div>
@@ -438,7 +438,7 @@ function App() {
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
                       <span className="msg-time">{new Date(c.created_at).toLocaleDateString('fr-CA')}</span>
                     </div>
-                  </div>
+                  </a>
                 ))}
                 <div style={{padding:'12px 20px'}}>
                   <a href="messages.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Ouvrir la messagerie <Ic.Arrow/></a>

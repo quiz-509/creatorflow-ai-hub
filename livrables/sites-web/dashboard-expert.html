@@ -248,7 +248,7 @@ function App() {
       const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
       const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) setUser({ ...u, ...profile });
-      if (exp) setExpert(exp);
+      if (exp) { setExpert(exp); setDispo(exp.disponible !== false); }
       const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').neq('user_id', u.id).order('created_at', {ascending: false}).limit(5);
       setOpps(o || []);
       const { data: c } = await sb.from('conversations').select('id,created_at,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
@@ -278,6 +278,12 @@ function App() {
   const handleLogout = async () => {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
+  };
+
+  const handleDispo = async () => {
+    const newVal = !dispo;
+    setDispo(newVal);
+    if (user?.id) await sb.from('experts').update({ disponible: newVal }).eq('id', user.id);
   };
 
   const openModal = (brief) => {
@@ -359,7 +365,7 @@ function App() {
         </div>
 
         {/* DISPONIBILITÉ */}
-        <div className="dispo-row" onClick={() => setDispo(!dispo)} style={!dispo ? {background:'rgba(239,68,68,0.06)',borderColor:'rgba(239,68,68,0.2)'} : {}}>
+        <div className="dispo-row" onClick={handleDispo} style={!dispo ? {background:'rgba(239,68,68,0.06)',borderColor:'rgba(239,68,68,0.2)'} : {}}>
           <div>
             <div className="dispo-label" style={!dispo ? {color:'var(--red)'} : {}}>{dispo ? 'Disponible' : 'Indisponible'}</div>
             <div className="dispo-sub">{dispo ? 'Visible dans les recherches' : 'Masqué des résultats'}</div>
@@ -531,7 +537,7 @@ function App() {
                     <div style={{fontSize:13}}>Aucune conversation active</div>
                   </div>
                 ) : convs.map(c => (
-                  <div key={c.id} className="msg-item">
+                  <a key={c.id} className="msg-item" href={`messages.html?conv=${c.id}`} style={{textDecoration:'none',color:'inherit'}}>
                     <div className="msg-avatar" style={{background:'linear-gradient(135deg,#0891B2,#06B6D4)'}}>{c.clientInitials}</div>
                     <div className="msg-body">
                       <div className="msg-name">{c.clientName}</div>
@@ -540,7 +546,7 @@ function App() {
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
                       <span className="msg-time">{new Date(c.created_at).toLocaleDateString('fr-CA')}</span>
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
 
