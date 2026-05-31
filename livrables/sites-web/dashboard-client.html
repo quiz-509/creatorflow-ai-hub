@@ -179,7 +179,7 @@ const NAV_ITEMS = [
   {id:'overview', label:'Vue d\'ensemble', icon:<Ic.Grid/>},
   {id:'missions', label:'Mes missions', icon:<Ic.Briefcase/>, badge:2},
   {id:'props', label:'Propositions', icon:<Ic.Users/>, badge:3},
-  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2},
+  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2, href:'messages.html'},
   {id:'invoices', label:'Factures', icon:<Ic.Invoice/>},
 ];
 
@@ -280,13 +280,19 @@ function App() {
       <aside className={`sidebar${sidebarOpen?' open':''}`}>
         <div className="sidebar-section">
           <div className="sidebar-label">Menu</div>
-          {NAV_ITEMS.map(item => (
-            <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
-              {item.icon}
-              {item.label}
-              {item.badge && <span className="nav-badge">{item.id==='missions' ? missionCount : item.id==='messages' ? convs.length : item.id==='props' ? propositions.filter(p=>p.statut==='en_attente').length : item.badge}</span>}
-            </div>
-          ))}
+          {NAV_ITEMS.map(item => {
+            const badge = item.badge ? <span className="nav-badge">{item.id==='missions' ? missionCount : item.id==='messages' ? convs.length : item.id==='props' ? propositions.filter(p=>p.statut==='en_attente').length : item.badge}</span> : null;
+            const cls = `nav-item ${active === item.id ? 'active' : ''}`;
+            return item.href ? (
+              <a key={item.id} href={item.href} className={cls} style={{textDecoration:'none',color:'inherit'}}>
+                {item.icon}{item.label}{badge}
+              </a>
+            ) : (
+              <div key={item.id} className={cls} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
+                {item.icon}{item.label}{badge}
+              </div>
+            );
+          })}
         </div>
         <div className="sidebar-section">
           <div className="sidebar-label">Compte</div>

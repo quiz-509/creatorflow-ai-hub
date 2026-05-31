@@ -216,10 +216,10 @@ const NAV_ITEMS = [
   {id:'overview', label:'Vue d\'ensemble', icon:<Ic.Grid/>},
   {id:'missions', label:'Mes missions', icon:<Ic.Briefcase/>, badge:3},
   {id:'opps', label:'Opportunités', icon:<Ic.Search/>, badge:5, badgeClass:'nav-badge-amber'},
-  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2},
+  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2, href:'messages.html'},
   {id:'revenus', label:'Mes revenus', icon:<Ic.DollarSign/>},
   {id:'agenda', label:'Agenda', icon:<Ic.Calendar/>},
-  {id:'profil', label:'Mon profil', icon:<Ic.User/>},
+  {id:'profil', label:'Mon profil', icon:<Ic.User/>, hrefFn:(u)=>`profil-expert.html?id=${u?.id||''}`},
 ];
 
 function App() {
@@ -355,13 +355,20 @@ function App() {
       <aside className={`sidebar${sidebarOpen?' open':''}`}>
         <div className="sidebar-section">
           <div className="sidebar-label">Menu</div>
-          {NAV_ITEMS.map(item => (
-            <div key={item.id} className={`nav-item ${active === item.id ? 'active' : ''}`} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
-              {item.icon}
-              {item.label}
-              {item.badge && <span className={`nav-badge ${item.badgeClass || ''}`}>{item.id==='missions' ? missionCount : item.id==='opps' ? opps.length : item.badge}</span>}
-            </div>
-          ))}
+          {NAV_ITEMS.map(item => {
+            const href = item.href || (item.hrefFn ? item.hrefFn(user) : null);
+            const badge = item.badge ? <span className={`nav-badge ${item.badgeClass || ''}`}>{item.id==='missions' ? missionCount : item.id==='opps' ? opps.length : item.badge}</span> : null;
+            const cls = `nav-item ${active === item.id ? 'active' : ''}`;
+            return href ? (
+              <a key={item.id} href={href} className={cls} style={{textDecoration:'none',color:'inherit'}}>
+                {item.icon}{item.label}{badge}
+              </a>
+            ) : (
+              <div key={item.id} className={cls} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
+                {item.icon}{item.label}{badge}
+              </div>
+            );
+          })}
         </div>
 
         {/* DISPONIBILITÉ */}
