@@ -12,6 +12,8 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS entreprise      TEXT;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS photo_url       TEXT;
 
 -- ─── 2. TABLE experts — colonnes manquantes ───────────────────────────────────
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS specialite   TEXT;
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS bio          TEXT;
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS competences  TEXT[]       DEFAULT '{}';
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS categories   TEXT[]       DEFAULT '{}';
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS tarif_heure  INTEGER      DEFAULT 0;

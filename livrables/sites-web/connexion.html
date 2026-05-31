@@ -167,14 +167,14 @@ function App() {
                   {error && <div style={{color:'#EF4444',fontSize:13,marginBottom:12,padding:'10px 14px',background:'rgba(239,68,68,0.08)',borderRadius:8}}>{error}</div>}
                   <button type="submit" className="btn btn-primary form-submit" disabled={loading}>{loading ? 'Envoi…' : 'Envoyer le lien'}</button>
                 </form>
-                <div className="form-footer"><a href="#" onClick={e=>{e.preventDefault();setShowReset(false);}}>Retour a la connexion</a></div>
+                <div className="form-footer"><a href="#" onClick={e=>{e.preventDefault();setShowReset(false);}}>Retour à la connexion</a></div>
               </React.Fragment>
             ) : (
               <div style={{textAlign:'center',padding:'20px 0'}}>
                 <div style={{fontSize:40,marginBottom:16}}>📧</div>
-                <h2 className="form-title">Email envoye !</h2>
-                <p style={{fontSize:14,color:'var(--text-2)',marginTop:8,marginBottom:24}}>Verifiez votre boite mail et cliquez sur le lien pour reinitialiser votre mot de passe.</p>
-                <a href="connexion.html" className="btn btn-ghost" style={{margin:'0 auto'}}>Retour a la connexion</a>
+                <h2 className="form-title">Email envoyé !</h2>
+                <p style={{fontSize:14,color:'var(--text-2)',marginTop:8,marginBottom:24}}>Vérifiez votre boîte mail et cliquez sur le lien pour réinitialiser votre mot de passe.</p>
+                <a href="connexion.html" className="btn btn-ghost" style={{margin:'0 auto'}}>Retour à la connexion</a>
               </div>
             )}
           </div>
@@ -187,7 +187,7 @@ function App() {
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
         <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
-        <a href={`inscription.html?role=${tab}`} className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Creer un compte</a>
+        <a href={`inscription.html?role=${tab}`} className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Créer un compte</a>
       </div></nav>
 
       <div className="login-page">
@@ -202,7 +202,7 @@ function App() {
               <div className={`tab-btn ${tab==='expert'?'active':''}`} onClick={()=>setTab('expert')}>Je suis expert</div>
             </div>
             <h2 className="form-title">Se connecter</h2>
-            <p className="form-sub">{tab==='client' ? 'Accedez a vos briefs et missions en cours.' : 'Gerez vos missions et votre profil expert.'}</p>
+            <p className="form-sub">{tab==='client' ? 'Accédez à vos briefs et missions en cours.' : 'Gérez vos missions et votre profil expert.'}</p>
             <form onSubmit={handleLogin}>
               <div className="form-group">
                 <label className="form-label">Adresse email</label>
@@ -211,7 +211,7 @@ function App() {
               <div className="form-group">
                 <div className="form-label-row">
                   <span className="form-label" style={{margin:0}}>Mot de passe</span>
-                  <a href="#" onClick={e=>{e.preventDefault();setShowReset(true);setResetEmail(email);}}>Mot de passe oublie ?</a>
+                  <a href="#" onClick={e=>{e.preventDefault();setShowReset(true);setResetEmail(email);}}>Mot de passe oublié ?</a>
                 </div>
                 <div style={{position:'relative'}}>
                   <input className="form-input" type={showPwd?'text':'password'} placeholder="••••••••" value={pass} onChange={e=>setPass(e.target.value)} required style={{paddingRight:44}}/>

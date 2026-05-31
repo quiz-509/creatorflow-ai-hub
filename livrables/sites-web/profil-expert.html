@@ -263,6 +263,25 @@ function App() {
         };
       });
 
+      const CHIP_COLORS_SIM = ['linear-gradient(135deg,#7C3AED,#A78BFA)','linear-gradient(135deg,#0891B2,#06B6D4)','linear-gradient(135deg,#059669,#10B981)'];
+      const { data: simExperts } = await sb.from('experts')
+        .select('id, specialite, tarif_heure')
+        .neq('id', targetId)
+        .eq('disponible', true)
+        .limit(3);
+      const simIds = (simExperts || []).map(s => s.id);
+      const simProfiles = simIds.length > 0
+        ? (await sb.from('profiles').select('id,prenom,nom').in('id', simIds)).data || []
+        : [];
+      const simPM = {};
+      simProfiles.forEach(p => { simPM[p.id] = p; });
+      const similar = (simExperts || []).map((s, i) => {
+        const sp = simPM[s.id] || {};
+        const sName = `${sp.prenom||''} ${sp.nom||''}`.trim() || 'Expert IA';
+        const sInitials = sName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'EX';
+        return { id: s.id, name: sName, initials: sInitials, spec: s.specialite || 'Expert IA', rate: s.tarif_heure > 0 ? s.tarif_heure+'$/h' : 'Sur devis', color: CHIP_COLORS_SIM[i % CHIP_COLORS_SIM.length] };
+      });
+
       const competences = Array.isArray(exp?.competences) ? exp.competences : [];
       const realSkills = competences.length > 0
         ? competences.map((s, i) => ({ name: s, pct: Math.max(75, 98 - i * 4) }))
@@ -285,6 +304,7 @@ function App() {
         reviewCount,
         reviews: mappedReviews,
         skills: realSkills,
+        similar,
         stats: {
           missions: mCount,
           success: mCount > 0 ? '100%' : '—',
@@ -608,19 +628,21 @@ function App() {
                 </div>
               </div>
 
-              <div className="sidebar-card">
-                <div className="sidebar-title">Experts similaires</div>
-                {expert.similar.map((s,i) => (
-                  <div key={i} className="similar-expert">
-                    <div className="sim-avatar" style={{background:s.color}}>{s.initials}</div>
-                    <div className="sim-info">
-                      <div className="sim-name">{s.name}</div>
-                      <div className="sim-spec">{s.spec}</div>
-                    </div>
-                    <div className="sim-rate">{s.rate}</div>
-                  </div>
-                ))}
-              </div>
+              {expert.similar.length > 0 && (
+                <div className="sidebar-card">
+                  <div className="sidebar-title">Experts similaires</div>
+                  {expert.similar.map((s,i) => (
+                    <a key={i} href={`profil-expert.html?id=${s.id}`} className="similar-expert" style={{textDecoration:'none',color:'inherit'}}>
+                      <div className="sim-avatar" style={{background:s.color}}>{s.initials}</div>
+                      <div className="sim-info">
+                        <div className="sim-name">{s.name}</div>
+                        <div className="sim-spec">{s.spec}</div>
+                      </div>
+                      <div className="sim-rate">{s.rate}</div>
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
