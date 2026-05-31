@@ -251,8 +251,19 @@ function App() {
       if (exp) setExpert(exp);
       const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').neq('user_id', u.id).order('created_at', {ascending: false}).limit(5);
       setOpps(o || []);
-      const { data: c } = await sb.from('conversations').select('id,created_at').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
-      setConvs(c || []);
+      const { data: c } = await sb.from('conversations').select('id,created_at,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
+      const clientIds = (c || []).map(cv => cv.client_id).filter(Boolean);
+      let clientProfileMap = {};
+      if (clientIds.length > 0) {
+        const { data: cp } = await sb.from('profiles').select('id,prenom,nom').in('id', clientIds);
+        (cp || []).forEach(p => { clientProfileMap[p.id] = p; });
+      }
+      setConvs((c || []).map(cv => {
+        const p = clientProfileMap[cv.client_id] || {};
+        const name = `${p.prenom||''} ${p.nom||''}`.trim() || 'Client';
+        const ini = name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'CL';
+        return { ...cv, clientName: name, clientInitials: ini };
+      }));
       const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(4);
       setMissions(m || []);
       const { count: totalM } = await sb.from('missions').select('id', { count: 'exact', head: true }).eq('expert_id', u.id);
@@ -521,9 +532,9 @@ function App() {
                   </div>
                 ) : convs.map(c => (
                   <div key={c.id} className="msg-item">
-                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#0891B2,#06B6D4)'}}>CL</div>
+                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#0891B2,#06B6D4)'}}>{c.clientInitials}</div>
                     <div className="msg-body">
-                      <div className="msg-name">Client</div>
+                      <div className="msg-name">{c.clientName}</div>
                       <div className="msg-preview">Conversation en cours</div>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>

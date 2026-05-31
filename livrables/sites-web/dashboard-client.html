@@ -212,8 +212,19 @@ function App() {
       }
       const { data: b } = await sb.from('briefs').select('id,categorie,budget,delai,statut,created_at,description').eq('user_id', u.id).order('created_at', {ascending: false}).limit(4);
       setBriefs(b || []);
-      const { data: c } = await sb.from('conversations').select('id,created_at').eq('client_id', u.id).order('created_at', {ascending: false}).limit(3);
-      setConvs(c || []);
+      const { data: c } = await sb.from('conversations').select('id,created_at,expert_id').eq('client_id', u.id).order('created_at', {ascending: false}).limit(3);
+      const expertIds = (c || []).map(cv => cv.expert_id).filter(Boolean);
+      let expertProfileMap = {};
+      if (expertIds.length > 0) {
+        const { data: ep } = await sb.from('profiles').select('id,prenom,nom').in('id', expertIds);
+        (ep || []).forEach(p => { expertProfileMap[p.id] = p; });
+      }
+      setConvs((c || []).map(cv => {
+        const p = expertProfileMap[cv.expert_id] || {};
+        const name = `${p.prenom||''} ${p.nom||''}`.trim() || 'Expert';
+        const ini = name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'EX';
+        return { ...cv, expertName: name, expertInitials: ini };
+      }));
       const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,expert_id,created_at').eq('client_id', u.id).order('created_at', {ascending: false}).limit(4);
       setMissions(m || []);
       const { count: totalM } = await sb.from('missions').select('id', { count: 'exact', head: true }).eq('client_id', u.id);
@@ -419,9 +430,9 @@ function App() {
                   </div>
                 ) : convs.map(c => (
                   <div key={c.id} className="msg-item">
-                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#7C3AED,#A78BFA)'}}>EX</div>
+                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#7C3AED,#A78BFA)'}}>{c.expertInitials}</div>
                     <div className="msg-body">
-                      <div className="msg-name">Expert</div>
+                      <div className="msg-name">{c.expertName}</div>
                       <div className="msg-preview">Conversation en cours</div>
                     </div>
                     <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
