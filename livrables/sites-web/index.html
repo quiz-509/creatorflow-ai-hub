@@ -663,7 +663,7 @@ function Nav() {
           { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market', href: '#academy' },
         ]},
       ],
-      featured: { badge: 'Nouveau', title: 'Hub 2.0 disponible', text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.', link: 'Découvrir →' },
+      featured: { badge: 'Nouveau', title: 'Hub 2.0 disponible', text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.', link: 'Découvrir →', href: 'inscription.html' },
     },
     ressources: {
       cols: [
@@ -678,7 +678,7 @@ function Nav() {
           { icon: <Ic.Chart />, label: 'Changelog', sub: 'Nouveautés de la plateforme', href: '#' },
         ]},
       ],
-      featured: { badge: 'Guide', title: 'Recruter un expert IA', text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.', link: 'Lire le guide →' },
+      featured: { badge: 'Guide', title: 'Recruter un expert IA', text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.', link: 'Lire le guide →', href: 'blog.html' },
     },
   };
 
@@ -711,12 +711,12 @@ function Nav() {
                   </div>
                 ))}
                 <div className="mega-col">
-                  <div className="mega-featured">
+                  <a className="mega-featured" href={menus[key].featured.href||'#'} onClick={()=>setOpenMenu(null)} style={{display:'block',textDecoration:'none',color:'inherit'}}>
                     <span className="mega-featured-badge">{menus[key].featured.badge}</span>
                     <div className="mega-featured-title">{menus[key].featured.title}</div>
                     <div className="mega-featured-text">{menus[key].featured.text}</div>
                     <div className="mega-featured-link">{menus[key].featured.link}</div>
-                  </div>
+                  </a>
                 </div>
               </div>
             </div>
