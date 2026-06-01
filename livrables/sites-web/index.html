@@ -660,7 +660,7 @@ function Nav() {
         { title: 'Pour les experts', items: [
           { icon: <Ic.User />, label: 'Créer mon profil', sub: 'Validé par l\'académie en 48h', href: 'inscription.html' },
           { icon: <Ic.Bell />, label: 'Voir les missions', sub: 'Opportunités ciblées par l\'IA', href: 'dashboard-expert.html' },
-          { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market', href: '#academy' },
+          { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market', href: 'academie.html' },
         ]},
       ],
       featured: { badge: 'Nouveau', title: 'Hub 2.0 disponible', text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.', link: 'Découvrir →', href: 'inscription.html' },
@@ -722,7 +722,7 @@ function Nav() {
             </div>
           ))}
           <a className="nav-link" href="experts.html" onClick={() => setOpenMenu(null)}>Experts</a>
-          <a className="nav-link" href="#academy" onClick={() => setOpenMenu(null)}>Académie</a>
+          <a className="nav-link" href="academie.html" onClick={() => setOpenMenu(null)}>Académie</a>
         </div>
         <div className="nav-actions">
           <a href="connexion.html" className="btn btn-outline" style={{padding:'9px 18px',fontSize:'13px',borderRadius:'999px'}}>Se connecter</a>
