@@ -1,5 +1,5 @@
 # CREATORFLOW ACADEMY — BRAND BOOK OFFICIEL
-### Version 1.0 | Document de production confidentiel
+### Version 2.0 | Document de production confidentiel
 ### Chief Learning Officer : Joacenel Pierre | CreatorFlow Market
 
 ---
@@ -79,7 +79,7 @@ A — APPLY    : Ton exercice. Ton livrable. Ton résultat.
 
 ---
 
-### NOVA — Expert IA Marketing
+### ROSE — Experte Marketing IA
 
 | Attribut | Valeur |
 |----------|--------|
@@ -99,7 +99,7 @@ A — APPLY    : Ton exercice. Ton livrable. Ton résultat.
 
 ---
 
-### ATLAS — Expert IA Agents
+### PHELIX — Expert Agents IA
 
 | Attribut | Valeur |
 |----------|--------|
@@ -119,7 +119,7 @@ A — APPLY    : Ton exercice. Ton livrable. Ton résultat.
 
 ---
 
-### FLUX — Expert IA Automatisation
+### RÉMY — Expert Automatisation IA
 
 | Attribut | Valeur |
 |----------|--------|
@@ -139,7 +139,7 @@ A — APPLY    : Ton exercice. Ton livrable. Ton résultat.
 
 ---
 
-### CIPHER — Expert IA Développement
+### JAY — Expert Développement IA
 
 | Attribut | Valeur |
 |----------|--------|
@@ -159,7 +159,7 @@ A — APPLY    : Ton exercice. Ton livrable. Ton résultat.
 
 ---
 
-### VERA — Expert IA Business & Stratégie
+### LOUVIE — Experte Business IA & Prompt Engineering
 
 | Attribut | Valeur |
 |----------|--------|
@@ -648,7 +648,7 @@ Le projet de fin de module est le LIVRABLE CONCRET. Il doit :
 - ❌ Miniature avec plus de 5 mots
 - ❌ Musique avec paroles pendant les leçons
 - ❌ Intro de plus de 8 secondes
-- ❌ Autre formateur que les 5 officiels (NOVA, ATLAS, FLUX, CIPHER, VERA)
+- ❌ Autre formateur que les 5 officiels (ROSE, PHELIX, RÉMY, JAY, LOUVIE)
 
 ### Cohérence cross-platform
 
