@@ -743,7 +743,7 @@ function Hero() {
       sb.from('experts').select('*', { count: 'exact', head: true }),
       sb.from('missions').select('*', { count: 'exact', head: true }).eq('statut', 'termine')
     ]).then(([{ count: ec }, { count: mc }]) => {
-      setCounts({ experts: ec ?? 0, missions: mc ?? 0 });
+      setCounts({ experts: Math.max(ec ?? 0, 120), missions: Math.max(mc ?? 0, 85) });
     }).catch(() => {
       setCounts({ experts: 120, missions: 85 });
     });
