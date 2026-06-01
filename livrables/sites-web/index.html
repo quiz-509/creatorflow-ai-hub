@@ -167,7 +167,7 @@ h1,h2,h3,h4,h5 { font-family:var(--f); font-weight:700; letter-spacing:-0.03em; 
 .mega-col-title { font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:10px; }
 .mega-item {
   display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm);
-  font-size:13px; color:var(--text-2); transition:all 160ms ease; cursor:pointer;
+  font-size:13px; color:var(--text-2); transition:all 160ms ease; cursor:pointer; text-decoration:none;
 }
 .mega-item:hover { background:rgba(124,58,237,0.10); color:var(--text); }
 .mega-item-icon { width:28px; height:28px; border-radius:7px; background:rgba(255,255,255,0.04); border:1px solid var(--border); display:grid; place-items:center; flex-shrink:0; color:var(--vs); }
@@ -653,14 +653,14 @@ function Nav() {
     plateforme: {
       cols: [
         { title: 'Pour les entreprises', items: [
-          { icon: <Ic.Search />, label: 'Trouver un expert', sub: 'Parcourez 120+ profils certifiés' },
-          { icon: <Ic.Match />, label: 'Déposer un brief', sub: 'Recevez des candidatures sous 24h' },
-          { icon: <Ic.Rocket />, label: 'Comment ça marche', sub: 'Trois étapes, aucune friction' },
+          { icon: <Ic.Search />, label: 'Trouver un expert', sub: 'Parcourez 120+ profils certifiés', href: 'experts.html' },
+          { icon: <Ic.Match />, label: 'Déposer un brief', sub: 'Recevez des candidatures sous 24h', href: 'brief.html' },
+          { icon: <Ic.Rocket />, label: 'Comment ça marche', sub: 'Trois étapes, aucune friction', href: '#how' },
         ]},
         { title: 'Pour les experts', items: [
-          { icon: <Ic.User />, label: 'Créer mon profil', sub: 'Validé par l\'académie en 48h' },
-          { icon: <Ic.Bell />, label: 'Voir les missions', sub: 'Opportunités ciblées par l\'IA' },
-          { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market' },
+          { icon: <Ic.User />, label: 'Créer mon profil', sub: 'Validé par l\'académie en 48h', href: 'inscription.html' },
+          { icon: <Ic.Bell />, label: 'Voir les missions', sub: 'Opportunités ciblées par l\'IA', href: 'dashboard-expert.html' },
+          { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market', href: '#academy' },
         ]},
       ],
       featured: { badge: 'Nouveau', title: 'Hub 2.0 disponible', text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.', link: 'Découvrir →' },
@@ -668,14 +668,14 @@ function Nav() {
     ressources: {
       cols: [
         { title: 'Apprendre', items: [
-          { icon: <Ic.Pen />, label: 'Blog', sub: 'Actualités IA et stratégie' },
-          { icon: <Ic.Grad />, label: 'Guides pratiques', sub: 'Tutoriels et cas d\'usage' },
-          { icon: <Ic.Layers />, label: 'Études de cas', sub: 'Résultats clients réels' },
+          { icon: <Ic.Pen />, label: 'Blog', sub: 'Actualités IA et stratégie', href: 'blog.html' },
+          { icon: <Ic.Grad />, label: 'Guides pratiques', sub: 'Tutoriels et cas d\'usage', href: 'blog.html' },
+          { icon: <Ic.Layers />, label: 'Études de cas', sub: 'Résultats clients réels', href: 'blog.html' },
         ]},
         { title: 'Support', items: [
-          { icon: <Ic.Bell />, label: 'Centre d\'aide', sub: 'FAQ et documentation' },
-          { icon: <Ic.Compass />, label: 'Communauté', sub: 'Forum des experts' },
-          { icon: <Ic.Chart />, label: 'Changelog', sub: 'Nouveautés de la plateforme' },
+          { icon: <Ic.Bell />, label: 'Centre d\'aide', sub: 'FAQ et documentation', href: '#' },
+          { icon: <Ic.Compass />, label: 'Communauté', sub: 'Forum des experts', href: '#' },
+          { icon: <Ic.Chart />, label: 'Changelog', sub: 'Nouveautés de la plateforme', href: '#' },
         ]},
       ],
       featured: { badge: 'Guide', title: 'Recruter un expert IA', text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.', link: 'Lire le guide →' },
@@ -700,13 +700,13 @@ function Nav() {
                   <div className="mega-col" key={ci}>
                     <div className="mega-col-title">{col.title}</div>
                     {col.items.map((item, ii) => (
-                      <div className="mega-item" key={ii}>
+                      <a className="mega-item" href={item.href||'#'} key={ii} onClick={()=>setOpenMenu(null)}>
                         <div className="mega-item-icon">{item.icon}</div>
                         <div>
                           <div className="mega-item-text">{item.label}</div>
                           <div className="mega-item-sub">{item.sub}</div>
                         </div>
-                      </div>
+                      </a>
                     ))}
                   </div>
                 ))}
