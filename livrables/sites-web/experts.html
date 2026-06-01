@@ -184,11 +184,24 @@ const Ic = {
 
 function Nav() {
   const [stuck, setStuck] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [userType, setUserType] = useState('client');
+
   useEffect(() => {
     const h = () => setStuck(window.scrollY > 10);
     window.addEventListener('scroll', h, { passive: true });
+    sb.auth.getSession().then(async ({ data }) => {
+      if (data.session) {
+        setAuthUser(data.session.user);
+        const { data: profile } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
+        if (profile) setUserType(profile.type_utilisateur || 'client');
+      }
+    });
     return () => window.removeEventListener('scroll', h);
   }, []);
+
+  const dashboardUrl = userType === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
+
   return (
     <nav className={`nav ${stuck ? 'stuck' : ''}`}>
       <div className="wrap nav-inner">
@@ -199,7 +212,10 @@ function Nav() {
           <a href="inscription.html" className="nav-link">Devenir expert</a>
         </div>
         <div className="nav-ctas">
-          <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
+          {authUser
+            ? <a href={dashboardUrl} className="btn btn-ghost btn-sm">Mon espace</a>
+            : <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
+          }
           <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <Ic.Arrow/></a>
         </div>
       </div>
