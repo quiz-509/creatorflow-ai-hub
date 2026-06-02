@@ -94,6 +94,16 @@ const sb = createClient(
   'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
 );
 
+const normMod = m => ({ ...m, titre: m.title || m.titre || 'Module', ordre: m.order_num ?? m.ordre ?? 0 });
+const normLesson = l => ({
+  ...l,
+  titre: l.title || l.titre || 'Leçon',
+  type: l.type || 'video',
+  duree: l.duration_minutes ?? l.duree ?? 0,
+  ordre: l.order_num ?? l.ordre ?? 0,
+  contenu_url: l.content_url || l.contenu_url || null,
+});
+
 const CheckIcon = ({size=14}) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
 );
@@ -123,27 +133,28 @@ function App() {
 
   const loadData = async () => {
     const { data: sess } = await sb.auth.getSession();
-    if (!sess.session) { window.location.href = `connexion.html`; return; }
+    if (!sess.session) { window.location.href = 'connexion.html'; return; }
     const u = sess.session.user;
     const { data: pr } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
     setUser({ ...u, ...pr });
 
-    const { data: enr } = await sb.from('enrollments').select('*').eq('user_id', u.id).eq('course_id', courseId).single();
+    const { data: enr } = await sb.from('academy_enrollments').select('*').eq('user_id', u.id).eq('course_id', courseId).single();
     if (!enr) { setNotEnrolled(true); setLoading(false); return; }
     setEnrollment(enr);
 
-    const { data: c } = await sb.from('courses').select('id,titre,categorie,nb_inscrits').eq('id', courseId).single();
-    setCourse(c);
+    const { data: c } = await sb.from('academy_courses').select('id,slug,title,thumbnail_url').eq('id', courseId).single();
+    setCourse(c ? { ...c, titre: c.title } : null);
 
-    const { data: mods } = await sb.from('modules').select('*').eq('course_id', courseId).order('ordre');
-    setModules(mods || []);
+    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
+    setModules((mods || []).map(normMod));
 
-    const { data: lsns } = await sb.from('lessons').select('*').eq('course_id', courseId).order('ordre');
-    setLessons(lsns || []);
-    if (lsns?.length) setActiveLesson(lsns[0]);
+    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
+    const normLessons = (lsns || []).map(normLesson);
+    setLessons(normLessons);
+    if (normLessons.length) setActiveLesson(normLessons[0]);
 
-    const { data: comps } = await sb.from('lesson_completions').select('lesson_id').eq('user_id', u.id);
-    setCompletedIds(new Set((comps||[]).map(c => c.lesson_id)));
+    const { data: comps } = await sb.from('academy_progress').select('lesson_id').eq('user_id', u.id).eq('course_id', courseId);
+    setCompletedIds(new Set((comps || []).map(r => r.lesson_id)));
 
     setLoading(false);
   };
@@ -151,20 +162,12 @@ function App() {
   const handleComplete = async () => {
     if (!activeLesson || !user) return;
     if (completedIds.has(activeLesson.id)) {
-      await sb.from('lesson_completions').delete().eq('user_id', user.id).eq('lesson_id', activeLesson.id);
+      await sb.from('academy_progress').delete().eq('user_id', user.id).eq('lesson_id', activeLesson.id);
       setCompletedIds(prev => { const s = new Set(prev); s.delete(activeLesson.id); return s; });
     } else {
-      await sb.from('lesson_completions').insert({ user_id: user.id, lesson_id: activeLesson.id });
+      await sb.from('academy_progress').insert({ user_id: user.id, lesson_id: activeLesson.id, course_id: courseId });
       setCompletedIds(prev => new Set([...prev, activeLesson.id]));
     }
-    updateProgression();
-  };
-
-  const updateProgression = async () => {
-    if (!lessons.length || !user) return;
-    const newCount = completedIds.size + (completedIds.has(activeLesson?.id) ? -1 : 1);
-    const prog = Math.round((newCount / lessons.length) * 100);
-    await sb.from('enrollments').update({ progression: prog }).eq('user_id', user.id).eq('course_id', courseId);
   };
 
   const currentIndex = lessons.findIndex(l => l.id === activeLesson?.id);

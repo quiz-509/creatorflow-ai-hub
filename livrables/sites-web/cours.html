@@ -153,6 +153,36 @@ const THUMB_IMGS = {
 };
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
 
+const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
+const FORMATEURS = [
+  { nom:'Rose',   domaine:'Marketing IA',       img:`${SB_STORAGE}/Rose.jpg`,   couleur:'#10B981', bio:'Experte en marketing digital IA, Rose a accompagné plus de 200 entrepreneurs à automatiser et accélérer leur présence en ligne grâce à l\'IA.' },
+  { nom:'Phelix', domaine:'Agents IA',          img:`${SB_STORAGE}/Phelix.jpg`, couleur:'#7C3AED', bio:'Spécialiste des agents autonomes, Phelix conçoit des systèmes IA qui travaillent pour toi 24h/24 sans intervention manuelle.' },
+  { nom:'Rémy',   domaine:'Automatisation',     img:`${SB_STORAGE}/Remy.jpg`,   couleur:'#F59E0B', bio:'Expert automation, Rémy transforme les workflows manuels en pipelines automatisés avec n8n, Make et l\'IA.' },
+  { nom:'Jay',    domaine:'Développement IA',   img:`${SB_STORAGE}/Jay.jpg`,    couleur:'#06B6D4', bio:'Développeur IA full-stack, Jay enseigne à créer des apps et APIs IA sans être ingénieur senior.' },
+  { nom:'Louvie', domaine:'Business & Prompts', img:`${SB_STORAGE}/Louvie.jpg`, couleur:'#EC4899', bio:'Stratège business IA, Louvie maîtrise l\'art du prompt engineering et la monétisation des compétences IA.' },
+];
+
+const getCat = (slug, title) => {
+  const s = ((slug||'') + ' ' + (title||'')).toLowerCase();
+  if (/marketing/.test(s)) return 'Marketing IA';
+  if (/agent/.test(s))     return 'Agents IA';
+  if (/automat/.test(s))   return 'Automatisation';
+  if (/d[eé]velop/.test(s))return 'Développement';
+  if (/prompt|business/.test(s)) return 'Prompt Engineering';
+  return 'Formation IA';
+};
+
+const normMod = m => ({ ...m, titre: m.title || m.titre || 'Module', ordre: m.order_num ?? m.ordre ?? 0 });
+const normLesson = l => ({
+  ...l,
+  titre: l.title || l.titre || 'Leçon',
+  type: l.type || 'video',
+  duree: l.duration_minutes ?? l.duree ?? 0,
+  ordre: l.order_num ?? l.ordre ?? 0,
+  gratuite: l.is_free ?? l.gratuite ?? false,
+  contenu_url: l.content_url || l.contenu_url || null,
+});
+
 function App() {
   const courseId = new URLSearchParams(window.location.search).get('id');
   const [user, setUser] = useState(null);
@@ -173,27 +203,43 @@ function App() {
 
   const loadData = async () => {
     setLoading(true);
-    const { data: c } = await sb.from('courses').select('*').eq('id', courseId).single();
+    const { data: c } = await sb.from('academy_courses')
+      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,is_published')
+      .eq('id', courseId).single();
     if (!c) { window.location.href = 'academie.html'; return; }
-    setCourse(c);
 
-    const { data: p } = await sb.from('profiles').select('prenom,nom,specialite').eq('id', c.instructor_id).single();
-    const { data: ex } = await sb.from('experts').select('specialite,note,nb_avis,bio').eq('id', c.instructor_id).single();
-    setInstructor({ ...p, ...ex });
+    const cat = getCat(c.slug, c.title);
+    const form = FORMATEURS.find(f => f.nom === c.instructor);
+    setCourse({
+      ...c,
+      titre: c.title,
+      categorie: cat,
+      description_courte: c.subtitle,
+      description: c.subtitle,
+      niveau: c.level || 'Débutant',
+      langue: 'Français',
+      image_url: c.thumbnail_url || THUMB_IMGS[cat] || DEFAULT_THUMB,
+      note_moyenne: 0, nb_avis: 0, nb_inscrits: 0,
+      duree_totale: c.duration_minutes || 0,
+    });
+    setInstructor(form
+      ? { prenom: form.nom, nom: '', specialite: form.domaine, bio: form.bio, _img: form.img, _couleur: form.couleur }
+      : { prenom: c.instructor || 'Expert', nom: '', specialite: 'Expert IA', bio: '', _img: null });
 
-    const { data: mods } = await sb.from('modules').select('*').eq('course_id', courseId).order('ordre');
-    setModules(mods || []);
-    if (mods?.length) setOpenModules({ [mods[0].id]: true });
+    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
+    const normMods = (mods || []).map(normMod);
+    setModules(normMods);
+    if (normMods.length) setOpenModules({ [normMods[0].id]: true });
 
-    const { data: lsns } = await sb.from('lessons').select('*').eq('course_id', courseId).order('ordre');
-    setLessons(lsns || []);
+    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
+    setLessons((lsns || []).map(normLesson));
 
     const { data: sess } = await sb.auth.getSession();
     if (sess.session) {
       const u = sess.session.user;
       const { data: pr } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
       setUser({ ...u, ...pr });
-      const { data: enr } = await sb.from('enrollments').select('id').eq('user_id', u.id).eq('course_id', courseId).single();
+      const { data: enr } = await sb.from('academy_enrollments').select('id').eq('user_id', u.id).eq('course_id', courseId).single();
       setEnrolled(!!enr);
     }
     setLoading(false);
@@ -202,9 +248,9 @@ function App() {
   const handleEnroll = async () => {
     if (!user) { window.location.href = `connexion.html?redirect=cours.html?id=${courseId}`; return; }
     if (enrolled) { window.location.href = `lecteur.html?id=${courseId}`; return; }
-    if (course.prix > 0) { alert('Paiement Stripe bientôt disponible !'); return; }
+    if (course.prix > 0) { window.location.href = `paiement.html?id=${courseId}`; return; }
     setEnrolling(true);
-    const { error } = await sb.from('enrollments').insert({ user_id: user.id, course_id: courseId, prix_paye: 0 });
+    const { error } = await sb.from('academy_enrollments').insert({ user_id: user.id, course_id: courseId });
     if (!error) { setEnrolled(true); window.location.href = `lecteur.html?id=${courseId}`; }
     setEnrolling(false);
   };
@@ -268,7 +314,7 @@ function App() {
             </div>
             {instructor && (
               <div className="instructor-mini">
-                <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar" style={{objectFit:'cover',background:'var(--surf-3)'}}/>
+                <img src={instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar" style={{objectFit:'cover',background:'var(--surf-3)'}}/>
                 <div>
                   <div className="instr-name">{instrName}</div>
                   <div className="instr-spec">{instructor.specialite || 'Expert IA certifié'}</div>
@@ -381,15 +427,10 @@ function App() {
             <h2>Votre instructeur</h2>
             <div className="instructor-card">
               <div className="instr-header">
-                <img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar-lg" style={{objectFit:'cover',background:'var(--surf-3)'}}/>
+                <img src={instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar-lg" style={{objectFit:'cover',background:'var(--surf-3)',borderRadius:'50%'}}/>
                 <div>
                   <div style={{fontSize:18,fontWeight:700}}>{instrName}</div>
                   <div style={{fontSize:13,color:'var(--text-2)'}}>{instructor.specialite || 'Expert IA certifié'}</div>
-                  {instructor.note && (
-                    <div style={{display:'flex',alignItems:'center',gap:6,marginTop:4,fontSize:13,color:'var(--amber)'}}>
-                      <StarIcon/> {instructor.note} · {instructor.nb_avis||0} avis
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="instr-bio">{instructor.bio || 'Expert certifié CreatorFlow AI Academy.'}</div>
