@@ -75,9 +75,26 @@ img{display:block;max-width:100%;}
 .ps-sub{font-size:15px;color:var(--text-2);line-height:1.75;max-width:540px;}
 .ps-head{margin-bottom:40px;}
 
+/* VIDEO MODAL */
+.vmodal-bg{position:fixed;inset:0;background:rgba(4,4,10,0.94);backdrop-filter:blur(20px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn 180ms ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.vmodal-inner{width:100%;max-width:840px;position:relative;}
+.vmodal-close{position:absolute;top:-48px;right:0;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border-2);display:grid;place-items:center;cursor:pointer;color:var(--text-2);font-size:18px;transition:background 150ms;line-height:1;}
+.vmodal-close:hover{background:rgba(255,255,255,0.15);color:var(--text);}
+.vmodal-video{width:100%;border-radius:var(--r-xl);overflow:hidden;background:#000;aspect-ratio:9/16;max-height:80vh;}
+.vmodal-video video{width:100%;height:100%;display:block;object-fit:cover;}
+.vmodal-info{margin-top:16px;display:flex;align-items:center;gap:12px;}
+.vmodal-ava{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--vs);}
+.vmodal-ava img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.vmodal-nom{font-size:16px;font-weight:800;}
+.vmodal-dom{font-size:12px;color:var(--text-3);}
+
 /* FORMATEURS */
 .fmt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:40px;}
-.fmt-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;transition:transform 300ms var(--ease),border-color 300ms,box-shadow 300ms;position:relative;}
+.fmt-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;transition:transform 300ms var(--ease),border-color 300ms,box-shadow 300ms;position:relative;cursor:pointer;}
+.fmt-card:hover{transform:translateY(-6px);box-shadow:0 24px 48px -12px rgba(0,0,0,0.7);}
+.fmt-play-btn{position:absolute;bottom:16px;right:16px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--v2));display:grid;place-items:center;opacity:0;transition:opacity 250ms,transform 250ms;transform:scale(0.75);box-shadow:0 4px 20px rgba(124,58,237,0.6);}
+.fmt-card:hover .fmt-play-btn{opacity:1;transform:scale(1);}
 .fmt-card.clickable{cursor:pointer;}
 .fmt-card.clickable:hover{transform:translateY(-6px);box-shadow:0 24px 48px -12px rgba(0,0,0,0.7);}
 .fmt-img-wrap{width:100%;aspect-ratio:3/4;overflow:hidden;background:var(--surf-3);position:relative;}
@@ -320,14 +337,13 @@ const THUMB = {
 };
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
 
-/* FORMATEURS — remplacez img par l'URL de l'avatar Leonardo AI une fois hébergé */
 const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
 const FORMATEURS = [
-  { nom:'Rose',   domaine:'Marketing IA',      bio:'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',       couleur:'#10B981', img:`${SB_STORAGE}/Rose.jpg`,   slug:'marketing-ia-avec-rose', dispo:true  },
-  { nom:'Phelix', domaine:'Agents IA',         bio:'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',        couleur:'#7C3AED', img:`${SB_STORAGE}/Phelix.jpg`, slug:null,                    dispo:false },
-  { nom:'Rémy',   domaine:'Automatisation',    bio:'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',      couleur:'#F59E0B', img:`${SB_STORAGE}/Remy.jpg`,   slug:null,                    dispo:false },
-  { nom:'Jay',    domaine:'Développement IA',  bio:'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',      couleur:'#06B6D4', img:`${SB_STORAGE}/Jay.jpg`,    slug:null,                    dispo:false },
-  { nom:'Louvie', domaine:'Business & Prompts',bio:'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',         couleur:'#EC4899', img:`${SB_STORAGE}/Louvie.jpg`, slug:null,                    dispo:false },
+  { nom:'Rose',   domaine:'Marketing IA',      bio:'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',       couleur:'#10B981', img:`${SB_STORAGE}/Rose.jpg`,   video:`${SB_STORAGE}/Rose.mp4`,   slug:'marketing-ia-avec-rose', dispo:true  },
+  { nom:'Phelix', domaine:'Agents IA',         bio:'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',        couleur:'#7C3AED', img:`${SB_STORAGE}/Phelix.jpg`, video:`${SB_STORAGE}/Phelix.mp4`, slug:null,                    dispo:false },
+  { nom:'Rémy',   domaine:'Automatisation',    bio:'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',      couleur:'#F59E0B', img:`${SB_STORAGE}/Remy.jpg`,   video:`${SB_STORAGE}/Remy.mp4`,   slug:null,                    dispo:false },
+  { nom:'Jay',    domaine:'Développement IA',  bio:'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',      couleur:'#06B6D4', img:`${SB_STORAGE}/Jay.jpg`,    video:`${SB_STORAGE}/Jay.mp4`,    slug:null,                    dispo:false },
+  { nom:'Louvie', domaine:'Business & Prompts',bio:'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',         couleur:'#EC4899', img:`${SB_STORAGE}/Louvie.jpg`, video:`${SB_STORAGE}/Louvie.mp4`, slug:null,                    dispo:false },
 ];
 
 const PARCOURS = [
@@ -356,6 +372,34 @@ function getCat(slug, title) {
 
 const StarIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>;
 const PlayIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+const PlayIconLg = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+
+function VideoModal({ formateur, onClose }) {
+  if (!formateur) return null;
+  React.useEffect(() => {
+    const onKey = e => { if (e.key==='Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  }, []);
+  return (
+    <div className="vmodal-bg" onClick={onClose}>
+      <div className="vmodal-inner" onClick={e=>e.stopPropagation()}>
+        <button className="vmodal-close" onClick={onClose}>✕</button>
+        <div className="vmodal-video">
+          <video autoPlay controls playsInline src={formateur.video}/>
+        </div>
+        <div className="vmodal-info">
+          <div className="vmodal-ava"><img src={formateur.img} alt={formateur.nom}/></div>
+          <div>
+            <div className="vmodal-nom">{formateur.nom}</div>
+            <div className="vmodal-dom">{formateur.domaine}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function CourseCard({ course, enrolled, onEnroll }) {
   const prix = course.prix===0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $`;
@@ -403,6 +447,7 @@ function App() {
   const [activeNiveau, setActiveNiveau] = useState('Tous niveaux');
   const [activeSort, setActiveSort] = useState('recent');
   const [enrolledIds, setEnrolledIds] = useState(new Set());
+  const [activeVideo, setActiveVideo] = useState(null);
 
   useEffect(() => {
     sb.auth.getSession().then(async ({ data }) => {
@@ -466,6 +511,8 @@ function App() {
   return (
     <React.Fragment>
 
+      {activeVideo && <VideoModal formateur={activeVideo} onClose={()=>setActiveVideo(null)}/>}
+
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner">
@@ -524,7 +571,7 @@ function App() {
                   <strong>Rose — Marketing IA</strong>
                   <span>22 leçons · Accès gratuit pendant le beta</span>
                 </div>
-                <div className="hero-card-play"><PlayIcon/></div>
+                <div className="hero-card-play" onClick={()=>setActiveVideo(FORMATEURS[0])} style={{cursor:'pointer'}}><PlayIcon/></div>
               </div>
             </div>
           </div>
@@ -540,7 +587,7 @@ function App() {
         </div>
         <div className="fmt-grid">
           {FORMATEURS.map(f => (
-            <div key={f.nom} className={`fmt-card${f.slug?' clickable':''}`} onClick={() => f.slug && (window.location.href=`cours.html?slug=${f.slug}`)}>
+            <div key={f.nom} className="fmt-card" onClick={() => setActiveVideo(f)}>
               <div className="fmt-img-wrap">
                 <img className="fmt-img" src={f.img} alt={f.nom}/>
                 <div className="fmt-overlay"/>
@@ -551,6 +598,7 @@ function App() {
                 <div className="fmt-nom">{f.nom}</div>
                 <div className="fmt-bio">{f.bio}</div>
               </div>
+              <div className="fmt-play-btn"><PlayIconLg/></div>
             </div>
           ))}
         </div>
