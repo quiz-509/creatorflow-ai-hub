@@ -320,7 +320,7 @@ function App() {
           amount_cents: Math.round((course.prix || 0) * 100),
           mission_titre: `Formation : ${course.title}`,
           success_url: `${base}?course_id=${courseId}&payment=success`,
-          cancel_url: `cours.html?id=${courseId}`,
+          cancel_url: `${window.location.origin}/cours.html?id=${courseId}`,
         };
       } else {
         if (!missionId || !mission) return;
@@ -351,6 +351,7 @@ function App() {
   const prix = mode === 'course' ? (course?.prix || 0) : (mission?.prix || 0);
   const prixStr = prix > 0 ? `${prix.toLocaleString('fr-CA')}$` : '—';
   const instrImg = course ? FORMATEURS_IMG[(course.instructor||'').toLowerCase()] : null;
+  const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 
   if (loading) return (
     <div style={{minHeight:'100vh',display:'grid',placeItems:'center'}}>
@@ -395,7 +396,7 @@ function App() {
                 <div className="success-details">
                   {[
                     {label:'Formation', val: course?.title || '—'},
-                    {label:'Instructeur', val: course?.instructor || '—'},
+                    {label:'Instructeur', val: cap(course?.instructor) || '—'},
                     {label:'Montant payé', val: prixStr},
                     {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
                     {label:'Statut', val:'✅ Accès activé'},
@@ -587,7 +588,7 @@ function App() {
                     <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
                       {[
                         {label:'Formation', val: course.title || '—'},
-                        {label:'Instructeur', val: course.instructor || '—'},
+                        {label:'Instructeur', val: cap(course.instructor) || '—'},
                         {label:'Montant', val: prixStr, bold:true},
                         {label:'Devise', val:'CAD (dollar canadien)'},
                       ].map((r,i)=>(
@@ -619,7 +620,7 @@ function App() {
                     }
                     <div>
                       <div className="sm-title">{course.title}</div>
-                      <div className="sm-meta">{course.instructor} · {course.level || 'Débutant'}</div>
+                      <div className="sm-meta">{cap(course.instructor)} · {course.level || 'Débutant'}</div>
                       <div style={{marginTop:5}}>
                         <span className="badge" style={{background:'rgba(16,185,129,0.1)',color:'var(--green)',border:'1px solid rgba(16,185,129,0.2)'}}>Accès à vie</span>
                       </div>
