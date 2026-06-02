@@ -267,10 +267,22 @@ const THUMB_IMGS = {
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
 
 const MOCK_COURSES = [
-  { id:'m1', titre:"Maîtriser les Agents IA : De Zéro à l'Autonomie", categorie:'Agents IA', niveau:'Intermédiaire', prix:97, image_url:THUMB_IMGS['Agents IA'], is_mock:true },
-  { id:'m2', titre:'Prompt Engineering Pro : L\'Art de Parler aux LLMs', categorie:'Prompt Engineering', niveau:'Débutant', prix:0, image_url:THUMB_IMGS['Prompt Engineering'], is_mock:true },
-  { id:'m3', titre:'Marketing IA : Croissance 10x en 30 jours', categorie:'Marketing IA', niveau:'Débutant', prix:67, image_url:THUMB_IMGS['Marketing IA'], is_mock:true },
+  { id:'m1', titre:"Agents IA avec Phelix : Automatisation Intelligente", categorie:'Agents IA', niveau:'Intermédiaire', prix:0, image_url:THUMB_IMGS['Agents IA'], is_mock:true },
+  { id:'m2', titre:'Automatisation No-Code avec Rémy', categorie:'Automatisation', niveau:'Débutant', prix:0, image_url:THUMB_IMGS['Automatisation'], is_mock:true },
+  { id:'m3', titre:'Développement IA avec Jay : Construire ses Outils', categorie:'Développement', niveau:'Intermédiaire', prix:0, image_url:THUMB_IMGS['Développement'], is_mock:true },
 ];
+
+function getCategoryFromSlug(slug, title) {
+  const s = ((slug||'') + ' ' + (title||'')).toLowerCase();
+  if (s.includes('marketing')) return 'Marketing IA';
+  if (s.includes('agent')) return 'Agents IA';
+  if (s.includes('automatisation')) return 'Automatisation';
+  if (s.includes('développement') || s.includes('developpement')) return 'Développement';
+  if (s.includes('prompt')) return 'Prompt Engineering';
+  if (s.includes('design')) return 'Design IA';
+  if (s.includes('data') || s.includes('analytics')) return 'Data & Analytics';
+  return 'Autre';
+}
 
 const TESTIMONIALS = [
   { text:"En 3 semaines j'ai automatisé 80% de ma production de contenu. Mon agence génère maintenant 3x plus de revenus avec la même équipe.", name:'Marie L.', role:'Créatrice de contenu · Montréal', seed:'MarieLavallee' },
@@ -380,7 +392,7 @@ function App() {
         const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',u.id).single();
         if (p) { setInitials(((p.prenom||'?')[0]+(p.nom||'?')[0]).toUpperCase()); setUser({...u,...p}); }
         else setUser(u);
-        const { data: enrolls } = await sb.from('enrollments').select('course_id').eq('user_id',u.id);
+        const { data: enrolls } = await sb.from('academy_enrollments').select('course_id').eq('user_id',u.id);
         setEnrolledIds(new Set((enrolls||[]).map(e=>e.course_id)));
       }
     });
@@ -454,16 +466,24 @@ function App() {
 
   const loadCourses = async () => {
     setLoading(true);
-    const { data } = await sb.from('courses')
-      .select('id,titre,description_courte,categorie,niveau,prix,image_url,note_moyenne,nb_avis,nb_inscrits,duree_totale,instructor_id,created_at')
-      .eq('statut','publié')
-      .order('created_at',{ascending:false});
-    const list = data || [];
-    const withNames = await Promise.all(list.map(async c => {
-      const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',c.instructor_id).single();
-      return { ...c, nom_instructeur: p ? `${p.prenom||''} ${p.nom||''}`.trim() : 'Expert' };
+    const { data } = await sb.from('academy_courses')
+      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,created_at')
+      .eq('is_published', true)
+      .order('created_at', {ascending:false});
+    const list = (data || []).map(c => ({
+      ...c,
+      titre: c.title,
+      categorie: getCategoryFromSlug(c.slug, c.title),
+      niveau: c.level || 'Débutant',
+      prix: 0,
+      image_url: c.thumbnail_url || THUMB_IMGS[getCategoryFromSlug(c.slug, c.title)] || DEFAULT_THUMB,
+      note_moyenne: 0,
+      nb_avis: 0,
+      nb_inscrits: 0,
+      duree_totale: c.duration_minutes || 0,
+      nom_instructeur: c.instructor || 'Expert certifié',
     }));
-    setCourses(withNames);
+    setCourses(list);
     setLoading(false);
   };
 
@@ -472,7 +492,7 @@ function App() {
     if (!user) { window.location.href='connexion.html'; return; }
     if (enrolledIds.has(course.id)) { window.location.href=`lecteur.html?id=${course.id}`; return; }
     if (course.prix===0) {
-      const { error } = await sb.from('enrollments').insert({user_id:user.id,course_id:course.id,prix_paye:0});
+      const { error } = await sb.from('academy_enrollments').insert({user_id:user.id, course_id:course.id});
       if (!error) { setEnrolledIds(prev=>new Set([...prev,course.id])); window.location.href=`lecteur.html?id=${course.id}`; }
     } else {
       window.location.href=`cours.html?id=${course.id}`;
