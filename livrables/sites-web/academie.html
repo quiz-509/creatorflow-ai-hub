@@ -321,12 +321,13 @@ const THUMB = {
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
 
 /* FORMATEURS — remplacez img par l'URL de l'avatar Leonardo AI une fois hébergé */
+const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
 const FORMATEURS = [
-  { nom:'Rose',   domaine:'Marketing IA',    bio:'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',             couleur:'#10B981', img:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=85', slug:'marketing-ia-avec-rose', dispo:true  },
-  { nom:'Phelix', domaine:'Agents IA',       bio:'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',              couleur:'#7C3AED', img:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=85', slug:null,                    dispo:false },
-  { nom:'Rémy',   domaine:'Automatisation',  bio:'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',            couleur:'#F59E0B', img:'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=85', slug:null,                    dispo:false },
-  { nom:'Jay',    domaine:'Développement IA',bio:'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',            couleur:'#06B6D4', img:'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=85', slug:null,                    dispo:false },
-  { nom:'Louvie', domaine:'Business & Prompts',bio:'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',             couleur:'#EC4899', img:'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&q=85', slug:null,                    dispo:false },
+  { nom:'Rose',   domaine:'Marketing IA',      bio:'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',       couleur:'#10B981', img:`${SB_STORAGE}/Rose.jpg`,   slug:'marketing-ia-avec-rose', dispo:true  },
+  { nom:'Phelix', domaine:'Agents IA',         bio:'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',        couleur:'#7C3AED', img:`${SB_STORAGE}/Phelix.jpg`, slug:null,                    dispo:false },
+  { nom:'Rémy',   domaine:'Automatisation',    bio:'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',      couleur:'#F59E0B', img:`${SB_STORAGE}/Remy.jpg`,   slug:null,                    dispo:false },
+  { nom:'Jay',    domaine:'Développement IA',  bio:'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',      couleur:'#06B6D4', img:`${SB_STORAGE}/Jay.jpg`,    slug:null,                    dispo:false },
+  { nom:'Louvie', domaine:'Business & Prompts',bio:'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',         couleur:'#EC4899', img:`${SB_STORAGE}/Louvie.jpg`, slug:null,                    dispo:false },
 ];
 
 const PARCOURS = [
@@ -513,11 +514,11 @@ function App() {
           </div>
           <div>
             <div className="hero-img-wrap">
-              <img className="hero-img" src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=90" alt="Rose — Marketing IA"/>
+              <img className="hero-img" src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose — Marketing IA"/>
               <div className="hero-img-mask"/>
               <div className="hero-img-card">
                 <div className="hero-card-ava">
-                  <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt="Rose"/>
+                  <img src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose"/>
                 </div>
                 <div className="hero-card-text">
                   <strong>Rose — Marketing IA</strong>
@@ -616,7 +617,7 @@ function App() {
               </div>
             </div>
             <div className="f-instructor">
-              <div className="f-instr-photo"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&q=80" alt="Rose"/></div>
+              <div className="f-instr-photo"><img src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose"/></div>
               <div><div className="f-instr-name">Rose</div><div className="f-instr-role">Experte Marketing IA</div></div>
             </div>
           </div>
