@@ -293,7 +293,7 @@ function App() {
         if (c) {
           setCourse(c);
           if (isSuccess) {
-            await sb.from('academy_enrollments').insert({ user_id: u.id, course_id: courseId }).catch(() => {});
+            try { await sb.from('academy_enrollments').insert({ user_id: u.id, course_id: courseId }); } catch(e) {}
           }
         }
       }
