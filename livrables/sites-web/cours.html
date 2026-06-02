@@ -248,7 +248,7 @@ function App() {
   const handleEnroll = async () => {
     if (!user) { window.location.href = `connexion.html?redirect=cours.html?id=${courseId}`; return; }
     if (enrolled) { window.location.href = `lecteur.html?id=${courseId}`; return; }
-    if (course.prix > 0) { window.location.href = `paiement.html?id=${courseId}`; return; }
+    if (course.prix > 0) { window.location.href = `paiement.html?course_id=${courseId}`; return; }
     setEnrolling(true);
     const { error } = await sb.from('academy_enrollments').insert({ user_id: user.id, course_id: courseId });
     if (!error) { setEnrolled(true); window.location.href = `lecteur.html?id=${courseId}`; }

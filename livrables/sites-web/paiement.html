@@ -178,6 +178,11 @@ const sb = createClient(
 );
 const EDGE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/create-checkout-session';
 const ANON_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
+const FORMATEURS_IMG = {
+  rose:`${SB_STORAGE}/Rose.jpg`, phelix:`${SB_STORAGE}/Phelix.jpg`,
+  'rémy':`${SB_STORAGE}/Remy.jpg`, jay:`${SB_STORAGE}/Jay.jpg`, louvie:`${SB_STORAGE}/Louvie.jpg`
+};
 
 const Ic = {
   Shield:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
@@ -200,14 +205,45 @@ function Stars({ n }) {
   );
 }
 
+function PayBtn({ paying, prixStr }) {
+  return (
+    <button type="submit" className="btn btn-green btn-lg" disabled={paying} style={{position:'relative',overflow:'hidden'}}>
+      {paying ? (
+        <React.Fragment>
+          <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
+          Redirection vers Stripe...
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <Ic.Lock/>Payer {prixStr} via Stripe<Ic.Arrow/>
+        </React.Fragment>
+      )}
+    </button>
+  );
+}
+
+function SecurityRow() {
+  return (
+    <div className="security-row">
+      <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
+      <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
+      <div className="sec-badge">🔒 3D Secure</div>
+      <div className="sec-badge">⚡ Stripe</div>
+    </div>
+  );
+}
+
 function App() {
   const params = new URLSearchParams(window.location.search);
   const missionId = params.get('mission_id');
+  const courseId = params.get('course_id');
   const isSuccess = params.get('payment') === 'success';
+  const mode = courseId ? 'course' : 'mission';
 
   const [user, setUser] = useState(null);
   const [mission, setMission] = useState(null);
   const [expert, setExpert] = useState(null);
+  const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -221,10 +257,7 @@ function App() {
       setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
 
       if (missionId) {
-        const [{ data: m }, { data: profileRes }] = await Promise.all([
-          sb.from('missions').select('*').eq('id', missionId).single(),
-          Promise.resolve({ data: null }),
-        ]);
+        const { data: m } = await sb.from('missions').select('*').eq('id', missionId).single();
         if (m) {
           setMission(m);
           if (m.expert_id) {
@@ -234,24 +267,37 @@ function App() {
             ]);
             setExpert({ ...(ep||{}), ...(pp||{}) });
           }
-        }
-        if (isSuccess && m) {
-          await sb.from('missions').update({ statut: 'en_cours' }).eq('id', missionId);
-          const { data: { session: authSess } } = await sb.auth.getSession();
-          const [{ data: cp }, { data: ep }] = await Promise.all([
-            sb.from('profiles').select('email, prenom, nom').eq('id', m.client_id).single(),
-            sb.from('profiles').select('email, prenom, nom').eq('id', m.expert_id).single(),
-          ]);
-          const recipients = [cp?.email, ep?.email].filter(Boolean);
-          if (recipients.length && authSess) {
-            fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${authSess.access_token}` },
-              body: JSON.stringify({ type: 'paiement_confirme', to: recipients, data: { mission_titre: m.titre||'Mission', montant: m.prix||0, client_name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim()||'Client' : 'Client', expert_name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim()||'Expert' : 'Expert' } }),
-            }).catch(() => {});
+          if (isSuccess) {
+            await sb.from('missions').update({ statut: 'en_cours' }).eq('id', missionId);
+            const { data: { session: authSess } } = await sb.auth.getSession();
+            const [{ data: cp }, { data: ep }] = await Promise.all([
+              sb.from('profiles').select('email, prenom, nom').eq('id', m.client_id).single(),
+              sb.from('profiles').select('email, prenom, nom').eq('id', m.expert_id).single(),
+            ]);
+            const recipients = [cp?.email, ep?.email].filter(Boolean);
+            if (recipients.length && authSess) {
+              fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'apikey': ANON_KEY, 'Authorization': `Bearer ${authSess.access_token}` },
+                body: JSON.stringify({ type: 'paiement_confirme', to: recipients, data: { mission_titre: m.titre||'Mission', montant: m.prix||0, client_name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim()||'Client' : 'Client', expert_name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim()||'Expert' : 'Expert' } }),
+              }).catch(() => {});
+            }
           }
         }
       }
+
+      if (courseId) {
+        const { data: c } = await sb.from('academy_courses')
+          .select('id,slug,title,subtitle,instructor,prix,thumbnail_url,level,duration_minutes,total_lessons')
+          .eq('id', courseId).single();
+        if (c) {
+          setCourse(c);
+          if (isSuccess) {
+            await sb.from('academy_enrollments').insert({ user_id: u.id, course_id: courseId }).catch(() => {});
+          }
+        }
+      }
+
       setLoading(false);
     });
     const el = document.getElementById('cursor-glow');
@@ -263,35 +309,37 @@ function App() {
   async function handlePay(e) {
     e.preventDefault();
     if (!agreed) { setError('Vous devez accepter les conditions pour continuer.'); return; }
-    if (!missionId || !mission) return;
     setPaying(true);
     setError('');
     try {
       const { data: { session: auth } } = await sb.auth.getSession();
-      const amountCents = Math.round((mission.prix || 0) * 100);
       const base = window.location.origin + window.location.pathname;
-      const resp = await fetch(EDGE_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${auth.access_token}`,
-          'apikey': ANON_KEY,
-        },
-        body: JSON.stringify({
+      let body;
+      if (mode === 'course' && course) {
+        body = {
+          amount_cents: Math.round((course.prix || 0) * 100),
+          mission_titre: `Formation : ${course.title}`,
+          success_url: `${base}?course_id=${courseId}&payment=success`,
+          cancel_url: `cours.html?id=${courseId}`,
+        };
+      } else {
+        if (!missionId || !mission) return;
+        body = {
           mission_id: missionId,
-          amount_cents: amountCents,
+          amount_cents: Math.round((mission.prix || 0) * 100),
           mission_titre: mission.titre || 'Mission CreatorFlow Market',
           success_url: `${base}?mission_id=${missionId}&payment=success`,
           cancel_url: `${base}?mission_id=${missionId}`,
-        }),
+        };
+      }
+      const resp = await fetch(EDGE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${auth.access_token}`, 'apikey': ANON_KEY },
+        body: JSON.stringify(body),
       });
       const json = await resp.json();
-      if (json.url) {
-        window.location.href = json.url;
-      } else {
-        setError(json.error || 'Erreur lors de la création de la session de paiement.');
-        setPaying(false);
-      }
+      if (json.url) { window.location.href = json.url; }
+      else { setError(json.error || 'Erreur lors de la création de la session de paiement.'); setPaying(false); }
     } catch (err) {
       setError('Erreur de connexion. Veuillez réessayer.');
       setPaying(false);
@@ -300,8 +348,9 @@ function App() {
 
   const expertName = expert ? `${expert.prenom||''} ${expert.nom||''}`.trim() || 'Expert' : '…';
   const expertInitials = expertName.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || 'EX';
-  const prix = mission?.prix || 0;
+  const prix = mode === 'course' ? (course?.prix || 0) : (mission?.prix || 0);
   const prixStr = prix > 0 ? `${prix.toLocaleString('fr-CA')}$` : '—';
+  const instrImg = course ? FORMATEURS_IMG[(course.instructor||'').toLowerCase()] : null;
 
   if (loading) return (
     <div style={{minHeight:'100vh',display:'grid',placeItems:'center'}}>
@@ -310,11 +359,22 @@ function App() {
     </div>
   );
 
+  const stripeInfoBlock = (
+    <div style={{background:'rgba(99,91,255,0.06)',border:'1px solid rgba(99,91,255,0.2)',borderRadius:12,padding:'20px',marginBottom:24,display:'flex',gap:16,alignItems:'center'}}>
+      <Ic.Stripe style={{flexShrink:0}}/>
+      <div>
+        <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>Stripe Checkout</div>
+        <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.5}}>En cliquant sur "Payer", vous serez redirigé vers la page de paiement sécurisée de Stripe pour saisir vos informations de carte.</div>
+      </div>
+    </div>
+  );
+
   return (
     <React.Fragment>
-      {/* NAV */}
       <nav className="nav"><div className="wrap nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href={mode === 'course' ? 'academie.html' : 'index.html'} className="nav-logo">
+          CreatorFlow <em>{mode === 'course' ? 'Academy' : 'Market'}</em>
+        </a>
         <div className="nav-secure"><Ic.Lock/>Paiement sécurisé SSL</div>
         <div className="user-chip">
           <div className="av">{user ? ((user.prenom||'?')[0]+(user.nom||'?')[0]).toUpperCase() : '…'}</div>
@@ -322,207 +382,274 @@ function App() {
         </div>
       </div></nav>
 
-      <div className="page-wrap">
-        <div className="wrap">
+      <div className="page-wrap"><div className="wrap">
 
-          {isSuccess ? (
-            /* SUCCESS */
-            <div style={{maxWidth:520,margin:'0 auto'}}>
-              <div className="card">
-                <div className="success-wrap">
-                  <div className="success-ring">✓</div>
-                  <h1 className="success-title">Paiement confirmé !</h1>
-                  <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été enregistré. {expertName} a été notifié et la mission est maintenant active.</p>
-                  <div className="success-details">
-                    {[
-                      {label:'Mission', val: mission?.titre || '—'},
-                      {label:'Expert', val: expertName},
-                      {label:'Montant payé', val: prixStr},
-                      {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
-                      {label:'Statut', val:'✅ Confirmé'},
-                    ].map((r,i) => (
-                      <div key={i} className="suc-row">
-                        <span className="suc-label">{r.label}</span>
-                        <span className="suc-val">{r.val}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
-                    <a href={`mission.html?id=${missionId}`} className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
-                    <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
-                  </div>
-                  <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
-                    Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
-                  </div>
+        {/* SUCCESS — COURS */}
+        {isSuccess && mode === 'course' && (
+          <div style={{maxWidth:520,margin:'0 auto'}}>
+            <div className="card">
+              <div className="success-wrap">
+                <div className="success-ring">✓</div>
+                <h1 className="success-title">Accès accordé !</h1>
+                <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été reçu. Vous avez maintenant accès à <strong>"{course?.title}"</strong>.</p>
+                <div className="success-details">
+                  {[
+                    {label:'Formation', val: course?.title || '—'},
+                    {label:'Instructeur', val: course?.instructor || '—'},
+                    {label:'Montant payé', val: prixStr},
+                    {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
+                    {label:'Statut', val:'✅ Accès activé'},
+                  ].map((r,i) => (
+                    <div key={i} className="suc-row">
+                      <span className="suc-label">{r.label}</span>
+                      <span className="suc-val">{r.val}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
+                  <a href={`lecteur.html?id=${courseId}`} className="btn btn-green" style={{borderRadius:12,padding:'12px 24px',fontSize:14,fontWeight:700}}>▶ Commencer le cours</a>
+                  <a href="academie.html" className="btn btn-ghost"><Ic.Back/>Académie</a>
+                </div>
+                <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
+                  Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-          ) : !missionId || !mission ? (
-            /* MISSION INTROUVABLE */
-            <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
-              <div style={{fontSize:40,marginBottom:16}}>🔍</div>
-              <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Mission introuvable</h2>
-              <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission associée à ce lien. Vérifiez l'URL ou revenez au dashboard.</p>
-              <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
-            </div>
-
-          ) : (
-            /* FORMULAIRE PAIEMENT */
-            <React.Fragment>
-              <div className="breadcrumb">
-                <a href="dashboard-client.html">Dashboard</a>
-                <span className="bc-sep">/</span>
-                <a href={`mission.html?id=${missionId}`}>{mission.titre || 'Mission'}</a>
-                <span className="bc-sep">/</span>
-                <span style={{color:'var(--text-2)'}}>Paiement</span>
+        {/* SUCCESS — MISSION */}
+        {isSuccess && mode === 'mission' && (
+          <div style={{maxWidth:520,margin:'0 auto'}}>
+            <div className="card">
+              <div className="success-wrap">
+                <div className="success-ring">✓</div>
+                <h1 className="success-title">Paiement confirmé !</h1>
+                <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été enregistré. {expertName} a été notifié et la mission est maintenant active.</p>
+                <div className="success-details">
+                  {[
+                    {label:'Mission', val: mission?.titre || '—'},
+                    {label:'Expert', val: expertName},
+                    {label:'Montant payé', val: prixStr},
+                    {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
+                    {label:'Statut', val:'✅ Confirmé'},
+                  ].map((r,i) => (
+                    <div key={i} className="suc-row">
+                      <span className="suc-label">{r.label}</span>
+                      <span className="suc-val">{r.val}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
+                  <a href={`mission.html?id=${missionId}`} className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
+                  <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
+                </div>
+                <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
+                  Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
+                </div>
               </div>
-              <h1 className="page-title">Valider le paiement</h1>
-              <p className="page-sub">Mission · Paiement sécurisé via Stripe</p>
+            </div>
+          </div>
+        )}
 
-              <div className="pay-layout">
+        {/* NOT FOUND */}
+        {!isSuccess && !missionId && !courseId && (
+          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
+            <div style={{fontSize:40,marginBottom:16}}>🔍</div>
+            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Page introuvable</h2>
+            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission ou formation associée à ce lien.</p>
+            <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
+          </div>
+        )}
 
-                {/* FORMULAIRE STRIPE */}
-                <form onSubmit={handlePay}>
-                  <div className="card" style={{marginBottom:0}}>
-                    <div className="card-head">
-                      <div className="card-title">Paiement sécurisé</div>
-                      <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
-                    </div>
-                    <div className="card-body">
+        {/* MISSION NOT FOUND */}
+        {!isSuccess && missionId && !mission && (
+          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
+            <div style={{fontSize:40,marginBottom:16}}>🔍</div>
+            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Mission introuvable</h2>
+            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission associée à ce lien. Vérifiez l'URL ou revenez au dashboard.</p>
+            <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
+          </div>
+        )}
 
-                      <div style={{background:'rgba(99,91,255,0.06)',border:'1px solid rgba(99,91,255,0.2)',borderRadius:12,padding:'20px',marginBottom:24,display:'flex',gap:16,alignItems:'center'}}>
-                        <Ic.Stripe style={{flexShrink:0}}/>
-                        <div>
-                          <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>Stripe Checkout</div>
-                          <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.5}}>En cliquant sur "Payer", vous serez redirigé vers la page de paiement sécurisée de Stripe pour saisir vos informations de carte.</div>
-                        </div>
-                      </div>
+        {/* COURSE NOT FOUND */}
+        {!isSuccess && courseId && !course && (
+          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
+            <div style={{fontSize:40,marginBottom:16}}>🎓</div>
+            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Formation introuvable</h2>
+            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Impossible de charger cette formation. Retournez à l'Académie.</p>
+            <a href="academie.html" className="btn btn-primary"><Ic.Back/>Académie</a>
+          </div>
+        )}
 
-                      <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
-                        {[
-                          {label:'Mission', val: mission.titre || '—'},
-                          {label:'Montant', val: prixStr, bold:true},
-                          {label:'Devise', val:'CAD (dollar canadien)'},
-                        ].map((r,i)=>(
-                          <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<2 ? '1px solid var(--border)' : 'none',fontSize:13}}>
-                            <span style={{color:'var(--text-2)'}}>{r.label}</span>
-                            <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="checkbox-row" style={{marginBottom:16}}>
-                        <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
-                        <label htmlFor="agree">
-                          J'accepte les <a href="#" style={{color:'var(--vs)'}}>conditions générales</a> et la <a href="#" style={{color:'var(--vs)'}}>politique de remboursement</a> de CreatorFlow Market.
-                        </label>
-                      </div>
-                      {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
-
-                      <button type="submit" className="btn btn-green btn-lg" disabled={paying} style={{position:'relative',overflow:'hidden'}}>
-                        {paying ? (
-                          <React.Fragment>
-                            <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
-                            Redirection vers Stripe...
-                          </React.Fragment>
-                        ) : (
-                          <React.Fragment>
-                            <Ic.Lock/>
-                            Payer {prixStr} via Stripe
-                            <Ic.Arrow/>
-                          </React.Fragment>
-                        )}
-                      </button>
-
-                      <div className="security-row">
-                        <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
-                        <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
-                        <div className="sec-badge">🔒 3D Secure</div>
-                        <div className="sec-badge">⚡ Stripe</div>
-                      </div>
-                    </div>
+        {/* FORMULAIRE — MISSION */}
+        {!isSuccess && missionId && mission && (
+          <React.Fragment>
+            <div className="breadcrumb">
+              <a href="dashboard-client.html">Dashboard</a>
+              <span className="bc-sep">/</span>
+              <a href={`mission.html?id=${missionId}`}>{mission.titre || 'Mission'}</a>
+              <span className="bc-sep">/</span>
+              <span style={{color:'var(--text-2)'}}>Paiement</span>
+            </div>
+            <h1 className="page-title">Valider le paiement</h1>
+            <p className="page-sub">Mission · Paiement sécurisé via Stripe</p>
+            <div className="pay-layout">
+              <form onSubmit={handlePay}>
+                <div className="card" style={{marginBottom:0}}>
+                  <div className="card-head">
+                    <div className="card-title">Paiement sécurisé</div>
+                    <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
                   </div>
-                </form>
-
-                {/* RÉSUMÉ */}
-                <div style={{display:'flex',flexDirection:'column',gap:16}}>
-
-                  <div className="card">
-                    <div className="summary-mission">
-                      <div className="sm-icon">💼</div>
-                      <div>
-                        <div className="sm-title">{mission.titre || 'Mission'}</div>
-                        <div className="sm-meta">{mission.categorie || ''}{mission.deadline ? ` · Livraison ${new Date(mission.deadline).toLocaleDateString('fr-CA')}` : ''}</div>
-                        <div style={{marginTop:5}}><span className="badge badge-amber">Paiement en attente</span></div>
-                      </div>
-                    </div>
-
-                    {expert && (
-                      <div className="expert-row">
-                        <div className="ex-av">{expertInitials}</div>
-                        <div>
-                          <div className="ex-name">{expertName}</div>
-                          <div className="ex-spec">{expert.specialite || 'Expert IA'}</div>
-                        </div>
-                        <div style={{marginLeft:'auto'}}>
-                          <Stars n={expert.note_moyenne}/>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="pricing-block">
-                      <div className="price-row">
-                        <span className="price-label">Montant total de la mission</span>
-                        <span className="price-val">{prixStr}</span>
-                      </div>
-                      <div className="price-row">
-                        <span className="price-label">Commission plateforme</span>
-                        <span className="price-val" style={{color:'var(--text-3)'}}>0$ <span className="discount-tag">Incluse</span></span>
-                      </div>
-                      <div className="price-total-row">
-                        <span className="price-total-label">Total à payer</span>
-                        <span className="price-total-val">{prixStr}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="card" style={{overflow:'visible'}}>
-                    <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
-                      <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}>
-                        <Ic.Shield style={{color:'var(--green)'}}/>Paiement protégé
-                      </div>
-                    </div>
-                    <div className="protection-items">
+                  <div className="card-body">
+                    {stripeInfoBlock}
+                    <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
                       {[
-                        'Fonds sécurisés jusqu\'à validation de la livraison',
-                        'Remboursement intégral si le livrable n\'est pas conforme',
-                        'Médiation CreatorFlow Market en cas de litige',
-                        'Reçu Stripe envoyé automatiquement',
-                      ].map((t,i) => (
-                        <div key={i} className="prot-item">
-                          <div className="prot-dot"/>
-                          <span className="prot-text">{t}</span>
+                        {label:'Mission', val: mission.titre || '—'},
+                        {label:'Montant', val: prixStr, bold:true},
+                        {label:'Devise', val:'CAD (dollar canadien)'},
+                      ].map((r,i)=>(
+                        <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<2 ? '1px solid var(--border)' : 'none',fontSize:13}}>
+                          <span style={{color:'var(--text-2)'}}>{r.label}</span>
+                          <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
                         </div>
                       ))}
                     </div>
+                    <div className="checkbox-row" style={{marginBottom:16}}>
+                      <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
+                      <label htmlFor="agree">J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Market.</label>
+                    </div>
+                    {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
+                    <PayBtn paying={paying} prixStr={prixStr}/>
+                    <SecurityRow/>
                   </div>
-
-                  <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'var(--r-lg)',padding:'16px 18px',display:'flex',gap:10}}>
-                    <Ic.Info style={{color:'var(--text-3)',flexShrink:0,marginTop:2}}/>
+                </div>
+              </form>
+              <div style={{display:'flex',flexDirection:'column',gap:16}}>
+                <div className="card">
+                  <div className="summary-mission">
+                    <div className="sm-icon">💼</div>
                     <div>
-                      <div style={{fontSize:12,fontWeight:600,marginBottom:3}}>Une question ?</div>
-                      <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.5}}>Support disponible 7j/7 à <span style={{color:'var(--vs)'}}>support@creatorflow.io</span></div>
+                      <div className="sm-title">{mission.titre || 'Mission'}</div>
+                      <div className="sm-meta">{mission.categorie || ''}{mission.deadline ? ` · Livraison ${new Date(mission.deadline).toLocaleDateString('fr-CA')}` : ''}</div>
+                      <div style={{marginTop:5}}><span className="badge badge-amber">Paiement en attente</span></div>
                     </div>
                   </div>
-
+                  {expert && (
+                    <div className="expert-row">
+                      <div className="ex-av">{expertInitials}</div>
+                      <div><div className="ex-name">{expertName}</div><div className="ex-spec">{expert.specialite || 'Expert IA'}</div></div>
+                      <div style={{marginLeft:'auto'}}><Stars n={expert.note_moyenne}/></div>
+                    </div>
+                  )}
+                  <div className="pricing-block">
+                    <div className="price-row"><span className="price-label">Montant total de la mission</span><span className="price-val">{prixStr}</span></div>
+                    <div className="price-row"><span className="price-label">Commission plateforme</span><span className="price-val" style={{color:'var(--text-3)'}}>0$ <span className="discount-tag">Incluse</span></span></div>
+                    <div className="price-total-row"><span className="price-total-label">Total à payer</span><span className="price-total-val">{prixStr}</span></div>
+                  </div>
+                </div>
+                <div className="card">
+                  <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
+                    <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}><Ic.Shield style={{color:'var(--green)'}}/>Paiement protégé</div>
+                  </div>
+                  <div className="protection-items">
+                    {['Fonds sécurisés jusqu\'à validation de la livraison','Remboursement intégral si le livrable n\'est pas conforme','Médiation CreatorFlow Market en cas de litige','Reçu Stripe envoyé automatiquement'].map((t,i) => (
+                      <div key={i} className="prot-item"><div className="prot-dot"/><span className="prot-text">{t}</span></div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </React.Fragment>
-          )}
+            </div>
+          </React.Fragment>
+        )}
 
-        </div>
-      </div>
+        {/* FORMULAIRE — COURS */}
+        {!isSuccess && courseId && course && (
+          <React.Fragment>
+            <div className="breadcrumb">
+              <a href="academie.html">Académie</a>
+              <span className="bc-sep">/</span>
+              <a href={`cours.html?id=${courseId}`}>{course.title}</a>
+              <span className="bc-sep">/</span>
+              <span style={{color:'var(--text-2)'}}>Paiement</span>
+            </div>
+            <h1 className="page-title">Accéder à la formation</h1>
+            <p className="page-sub">Formation Academy · Paiement sécurisé via Stripe</p>
+            <div className="pay-layout">
+              <form onSubmit={handlePay}>
+                <div className="card" style={{marginBottom:0}}>
+                  <div className="card-head">
+                    <div className="card-title">Paiement sécurisé</div>
+                    <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
+                  </div>
+                  <div className="card-body">
+                    {stripeInfoBlock}
+                    <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
+                      {[
+                        {label:'Formation', val: course.title || '—'},
+                        {label:'Instructeur', val: course.instructor || '—'},
+                        {label:'Montant', val: prixStr, bold:true},
+                        {label:'Devise', val:'CAD (dollar canadien)'},
+                      ].map((r,i)=>(
+                        <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<3 ? '1px solid var(--border)' : 'none',fontSize:13}}>
+                          <span style={{color:'var(--text-2)'}}>{r.label}</span>
+                          <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="checkbox-row" style={{marginBottom:16}}>
+                      <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
+                      <label htmlFor="agree">J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Academy.</label>
+                    </div>
+                    {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
+                    <PayBtn paying={paying} prixStr={prixStr}/>
+                    <SecurityRow/>
+                  </div>
+                </div>
+              </form>
+              <div style={{display:'flex',flexDirection:'column',gap:16}}>
+                <div className="card">
+                  {course.thumbnail_url && (
+                    <img src={course.thumbnail_url} alt={course.title} style={{width:'100%',aspectRatio:'16/9',objectFit:'cover',display:'block'}}/>
+                  )}
+                  <div className="summary-mission">
+                    {instrImg
+                      ? <img src={instrImg} alt={course.instructor} style={{width:48,height:48,borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
+                      : <div className="sm-icon">🎓</div>
+                    }
+                    <div>
+                      <div className="sm-title">{course.title}</div>
+                      <div className="sm-meta">{course.instructor} · {course.level || 'Débutant'}</div>
+                      <div style={{marginTop:5}}>
+                        <span className="badge" style={{background:'rgba(16,185,129,0.1)',color:'var(--green)',border:'1px solid rgba(16,185,129,0.2)'}}>Accès à vie</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pricing-block">
+                    <div className="price-row"><span className="price-label">Prix de la formation</span><span className="price-val">{prixStr}</span></div>
+                    <div className="price-row"><span className="price-label">Garantie remboursement</span><span className="price-val" style={{color:'var(--green)'}}>30 jours</span></div>
+                    {course.total_lessons > 0 && (
+                      <div className="price-row"><span className="price-label">Contenu</span><span className="price-val" style={{color:'var(--text-2)'}}>{course.total_lessons} leçons · {Math.floor((course.duration_minutes||0)/60)}h</span></div>
+                    )}
+                    <div className="price-total-row"><span className="price-total-label">Total à payer</span><span className="price-total-val">{prixStr}</span></div>
+                  </div>
+                </div>
+                <div className="card">
+                  <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
+                    <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}><Ic.Shield style={{color:'var(--green)'}}/>Ce qui est inclus</div>
+                  </div>
+                  <div className="protection-items">
+                    {['Accès à vie à toutes les leçons et mises à jour','Certificat de complétion CreatorFlow Academy','Templates et ressources téléchargeables','Accès à la communauté Discord privée','Garantie satisfait ou remboursé 30 jours'].map((t,i) => (
+                      <div key={i} className="prot-item"><div className="prot-dot"/><span className="prot-text">{t}</span></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+
+      </div></div>
       <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
     </React.Fragment>
   );
