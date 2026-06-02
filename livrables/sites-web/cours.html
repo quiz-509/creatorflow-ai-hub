@@ -209,7 +209,7 @@ function App() {
     if (!c) { window.location.href = 'academie.html'; return; }
 
     const cat = getCat(c.slug, c.title);
-    const form = FORMATEURS.find(f => f.nom === c.instructor);
+    const form = FORMATEURS.find(f => f.nom.toLowerCase() === (c.instructor || '').toLowerCase());
     setCourse({
       ...c,
       titre: c.title,
@@ -226,13 +226,13 @@ function App() {
       ? { prenom: form.nom, nom: '', specialite: form.domaine, bio: form.bio, _img: form.img, _couleur: form.couleur }
       : { prenom: c.instructor || 'Expert', nom: '', specialite: 'Expert IA', bio: '', _img: null });
 
-    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
-    const normMods = (mods || []).map(normMod);
+    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
+    const normMods = (mods || []).map(normMod).sort((a,b) => a.ordre - b.ordre);
     setModules(normMods);
     if (normMods.length) setOpenModules({ [normMods[0].id]: true });
 
-    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
-    setLessons((lsns || []).map(normLesson));
+    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
+    setLessons((lsns || []).map(normLesson).sort((a,b) => a.ordre - b.ordre));
 
     const { data: sess } = await sb.auth.getSession();
     if (sess.session) {

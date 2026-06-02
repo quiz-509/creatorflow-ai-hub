@@ -145,11 +145,11 @@ function App() {
     const { data: c } = await sb.from('academy_courses').select('id,slug,title,thumbnail_url').eq('id', courseId).single();
     setCourse(c ? { ...c, titre: c.title } : null);
 
-    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
-    setModules((mods || []).map(normMod));
+    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
+    setModules((mods || []).map(normMod).sort((a,b) => a.ordre - b.ordre));
 
-    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId).order('order_num', { ascending: true });
-    const normLessons = (lsns || []).map(normLesson);
+    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
+    const normLessons = (lsns || []).map(normLesson).sort((a,b) => a.ordre - b.ordre);
     setLessons(normLessons);
     if (normLessons.length) setActiveLesson(normLessons[0]);
 
