@@ -467,7 +467,7 @@ function App() {
   const loadCourses = async () => {
     setLoading(true);
     const { data } = await sb.from('academy_courses')
-      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,created_at')
+      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,created_at')
       .eq('is_published', true)
       .order('created_at', {ascending:false});
     const list = (data || []).map(c => ({
@@ -475,7 +475,7 @@ function App() {
       titre: c.title,
       categorie: getCategoryFromSlug(c.slug, c.title),
       niveau: c.level || 'Débutant',
-      prix: 0,
+      prix: c.prix || 0,
       image_url: c.thumbnail_url || THUMB_IMGS[getCategoryFromSlug(c.slug, c.title)] || DEFAULT_THUMB,
       note_moyenne: 0,
       nb_avis: 0,
