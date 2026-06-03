@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Article — CreatorFlow Market</title>
+  <meta name="description" content="">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--pink:#EC4899;--purple:#8B5CF6;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--f);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:32px;}
+    .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0;}
+    .nav-links{display:flex;align-items:center;gap:4px;flex:1;}
+    .nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
+    .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.06);color:var(--text);}
+    .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+    .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+    .btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;box-shadow:0 4px 24px rgba(124,58,237,0.35);}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(124,58,237,0.5);}
+
+    /* HERO */
+    .article-hero{padding:calc(var(--nav) + 60px) 0 48px;background:linear-gradient(180deg,rgba(124,58,237,0.06) 0%,transparent 100%);border-bottom:1px solid var(--border);}
+    .container{max-width:860px;margin:0 auto;padding:0 24px;}
+    .container-wide{max-width:1200px;margin:0 auto;padding:0 24px;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3);margin-bottom:24px;}
+    .breadcrumb a:hover{color:var(--text-2);}
+    .breadcrumb-sep{opacity:.4;}
+
+    .cat-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
+    .cat-badge[data-cat="Actualités IA"]{background:rgba(245,158,11,.12);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
+    .cat-badge[data-cat="Outils IA"]{background:rgba(6,182,212,.1);color:var(--c);border:1px solid rgba(6,182,212,.2);}
+    .cat-badge[data-cat="Automatisation IA"]{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+    .cat-badge[data-cat="Marketing IA"]{background:rgba(124,58,237,.1);color:var(--vs);border:1px solid rgba(124,58,237,.2);}
+    .cat-badge[data-cat="Création de Contenu IA"]{background:rgba(236,72,153,.1);color:var(--pink);border:1px solid rgba(236,72,153,.2);}
+    .cat-badge[data-cat="Vente IA"]{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+    .cat-badge[data-cat="Support Client IA"]{background:rgba(139,92,246,.1);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+
+    h1.article-title{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;margin-bottom:12px;}
+    .article-subtitle{font-size:18px;color:var(--text-2);margin-bottom:28px;line-height:1.5;}
+    .article-meta{display:flex;flex-wrap:wrap;align-items:center;gap:20px;font-size:13px;color:var(--text-3);padding-top:20px;border-top:1px solid var(--border);}
+    .meta-chip{display:flex;align-items:center;gap:5px;}
+
+    /* BODY */
+    .article-body{padding:56px 0 80px;}
+    .article-content{font-size:17px;line-height:1.85;color:var(--text-2);}
+    .article-content h2{font-size:24px;font-weight:700;color:var(--text);margin:40px 0 16px;line-height:1.3;}
+    .article-content h3{font-size:19px;font-weight:700;color:var(--text);margin:32px 0 12px;}
+    .article-content p{margin-bottom:20px;}
+    .article-content ul,.article-content ol{margin:0 0 20px 24px;}
+    .article-content li{margin-bottom:8px;}
+    .article-content strong{color:var(--text);font-weight:600;}
+    .article-content a{color:var(--vs);text-decoration:underline;text-underline-offset:3px;}
+    .article-content blockquote{border-left:3px solid var(--v);padding:16px 20px;background:rgba(124,58,237,.07);border-radius:0 10px 10px 0;margin:24px 0;font-style:italic;color:var(--text-2);}
+    .article-content code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;font-size:.9em;font-family:monospace;}
+    .article-content pre{background:var(--surf-3);padding:20px;border-radius:12px;overflow-x:auto;margin:24px 0;}
+    .article-content pre code{background:none;padding:0;font-size:14px;}
+    .article-content img{border-radius:12px;margin:24px 0;width:100%;}
+
+    /* TAGS */
+    .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;padding-top:32px;border-top:1px solid var(--border);}
+    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);}
+
+    /* SHARE */
+    .share-row{display:flex;align-items:center;gap:12px;margin-top:32px;flex-wrap:wrap;}
+    .share-label{font-size:13px;color:var(--text-3);}
+    .share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;background:var(--surf-2);border:1px solid var(--border);transition:all 180ms;}
+    .share-btn:hover{background:var(--surf-3);border-color:var(--border-2);}
+    .share-tw:hover{color:#1DA1F2;}
+    .share-li:hover{color:#0A66C2;}
+    .share-fb:hover{color:#1877F2;}
+
+    /* CTA */
+    .article-cta{margin-top:48px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.06));border:1px solid rgba(124,58,237,.25);border-radius:var(--r-xl);padding:40px;text-align:center;}
+    .article-cta h3{font-size:22px;font-weight:800;margin-bottom:10px;}
+    .article-cta p{color:var(--text-2);margin-bottom:24px;font-size:15px;}
+
+    /* RELATED */
+    .related-section{padding:60px 0;border-top:1px solid var(--border);}
+    .related-section h2{font-size:22px;font-weight:700;margin-bottom:32px;}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+    .related-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 220ms var(--ease);cursor:pointer;}
+    .related-card:hover{transform:translateY(-3px);border-color:var(--border-2);box-shadow:0 12px 40px rgba(0,0,0,.4);}
+    .related-thumb{height:140px;background:var(--surf-3);display:flex;align-items:center;justify-content:center;font-size:36px;}
+    .related-body{padding:16px;}
+    .related-body h4{font-size:15px;font-weight:600;line-height:1.4;margin:8px 0 6px;}
+    .related-body p{font-size:13px;color:var(--text-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+    /* SKELETON */
+    .skeleton{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:400% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .sk-h1{height:44px;width:80%;margin-bottom:16px;}
+    .sk-h2{height:20px;width:60%;margin-bottom:28px;}
+    .sk-meta{height:14px;width:50%;margin-bottom:40px;}
+    .sk-p{height:14px;margin-bottom:10px;}
+    .sk-p:last-child{width:70%;}
+
+    /* NOT FOUND */
+    .not-found{text-align:center;padding:120px 24px;}
+    .not-found h2{font-size:28px;font-weight:700;margin-bottom:12px;}
+    .not-found p{color:var(--text-2);margin-bottom:32px;}
+
+    /* FOOTER */
+    .footer{background:var(--surf);border-top:1px solid var(--border);padding:40px 0;}
+    .footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+    .footer-logo{font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .footer-links{display:flex;gap:20px;font-size:13px;color:var(--text-3);}
+    .footer-links a:hover{color:var(--text-2);}
+
+    /* SEO SCORE BADGE */
+    .seo-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
+    .seo-good{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);}
+    .seo-mid{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+
+    @media(max-width:768px){
+      .nav-links{display:none;}
+      h1.article-title{font-size:26px;}
+      .article-content{font-size:16px;}
+      .article-cta{padding:24px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">CreatorFlow Market</a>
+    <div class="nav-links">
+      <a href="experts.html" class="nav-link">Experts</a>
+      <a href="brief.html" class="nav-link">Publier un brief</a>
+      <a href="academy.html" class="nav-link">Academy</a>
+      <a href="tarifs.html" class="nav-link">Tarifs</a>
+      <a href="blog.html" class="nav-link active">Blog IA</a>
+    </div>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Connexion</a>
+      <a href="auth.html?mode=register" class="btn btn-primary">Rejoindre →</a>
+    </div>
+  </div>
+</nav>
+
+<div id="root"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-logo">CreatorFlow Market</span>
+    <div class="footer-links">
+      <a href="cgu.html">CGU</a>
+      <a href="confidentialite.html">Vie privée</a>
+      <a href="blog.html">Blog IA</a>
+      <a href="experts.html">Experts</a>
+      <a href="academy.html">Academy</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const CAT_ICONS = {
+  'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡',
+  'Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝'
+};
+
+function CatBadge({ cat }) {
+  return <span className="cat-badge" data-cat={cat}>{CAT_ICONS[cat] || '📄'} {cat}</span>;
+}
+
+function ShareBtn({ href, label, cls }) {
+  return (
+    <a href={href} target="_blank" rel="noopener" className={`share-btn ${cls}`}>{label}</a>
+  );
+}
+
+function Skeleton() {
+  return (
+    <div style={{ paddingTop: 'calc(var(--nav) + 60px)', paddingBottom: 60 }}>
+      <div className="container">
+        <div className="skeleton sk-h1" />
+        <div className="skeleton sk-h2" />
+        <div className="skeleton sk-meta" />
+        {[1,2,3,4,5,6].map(i => <div key={i} className="skeleton sk-p" style={{ width: i%3===0?'70%':'100%', marginBottom:12 }} />)}
+      </div>
+    </div>
+  );
+}
+
+function RelatedCard({ article }) {
+  const icons = {'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝'};
+  const colors = {'Actualités IA':'#1C1408','Outils IA':'#041418','Automatisation IA':'#041410','Marketing IA':'#100A1C','Création de Contenu IA':'#1A0814','Vente IA':'#180808','Support Client IA':'#0E0A1C'};
+  return (
+    <div className="related-card" onClick={() => window.location.href = `blog-article.html?slug=${article.slug}`}>
+      <div className="related-thumb" style={{ background: colors[article.category] || '#101020' }}>
+        <span style={{ fontSize: 40 }}>{icons[article.category] || '📄'}</span>
+      </div>
+      <div className="related-body">
+        <CatBadge cat={article.category} />
+        <h4>{article.title}</h4>
+        <p>{article.excerpt}</p>
+      </div>
+    </div>
+  );
+}
+
+function ArticlePage() {
+  const [article, setArticle] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  const slug = new URLSearchParams(window.location.search).get('slug');
+
+  useEffect(() => {
+    if (!slug) { setNotFound(true); setLoading(false); return; }
+    loadArticle();
+  }, [slug]);
+
+  async function loadArticle() {
+    try {
+      const { data, error } = await sb
+        .from('blog_articles')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .single();
+
+      if (error || !data) { setNotFound(true); setLoading(false); return; }
+
+      setArticle(data);
+      document.title = `${data.title} — CreatorFlow Market`;
+      const desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute('content', data.meta_description || data.excerpt || '');
+
+      // Schema.org JSON-LD
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: data.title,
+        description: data.meta_description || data.excerpt,
+        author: { '@type': 'Organization', name: 'CreatorFlow Market' },
+        publisher: { '@type': 'Organization', name: 'CreatorFlow Market', url: 'https://creatorflowmarket.com' },
+        datePublished: data.published_at,
+        dateModified: data.updated_at || data.published_at,
+        url: `https://creatorflowmarket.com/blog-article.html?slug=${data.slug}`,
+      };
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.text = JSON.stringify(schema);
+      document.head.appendChild(s);
+
+      // Incrémenter vues
+      sb.rpc('increment_blog_views', { article_slug: slug }).then(() => {});
+
+      // Articles liés
+      const { data: rel } = await sb
+        .from('blog_articles')
+        .select('id,slug,title,excerpt,category')
+        .eq('status', 'published')
+        .eq('category', data.category)
+        .neq('slug', slug)
+        .limit(3);
+      setRelated(rel || []);
+
+      setLoading(false);
+    } catch(e) {
+      setNotFound(true);
+      setLoading(false);
+    }
+  }
+
+  if (loading) return <Skeleton />;
+
+  if (notFound) return (
+    <div style={{ paddingTop: 'var(--nav)' }}>
+      <div className="not-found">
+        <div style={{ fontSize: 64, marginBottom: 24 }}>📭</div>
+        <h2>Article introuvable</h2>
+        <p>Cet article n'existe pas ou a été supprimé.</p>
+        <a href="blog.html" className="btn btn-primary">← Retour au Blog</a>
+      </div>
+    </div>
+  );
+
+  const articleUrl = `https://creatorflowmarket.com/blog-article.html?slug=${article.slug}`;
+  const pubDate = article.published_at
+    ? new Date(article.published_at).toLocaleDateString('fr-CA', { day:'numeric', month:'long', year:'numeric' })
+    : '';
+
+  return (
+    <div style={{ paddingTop: 'var(--nav)' }}>
+      {/* HERO */}
+      <div className="article-hero">
+        <div className="container">
+          <div className="breadcrumb">
+            <a href="blog.html">Blog IA</a>
+            <span className="breadcrumb-sep">›</span>
+            <span style={{ color: 'var(--text-2)' }}>{article.category}</span>
+          </div>
+
+          <CatBadge cat={article.category} />
+
+          <h1 className="article-title">{article.title}</h1>
+          {article.subtitle && (
+            <p className="article-subtitle">{article.subtitle}</p>
+          )}
+
+          <div className="article-meta">
+            <span className="meta-chip">✍️ {article.author || 'CreatorFlow AI'}</span>
+            {article.reading_time > 0 && (
+              <span className="meta-chip">📖 {article.reading_time} min de lecture</span>
+            )}
+            {article.views > 0 && (
+              <span className="meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>
+            )}
+            {pubDate && <span className="meta-chip">📅 {pubDate}</span>}
+            {article.seo_score > 0 && (
+              <span className={`seo-badge ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
+                SEO {article.seo_score}/100
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* BODY */}
+      <div className="article-body">
+        <div className="container">
+          {article.content ? (
+            <div
+              className="article-content"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
+          ) : (
+            <p style={{ color: 'var(--text-2)' }}>Contenu en cours de chargement…</p>
+          )}
+
+          {/* TAGS */}
+          {article.tags?.length > 0 && (
+            <div className="tags-row">
+              {article.tags.map(tag => (
+                <span key={tag} className="tag-pill">#{tag}</span>
+              ))}
+            </div>
+          )}
+
+          {/* SHARE */}
+          <div className="share-row">
+            <span className="share-label">Partager :</span>
+            <ShareBtn
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`}
+              label="𝕏 Twitter"
+              cls="share-tw"
+            />
+            <ShareBtn
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
+              label="LinkedIn"
+              cls="share-li"
+            />
+            <ShareBtn
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`}
+              label="Facebook"
+              cls="share-fb"
+            />
+          </div>
+
+          {/* CTA */}
+          <div className="article-cta">
+            <h3>🚀 Trouvez un expert IA sur CreatorFlow Market</h3>
+            <p>Besoin d'aide pour implémenter ces stratégies dans votre business ?<br/>Nos experts IA certifiés sont disponibles pour vos projets.</p>
+            <a href="experts.html" className="btn btn-primary" style={{ margin: '0 auto' }}>
+              Parcourir les experts IA →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* RELATED */}
+      {related.length > 0 && (
+        <section className="related-section">
+          <div className="container-wide">
+            <h2>Articles similaires</h2>
+            <div className="related-grid">
+              {related.map(a => <RelatedCard key={a.id} article={a} />)}
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<ArticlePage />);
+</script>
+</body>
+</html>
