@@ -1,7 +1,12 @@
-// Serves blog-article.html for /blog/:slug paths
-// Browser URL stays as /blog/SLUG — JS reads slug from window.location.pathname
+// Serves blog-article.html content at /blog/:slug
+// Server-side fetch follows any .html redirects internally — browser never sees a redirect,
+// so window.location.pathname stays as /blog/SLUG and the JS can extract the slug
 export async function onRequest(context) {
   const url = new URL(context.request.url);
-  const assetUrl = new URL('/blog-article.html', url.origin).toString();
-  return context.env.ASSETS.fetch(new Request(assetUrl, context.request));
+  const res = await fetch(new URL('/blog-article', url.origin).toString());
+  const html = await res.text();
+  return new Response(html, {
+    status: 200,
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+  });
 }
