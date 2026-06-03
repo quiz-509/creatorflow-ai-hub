@@ -1,1 +1,1 @@
-/blog/:slug  /blog-article  200
+/blog/:slug  /blog-article?slug=:slug  302
