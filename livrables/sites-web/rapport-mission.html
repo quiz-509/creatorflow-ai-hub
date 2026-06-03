@@ -237,7 +237,7 @@ function App() {
   const prix = mission.prix || 0;
   const acompte = Math.round(prix * 0.3);
   const solde = prix - acompte;
-  const commission = Math.round(prix * 0.05);
+  const commission = Math.round(prix * 0.15);
   const missionUrl = `mission.html?id=${mission.id}`;
 
   async function submitReview() {
@@ -249,6 +249,8 @@ function App() {
       mission_id: mission.id,
       note: rating,
       commentaire: reviewComment.trim() || null,
+      client_prenom: currentUser.prenom || '',
+      client_nom: currentUser.nom || '',
     }).select().single();
     if (!error && data) {
       setExistingReview(data);
@@ -355,7 +357,7 @@ function App() {
                   [`Montant total de la mission`, `${prix},00$`],
                   [`Acompte versé (30%)`, `${acompte},00$`],
                   [`Solde à la livraison (70%)`, `${solde},00$`],
-                  [`Commission CreatorFlow Market (5%)`, `${commission},00$`],
+                  [`Commission CreatorFlow Market (15%)`, `${commission},00$`],
                 ].map(([l,v])=>(
                   <div key={l} className="fin-row">
                     <span className="fin-label">{l}</span>
