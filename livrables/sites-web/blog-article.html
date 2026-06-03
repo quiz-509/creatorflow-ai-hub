@@ -315,8 +315,9 @@ const CAT_GRAD = c => {
   return `linear-gradient(135deg,${map[c]||'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
 };
 
-// Reads slug from /blog/SLUG path OR ?slug= query param
+// Reads slug from injected window var, /blog/SLUG path, or ?slug= query param
 const getSlug = () => {
+  if (typeof window.__BLOG_SLUG__ === 'string' && window.__BLOG_SLUG__) return window.__BLOG_SLUG__;
   const qs = new URLSearchParams(window.location.search).get('slug');
   if (qs) return qs;
   const p = window.location.pathname;
