@@ -558,7 +558,7 @@ function ArticlePage() {
         const { data, error } = await sb
           .from('blog_articles').select('*')
           .eq('slug', slug).eq('status','published').single();
-        if (error || !data) { console.error('[blog-article] Supabase query failed — error:', error, '| data:', data, '| slug:', slug); setNotFound(true); setLoading(false); return; }
+        if (error || !data) { setNotFound(true); setLoading(false); return; }
         setArticle(data);
 
         // Canonical URL (clean /blog/SLUG format)
@@ -649,7 +649,7 @@ function ArticlePage() {
           relData = byCat;
         }
         setRelated(relData || []);
-      } catch(e) { console.error('[blog-article] Caught JS error:', e); setNotFound(true); }
+      } catch { setNotFound(true); }
       finally { setLoading(false); }
     })();
   }, [slug]);
