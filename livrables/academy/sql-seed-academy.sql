@@ -26,50 +26,50 @@ VALUES (
   'Phelix', 'Intermédiaire', 480, 22, 147, true, NOW()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO academy_modules (id, course_id, title) VALUES
-  ('11000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Fondamentaux des Agents IA'),
-  ('12000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Construire son Premier Agent'),
-  ('13000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Mémoire et Contexte'),
-  ('14000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Agents Multi-tâches et Workflows'),
-  ('15000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Déploiement et Production')
+INSERT INTO academy_modules (id, course_id, title, order_index) VALUES
+  ('11000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Fondamentaux des Agents IA', 1),
+  ('12000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Construire son Premier Agent', 2),
+  ('13000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Mémoire et Contexte', 3),
+  ('14000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Agents Multi-tâches et Workflows', 4),
+  ('15000000-0000-0000-0000-000000000000', '10000000-0000-0000-0000-000000000000', 'Déploiement et Production', 5)
 ON CONFLICT (id) DO NOTHING;
 
 -- Module 1
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Qu''est-ce qu''un agent IA ?', 1),
-  ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Agent vs chatbot vs automatisation'),
+  ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Agent vs chatbot vs automatisation', 2),
   ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'L''écosystème des frameworks agents', 3),
-  ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Choisir son stack selon le projet'),
+  ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Choisir son stack selon le projet', 4),
   ('10000000-0000-0000-0000-000000000000', '11000000-0000-0000-0000-000000000000', 'Tour d''horizon des outils (n8n, Make, LangChain)', 5);
 
 -- Module 2
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Architecture d''un agent (mémoire, outils, instructions)', 1),
-  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Ton premier agent avec n8n'),
-  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Ajouter des outils : recherche web, fichiers, calcul'),
-  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Tester et déboguer un agent'),
+  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Ton premier agent avec n8n', 2),
+  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Ajouter des outils : recherche web, fichiers, calcul', 3),
+  ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Tester et déboguer un agent', 4),
   ('10000000-0000-0000-0000-000000000000', '12000000-0000-0000-0000-000000000000', 'Gérer les erreurs et les limites de l''agent', 5);
 
 -- Module 3
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Mémoire court terme vs long terme'),
-  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Bases vectorielles pour agents (Pinecone, Supabase)'),
-  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'RAG : retrieval augmented generation pratique'),
-  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Optimiser la fenêtre de contexte');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Mémoire court terme vs long terme', 1),
+  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Bases vectorielles pour agents (Pinecone, Supabase)', 2),
+  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'RAG : retrieval augmented generation pratique', 3),
+  ('10000000-0000-0000-0000-000000000000', '13000000-0000-0000-0000-000000000000', 'Optimiser la fenêtre de contexte', 4);
 
 -- Module 4
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Orchestrer plusieurs agents'),
-  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Délégation et sous-agents'),
-  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Agents avec accès email et agenda'),
-  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Automatiser des flux de travail complexes');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Orchestrer plusieurs agents', 1),
+  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Délégation et sous-agents', 2),
+  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Agents avec accès email et agenda', 3),
+  ('10000000-0000-0000-0000-000000000000', '14000000-0000-0000-0000-000000000000', 'Automatiser des flux de travail complexes', 4);
 
 -- Module 5
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Héberger son agent (Railway, Render)'),
-  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Monitoring et alertes'),
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Héberger son agent (Railway, Render)', 1),
+  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Monitoring et alertes', 2),
   ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Sécurité et limites d''accès', 3),
-  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Créer une interface pour tes clients');
+  ('10000000-0000-0000-0000-000000000000', '15000000-0000-0000-0000-000000000000', 'Créer une interface pour tes clients', 4);
 
 
 -- ════════════════════════════════════════════════════════════
@@ -85,50 +85,50 @@ VALUES (
   'Rémy', 'Débutant', 420, 22, 127, true, NOW()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO academy_modules (id, course_id, title) VALUES
-  ('21000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Introduction à l''Automatisation IA'),
-  ('22000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Make (Integromat) Maîtrisé'),
-  ('23000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'n8n — Automatisation Open Source'),
-  ('24000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'IA dans les Workflows'),
-  ('25000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Systèmes Complets')
+INSERT INTO academy_modules (id, course_id, title, order_index) VALUES
+  ('21000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Introduction à l''Automatisation IA', 1),
+  ('22000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Make (Integromat) Maîtrisé', 2),
+  ('23000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'n8n — Automatisation Open Source', 3),
+  ('24000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'IA dans les Workflows', 4),
+  ('25000000-0000-0000-0000-000000000000', '20000000-0000-0000-0000-000000000000', 'Systèmes Complets', 5)
 ON CONFLICT (id) DO NOTHING;
 
 -- Module 1
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Pourquoi automatiser avec l''IA en 2025', 1),
-  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Les outils essentiels : Make, n8n, Zapier'),
-  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Ton premier workflow en 15 minutes'),
-  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Connecter ses apps préférées'),
-  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Cartographier les tâches automatisables de ton business');
+  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Les outils essentiels : Make, n8n, Zapier', 2),
+  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Ton premier workflow en 15 minutes', 3),
+  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Connecter ses apps préférées', 4),
+  ('20000000-0000-0000-0000-000000000000', '21000000-0000-0000-0000-000000000000', 'Cartographier les tâches automatisables de ton business', 5);
 
 -- Module 2
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Interface Make de A à Z'),
-  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Triggers, actions, filtres et routeurs'),
-  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Gestion des erreurs et webhooks'),
-  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Templates Make pour créateurs'),
-  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Projets pratiques avec Make');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Interface Make de A à Z', 1),
+  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Triggers, actions, filtres et routeurs', 2),
+  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Gestion des erreurs et webhooks', 3),
+  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Templates Make pour créateurs', 4),
+  ('20000000-0000-0000-0000-000000000000', '22000000-0000-0000-0000-000000000000', 'Projets pratiques avec Make', 5);
 
 -- Module 3
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Installer et configurer n8n'),
-  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Workflows avancés avec code JavaScript'),
-  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Intégrer une IA dans tes workflows n8n'),
-  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'n8n en production (auto-hébergé)');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Installer et configurer n8n', 1),
+  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Workflows avancés avec code JavaScript', 2),
+  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'Intégrer une IA dans tes workflows n8n', 3),
+  ('20000000-0000-0000-0000-000000000000', '23000000-0000-0000-0000-000000000000', 'n8n en production (auto-hébergé)', 4);
 
 -- Module 4
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Appeler GPT-4 via API dans Make et n8n'),
-  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Analyse de sentiment et extraction de données'),
-  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Génération de contenu automatique'),
-  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Traitement automatisé de documents et PDFs');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Appeler GPT-4 via API dans Make et n8n', 1),
+  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Analyse de sentiment et extraction de données', 2),
+  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Génération de contenu automatique', 3),
+  ('20000000-0000-0000-0000-000000000000', '24000000-0000-0000-0000-000000000000', 'Traitement automatisé de documents et PDFs', 4);
 
 -- Module 5
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Système de gestion client automatisé'),
-  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Pipeline de contenu automatique'),
-  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Tableau de bord IA pour ton business'),
-  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Maintenance et monitoring de tes systèmes');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Système de gestion client automatisé', 1),
+  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Pipeline de contenu automatique', 2),
+  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Tableau de bord IA pour ton business', 3),
+  ('20000000-0000-0000-0000-000000000000', '25000000-0000-0000-0000-000000000000', 'Maintenance et monitoring de tes systèmes', 4);
 
 
 -- ════════════════════════════════════════════════════════════
@@ -144,50 +144,50 @@ VALUES (
   'Jay', 'Avancé', 600, 22, 197, true, NOW()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO academy_modules (id, course_id, title) VALUES
-  ('31000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Fondamentaux LLM pour Développeurs'),
-  ('32000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'LangChain et LlamaIndex'),
-  ('33000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'RAG et Bases Vectorielles'),
-  ('34000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Construire des Produits IA'),
-  ('35000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Fine-tuning et IA Avancée')
+INSERT INTO academy_modules (id, course_id, title, order_index) VALUES
+  ('31000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Fondamentaux LLM pour Développeurs', 1),
+  ('32000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'LangChain et LlamaIndex', 2),
+  ('33000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'RAG et Bases Vectorielles', 3),
+  ('34000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Construire des Produits IA', 4),
+  ('35000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', 'Fine-tuning et IA Avancée', 5)
 ON CONFLICT (id) DO NOTHING;
 
 -- Module 1
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Architecture des LLMs (transformers, tokens)'),
-  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'API OpenAI et Anthropic — tour complet'),
-  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Gestion des tokens, coûts et limites'),
-  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Prompt engineering pour développeurs'),
-  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Structured outputs et function calling');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Architecture des LLMs (transformers, tokens)', 1),
+  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'API OpenAI et Anthropic — tour complet', 2),
+  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Gestion des tokens, coûts et limites', 3),
+  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Prompt engineering pour développeurs', 4),
+  ('30000000-0000-0000-0000-000000000000', '31000000-0000-0000-0000-000000000000', 'Structured outputs et function calling', 5);
 
 -- Module 2
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Introduction à LangChain'),
-  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Chaînes, mémoire et agents LangChain'),
-  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'LlamaIndex pour la recherche documentaire'),
-  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Combiner LangChain et LlamaIndex'),
-  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Outils et plugins custom');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Introduction à LangChain', 1),
+  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Chaînes, mémoire et agents LangChain', 2),
+  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'LlamaIndex pour la recherche documentaire', 3),
+  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Combiner LangChain et LlamaIndex', 4),
+  ('30000000-0000-0000-0000-000000000000', '32000000-0000-0000-0000-000000000000', 'Outils et plugins custom', 5);
 
 -- Module 3
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Embeddings : transformer le texte en vecteurs'),
-  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Choisir sa base vectorielle (Pinecone, Chroma, Weaviate)'),
-  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Pipeline RAG complet de A à Z'),
-  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Optimisation et reranking');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Embeddings : transformer le texte en vecteurs', 1),
+  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Choisir sa base vectorielle (Pinecone, Chroma, Weaviate)', 2),
+  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Pipeline RAG complet de A à Z', 3),
+  ('30000000-0000-0000-0000-000000000000', '33000000-0000-0000-0000-000000000000', 'Optimisation et reranking', 4);
 
 -- Module 4
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Interface chat avec React'),
-  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'API backend IA avec FastAPI'),
-  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Authentification et gestion des utilisateurs'),
-  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Déploiement sur Railway et Render');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Interface chat avec React', 1),
+  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'API backend IA avec FastAPI', 2),
+  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Authentification et gestion des utilisateurs', 3),
+  ('30000000-0000-0000-0000-000000000000', '34000000-0000-0000-0000-000000000000', 'Déploiement sur Railway et Render', 4);
 
 -- Module 5
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Quand et pourquoi fine-tuner ?'),
-  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Fine-tuning GPT-3.5 Turbo — pratique'),
-  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Évaluation et métriques de performance'),
-  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Monétiser son application IA');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Quand et pourquoi fine-tuner ?', 1),
+  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Fine-tuning GPT-3.5 Turbo — pratique', 2),
+  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Évaluation et métriques de performance', 3),
+  ('30000000-0000-0000-0000-000000000000', '35000000-0000-0000-0000-000000000000', 'Monétiser son application IA', 4);
 
 
 -- ════════════════════════════════════════════════════════════
@@ -203,49 +203,49 @@ VALUES (
   'Louvie', 'Débutant', 360, 22, 97, true, NOW()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO academy_modules (id, course_id, title) VALUES
-  ('41000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Maîtriser le Prompt Engineering'),
-  ('42000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'ChatGPT et Claude pour le Business'),
-  ('43000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Stratégie de Contenu IA'),
-  ('44000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Automatiser son Business'),
-  ('45000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Monétiser ses Compétences IA')
+INSERT INTO academy_modules (id, course_id, title, order_index) VALUES
+  ('41000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Maîtriser le Prompt Engineering', 1),
+  ('42000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'ChatGPT et Claude pour le Business', 2),
+  ('43000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Stratégie de Contenu IA', 3),
+  ('44000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Automatiser son Business', 4),
+  ('45000000-0000-0000-0000-000000000000', '40000000-0000-0000-0000-000000000000', 'Monétiser ses Compétences IA', 5)
 ON CONFLICT (id) DO NOTHING;
 
 -- Module 1
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Anatomie d''un bon prompt', 1),
-  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Les 6 principes fondamentaux du prompting'),
-  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Chain-of-thought et few-shot prompting'),
-  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Construire ta bibliothèque de prompts'),
-  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Prompts systèmes et personnalisation avancée');
+  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Les 6 principes fondamentaux du prompting', 2),
+  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Chain-of-thought et few-shot prompting', 3),
+  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Construire ta bibliothèque de prompts', 4),
+  ('40000000-0000-0000-0000-000000000000', '41000000-0000-0000-0000-000000000000', 'Prompts systèmes et personnalisation avancée', 5);
 
 -- Module 2
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Configurer GPT et Claude pour ton business'),
-  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Rédaction : emails, articles, scripts'),
-  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Analyse et résumé de documents'),
-  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Créer des Custom GPTs personnalisés'),
-  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Projets de la semaine : 5 cas business concrets');
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Configurer GPT et Claude pour ton business', 1),
+  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Rédaction : emails, articles, scripts', 2),
+  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Analyse et résumé de documents', 3),
+  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Créer des Custom GPTs personnalisés', 4),
+  ('40000000-0000-0000-0000-000000000000', '42000000-0000-0000-0000-000000000000', 'Projets de la semaine : 5 cas business concrets', 5);
 
 -- Module 3
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'Calendrier éditorial 90 jours avec l''IA', 1),
-  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'Adapter le ton selon chaque plateforme'),
-  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'SEO et optimisation de contenu IA'),
-  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'Recycler et démultiplier chaque contenu');
+  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'Adapter le ton selon chaque plateforme', 2),
+  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'SEO et optimisation de contenu IA', 3),
+  ('40000000-0000-0000-0000-000000000000', '43000000-0000-0000-0000-000000000000', 'Recycler et démultiplier chaque contenu', 4);
 
 -- Module 4
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
-  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Identifier les tâches automatisables'),
-  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Service client avec IA'),
-  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Reporting et analytics IA'),
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
+  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Identifier les tâches automatisables', 1),
+  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Service client avec IA', 2),
+  ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Reporting et analytics IA', 3),
   ('40000000-0000-0000-0000-000000000000', '44000000-0000-0000-0000-000000000000', 'Système d''onboarding automatisé', 4);
 
 -- Module 5
-INSERT INTO academy_lessons (course_id, module_id, title, order_num) VALUES
+INSERT INTO academy_lessons (course_id, module_id, title, order_index) VALUES
   ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Positionner ton offre autour de l''IA', 1),
-  ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Tarification et vente de services IA'),
-  ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Créer et vendre ses prompts'),
+  ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Tarification et vente de services IA', 2),
+  ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Créer et vendre ses prompts', 3),
   ('40000000-0000-0000-0000-000000000000', '45000000-0000-0000-0000-000000000000', 'Construire un business autour de l''IA', 4);
 
 
