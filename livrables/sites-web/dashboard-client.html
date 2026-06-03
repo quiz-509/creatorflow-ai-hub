@@ -486,7 +486,8 @@ function App() {
                         {p.statut==='en_attente' && (
                           <button className="btn btn-primary btn-sm" style={{fontSize:10,padding:'4px 10px',marginTop:4}} onClick={async()=>{
                             if (!user) return;
-                            await sb.from('propositions').update({statut:'acceptee'}).eq('id',p.id);
+                            const { error: propErr } = await sb.from('propositions').update({statut:'acceptee'}).eq('id',p.id);
+                            if (propErr) { alert('Erreur acceptation: ' + propErr.message); return; }
                             let titre = 'Mission';
                             if (p.brief_id) {
                               const { data: brief } = await sb.from('briefs').select('categorie').eq('id',p.brief_id).single();

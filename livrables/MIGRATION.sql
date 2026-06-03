@@ -350,3 +350,122 @@ DROP TRIGGER IF EXISTS trg_update_course_duration ON lessons;
 CREATE TRIGGER trg_update_course_duration
   AFTER INSERT OR UPDATE OR DELETE ON lessons
   FOR EACH ROW EXECUTE FUNCTION update_course_duration();
+
+-- ─── 21. RLS — missions ────────────────────────────────────────────────────────
+ALTER TABLE missions ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='missions' AND policyname='Participants voient leurs missions') THEN
+    CREATE POLICY "Participants voient leurs missions" ON missions
+      FOR SELECT USING (auth.uid() = client_id OR auth.uid() = expert_id);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='missions' AND policyname='Client crée une mission') THEN
+    CREATE POLICY "Client crée une mission" ON missions
+      FOR INSERT WITH CHECK (auth.uid() = client_id);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='missions' AND policyname='Participants mettent à jour la mission') THEN
+    CREATE POLICY "Participants mettent à jour la mission" ON missions
+      FOR UPDATE USING (auth.uid() = client_id OR auth.uid() = expert_id);
+  END IF;
+END $$;
+
+-- ─── 22. RLS — propositions ───────────────────────────────────────────────────
+ALTER TABLE propositions ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='propositions' AND policyname='Participants voient les propositions') THEN
+    CREATE POLICY "Participants voient les propositions" ON propositions
+      FOR SELECT USING (auth.uid() = client_id OR auth.uid() = expert_id);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='propositions' AND policyname='Expert soumet une proposition') THEN
+    CREATE POLICY "Expert soumet une proposition" ON propositions
+      FOR INSERT WITH CHECK (auth.uid() = expert_id);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='propositions' AND policyname='Client met à jour le statut proposition') THEN
+    CREATE POLICY "Client met à jour le statut proposition" ON propositions
+      FOR UPDATE USING (auth.uid() = client_id);
+  END IF;
+END $$;
+
+-- ─── 23. RLS — briefs ─────────────────────────────────────────────────────────
+ALTER TABLE briefs ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='briefs' AND policyname='Briefs visibles par authentifiés') THEN
+    CREATE POLICY "Briefs visibles par authentifiés" ON briefs
+      FOR SELECT USING (auth.role() = 'authenticated');
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='briefs' AND policyname='Client crée un brief') THEN
+    CREATE POLICY "Client crée un brief" ON briefs
+      FOR INSERT WITH CHECK (auth.uid() = user_id OR user_id IS NULL);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='briefs' AND policyname='Client met à jour son brief') THEN
+    CREATE POLICY "Client met à jour son brief" ON briefs
+      FOR UPDATE USING (auth.uid() = user_id);
+  END IF;
+END $$;
+
+-- ─── 24. RLS — conversations ──────────────────────────────────────────────────
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='conversations' AND policyname='Participants voient leurs conversations') THEN
+    CREATE POLICY "Participants voient leurs conversations" ON conversations
+      FOR SELECT USING (auth.uid() = client_id OR auth.uid() = expert_id);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='conversations' AND policyname='Participant crée une conversation') THEN
+    CREATE POLICY "Participant crée une conversation" ON conversations
+      FOR INSERT WITH CHECK (auth.uid() = client_id OR auth.uid() = expert_id);
+  END IF;
+END $$;
+
+-- ─── 25. RLS — messages ───────────────────────────────────────────────────────
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='messages' AND policyname='Participants voient les messages') THEN
+    CREATE POLICY "Participants voient les messages" ON messages
+      FOR SELECT USING (
+        EXISTS (
+          SELECT 1 FROM conversations cv
+          WHERE cv.id = conversation_id
+            AND (cv.client_id = auth.uid() OR cv.expert_id = auth.uid())
+        )
+      );
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='messages' AND policyname='Participant envoie un message') THEN
+    CREATE POLICY "Participant envoie un message" ON messages
+      FOR INSERT WITH CHECK (
+        auth.uid() = sender_id
+        AND EXISTS (
+          SELECT 1 FROM conversations cv
+          WHERE cv.id = conversation_id
+            AND (cv.client_id = auth.uid() OR cv.expert_id = auth.uid())
+        )
+      );
+  END IF;
+END $$;
