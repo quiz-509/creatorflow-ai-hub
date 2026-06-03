@@ -314,7 +314,8 @@ function App(){
       else         setArticles(prev => [...prev, ...(data||[])]);
       setTotal(count || 0);
       setHasMore((count||0) > p * PER);
-    } catch {
+    } catch(err) {
+      console.error('[CreatorFlow Blog] Supabase error — falling back to DEMO:', err);
       const f = DEMO.filter(a => {
         if (c !== 'all' && a.category !== c) return false;
         if (search.trim() && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
