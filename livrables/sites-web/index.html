@@ -1104,13 +1104,13 @@ function Footer() {
             </div>
           </div>
           {[
-            {h:'Plateforme',links:['À propos','Pour les experts','Pour les entreprises','Tarifs']},
+            {h:'Plateforme',links:[{l:'À propos',h:'#'},{l:'Pour les experts',h:'inscription.html'},{l:'Pour les entreprises',h:'brief.html'},{l:'Tarifs',h:'pricing.html'}]},
             {h:'Ressources',links:['Blog','Guides','Études de cas','Centre d\'aide']},
             {h:'Contact',links:['Nous contacter','Devenir partenaire','Presse','Carrières']},
           ].map((col,i)=>(
             <div className="footer-col" key={i}>
               <h4>{col.h}</h4>
-              <ul>{col.links.map(l=><li key={l}><a href="#">{l}</a></li>)}</ul>
+              <ul>{col.links.map(l=>{const label=typeof l==='string'?l:l.l; const href=typeof l==='string'?'#':l.h; return <li key={label}><a href={href}>{label}</a></li>;})}</ul>
             </div>
           ))}
         </div>

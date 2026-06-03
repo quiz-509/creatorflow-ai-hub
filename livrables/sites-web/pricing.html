@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tarifs — CreatorFlow Market</title>
+  <meta name="description" content="Découvrez notre modèle de tarification transparent. Gratuit pour les clients, gratuit pour les experts. Commission de 15% uniquement sur les missions complétées." />
+  <link rel="canonical" href="https://creatorflowmarket.com/pricing.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://creatorflowmarket.com/pricing.html"/>
+  <meta property="og:title" content="Tarifs — CreatorFlow Market"/>
+  <meta property="og:description" content="Modèle simple et transparent. Aucun abonnement. Commission de 15% uniquement sur les missions complétées."/>
+  <meta property="og:site_name" content="CreatorFlow Market"/>
+  <meta property="og:locale" content="fr_CA"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg:#04040A; --bg-2:#07070F; --surf:#0C0C18; --surf-2:#101020; --surf-3:#14142A;
+  --border:rgba(255,255,255,0.055); --border-2:rgba(255,255,255,0.10); --border-3:rgba(255,255,255,0.18);
+  --text:#F4F4FF; --text-2:#9898B8; --text-3:#55557A;
+  --v:#7C3AED; --v2:#6D28D9; --vs:#A78BFA; --vg:rgba(124,58,237,0.35);
+  --c:#06B6D4; --cs:#67E8F9; --green:#10B981; --amber:#F59E0B; --red:#EF4444;
+  --r:14px; --r-lg:20px; --r-xl:28px;
+  --f:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+img{display:block;max-width:100%;}
+.wrap{width:100%;max-width:1100px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid transparent;transition:all 300ms ease;}
+.nav.stuck{background:rgba(4,4,10,0.88);backdrop-filter:blur(20px);border-color:var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;display:flex;align-items:center;gap:6px;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms ease;}
+.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--vs);}
+.nav-ctas{display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,0.14) inset,0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-sm{padding:8px 16px;font-size:13px;}
+.btn-lg{padding:13px 28px;font-size:15px;}
+
+/* PAGE HEADER */
+.page-header{padding:120px 0 72px;text-align:center;position:relative;}
+.page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 900px 500px at 50% 0%,rgba(124,58,237,0.14),transparent 70%);pointer-events:none;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--vs);}
+.eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);}
+.page-title{font-size:clamp(36px,5vw,58px);font-weight:800;letter-spacing:-0.03em;margin:16px 0 16px;line-height:1.1;}
+.page-title em{background:linear-gradient(135deg,#C084FC,var(--v),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;}
+.page-sub{font-size:17px;color:var(--text-2);max-width:540px;margin:0 auto;}
+
+/* PRICING GRID */
+.pricing-section{padding:0 0 80px;}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:80px;}
+.price-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:40px;position:relative;overflow:hidden;transition:border-color 300ms ease,transform 300ms ease;}
+.price-card:hover{border-color:var(--border-2);transform:translateY(-2px);}
+.price-card.featured{border-color:rgba(124,58,237,0.4);background:linear-gradient(145deg,rgba(124,58,237,0.07),var(--surf));}
+.price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
+.price-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--vs);background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:999px;padding:3px 10px;margin-bottom:20px;}
+.price-badge.green{color:var(--green);background:rgba(16,185,129,0.10);border-color:rgba(16,185,129,0.25);}
+.price-target{font-size:13px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.price-title{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+.price-tagline{font-size:14px;color:var(--text-2);margin-bottom:28px;line-height:1.5;}
+.price-amount{display:flex;align-items:baseline;gap:6px;margin-bottom:8px;}
+.price-num{font-size:52px;font-weight:800;letter-spacing:-0.04em;line-height:1;}
+.price-num.free{background:linear-gradient(135deg,#10B981,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.price-num.commission{background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.price-unit{font-size:14px;color:var(--text-2);}
+.price-note{font-size:12px;color:var(--text-3);margin-bottom:32px;line-height:1.5;}
+.price-divider{height:1px;background:var(--border);margin-bottom:28px;}
+.price-features{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.price-feature{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--text-2);}
+.price-feature-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.price-feature-icon.check{background:rgba(16,185,129,0.15);color:var(--green);}
+.price-feature-icon.info{background:rgba(124,58,237,0.15);color:var(--vs);}
+.price-feature strong{color:var(--text);}
+.price-cta{width:100%;}
+.price-cta-note{font-size:12px;color:var(--text-3);text-align:center;margin-top:12px;}
+
+/* EXAMPLE CALC */
+.calc-box{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.18);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:32px;}
+.calc-title{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--vs);margin-bottom:14px;}
+.calc-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:4px 0;}
+.calc-row.total{border-top:1px solid rgba(124,58,237,0.2);margin-top:8px;padding-top:12px;font-weight:700;font-size:14px;color:var(--text);}
+.calc-row span:first-child{color:var(--text-2);}
+.calc-row span:last-child{color:var(--text);}
+.calc-row.total span:last-child{color:var(--green);}
+
+/* ACADEMY SECTION */
+.academy-section{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:48px;margin-bottom:80px;position:relative;overflow:hidden;}
+.academy-section::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(124,58,237,0.12),transparent 70%);pointer-events:none;}
+.academy-header{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;}
+.academy-content{flex:1;min-width:280px;}
+.academy-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#F59E0B;background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.25);border-radius:999px;padding:3px 10px;margin-bottom:14px;}
+.academy-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px;}
+.academy-desc{font-size:14px;color:var(--text-2);line-height:1.6;max-width:440px;}
+.academy-price-range{flex-shrink:0;text-align:right;}
+.academy-from{font-size:12px;color:var(--text-3);margin-bottom:4px;}
+.academy-range{font-size:30px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#F59E0B,#FCD34D);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.academy-range-note{font-size:12px;color:var(--text-3);margin-top:2px;}
+.academy-features{display:flex;gap:20px;flex-wrap:wrap;margin-top:28px;}
+.academy-feat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2);}
+
+/* FAQ */
+.faq-section{margin-bottom:80px;}
+.sh{text-align:center;margin-bottom:48px;}
+.sh-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--vs);display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;}
+.sh-label::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);}
+.sh-title{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-0.03em;margin-bottom:14px;}
+.sh-title em{background:linear-gradient(135deg,#C084FC,var(--v));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;}
+.faq-list{display:flex;flex-direction:column;gap:2px;max-width:760px;margin:0 auto;}
+.faq-item{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color 200ms ease;}
+.faq-item.open{border-color:rgba(124,58,237,0.3);}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;font-size:15px;font-weight:600;cursor:pointer;gap:16px;}
+.faq-q:hover{color:var(--vs);}
+.faq-icon{width:20px;height:20px;flex-shrink:0;border:1px solid var(--border-2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text-3);transition:all 200ms ease;}
+.faq-item.open .faq-icon{border-color:var(--v);color:var(--vs);transform:rotate(45deg);}
+.faq-a{padding:0 24px;max-height:0;overflow:hidden;transition:max-height 350ms var(--ease),padding 250ms ease;}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:20px;}
+.faq-a p{font-size:14px;color:var(--text-2);line-height:1.7;}
+.faq-a a{color:var(--vs);text-decoration:underline;text-underline-offset:3px;}
+
+/* CTA SECTION */
+.cta-section{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.08));border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-xl);padding:56px;text-align:center;margin-bottom:80px;position:relative;overflow:hidden;}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 600px 400px at 50% 50%,rgba(124,58,237,0.10),transparent 70%);pointer-events:none;}
+.cta-title{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;}
+.cta-sub{font-size:16px;color:var(--text-2);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+.footer-mini{border-top:1px solid var(--border);padding:28px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-mini a{font-size:13px;color:var(--text-3);transition:color 160ms;}
+.footer-mini a:hover{color:var(--text);}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .pricing-grid{grid-template-columns:1fr;}
+  .academy-header{flex-direction:column;}
+  .academy-price-range{text-align:left;}
+  .cta-section{padding:36px 24px;}
+  .nav-links{display:none;}
+}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
+
+const IcCheck = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+const IcArrow = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14M13 5l7 7-7 7"/>
+  </svg>
+);
+const IcGrad = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+  </svg>
+);
+
+function Nav() {
+  const [stuck, setStuck] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [userType, setUserType] = useState('client');
+  useEffect(() => {
+    const h = () => setStuck(window.scrollY > 10);
+    window.addEventListener('scroll', h, { passive: true });
+    sb.auth.getSession().then(async ({ data }) => {
+      if (data.session) {
+        setAuthUser(data.session.user);
+        const { data: p } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
+        if (p) setUserType(p.type_utilisateur || 'client');
+      }
+    });
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+  const dash = userType === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
+  return (
+    <nav className={`nav ${stuck ? 'stuck' : ''}`}>
+      <div className="wrap nav-inner">
+        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <div className="nav-links">
+          <a href="experts.html" className="nav-link">Experts</a>
+          <a href="brief.html" className="nav-link">Déposer un brief</a>
+          <a href="pricing.html" className="nav-link active">Tarifs</a>
+          <a href="inscription.html" className="nav-link">Devenir expert</a>
+        </div>
+        <div className="nav-ctas">
+          {authUser
+            ? <a href={dash} className="btn btn-ghost btn-sm">Mon espace</a>
+            : <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
+          }
+          <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <IcArrow/></a>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+const FAQS = [
+  {
+    q: "Comment fonctionne la commission de 15% ?",
+    a: "Lorsqu'une mission est complétée et payée, CreatorFlow Market prélève 15% du montant total. Par exemple, pour une mission de 1 000$, vous recevez 850$. La commission couvre l'accès à la plateforme, la mise en relation, la messagerie et le support."
+  },
+  {
+    q: "Quand est-ce que la commission est prélevée ?",
+    a: "La commission est prélevée uniquement lorsque la mission est marquée comme complétée et que le paiement est confirmé. Il n'y a aucun frais si une mission n'aboutit pas."
+  },
+  {
+    q: "Les clients paient-ils des frais supplémentaires ?",
+    a: "Non. Pour les clients et entreprises, la plateforme est entièrement gratuite. Vous ne payez que le tarif convenu avec l'expert. Aucun frais de service, aucune commission côté client."
+  },
+  {
+    q: "Est-ce que je peux m'inscrire comme expert gratuitement ?",
+    a: "Oui, l'inscription est gratuite et sans abonnement mensuel. Vous créez votre profil, soumettez des propositions sur les missions ouvertes, et ne payez la commission que lorsque vous êtes payé."
+  },
+  {
+    q: "Les cours de l'Academy sont-ils inclus ?",
+    a: "Non. Les formations de la CreatorFlow Market Academy sont vendues séparément, à prix individuel par cours. Elles ne font pas partie du modèle de commission des missions."
+  },
+];
+
+function FaqItem({ q, a }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`faq-item ${open ? 'open' : ''}`}>
+      <div className="faq-q" onClick={() => setOpen(o => !o)}>
+        <span>{q}</span>
+        <span className="faq-icon">+</span>
+      </div>
+      <div className="faq-a"><p>{a}</p></div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <React.Fragment>
+      <Nav/>
+
+      {/* PAGE HEADER */}
+      <div className="page-header">
+        <div className="wrap">
+          <span className="eyebrow">Transparent par défaut</span>
+          <h1 className="page-title">Tarifs simples,<br/><em>aucune surprise.</em></h1>
+          <p className="page-sub">
+            Gratuit pour les clients et les experts. Une commission uniquement quand une mission est complétée et payée.
+          </p>
+        </div>
+      </div>
+
+      <div className="pricing-section">
+        <div className="wrap">
+
+          {/* PRICING CARDS */}
+          <div className="pricing-grid">
+
+            {/* CLIENTS */}
+            <div className="price-card">
+              <div className="price-badge green">Pour les clients</div>
+              <div className="price-target">Entreprises, startups, créateurs</div>
+              <div className="price-title">Entièrement gratuit</div>
+              <div className="price-tagline">Trouvez l'expert qu'il vous faut. Vous ne payez que la mission convenue avec l'expert.</div>
+              <div className="price-amount">
+                <span className="price-num free">0$</span>
+                <span className="price-unit">pour rejoindre</span>
+              </div>
+              <div className="price-note">Aucun abonnement. Aucun frais de service. Vous réglez directement le tarif de l'expert.</div>
+              <div className="price-divider"/>
+              <div className="price-features">
+                {[
+                  'Déposer des briefs illimités',
+                  'Recevoir des propositions d\'experts',
+                  'Messagerie intégrée avec les experts',
+                  'Tableau de bord de suivi des missions',
+                  'Accès aux profils et portfolios complets',
+                  'Support client inclus',
+                ].map(f => (
+                  <div className="price-feature" key={f}>
+                    <span className="price-feature-icon check"><IcCheck/></span>
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+              <a href="brief.html" className="btn btn-ghost btn-lg price-cta">Déposer un brief <IcArrow/></a>
+              <p className="price-cta-note">Inscription en 2 minutes</p>
+            </div>
+
+            {/* EXPERTS */}
+            <div className="price-card featured">
+              <div className="price-badge">Pour les experts</div>
+              <div className="price-target">Freelances, consultants IA</div>
+              <div className="price-title">Gratuit + 15% par mission</div>
+              <div className="price-tagline">Inscrivez-vous sans frais. Une commission de 15% est prélevée uniquement sur chaque mission complétée et payée.</div>
+              <div className="price-amount">
+                <span className="price-num commission">15%</span>
+                <span className="price-unit">par mission complétée</span>
+              </div>
+              <div className="price-note">Inscription gratuite. Pas d'abonnement. Pas de commission sur les missions non abouties.</div>
+
+              <div className="calc-box">
+                <div className="calc-title">Exemple de calcul</div>
+                <div className="calc-row">
+                  <span>Mission à</span>
+                  <span>1 000 $</span>
+                </div>
+                <div className="calc-row">
+                  <span>Commission CreatorFlow (15%)</span>
+                  <span style={{color:'var(--red)'}}>− 150 $</span>
+                </div>
+                <div className="calc-row total">
+                  <span>Vous recevez</span>
+                  <span>850 $</span>
+                </div>
+              </div>
+
+              <div className="price-features">
+                {[
+                  ['check', 'Inscription et profil gratuits'],
+                  ['check', 'Accès aux missions ouvertes sur la plateforme'],
+                  ['check', 'Messagerie et suivi des missions intégrés'],
+                  ['check', 'Tableau de bord expert complet'],
+                  ['check', 'Notation et avis clients visibles'],
+                  ['info', 'Commission de 15% sur missions complétées uniquement'],
+                ].map(([type, f]) => (
+                  <div className="price-feature" key={f}>
+                    <span className={`price-feature-icon ${type}`}>
+                      {type === 'check' ? <IcCheck/> : <span style={{fontSize:11,fontWeight:700}}>i</span>}
+                    </span>
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <a href="inscription.html" className="btn btn-primary btn-lg price-cta">Créer mon profil expert <IcArrow/></a>
+              <p className="price-cta-note">Validation du profil sous 48h</p>
+            </div>
+          </div>
+
+          {/* ACADEMY */}
+          <div className="academy-section">
+            <div className="academy-header">
+              <div className="academy-content">
+                <div className="academy-badge"><IcGrad/> Academy</div>
+                <div className="academy-title">Formations IA — Prix individuel</div>
+                <div className="academy-desc">
+                  Les cours de la CreatorFlow Market Academy sont vendus séparément de la marketplace. Chaque formation a son propre prix selon le contenu et la durée. Aucun abonnement requis.
+                </div>
+                <div className="academy-features">
+                  {[
+                    'Paiement unique par cours',
+                    'Accès à vie après achat',
+                    'Certificat CreatorFlow Market',
+                    'Support formateur inclus',
+                  ].map(f => (
+                    <div className="academy-feat" key={f}>
+                      <span style={{color:'var(--amber)'}}>✓</span>
+                      <span>{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="academy-price-range">
+                <div className="academy-from">Prix à partir de</div>
+                <div className="academy-range">97$</div>
+                <div className="academy-range-note">par formation</div>
+                <a href="academie.html" className="btn btn-ghost btn-sm" style={{marginTop:16}}>Voir les formations <IcArrow/></a>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ */}
+          <div className="faq-section">
+            <div className="sh">
+              <div className="sh-label">Questions fréquentes</div>
+              <h2 className="sh-title">Tout ce que vous <em>devez savoir</em></h2>
+            </div>
+            <div className="faq-list">
+              {FAQS.map(f => <FaqItem key={f.q} {...f}/>)}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="cta-section">
+            <h2 className="cta-title">Prêt à rejoindre la plateforme ?</h2>
+            <p className="cta-sub">Clients et experts s'inscrivent gratuitement. Aucune carte de crédit requise pour démarrer.</p>
+            <div className="cta-btns">
+              <a href="brief.html" className="btn btn-primary btn-lg">Je cherche un expert <IcArrow/></a>
+              <a href="inscription.html" className="btn btn-ghost btn-lg">Je propose mes services</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <footer>
+        <div className="wrap footer-mini">
+          <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
+          <div className="footer-links">
+            <a href="index.html">Accueil</a>
+            <a href="experts.html">Experts</a>
+            <a href="academie.html">Academy</a>
+            <a href="inscription.html">Devenir expert</a>
+          </div>
+        </div>
+      </footer>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
