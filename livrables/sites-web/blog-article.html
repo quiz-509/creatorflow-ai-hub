@@ -687,12 +687,6 @@ function ArticlePage() {
       <div style={{fontSize:56,marginBottom:20}}>📭</div>
       <h2>Article introuvable</h2>
       <p style={{color:'var(--text-2)',marginBottom:28}}>Cet article n'existe pas ou a été supprimé.</p>
-      <p style={{color:'var(--text-3)',fontSize:12,marginBottom:8,fontFamily:'monospace'}}>
-        DEBUG — slug détecté: <strong style={{color:'var(--vs)'}}>{getSlug() || '(aucun)'}</strong>
-      </p>
-      <p style={{color:'var(--text-3)',fontSize:12,marginBottom:28,fontFamily:'monospace'}}>
-        URL: {typeof window !== 'undefined' ? window.location.href : ''}
-      </p>
       <a href="/blog" className="btn btn-primary">← Retour au Blog</a>
     </div>
   );
