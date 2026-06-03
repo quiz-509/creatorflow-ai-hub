@@ -626,7 +626,7 @@ function ArticlePage() {
         });
 
         // Views
-        sb.rpc('increment_blog_views',{article_slug:slug}).catch(()=>{});
+        sb.rpc('increment_blog_views',{article_slug:slug}).then(null, ()=>{});
 
         // Related articles: tags-based first, fallback to category
         let relData = null;
