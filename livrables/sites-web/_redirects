@@ -1,1 +1,1 @@
-# /blog/:slug is handled by the Pages Function at functions/blog/[slug].js
+/blog/:slug  /blog-article  200
