@@ -653,7 +653,7 @@ function Nav() {
     plateforme: {
       cols: [
         { title: 'Pour les entreprises', items: [
-          { icon: <Ic.Search />, label: 'Trouver un expert', sub: 'Parcourez 120+ profils certifiés', href: 'experts.html' },
+          { icon: <Ic.Search />, label: 'Trouver un expert', sub: 'Parcourez nos experts certifiés', href: 'experts.html' },
           { icon: <Ic.Match />, label: 'Déposer un brief', sub: 'Recevez des candidatures sous 24h', href: 'brief.html' },
           { icon: <Ic.Rocket />, label: 'Comment ça marche', sub: 'Trois étapes, aucune friction', href: '#how' },
         ]},
@@ -743,9 +743,9 @@ function Hero() {
       sb.from('experts').select('*', { count: 'exact', head: true }),
       sb.from('missions').select('*', { count: 'exact', head: true }).eq('statut', 'termine')
     ]).then(([{ count: ec }, { count: mc }]) => {
-      setCounts({ experts: Math.max(ec ?? 0, 120), missions: Math.max(mc ?? 0, 85) });
+      setCounts({ experts: ec ?? 0, missions: mc ?? 0 });
     }).catch(() => {
-      setCounts({ experts: 120, missions: 85 });
+      setCounts({ experts: 0, missions: 0 });
     });
   }, []);
   return (
@@ -768,7 +768,7 @@ function Hero() {
           <a href="inscription.html" className="btn btn-ghost btn-lg">Je propose mes services</a>
         </div>
         <div className="hero-stats">
-          {[{to:counts.experts,s:'+',l:'Experts certifiés'},{to:counts.missions,s:'+',l:'Projets livrés'},{to:30,s:'+',l:'Secteurs couverts'}].map((st,i)=>(
+          {[{to:counts.experts,s:'+',l:'Experts certifiés'},{to:counts.missions,s:'+',l:'Projets livrés'},{to:30,s:'+',l:'Secteurs couverts'}].filter(st=>st.to>0).map((st,i)=>(
             <div className="stat" key={i}>
               <div className="stat-n"><StatCount to={st.to} suffix={st.s}/></div>
               <div className="stat-l">{st.l}</div>
@@ -905,14 +905,14 @@ function Categories() {
   const IcCode  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>;
   const IcBrand = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>;
   const cats = [
-    {icon:<Ic.Bot/>,    name:'Agents IA',          count:'34 experts', a:'#7C3AED', b:'#9333EA'},
-    {icon:<Ic.Rocket/>, name:'Automatisation',      count:'28 experts', a:'#06B6D4', b:'#0891B2'},
-    {icon:<Ic.Match/>,  name:'Chatbots',            count:'41 experts', a:'#10B981', b:'#059669'},
-    {icon:<IcCode/>,    name:'Développement IA',    count:'52 experts', a:'#9333EA', b:'#7C3AED'},
-    {icon:<Ic.Pen/>,    name:'Prompt Engineering',  count:'19 experts', a:'#F59E0B', b:'#D97706'},
-    {icon:<IcVideo/>,   name:'Montage vidéo IA',    count:'23 experts', a:'#EC4899', b:'#DB2777'},
-    {icon:<IcBrand/>,   name:'Branding IA',         count:'17 experts', a:'#F97316', b:'#EA580C'},
-    {icon:<Ic.Grad/>,   name:'Formation IA',        count:'38 experts', a:'#3B82F6', b:'#2563EB'},
+    {icon:<Ic.Bot/>,    name:'Agents IA',          a:'#7C3AED', b:'#9333EA'},
+    {icon:<Ic.Rocket/>, name:'Automatisation',      a:'#06B6D4', b:'#0891B2'},
+    {icon:<Ic.Match/>,  name:'Chatbots',            a:'#10B981', b:'#059669'},
+    {icon:<IcCode/>,    name:'Développement IA',    a:'#9333EA', b:'#7C3AED'},
+    {icon:<Ic.Pen/>,    name:'Prompt Engineering',  a:'#F59E0B', b:'#D97706'},
+    {icon:<IcVideo/>,   name:'Montage vidéo IA',    a:'#EC4899', b:'#DB2777'},
+    {icon:<IcBrand/>,   name:'Branding IA',         a:'#F97316', b:'#EA580C'},
+    {icon:<Ic.Grad/>,   name:'Formation IA',        a:'#3B82F6', b:'#2563EB'},
   ];
   return (
     <section className="pad-sm">
@@ -920,7 +920,7 @@ function Categories() {
         <Rv className="sh">
           <span className="eyebrow">Explorer les catégories</span>
           <h2 className="sh-title">Trouvez l'expertise <em>qu'il vous faut.</em></h2>
-          <p className="sh-sub">8 domaines, 252 experts vérifiés. Choisissez votre catégorie et matchez en quelques minutes.</p>
+          <p className="sh-sub">8 domaines d'expertise IA. Choisissez votre catégorie et matchez en quelques minutes.</p>
         </Rv>
         <div className="cat-grid">
           {cats.map((c,i) => (
@@ -929,7 +929,6 @@ function Categories() {
               onMouseMove={onTilt} onMouseLeave={offTilt}>
               <div className="cat-ico">{c.icon}</div>
               <div className="cat-name">{c.name}</div>
-              <div className="cat-count">{c.count}</div>
               <div className="cat-arr"><Ic.Arrow/></div>
             </Rv>
           ))}
