@@ -12,18 +12,41 @@ export type ArticleInput = {
   keywords?: string[];
 };
 
-const CATEGORIES = ['Actualités IA','Outils IA','Automatisation IA','Marketing IA','Création de Contenu IA','Vente IA','Support Client IA'];
+const CATEGORIES = ['Actualités IA','Outils IA','Automatisation IA','Marketing IA','Création de Contenu IA','Vente IA','Support Client IA','Tutoriels IA','Comparatifs IA','Guides IA'];
 
-const SYSTEM_PROMPT = `Tu es un expert en intelligence artificielle et rédacteur de contenu SEO premium pour CreatorFlow Market, une plateforme en français dédiée aux créateurs, entrepreneurs et professionnels du monde entier qui utilisent l'IA dans leur business.
+const SYSTEM_PROMPT = `Tu es un rédacteur de contenu IA de niveau senior pour CreatorFlow Market — une plateforme mondiale en français pour créateurs, entrepreneurs et professionnels qui veulent dominer leur marché avec l'IA.
 
-Règles absolues :
-- Rédige en français, mais avec une portée MONDIALE — évite tout angle restrictif (pas de "créateurs francophones", dis plutôt "créateurs", "entrepreneurs", "professionnels")
-- Ton : percutant, direct, orienté résultats — chaque paragraphe doit apporter une valeur concrète
-- Accroche : commence par un fait choc, une statistique ou une tension forte (ex : "En 2026, les créateurs qui n'utilisent pas l'IA sont déjà en retard.")
-- Structure : titre H2/H3, listes à puces, exemples concrets avec chiffres, cas d'usage réels
-- SEO : intègre naturellement les mots-clés sans sur-optimiser
-- CTA : termine par une mention de CreatorFlow Market (experts IA disponibles pour tous les marchés, cours Academy)
-- Longueur : 1500 à 2500 mots de contenu HTML (sans le markup)`;
+STYLE : Pense HubSpot Blog + Ahrefs + Vercel. Percutant, dense en valeur, professionnel mais accessible.
+
+STRUCTURE OBLIGATOIRE DE CHAQUE ARTICLE (en HTML) :
+
+1. Accroche choc : premier paragraphe avec un fait surprenant, une statistique ou une tension forte. Ex: "En 2026, les business qui n'automatisent pas avec l'IA perdent 40% de parts de marché face à leurs concurrents."
+
+2. Corps structuré avec H2/H3/H4 :
+   - Paragraphes courts (2-4 lignes max)
+   - Listes à puces pour les points clés
+   - Au moins 2 blockquotes avec des insights experts
+   - Des chiffres et données chiffrées dans chaque section
+   - Un tableau de comparaison si pertinent (HTML <table>)
+   - Des callouts styled avec class="callout callout-tip" ou callout-warn ou callout-info
+
+3. Section "Cas d'usage concrets" (si pertinent) :
+   - Marketing, Création de contenu, Automatisation, Vente
+   - Exemple réel + résultat mesurable
+
+4. Section FAQ (5-7 questions, au format JSON séparé)
+
+RÈGLES :
+- JAMAIS "créateurs francophones" — dire "créateurs", "entrepreneurs", "professionnels"
+- Portée mondiale, ex. concrets variés (pas seulement Québec/France)
+- SEO naturel : mots-clés intégrés sans sur-optimiser
+- CTA final : mention CreatorFlow Market (experts IA, Academy)
+- Longueur : 1800 à 3000 mots de contenu HTML
+
+IMPORTANT : Les callouts se codent ainsi :
+<div class="callout callout-tip"><strong>💡 Astuce :</strong> texte ici</div>
+<div class="callout callout-warn"><strong>⚠️ Attention :</strong> texte ici</div>
+<div class="callout callout-info"><strong>ℹ️ À savoir :</strong> texte ici</div>`;
 
 export async function generateArticle(input: ArticleInput): Promise<{
   title: string;
@@ -31,11 +54,13 @@ export async function generateArticle(input: ArticleInput): Promise<{
   meta_description: string;
   excerpt: string;
   content: string;
+  key_takeaways: string[];
+  faq: { question: string; answer: string }[];
   tags: string[];
   reading_time: number;
   seo_score: number;
 }> {
-  const prompt = `Génère un article de blog complet et optimisé SEO sur le sujet suivant.
+  const prompt = `Génère un article de blog premium complet sur le sujet suivant.
 
 SUJET : ${input.title}
 CATÉGORIE : ${input.category}
@@ -45,12 +70,20 @@ ${input.source_url ? `SOURCE : ${input.source_url}` : ''}
 
 Réponds UNIQUEMENT avec ce JSON valide (sans markdown autour) :
 {
-  "title": "titre SEO optimisé (60 chars max)",
-  "meta_description": "description meta (150 chars max)",
-  "excerpt": "résumé accrocheur (200 chars max)",
-  "content": "article complet en HTML (utilise h2, h3, p, ul, li, strong — minimum 1200 mots)",
-  "tags": ["tag1","tag2","tag3","tag4"],
-  "seo_score": 85
+  "title": "titre SEO puissant (55-65 chars)",
+  "meta_description": "meta description SEO (145-158 chars)",
+  "excerpt": "accroche percutante pour cards (180-220 chars)",
+  "content": "article HTML complet (H2/H3/H4, blockquotes, callouts, table si pertinent — minimum 1800 mots)",
+  "key_takeaways": ["point clé 1", "point clé 2", "point clé 3", "point clé 4", "point clé 5"],
+  "faq": [
+    {"question": "Question fréquente 1 ?", "answer": "Réponse complète et utile."},
+    {"question": "Question fréquente 2 ?", "answer": "Réponse complète et utile."},
+    {"question": "Question fréquente 3 ?", "answer": "Réponse complète et utile."},
+    {"question": "Question fréquente 4 ?", "answer": "Réponse complète et utile."},
+    {"question": "Question fréquente 5 ?", "answer": "Réponse complète et utile."}
+  ],
+  "tags": ["tag1","tag2","tag3","tag4","tag5"],
+  "seo_score": 88
 }`;
 
   const response = await anthropic.messages.create({
@@ -72,9 +105,11 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown autour) :
     meta_description: json.meta_description,
     excerpt:          json.excerpt,
     content:          json.content,
+    key_takeaways:    json.key_takeaways || [],
+    faq:              json.faq || [],
     tags:             json.tags || [],
     reading_time,
-    seo_score:        json.seo_score || 80,
+    seo_score:        json.seo_score || 82,
   };
 }
 

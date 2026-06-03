@@ -128,13 +128,15 @@ const CATS = [
   { id:'all',                    label:'Tout',               color:'#7C3AED' },
   { id:'Actualités IA',          label:'Actualités IA',      color:'#F59E0B' },
   { id:'Outils IA',              label:'Outils IA',          color:'#06B6D4' },
+  { id:'Tutoriels IA',           label:'Tutoriels IA',       color:'#3B82F6' },
+  { id:'Comparatifs IA',         label:'Comparatifs IA',     color:'#F97316' },
+  { id:'Guides IA',              label:'Guides IA',          color:'#84CC16' },
   { id:'Automatisation IA',      label:'Automatisation IA',  color:'#10B981' },
   { id:'Marketing IA',           label:'Marketing IA',       color:'#7C3AED' },
   { id:'Création de Contenu IA', label:'Contenu IA',         color:'#EF4444' },
   { id:'Vente IA',               label:'Vente IA',           color:'#8B5CF6' },
-  { id:'Support Client IA',      label:'Support Client',     color:'#EC4899' },
 ];
-const ICONS = {'Actualités IA':'📡','Outils IA':'🔧','Automatisation IA':'⚡','Marketing IA':'📈','Création de Contenu IA':'✍️','Vente IA':'💰','Support Client IA':'🤝'};
+const ICONS = {'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝','Tutoriels IA':'📚','Comparatifs IA':'⚖️','Guides IA':'🗺️'};
 const catColor = c => CATS.find(x => x.id === c)?.color || '#7C3AED';
 const catGrad  = c => ({
   'Actualités IA':         'linear-gradient(135deg,rgba(245,158,11,0.22),rgba(245,158,11,0.06))',
@@ -300,7 +302,7 @@ function App(){
           <p>Actualités IA, outils, stratégies et tutoriels publiés chaque semaine pour rester à la pointe.</p>
           <div className="blog-stats">
             <span className="blog-stat"><strong>{total || DEMO.length}+</strong> articles</span>
-            <span className="blog-stat"><strong>7</strong> catégories</span>
+            <span className="blog-stat"><strong>10</strong> catégories</span>
             <span className="blog-stat"><strong>100%</strong> en français</span>
             <span className="blog-stat"><strong>Mis à jour</strong> chaque semaine</span>
           </div>

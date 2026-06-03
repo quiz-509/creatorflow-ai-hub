@@ -3,213 +3,387 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Article — CreatorFlow Market</title>
-  <meta name="description" content="">
+  <title id="page-title">Article — CreatorFlow Market</title>
+  <meta id="page-desc" name="description" content="">
+  <meta id="og-type"  property="og:type"        content="article">
+  <meta id="og-site"  property="og:site_name"   content="CreatorFlow Market">
+  <meta id="og-title" property="og:title"        content="">
+  <meta id="og-desc"  property="og:description"  content="">
+  <meta id="og-img"   property="og:image"        content="">
+  <meta id="tw-card"  name="twitter:card"        content="summary_large_image">
+  <meta id="tw-title" name="twitter:title"       content="">
+  <meta id="tw-desc"  name="twitter:description" content="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--pink:#EC4899;--purple:#8B5CF6;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+    :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--pink:#EC4899;--blue:#3B82F6;--r:12px;--r-lg:18px;--r-xl:24px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{font-family:var(--f);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
     a{color:inherit;text-decoration:none;}
     button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-    .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:32px;}
-    .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0;}
-    .nav-links{display:flex;align-items:center;gap:4px;flex:1;}
-    .nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
+
+    /* PROGRESS */
+    .rp{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--v),var(--c));z-index:600;transition:width 60ms linear;pointer-events:none;}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:24px;}
+    .logo{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;flex:1;}
+    .nav-link{padding:7px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
     .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.06);color:var(--text);}
     .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
-    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;transition:all 200ms var(--ease);cursor:pointer;white-space:nowrap;}
     .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
-    .btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;box-shadow:0 4px 24px rgba(124,58,237,0.35);}
-    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(124,58,237,0.5);}
+    .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+    .btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border:none;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
 
     /* HERO */
-    .article-hero{padding:calc(var(--nav) + 60px) 0 48px;background:linear-gradient(180deg,rgba(124,58,237,0.06) 0%,transparent 100%);border-bottom:1px solid var(--border);}
-    .container{max-width:860px;margin:0 auto;padding:0 24px;}
-    .container-wide{max-width:1200px;margin:0 auto;padding:0 24px;}
-    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3);margin-bottom:24px;}
+    .article-hero{padding:calc(var(--nav)+48px) 0 40px;background:linear-gradient(180deg,rgba(124,58,237,0.07) 0%,transparent 100%);border-bottom:1px solid var(--border);}
+    .hero-inner{max-width:900px;margin:0 auto;padding:0 24px;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-bottom:20px;}
     .breadcrumb a:hover{color:var(--text-2);}
-    .breadcrumb-sep{opacity:.4;}
+    .bc-sep{opacity:.35;}
+    .cat-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:18px;}
+    .article-title{font-size:clamp(26px,4vw,46px);font-weight:900;line-height:1.15;letter-spacing:-0.03em;margin-bottom:14px;}
+    .article-subtitle{font-size:18px;color:var(--text-2);line-height:1.6;margin-bottom:28px;max-width:720px;}
+    .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;font-size:13px;color:var(--text-3);padding-top:20px;border-top:1px solid var(--border);}
+    .hero-meta-chip{display:flex;align-items:center;gap:5px;}
+    .seo-pill{padding:2px 9px;border-radius:6px;font-size:11px;font-weight:700;}
+    .seo-good{background:rgba(16,185,129,.12);color:#10B981;border:1px solid rgba(16,185,129,.2);}
+    .seo-mid{background:rgba(245,158,11,.12);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
 
-    .cat-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
-    .cat-badge[data-cat="Actualités IA"]{background:rgba(245,158,11,.12);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
-    .cat-badge[data-cat="Outils IA"]{background:rgba(6,182,212,.1);color:var(--c);border:1px solid rgba(6,182,212,.2);}
-    .cat-badge[data-cat="Automatisation IA"]{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);}
-    .cat-badge[data-cat="Marketing IA"]{background:rgba(124,58,237,.1);color:var(--vs);border:1px solid rgba(124,58,237,.2);}
-    .cat-badge[data-cat="Création de Contenu IA"]{background:rgba(236,72,153,.1);color:var(--pink);border:1px solid rgba(236,72,153,.2);}
-    .cat-badge[data-cat="Vente IA"]{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
-    .cat-badge[data-cat="Support Client IA"]{background:rgba(139,92,246,.1);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+    /* LAYOUT */
+    .article-layout{display:grid;grid-template-columns:256px minmax(0,720px) 260px;gap:40px;max-width:1300px;margin:0 auto;padding:40px 24px 80px;align-items:start;}
+    @media(max-width:1200px){.article-layout{grid-template-columns:220px minmax(0,1fr);}.right-sidebar{display:none;}}
+    @media(max-width:900px){.article-layout{grid-template-columns:1fr;}.toc-sidebar{display:none;}}
 
-    h1.article-title{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.2;margin-bottom:12px;}
-    .article-subtitle{font-size:18px;color:var(--text-2);margin-bottom:28px;line-height:1.5;}
-    .article-meta{display:flex;flex-wrap:wrap;align-items:center;gap:20px;font-size:13px;color:var(--text-3);padding-top:20px;border-top:1px solid var(--border);}
-    .meta-chip{display:flex;align-items:center;gap:5px;}
+    /* TOC */
+    .toc-sidebar{position:sticky;top:calc(var(--nav)+20px);max-height:calc(100vh - var(--nav) - 40px);overflow-y:auto;padding-right:8px;}
+    .toc-sidebar::-webkit-scrollbar{width:3px;}
+    .toc-sidebar::-webkit-scrollbar-track{background:transparent;}
+    .toc-sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:99px;}
+    .toc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:12px;padding-left:12px;}
+    .toc-list{list-style:none;}
+    .toc-item{display:block;padding:6px 12px;font-size:13px;color:var(--text-3);border-left:2px solid var(--border);transition:all 150ms;cursor:pointer;border-radius:0 6px 6px 0;line-height:1.4;}
+    .toc-item:hover{color:var(--text-2);border-left-color:var(--border-2);}
+    .toc-item.active{color:var(--vs);border-left-color:var(--v);background:rgba(124,58,237,0.06);}
+    .toc-item.h3{padding-left:24px;font-size:12px;}
 
-    /* BODY */
-    .article-body{padding:56px 0 80px;}
+    /* CONTENT */
+    .article-content-wrap{min-width:0;}
     .article-content{font-size:17px;line-height:1.85;color:var(--text-2);}
-    .article-content h2{font-size:24px;font-weight:700;color:var(--text);margin:40px 0 16px;line-height:1.3;}
-    .article-content h3{font-size:19px;font-weight:700;color:var(--text);margin:32px 0 12px;}
-    .article-content p{margin-bottom:20px;}
-    .article-content ul,.article-content ol{margin:0 0 20px 24px;}
-    .article-content li{margin-bottom:8px;}
-    .article-content strong{color:var(--text);font-weight:600;}
+    .article-content h2{font-size:clamp(20px,2.5vw,26px);font-weight:800;color:var(--text);margin:44px 0 16px;line-height:1.3;letter-spacing:-0.02em;padding-bottom:12px;border-bottom:1px solid var(--border);}
+    .article-content h3{font-size:20px;font-weight:700;color:var(--text);margin:32px 0 12px;line-height:1.35;}
+    .article-content h4{font-size:17px;font-weight:600;color:var(--text);margin:24px 0 10px;}
+    .article-content p{margin-bottom:20px;color:var(--text-2);}
+    .article-content ul,.article-content ol{margin:0 0 20px 20px;}
+    .article-content li{margin-bottom:8px;color:var(--text-2);}
+    .article-content ul li::marker{color:var(--v);}
+    .article-content strong,.article-content b{color:var(--text);font-weight:600;}
+    .article-content em{color:var(--vs);font-style:italic;}
     .article-content a{color:var(--vs);text-decoration:underline;text-underline-offset:3px;}
-    .article-content blockquote{border-left:3px solid var(--v);padding:16px 20px;background:rgba(124,58,237,.07);border-radius:0 10px 10px 0;margin:24px 0;font-style:italic;color:var(--text-2);}
-    .article-content code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;font-size:.9em;font-family:monospace;}
-    .article-content pre{background:var(--surf-3);padding:20px;border-radius:12px;overflow-x:auto;margin:24px 0;}
-    .article-content pre code{background:none;padding:0;font-size:14px;}
+    .article-content a:hover{color:var(--c);}
+    .article-content blockquote{border-left:3px solid var(--v);padding:16px 20px;background:rgba(124,58,237,0.06);border-radius:0 10px 10px 0;margin:24px 0;font-style:italic;color:var(--text-2);}
+    .article-content blockquote strong{color:var(--vs);}
+    .article-content code{background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:5px;font-size:.88em;font-family:'SFMono-Regular',Consolas,monospace;color:var(--c);}
+    .article-content pre{background:var(--surf-3);border:1px solid var(--border);padding:20px;border-radius:12px;overflow-x:auto;margin:24px 0;}
+    .article-content pre code{background:none;padding:0;font-size:14px;color:var(--text-2);}
     .article-content img{border-radius:12px;margin:24px 0;width:100%;}
+    .article-content table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px;}
+    .article-content th{background:var(--surf-2);padding:12px 16px;text-align:left;font-weight:600;color:var(--text);border-bottom:2px solid var(--border-2);}
+    .article-content td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text-2);}
+    .article-content tr:hover td{background:rgba(255,255,255,0.02);}
+
+    /* KEY TAKEAWAYS */
+    .key-takeaways{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.05));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:36px;}
+    .kt-title{font-size:14px;font-weight:700;color:var(--vs);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .kt-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .kt-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-2);line-height:1.55;}
+    .kt-dot{width:20px;height:20px;border-radius:50%;background:rgba(124,58,237,0.2);color:var(--vs);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+
+    /* INLINE CALLOUTS */
+    .callout{border-radius:10px;padding:16px 20px;margin:24px 0;font-size:14px;line-height:1.6;}
+    .callout-tip{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:var(--text-2);}
+    .callout-tip strong{color:var(--green);}
+    .callout-warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--text-2);}
+    .callout-warn strong{color:var(--amber);}
+    .callout-info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:var(--text-2);}
+    .callout-info strong{color:var(--blue);}
 
     /* TAGS */
-    .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;padding-top:32px;border-top:1px solid var(--border);}
-    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);}
+    .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:28px;border-top:1px solid var(--border);}
+    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);transition:all 150ms;}
+    .tag-pill:hover{border-color:var(--border-2);color:var(--text-2);}
 
     /* SHARE */
-    .share-row{display:flex;align-items:center;gap:12px;margin-top:32px;flex-wrap:wrap;}
-    .share-label{font-size:13px;color:var(--text-3);}
-    .share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;background:var(--surf-2);border:1px solid var(--border);transition:all 180ms;}
+    .share-row{display:flex;align-items:center;gap:10px;margin-top:28px;flex-wrap:wrap;}
+    .share-label{font-size:12px;color:var(--text-3);font-weight:500;}
+    .share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;background:var(--surf-2);border:1px solid var(--border);transition:all 150ms;cursor:pointer;}
     .share-btn:hover{background:var(--surf-3);border-color:var(--border-2);}
-    .share-tw:hover{color:#1DA1F2;}
-    .share-li:hover{color:#0A66C2;}
-    .share-fb:hover{color:#1877F2;}
+    .share-copy{cursor:pointer;}
 
-    /* CTA */
-    .article-cta{margin-top:48px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(6,182,212,.06));border:1px solid rgba(124,58,237,.25);border-radius:var(--r-xl);padding:40px;text-align:center;}
-    .article-cta h3{font-size:22px;font-weight:800;margin-bottom:10px;}
-    .article-cta p{color:var(--text-2);margin-bottom:24px;font-size:15px;}
+    /* CTA BLOCK */
+    .article-cta{background:linear-gradient(135deg,rgba(124,58,237,0.14),rgba(6,182,212,0.07));border:1px solid rgba(124,58,237,0.3);border-radius:var(--r-xl);padding:44px 40px;text-align:center;margin-top:48px;position:relative;overflow:hidden;}
+    .article-cta::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.07),transparent 70%);pointer-events:none;}
+    .cta-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--vs);margin-bottom:12px;}
+    .article-cta h3{font-size:clamp(18px,2.5vw,26px);font-weight:800;margin-bottom:10px;letter-spacing:-0.02em;}
+    .article-cta p{color:var(--text-2);margin-bottom:28px;font-size:15px;max-width:480px;margin-left:auto;margin-right:auto;}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .cta-btn-primary{padding:12px 28px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 200ms;display:inline-flex;align-items:center;gap:8px;}
+    .cta-btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--vg);}
+    .cta-btn-ghost{padding:12px 28px;background:rgba(255,255,255,0.04);color:var(--text-2);border-radius:999px;font-size:14px;font-weight:600;border:1px solid var(--border-2);cursor:pointer;transition:all 200ms;}
+    .cta-btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+
+    /* FAQ */
+    .faq-section{margin-top:52px;padding-top:40px;border-top:1px solid var(--border);}
+    .faq-title{font-size:20px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+    .faq-item{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:border-color 150ms;}
+    .faq-item.open{border-color:var(--border-2);}
+    .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;font-size:14px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;background:var(--surf);gap:12px;}
+    .faq-q:hover{background:var(--surf-2);}
+    .faq-icon{font-size:16px;transition:transform 200ms;flex-shrink:0;color:var(--text-3);}
+    .faq-item.open .faq-icon{transform:rotate(45deg);color:var(--vs);}
+    .faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height 250ms ease,padding 250ms ease;}
+    .faq-item.open .faq-a{max-height:400px;padding:4px 20px 18px;}
+    .faq-a p{font-size:14px;color:var(--text-2);line-height:1.7;}
 
     /* RELATED */
-    .related-section{padding:60px 0;border-top:1px solid var(--border);}
-    .related-section h2{font-size:22px;font-weight:700;margin-bottom:32px;}
-    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+    .related-section{padding:52px 0 0;border-top:1px solid var(--border);margin-top:52px;}
+    .related-title{font-size:20px;font-weight:800;margin-bottom:24px;}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
     .related-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 220ms var(--ease);cursor:pointer;}
-    .related-card:hover{transform:translateY(-3px);border-color:var(--border-2);box-shadow:0 12px 40px rgba(0,0,0,.4);}
-    .related-thumb{height:140px;background:var(--surf-3);display:flex;align-items:center;justify-content:center;font-size:36px;}
-    .related-body{padding:16px;}
-    .related-body h4{font-size:15px;font-weight:600;line-height:1.4;margin:8px 0 6px;}
-    .related-body p{font-size:13px;color:var(--text-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .related-card:hover{transform:translateY(-3px);border-color:var(--border-2);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+    .related-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:40px;}
+    .related-body{padding:16px 18px;}
+    .related-body h4{font-size:14px;font-weight:700;line-height:1.4;margin:8px 0 6px;color:var(--text);}
+    .related-body p{font-size:12px;color:var(--text-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+    /* RIGHT SIDEBAR */
+    .right-sidebar{position:sticky;top:calc(var(--nav)+20px);display:flex;flex-direction:column;gap:20px;}
+    .sidebar-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+    .sidebar-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:14px;}
+    .nl-mini input{width:100%;background:var(--surf-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--f);margin-bottom:10px;}
+    .nl-mini input::placeholder{color:var(--text-3);}
+    .nl-mini input:focus{outline:none;border-color:rgba(124,58,237,0.4);}
+    .nl-mini-btn{width:100%;padding:10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all 200ms;}
+    .nl-mini-btn:hover{opacity:.9;}
+    .expert-cta-mini{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.06));border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-lg);padding:20px;text-align:center;}
+    .expert-cta-mini h4{font-size:14px;font-weight:700;margin-bottom:8px;}
+    .expert-cta-mini p{font-size:12px;color:var(--text-3);margin-bottom:14px;line-height:1.5;}
+    .expert-cta-mini a{display:block;padding:9px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:12px;font-weight:600;color:var(--vs);transition:all 150ms;}
+    .expert-cta-mini a:hover{background:rgba(124,58,237,0.25);}
+
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 200ms;z-index:400;opacity:0;pointer-events:none;}
+    .back-top.visible{opacity:1;pointer-events:all;}
+    .back-top:hover{background:var(--v);border-color:var(--v);transform:translateY(-2px);}
 
     /* SKELETON */
-    .skeleton{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:400% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
-    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-    .sk-h1{height:44px;width:80%;margin-bottom:16px;}
-    .sk-h2{height:20px;width:60%;margin-bottom:28px;}
-    .sk-meta{height:14px;width:50%;margin-bottom:40px;}
-    .sk-p{height:14px;margin-bottom:10px;}
-    .sk-p:last-child{width:70%;}
+    .sk{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:400% 100%;animation:sh 1.5s infinite;border-radius:8px;}
+    @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
     /* NOT FOUND */
-    .not-found{text-align:center;padding:120px 24px;}
+    .not-found{text-align:center;padding:120px 24px;padding-top:calc(var(--nav)+80px);}
     .not-found h2{font-size:28px;font-weight:700;margin-bottom:12px;}
-    .not-found p{color:var(--text-2);margin-bottom:32px;}
 
     /* FOOTER */
     .footer{background:var(--surf);border-top:1px solid var(--border);padding:40px 0;}
-    .footer-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+    .footer-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
     .footer-logo{font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .footer-links{display:flex;gap:20px;font-size:13px;color:var(--text-3);}
+    .footer-links{display:flex;gap:20px;font-size:12px;color:var(--text-3);}
     .footer-links a:hover{color:var(--text-2);}
 
-    /* SEO SCORE BADGE */
-    .seo-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;}
-    .seo-good{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.2);}
-    .seo-mid{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
-
-    @media(max-width:768px){
+    @media(max-width:680px){
       .nav-links{display:none;}
-      h1.article-title{font-size:26px;}
+      .article-hero{padding:calc(var(--nav)+32px) 0 28px;}
+      .article-title{font-size:26px;}
       .article-content{font-size:16px;}
-      .article-cta{padding:24px;}
+      .article-cta{padding:28px 20px;}
+      .cta-btns{flex-direction:column;align-items:center;}
+      .hero-meta{gap:12px;font-size:12px;}
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
+<div class="rp" id="rp"></div>
+
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="logo">CreatorFlow Market</a>
     <div class="nav-links">
-      <a href="experts.html" class="nav-link">Experts</a>
-      <a href="brief.html" class="nav-link">Publier un brief</a>
-      <a href="academy.html" class="nav-link">Academy</a>
-      <a href="tarifs.html" class="nav-link">Tarifs</a>
-      <a href="blog.html" class="nav-link active">Blog IA</a>
+      <a href="experts.html"  class="nav-link">Experts</a>
+      <a href="briefs.html"   class="nav-link">Publier un brief</a>
+      <a href="academie.html" class="nav-link">Academy</a>
+      <a href="pricing.html"  class="nav-link">Tarifs</a>
+      <a href="blog.html"     class="nav-link active">Blog IA</a>
     </div>
     <div class="nav-actions">
-      <a href="auth.html" class="btn btn-ghost">Connexion</a>
-      <a href="auth.html?mode=register" class="btn btn-primary">Rejoindre →</a>
+      <a href="connexion.html"   class="btn btn-ghost">Connexion</a>
+      <a href="inscription.html" class="btn btn-primary">Rejoindre →</a>
     </div>
   </div>
 </nav>
 
 <div id="root"></div>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-inner">
     <span class="footer-logo">CreatorFlow Market</span>
     <div class="footer-links">
       <a href="cgu.html">CGU</a>
-      <a href="confidentialite.html">Vie privée</a>
+      <a href="politique-confidentialite.html">Vie privée</a>
       <a href="blog.html">Blog IA</a>
       <a href="experts.html">Experts</a>
-      <a href="academy.html">Academy</a>
+      <a href="academie.html">Academy</a>
     </div>
+    <span style="font-size:12px;color:var(--text-3)">© 2026 CreatorFlow Market</span>
   </div>
 </footer>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
+<script>
+  // Progress bar + back-to-top
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('rp');
+    const bt = document.getElementById('backTop');
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    if (el) el.style.width = pct + '%';
+    if (bt) bt.className = 'back-top' + (h.scrollTop > 400 ? ' visible' : '');
+  });
+</script>
+
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef, useCallback } = React;
+const sb = supabase.createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
-const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+const CAT_COLORS = {
+  'Actualités IA':'#F59E0B','Outils IA':'#06B6D4','Automatisation IA':'#10B981',
+  'Marketing IA':'#7C3AED','Création de Contenu IA':'#EF4444','Vente IA':'#8B5CF6',
+  'Support Client IA':'#EC4899','Tutoriels IA':'#3B82F6','Comparatifs IA':'#F97316',
+  'Guides IA':'#84CC16',
+};
 const CAT_ICONS = {
-  'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡',
-  'Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝'
+  'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈',
+  'Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝',
+  'Tutoriels IA':'📚','Comparatifs IA':'⚖️','Guides IA':'🗺️',
+};
+const CAT_GRAD = c => {
+  const map = {
+    'Actualités IA':'rgba(245,158,11,0.18)','Outils IA':'rgba(6,182,212,0.18)',
+    'Automatisation IA':'rgba(16,185,129,0.18)','Marketing IA':'rgba(124,58,237,0.18)',
+    'Création de Contenu IA':'rgba(239,68,68,0.18)','Vente IA':'rgba(139,92,246,0.18)',
+    'Support Client IA':'rgba(236,72,153,0.18)','Tutoriels IA':'rgba(59,130,246,0.18)',
+    'Comparatifs IA':'rgba(249,115,22,0.18)','Guides IA':'rgba(132,204,22,0.18)',
+  };
+  const col = map[c] || 'rgba(124,58,237,0.18)';
+  return `linear-gradient(135deg,${col},rgba(4,4,10,0.3))`;
 };
 
 function CatBadge({ cat }) {
-  return <span className="cat-badge" data-cat={cat}>{CAT_ICONS[cat] || '📄'} {cat}</span>;
-}
-
-function ShareBtn({ href, label, cls }) {
+  const col = CAT_COLORS[cat] || '#7C3AED';
   return (
-    <a href={href} target="_blank" rel="noopener" className={`share-btn ${cls}`}>{label}</a>
+    <span className="cat-badge" style={{background:`${col}20`,color:col,border:`1px solid ${col}40`}}>
+      {CAT_ICONS[cat]||'🤖'} {cat}
+    </span>
   );
 }
 
-function Skeleton() {
+function KeyTakeaways({ content, takeaways }) {
+  const items = (() => {
+    if (takeaways && takeaways.length > 0) return takeaways;
+    // Auto-extract from H2 sections
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, 'text/html');
+      const h2s = Array.from(doc.querySelectorAll('h2')).slice(0, 5);
+      return h2s.map(h => {
+        const next = h.nextElementSibling;
+        if (next && next.tagName === 'P') {
+          const t = next.textContent.trim();
+          return t.length > 110 ? t.slice(0, 110) + '…' : t;
+        }
+        return h.textContent;
+      }).filter(Boolean);
+    } catch { return []; }
+  })();
+  if (!items.length) return null;
   return (
-    <div style={{ paddingTop: 'calc(var(--nav) + 60px)', paddingBottom: 60 }}>
-      <div className="container">
-        <div className="skeleton sk-h1" />
-        <div className="skeleton sk-h2" />
-        <div className="skeleton sk-meta" />
-        {[1,2,3,4,5,6].map(i => <div key={i} className="skeleton sk-p" style={{ width: i%3===0?'70%':'100%', marginBottom:12 }} />)}
-      </div>
+    <div className="key-takeaways">
+      <div className="kt-title">⚡ Ce qu'il faut retenir</div>
+      <ul className="kt-list">
+        {items.map((item, i) => (
+          <li key={i} className="kt-item">
+            <span className="kt-dot">{i+1}</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function TOC({ headings, activeId }) {
+  if (!headings.length) return null;
+  return (
+    <aside className="toc-sidebar">
+      <div className="toc-title">Dans cet article</div>
+      <ul className="toc-list">
+        {headings.map(h => (
+          <li key={h.id}>
+            <span
+              className={`toc-item ${h.level === 3 ? 'h3' : ''} ${activeId === h.id ? 'active' : ''}`}
+              onClick={() => {
+                const el = document.getElementById(h.id);
+                if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+              }}
+            >{h.text}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
+function FAQSection({ faq }) {
+  const [open, setOpen] = useState(null);
+  if (!faq || !faq.length) return null;
+  return (
+    <div className="faq-section">
+      <h2 className="faq-title">❓ Questions fréquentes</h2>
+      {faq.map((item, i) => (
+        <div key={i} className={`faq-item ${open === i ? 'open' : ''}`}>
+          <button className="faq-q" onClick={() => setOpen(open === i ? null : i)}>
+            {item.question || item.q}
+            <span className="faq-icon">+</span>
+          </button>
+          <div className="faq-a">
+            <p>{item.answer || item.a}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
 
 function RelatedCard({ article }) {
-  const icons = {'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝'};
-  const colors = {'Actualités IA':'#1C1408','Outils IA':'#041418','Automatisation IA':'#041410','Marketing IA':'#100A1C','Création de Contenu IA':'#1A0814','Vente IA':'#180808','Support Client IA':'#0E0A1C'};
   return (
     <div className="related-card" onClick={() => window.location.href = `blog-article.html?slug=${article.slug}`}>
-      <div className="related-thumb" style={{ background: colors[article.category] || '#101020' }}>
-        <span style={{ fontSize: 40 }}>{icons[article.category] || '📄'}</span>
+      <div className="related-thumb" style={{ background: CAT_GRAD(article.category) }}>
+        <span>{CAT_ICONS[article.category] || '🤖'}</span>
       </div>
       <div className="related-body">
         <CatBadge cat={article.category} />
@@ -220,119 +394,213 @@ function RelatedCard({ article }) {
   );
 }
 
+function RightSidebar() {
+  const [email, setEmail] = useState('');
+  const [done, setDone] = useState(false);
+  const submit = async e => {
+    e.preventDefault();
+    if (!email) return;
+    try { await sb.from('blog_subscribers').insert({ email }); } catch {}
+    setDone(true);
+  };
+  return (
+    <aside className="right-sidebar">
+      <div className="sidebar-card">
+        <div className="sidebar-title">📨 Newsletter IA</div>
+        {done ? (
+          <p style={{fontSize:13,color:'#10B981',fontWeight:600}}>✅ Inscription confirmée !</p>
+        ) : (
+          <form className="nl-mini" onSubmit={submit}>
+            <input type="email" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required />
+            <button type="submit" className="nl-mini-btn">S'abonner gratuitement</button>
+          </form>
+        )}
+        <p style={{fontSize:11,color:'var(--text-3)',marginTop:10,lineHeight:1.5}}>Meilleurs articles IA chaque semaine. Sans spam.</p>
+      </div>
+      <div className="expert-cta-mini">
+        <div style={{fontSize:28,marginBottom:8}}>🚀</div>
+        <h4>Besoin d'un expert IA ?</h4>
+        <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
+        <a href="experts.html">Voir les experts →</a>
+      </div>
+    </aside>
+  );
+}
+
+function Skeleton() {
+  return (
+    <div style={{ paddingTop: 'var(--nav)' }}>
+      <div className="article-hero">
+        <div className="hero-inner">
+          <div className="sk" style={{height:12,width:'30%',marginBottom:20}}/>
+          <div className="sk" style={{height:14,width:'15%',borderRadius:999,marginBottom:18}}/>
+          <div className="sk" style={{height:42,width:'85%',marginBottom:12}}/>
+          <div className="sk" style={{height:42,width:'70%',marginBottom:14}}/>
+          <div className="sk" style={{height:20,width:'60%',marginBottom:28}}/>
+          <div className="sk" style={{height:14,width:'50%'}}/>
+        </div>
+      </div>
+      <div className="article-layout">
+        <div/>
+        <div>
+          {[1,2,3,4,5,6,7,8].map(i=>(
+            <div key={i} className="sk" style={{height:14,marginBottom:12,width:i%3===0?'75%':'100%'}}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ArticlePage() {
   const [article, setArticle] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [headings, setHeadings] = useState([]);
+  const [activeId, setActiveId] = useState('');
+  const [copied, setCopied] = useState(false);
+  const contentRef = useRef(null);
 
   const slug = new URLSearchParams(window.location.search).get('slug');
 
   useEffect(() => {
     if (!slug) { setNotFound(true); setLoading(false); return; }
-    loadArticle();
+    (async () => {
+      try {
+        const { data, error } = await sb
+          .from('blog_articles').select('*')
+          .eq('slug', slug).eq('status','published').single();
+        if (error || !data) { setNotFound(true); setLoading(false); return; }
+        setArticle(data);
+
+        // Meta tags
+        document.getElementById('page-title').textContent = `${data.title} — CreatorFlow Market`;
+        document.getElementById('page-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        document.getElementById('og-title').setAttribute('content', data.title);
+        document.getElementById('og-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        document.getElementById('tw-title').setAttribute('content', data.title);
+        document.getElementById('tw-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        if (data.og_image) document.getElementById('og-img').setAttribute('content', data.og_image);
+
+        // Schema.org
+        const schema = {
+          '@context':'https://schema.org','@type':'Article',
+          headline:data.title, description:data.meta_description||data.excerpt,
+          author:{'@type':'Organization',name:'CreatorFlow Market'},
+          publisher:{
+            '@type':'Organization',name:'CreatorFlow Market',
+            logo:{'@type':'ImageObject',url:'https://creatorflowmarket.com/og-image.jpg'},
+            url:'https://creatorflowmarket.com'
+          },
+          datePublished:data.published_at, dateModified:data.updated_at||data.published_at,
+          image:data.og_image||data.featured_image||'https://creatorflowmarket.com/og-image.jpg',
+          url:`https://creatorflowmarket.com/blog-article?slug=${data.slug}`,
+          mainEntityOfPage:{'@type':'WebPage','@id':`https://creatorflowmarket.com/blog-article?slug=${data.slug}`},
+        };
+        const faqSchema = data.faq && data.faq.length ? {
+          '@context':'https://schema.org','@type':'FAQPage',
+          mainEntity: data.faq.map(f => ({
+            '@type':'Question', name:f.question||f.q,
+            acceptedAnswer:{'@type':'Answer',text:f.answer||f.a}
+          }))
+        } : null;
+        const breadcrumbSchema = {
+          '@context':'https://schema.org','@type':'BreadcrumbList',
+          itemListElement:[
+            {'@type':'ListItem',position:1,name:'Accueil',item:'https://creatorflowmarket.com'},
+            {'@type':'ListItem',position:2,name:'Blog IA',item:'https://creatorflowmarket.com/blog'},
+            {'@type':'ListItem',position:3,name:data.category,item:`https://creatorflowmarket.com/blog?cat=${encodeURIComponent(data.category)}`},
+            {'@type':'ListItem',position:4,name:data.title},
+          ]
+        };
+        [schema, faqSchema, breadcrumbSchema].filter(Boolean).forEach(s => {
+          const sc = document.createElement('script');
+          sc.type = 'application/ld+json'; sc.text = JSON.stringify(s);
+          document.head.appendChild(sc);
+        });
+
+        // Views
+        sb.rpc('increment_blog_views',{article_slug:slug}).catch(()=>{});
+
+        // Related
+        const { data: rel } = await sb.from('blog_articles')
+          .select('id,slug,title,excerpt,category')
+          .eq('status','published').eq('category',data.category).neq('slug',slug).limit(3);
+        setRelated(rel || []);
+      } catch { setNotFound(true); }
+      finally { setLoading(false); }
+    })();
   }, [slug]);
 
-  async function loadArticle() {
-    try {
-      const { data, error } = await sb
-        .from('blog_articles')
-        .select('*')
-        .eq('slug', slug)
-        .eq('status', 'published')
-        .single();
+  // Build TOC after content renders
+  useEffect(() => {
+    if (!article?.content || !contentRef.current) return;
+    const els = contentRef.current.querySelectorAll('h2, h3');
+    const items = [];
+    els.forEach((el, i) => {
+      const id = `heading-${i}`;
+      el.id = id;
+      el.style.scrollMarginTop = '80px';
+      items.push({ id, level: parseInt(el.tagName[1]), text: el.textContent });
+    });
+    setHeadings(items);
 
-      if (error || !data) { setNotFound(true); setLoading(false); return; }
+    // Intersection observer for active TOC item
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id); });
+    }, { rootMargin: '-64px 0px -70% 0px', threshold: 0 });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, [article]);
 
-      setArticle(data);
-      document.title = `${data.title} — CreatorFlow Market`;
-      const desc = document.querySelector('meta[name="description"]');
-      if (desc) desc.setAttribute('content', data.meta_description || data.excerpt || '');
-
-      // Schema.org JSON-LD
-      const schema = {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: data.title,
-        description: data.meta_description || data.excerpt,
-        author: { '@type': 'Organization', name: 'CreatorFlow Market' },
-        publisher: { '@type': 'Organization', name: 'CreatorFlow Market', url: 'https://creatorflowmarket.com' },
-        datePublished: data.published_at,
-        dateModified: data.updated_at || data.published_at,
-        url: `https://creatorflowmarket.com/blog-article.html?slug=${data.slug}`,
-      };
-      const s = document.createElement('script');
-      s.type = 'application/ld+json';
-      s.text = JSON.stringify(schema);
-      document.head.appendChild(s);
-
-      // Incrémenter vues
-      sb.rpc('increment_blog_views', { article_slug: slug }).then(() => {});
-
-      // Articles liés
-      const { data: rel } = await sb
-        .from('blog_articles')
-        .select('id,slug,title,excerpt,category')
-        .eq('status', 'published')
-        .eq('category', data.category)
-        .neq('slug', slug)
-        .limit(3);
-      setRelated(rel || []);
-
-      setLoading(false);
-    } catch(e) {
-      setNotFound(true);
-      setLoading(false);
-    }
-  }
+  const copyLink = () => {
+    navigator.clipboard?.writeText(window.location.href).catch(()=>{});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (loading) return <Skeleton />;
-
   if (notFound) return (
-    <div style={{ paddingTop: 'var(--nav)' }}>
-      <div className="not-found">
-        <div style={{ fontSize: 64, marginBottom: 24 }}>📭</div>
-        <h2>Article introuvable</h2>
-        <p>Cet article n'existe pas ou a été supprimé.</p>
-        <a href="blog.html" className="btn btn-primary">← Retour au Blog</a>
-      </div>
+    <div className="not-found">
+      <div style={{fontSize:56,marginBottom:20}}>📭</div>
+      <h2>Article introuvable</h2>
+      <p style={{color:'var(--text-2)',marginBottom:28}}>Cet article n'existe pas ou a été supprimé.</p>
+      <a href="blog.html" className="btn btn-primary">← Retour au Blog</a>
     </div>
   );
 
-  const articleUrl = `https://creatorflowmarket.com/blog-article.html?slug=${article.slug}`;
+  const url = `https://creatorflowmarket.com/blog-article?slug=${article.slug}`;
   const pubDate = article.published_at
-    ? new Date(article.published_at).toLocaleDateString('fr-CA', { day:'numeric', month:'long', year:'numeric' })
+    ? new Date(article.published_at).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})
     : '';
+  const faqData = (() => {
+    try { return Array.isArray(article.faq) ? article.faq : (article.faq ? JSON.parse(article.faq) : []); }
+    catch { return []; }
+  })();
 
   return (
     <div style={{ paddingTop: 'var(--nav)' }}>
       {/* HERO */}
       <div className="article-hero">
-        <div className="container">
+        <div className="hero-inner">
           <div className="breadcrumb">
+            <a href="index.html">Accueil</a>
+            <span className="bc-sep">›</span>
             <a href="blog.html">Blog IA</a>
-            <span className="breadcrumb-sep">›</span>
-            <span style={{ color: 'var(--text-2)' }}>{article.category}</span>
+            <span className="bc-sep">›</span>
+            <a href={`blog.html?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
           </div>
-
           <CatBadge cat={article.category} />
-
           <h1 className="article-title">{article.title}</h1>
-          {article.subtitle && (
-            <p className="article-subtitle">{article.subtitle}</p>
-          )}
-
-          <div className="article-meta">
-            <span className="meta-chip">✍️ {article.author || 'CreatorFlow AI'}</span>
-            {article.reading_time > 0 && (
-              <span className="meta-chip">📖 {article.reading_time} min de lecture</span>
-            )}
-            {article.views > 0 && (
-              <span className="meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>
-            )}
-            {pubDate && <span className="meta-chip">📅 {pubDate}</span>}
+          {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
+          <div className="hero-meta">
+            <span className="hero-meta-chip">✍️ {article.author||'CreatorFlow AI'}</span>
+            {article.reading_time > 0 && <span className="hero-meta-chip">📖 {article.reading_time} min de lecture</span>}
+            {article.views > 0 && <span className="hero-meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>}
+            {pubDate && <span className="hero-meta-chip">📅 {pubDate}</span>}
             {article.seo_score > 0 && (
-              <span className={`seo-badge ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
+              <span className={`seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
                 SEO {article.seo_score}/100
               </span>
             )}
@@ -340,75 +608,66 @@ function ArticlePage() {
         </div>
       </div>
 
-      {/* BODY */}
-      <div className="article-body">
-        <div className="container">
+      {/* ARTICLE LAYOUT */}
+      <div className="article-layout">
+        <TOC headings={headings} activeId={activeId} />
+
+        <div className="article-content-wrap">
+          <KeyTakeaways content={article.content || ''} takeaways={article.key_takeaways} />
+
           {article.content ? (
-            <div
-              className="article-content"
-              dangerouslySetInnerHTML={{ __html: article.content }}
-            />
+            <div className="article-content" ref={contentRef} dangerouslySetInnerHTML={{ __html: article.content }} />
           ) : (
-            <p style={{ color: 'var(--text-2)' }}>Contenu en cours de chargement…</p>
+            <p style={{color:'var(--text-2)'}}>Contenu en cours de chargement…</p>
           )}
+
+          <FAQSection faq={faqData} />
 
           {/* TAGS */}
           {article.tags?.length > 0 && (
             <div className="tags-row">
-              {article.tags.map(tag => (
-                <span key={tag} className="tag-pill">#{tag}</span>
-              ))}
+              {article.tags.map(tag => <span key={tag} className="tag-pill">#{tag}</span>)}
             </div>
           )}
 
           {/* SHARE */}
           <div className="share-row">
             <span className="share-label">Partager :</span>
-            <ShareBtn
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(articleUrl)}`}
-              label="𝕏 Twitter"
-              cls="share-tw"
-            />
-            <ShareBtn
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(articleUrl)}`}
-              label="LinkedIn"
-              cls="share-li"
-            />
-            <ShareBtn
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`}
-              label="Facebook"
-              cls="share-fb"
-            />
+            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">𝕏 Twitter</a>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">LinkedIn</a>
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">Facebook</a>
+            <button className="share-btn share-copy" onClick={copyLink}>{copied ? '✅ Copié !' : '🔗 Copier le lien'}</button>
           </div>
 
           {/* CTA */}
           <div className="article-cta">
-            <h3>🚀 Trouvez un expert IA sur CreatorFlow Market</h3>
-            <p>Besoin d'aide pour implémenter ces stratégies dans votre business ?<br/>Nos experts IA certifiés sont disponibles pour vos projets.</p>
-            <a href="experts.html" className="btn btn-primary" style={{ margin: '0 auto' }}>
-              Parcourir les experts IA →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* RELATED */}
-      {related.length > 0 && (
-        <section className="related-section">
-          <div className="container-wide">
-            <h2>Articles similaires</h2>
-            <div className="related-grid">
-              {related.map(a => <RelatedCard key={a.id} article={a} />)}
+            <div className="cta-label">CreatorFlow Market</div>
+            <h3>🚀 Passez à l'action avec un expert IA</h3>
+            <p>Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business — en 48h.</p>
+            <div className="cta-btns">
+              <a href="experts.html" className="cta-btn-primary">Explorer les experts IA →</a>
+              <a href="academie.html" className="cta-btn-ghost">Voir l'Academy</a>
             </div>
           </div>
-        </section>
-      )}
+
+          {/* RELATED */}
+          {related.length > 0 && (
+            <div className="related-section">
+              <h2 className="related-title">Articles similaires</h2>
+              <div className="related-grid">
+                {related.map(a => <RelatedCard key={a.id} article={a} />)}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <RightSidebar />
+      </div>
     </div>
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<ArticlePage />);
+ReactDOM.createRoot(document.getElementById('root')).render(<ArticlePage />);
 </script>
 </body>
 </html>
