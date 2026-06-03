@@ -5,14 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title id="page-title">Article — CreatorFlow Market</title>
   <meta id="page-desc" name="description" content="">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link id="page-canonical" rel="canonical" href="https://creatorflowmarket.com/blog">
   <meta id="og-type"  property="og:type"        content="article">
   <meta id="og-site"  property="og:site_name"   content="CreatorFlow Market">
+  <meta id="og-url"   property="og:url"          content="">
   <meta id="og-title" property="og:title"        content="">
   <meta id="og-desc"  property="og:description"  content="">
-  <meta id="og-img"   property="og:image"        content="">
-  <meta id="tw-card"  name="twitter:card"        content="summary_large_image">
+  <meta id="og-img"   property="og:image"        content="https://creatorflowmarket.com/og-image.jpg">
+  <meta property="og:locale"   content="fr_FR">
+  <meta name="twitter:card"    content="summary_large_image">
+  <meta name="twitter:site"    content="@creatorflowmkt">
   <meta id="tw-title" name="twitter:title"       content="">
   <meta id="tw-desc"  name="twitter:description" content="">
+  <meta id="tw-img"   name="twitter:image"       content="https://creatorflowmarket.com/og-image.jpg">
+  <link rel="alternate" type="application/rss+xml" title="CreatorFlow Market — Blog IA" href="https://creatorflowmarket.com/rss.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -104,7 +111,7 @@
     .kt-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-2);line-height:1.55;}
     .kt-dot{width:20px;height:20px;border-radius:50%;background:rgba(124,58,237,0.2);color:var(--vs);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
 
-    /* INLINE CALLOUTS */
+    /* CALLOUTS */
     .callout{border-radius:10px;padding:16px 20px;margin:24px 0;font-size:14px;line-height:1.6;}
     .callout-tip{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:var(--text-2);}
     .callout-tip strong{color:var(--green);}
@@ -115,7 +122,7 @@
 
     /* TAGS */
     .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:28px;border-top:1px solid var(--border);}
-    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);transition:all 150ms;}
+    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);transition:all 150ms;cursor:pointer;}
     .tag-pill:hover{border-color:var(--border-2);color:var(--text-2);}
 
     /* SHARE */
@@ -123,7 +130,6 @@
     .share-label{font-size:12px;color:var(--text-3);font-weight:500;}
     .share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;background:var(--surf-2);border:1px solid var(--border);transition:all 150ms;cursor:pointer;}
     .share-btn:hover{background:var(--surf-3);border-color:var(--border-2);}
-    .share-copy{cursor:pointer;}
 
     /* CTA BLOCK */
     .article-cta{background:linear-gradient(135deg,rgba(124,58,237,0.14),rgba(6,182,212,0.07));border:1px solid rgba(124,58,237,0.3);border-radius:var(--r-xl);padding:44px 40px;text-align:center;margin-top:48px;position:relative;overflow:hidden;}
@@ -150,6 +156,14 @@
     .faq-item.open .faq-a{max-height:400px;padding:4px 20px 18px;}
     .faq-a p{font-size:14px;color:var(--text-2);line-height:1.7;}
 
+    /* PAA — People Also Ask */
+    .paa-section{margin:36px 0;padding:20px 24px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);}
+    .paa-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .paa-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-2);text-decoration:none;gap:12px;transition:color 150ms;}
+    .paa-item:last-child{border-bottom:none;padding-bottom:0;}
+    .paa-item:hover{color:var(--vs);}
+    .paa-icon{flex-shrink:0;opacity:.4;font-size:12px;}
+
     /* RELATED */
     .related-section{padding:52px 0 0;border-top:1px solid var(--border);margin-top:52px;}
     .related-title{font-size:20px;font-weight:800;margin-bottom:24px;}
@@ -175,6 +189,16 @@
     .expert-cta-mini p{font-size:12px;color:var(--text-3);margin-bottom:14px;line-height:1.5;}
     .expert-cta-mini a{display:block;padding:9px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:12px;font-weight:600;color:var(--vs);transition:all 150ms;}
     .expert-cta-mini a:hover{background:rgba(124,58,237,0.25);}
+
+    /* SEO INTELLIGENCE SIDEBAR CARD */
+    .seo-intel-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+    .seo-chips{display:flex;flex-wrap:wrap;gap:5px;}
+    .seo-chip{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:500;line-height:1.4;}
+    .seo-chip-sec{background:rgba(124,58,237,0.1);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+    .seo-chip-lt{background:rgba(6,182,212,0.08);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+    .seo-opp{font-size:11px;color:var(--text-2);padding:5px 0;border-bottom:1px solid var(--border);line-height:1.5;}
+    .seo-opp:last-child{border-bottom:none;padding-bottom:0;}
+    .seo-cluster{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:999px;font-size:11px;color:var(--green);font-weight:600;margin-bottom:12px;}
 
     /* BACK TO TOP */
     .back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 200ms;z-index:400;opacity:0;pointer-events:none;}
@@ -213,17 +237,17 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="index.html" class="logo">CreatorFlow Market</a>
+    <a href="/" class="logo">CreatorFlow Market</a>
     <div class="nav-links">
-      <a href="experts.html"  class="nav-link">Experts</a>
-      <a href="briefs.html"   class="nav-link">Publier un brief</a>
-      <a href="academie.html" class="nav-link">Academy</a>
-      <a href="pricing.html"  class="nav-link">Tarifs</a>
-      <a href="blog.html"     class="nav-link active">Blog IA</a>
+      <a href="/experts"  class="nav-link">Experts</a>
+      <a href="/briefs"   class="nav-link">Publier un brief</a>
+      <a href="/academie" class="nav-link">Academy</a>
+      <a href="/pricing"  class="nav-link">Tarifs</a>
+      <a href="/blog"     class="nav-link active">Blog IA</a>
     </div>
     <div class="nav-actions">
-      <a href="connexion.html"   class="btn btn-ghost">Connexion</a>
-      <a href="inscription.html" class="btn btn-primary">Rejoindre →</a>
+      <a href="/connexion"   class="btn btn-ghost">Connexion</a>
+      <a href="/inscription" class="btn btn-primary">Rejoindre →</a>
     </div>
   </div>
 </nav>
@@ -234,11 +258,11 @@
   <div class="footer-inner">
     <span class="footer-logo">CreatorFlow Market</span>
     <div class="footer-links">
-      <a href="cgu.html">CGU</a>
-      <a href="politique-confidentialite.html">Vie privée</a>
-      <a href="blog.html">Blog IA</a>
-      <a href="experts.html">Experts</a>
-      <a href="academie.html">Academy</a>
+      <a href="/cgu">CGU</a>
+      <a href="/politique-confidentialite">Vie privée</a>
+      <a href="/blog">Blog IA</a>
+      <a href="/experts">Experts</a>
+      <a href="/academie">Academy</a>
     </div>
     <span style="font-size:12px;color:var(--text-3)">© 2026 CreatorFlow Market</span>
   </div>
@@ -252,7 +276,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
-  // Progress bar + back-to-top
   window.addEventListener('scroll', () => {
     const el = document.getElementById('rp');
     const bt = document.getElementById('backTop');
@@ -289,8 +312,16 @@ const CAT_GRAD = c => {
     'Support Client IA':'rgba(236,72,153,0.18)','Tutoriels IA':'rgba(59,130,246,0.18)',
     'Comparatifs IA':'rgba(249,115,22,0.18)','Guides IA':'rgba(132,204,22,0.18)',
   };
-  const col = map[c] || 'rgba(124,58,237,0.18)';
-  return `linear-gradient(135deg,${col},rgba(4,4,10,0.3))`;
+  return `linear-gradient(135deg,${map[c]||'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
+};
+
+// Reads slug from /blog/SLUG path OR ?slug= query param
+const getSlug = () => {
+  const qs = new URLSearchParams(window.location.search).get('slug');
+  if (qs) return qs;
+  const p = window.location.pathname;
+  if (p.startsWith('/blog/') && p.length > 6) return p.slice(6).replace(/\/$/, '');
+  return null;
 };
 
 function CatBadge({ cat }) {
@@ -305,12 +336,9 @@ function CatBadge({ cat }) {
 function KeyTakeaways({ content, takeaways }) {
   const items = (() => {
     if (takeaways && takeaways.length > 0) return takeaways;
-    // Auto-extract from H2 sections
     try {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(content, 'text/html');
-      const h2s = Array.from(doc.querySelectorAll('h2')).slice(0, 5);
-      return h2s.map(h => {
+      const doc = new DOMParser().parseFromString(content, 'text/html');
+      return Array.from(doc.querySelectorAll('h2')).slice(0, 5).map(h => {
         const next = h.nextElementSibling;
         if (next && next.tagName === 'P') {
           const t = next.textContent.trim();
@@ -348,7 +376,7 @@ function TOC({ headings, activeId }) {
               className={`toc-item ${h.level === 3 ? 'h3' : ''} ${activeId === h.id ? 'active' : ''}`}
               onClick={() => {
                 const el = document.getElementById(h.id);
-                if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
             >{h.text}</span>
           </li>
@@ -379,9 +407,66 @@ function FAQSection({ faq }) {
   );
 }
 
+function PAASection({ questions }) {
+  if (!questions || !questions.length) return null;
+  return (
+    <div className="paa-section">
+      <div className="paa-header">🔍 Les gens demandent aussi</div>
+      {questions.map((q, i) => (
+        <a
+          key={i}
+          href={`https://www.google.com/search?q=${encodeURIComponent(q)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="paa-item"
+        >
+          <span>{q}</span>
+          <span className="paa-icon">↗</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function SEOIntelCard({ article }) {
+  const sec  = article?.secondary_keywords || [];
+  const lt   = article?.longtail_keywords  || [];
+  const opps = article?.seo_opportunities  || [];
+  const cluster = article?.topic_cluster   || '';
+  if (!sec.length && !lt.length && !opps.length) return null;
+  return (
+    <div className="sidebar-card">
+      <div className="sidebar-title">🎯 SEO Intelligence</div>
+      {cluster && <div className="seo-cluster">🗂 {cluster}</div>}
+      {sec.length > 0 && (
+        <div style={{marginBottom:12}}>
+          <div className="seo-intel-label">Mots-clés secondaires</div>
+          <div className="seo-chips">
+            {sec.map((kw, i) => <span key={i} className="seo-chip seo-chip-sec">{kw}</span>)}
+          </div>
+        </div>
+      )}
+      {lt.length > 0 && (
+        <div style={{marginBottom:12}}>
+          <div className="seo-intel-label">Longue traîne</div>
+          <div className="seo-chips">
+            {lt.slice(0,6).map((kw, i) => <span key={i} className="seo-chip seo-chip-lt">{kw}</span>)}
+          </div>
+        </div>
+      )}
+      {opps.length > 0 && (
+        <div>
+          <div className="seo-intel-label">Opportunités</div>
+          {opps.map((o, i) => <div key={i} className="seo-opp">💡 {o}</div>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RelatedCard({ article }) {
   return (
-    <div className="related-card" onClick={() => window.location.href = `blog-article.html?slug=${article.slug}`}>
+    <div className="related-card" onClick={() => window.location.href = `/blog/${article.slug}`}>
       <div className="related-thumb" style={{ background: CAT_GRAD(article.category) }}>
         <span>{CAT_ICONS[article.category] || '🤖'}</span>
       </div>
@@ -394,7 +479,7 @@ function RelatedCard({ article }) {
   );
 }
 
-function RightSidebar() {
+function RightSidebar({ article }) {
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
   const submit = async e => {
@@ -421,8 +506,9 @@ function RightSidebar() {
         <div style={{fontSize:28,marginBottom:8}}>🚀</div>
         <h4>Besoin d'un expert IA ?</h4>
         <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
-        <a href="experts.html">Voir les experts →</a>
+        <a href="/experts">Voir les experts →</a>
       </div>
+      {article && <SEOIntelCard article={article} />}
     </aside>
   );
 }
@@ -453,16 +539,16 @@ function Skeleton() {
 }
 
 function ArticlePage() {
-  const [article, setArticle] = useState(null);
-  const [related, setRelated] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [article,  setArticle]  = useState(null);
+  const [related,  setRelated]  = useState([]);
+  const [loading,  setLoading]  = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [headings, setHeadings] = useState([]);
   const [activeId, setActiveId] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [copied,   setCopied]   = useState(false);
   const contentRef = useRef(null);
 
-  const slug = new URLSearchParams(window.location.search).get('slug');
+  const slug = getSlug();
 
   useEffect(() => {
     if (!slug) { setNotFound(true); setLoading(false); return; }
@@ -474,6 +560,11 @@ function ArticlePage() {
         if (error || !data) { setNotFound(true); setLoading(false); return; }
         setArticle(data);
 
+        // Canonical URL (clean /blog/SLUG format)
+        const canonUrl = `https://creatorflowmarket.com/blog/${data.slug}`;
+        document.getElementById('page-canonical').href = canonUrl;
+        document.getElementById('og-url').setAttribute('content', canonUrl);
+
         // Meta tags
         document.getElementById('page-title').textContent = `${data.title} — CreatorFlow Market`;
         document.getElementById('page-desc').setAttribute('content', data.meta_description || data.excerpt || '');
@@ -481,26 +572,38 @@ function ArticlePage() {
         document.getElementById('og-desc').setAttribute('content', data.meta_description || data.excerpt || '');
         document.getElementById('tw-title').setAttribute('content', data.title);
         document.getElementById('tw-desc').setAttribute('content', data.meta_description || data.excerpt || '');
-        if (data.og_image) document.getElementById('og-img').setAttribute('content', data.og_image);
+        if (data.og_image) {
+          document.getElementById('og-img').setAttribute('content', data.og_image);
+          document.getElementById('tw-img').setAttribute('content', data.og_image);
+        }
 
-        // Schema.org
-        const schema = {
+        // Schema.org injection
+        const orgSchema = {
+          '@context':'https://schema.org','@type':'Organization',
+          name:'CreatorFlow Market',url:'https://creatorflowmarket.com',
+          logo:{'@type':'ImageObject',url:'https://creatorflowmarket.com/og-image.jpg'},
+          sameAs:['https://twitter.com/creatorflowmkt'],
+        };
+        const articleSchema = {
           '@context':'https://schema.org','@type':'Article',
           headline:data.title, description:data.meta_description||data.excerpt,
           author:{'@type':'Organization',name:'CreatorFlow Market'},
           publisher:{
             '@type':'Organization',name:'CreatorFlow Market',
             logo:{'@type':'ImageObject',url:'https://creatorflowmarket.com/og-image.jpg'},
-            url:'https://creatorflowmarket.com'
+            url:'https://creatorflowmarket.com',
           },
           datePublished:data.published_at, dateModified:data.updated_at||data.published_at,
           image:data.og_image||data.featured_image||'https://creatorflowmarket.com/og-image.jpg',
-          url:`https://creatorflowmarket.com/blog-article?slug=${data.slug}`,
-          mainEntityOfPage:{'@type':'WebPage','@id':`https://creatorflowmarket.com/blog-article?slug=${data.slug}`},
+          url:canonUrl,
+          mainEntityOfPage:{'@type':'WebPage','@id':canonUrl},
+          keywords:(data.tags||[]).join(', '),
+          articleSection:data.category,
+          inLanguage:'fr',
         };
-        const faqSchema = data.faq && data.faq.length ? {
+        const faqSchemaData = data.faq && data.faq.length ? {
           '@context':'https://schema.org','@type':'FAQPage',
-          mainEntity: data.faq.map(f => ({
+          mainEntity: (Array.isArray(data.faq) ? data.faq : JSON.parse(data.faq||'[]')).map(f => ({
             '@type':'Question', name:f.question||f.q,
             acceptedAnswer:{'@type':'Answer',text:f.answer||f.a}
           }))
@@ -511,10 +614,11 @@ function ArticlePage() {
             {'@type':'ListItem',position:1,name:'Accueil',item:'https://creatorflowmarket.com'},
             {'@type':'ListItem',position:2,name:'Blog IA',item:'https://creatorflowmarket.com/blog'},
             {'@type':'ListItem',position:3,name:data.category,item:`https://creatorflowmarket.com/blog?cat=${encodeURIComponent(data.category)}`},
-            {'@type':'ListItem',position:4,name:data.title},
-          ]
+            {'@type':'ListItem',position:4,name:data.title,item:canonUrl},
+          ],
         };
-        [schema, faqSchema, breadcrumbSchema].filter(Boolean).forEach(s => {
+
+        [orgSchema, articleSchema, faqSchemaData, breadcrumbSchema].filter(Boolean).forEach(s => {
           const sc = document.createElement('script');
           sc.type = 'application/ld+json'; sc.text = JSON.stringify(s);
           document.head.appendChild(sc);
@@ -523,11 +627,27 @@ function ArticlePage() {
         // Views
         sb.rpc('increment_blog_views',{article_slug:slug}).catch(()=>{});
 
-        // Related
-        const { data: rel } = await sb.from('blog_articles')
-          .select('id,slug,title,excerpt,category')
-          .eq('status','published').eq('category',data.category).neq('slug',slug).limit(3);
-        setRelated(rel || []);
+        // Related articles: tags-based first, fallback to category
+        let relData = null;
+        if (data.tags?.length) {
+          const { data: byTags } = await sb.from('blog_articles')
+            .select('id,slug,title,excerpt,category')
+            .eq('status','published')
+            .neq('slug', slug)
+            .overlaps('tags', data.tags)
+            .limit(3);
+          relData = byTags;
+        }
+        if (!relData?.length) {
+          const { data: byCat } = await sb.from('blog_articles')
+            .select('id,slug,title,excerpt,category')
+            .eq('status','published')
+            .eq('category', data.category)
+            .neq('slug', slug)
+            .limit(3);
+          relData = byCat;
+        }
+        setRelated(relData || []);
       } catch { setNotFound(true); }
       finally { setLoading(false); }
     })();
@@ -546,7 +666,6 @@ function ArticlePage() {
     });
     setHeadings(items);
 
-    // Intersection observer for active TOC item
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id); });
     }, { rootMargin: '-64px 0px -70% 0px', threshold: 0 });
@@ -555,7 +674,8 @@ function ArticlePage() {
   }, [article]);
 
   const copyLink = () => {
-    navigator.clipboard?.writeText(window.location.href).catch(()=>{});
+    const url = `https://creatorflowmarket.com/blog/${article.slug}`;
+    navigator.clipboard?.writeText(url).catch(()=>{});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -566,11 +686,11 @@ function ArticlePage() {
       <div style={{fontSize:56,marginBottom:20}}>📭</div>
       <h2>Article introuvable</h2>
       <p style={{color:'var(--text-2)',marginBottom:28}}>Cet article n'existe pas ou a été supprimé.</p>
-      <a href="blog.html" className="btn btn-primary">← Retour au Blog</a>
+      <a href="/blog" className="btn btn-primary">← Retour au Blog</a>
     </div>
   );
 
-  const url = `https://creatorflowmarket.com/blog-article?slug=${article.slug}`;
+  const url = `https://creatorflowmarket.com/blog/${article.slug}`;
   const pubDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})
     : '';
@@ -578,6 +698,7 @@ function ArticlePage() {
     try { return Array.isArray(article.faq) ? article.faq : (article.faq ? JSON.parse(article.faq) : []); }
     catch { return []; }
   })();
+  const paaData = Array.isArray(article.paa_questions) ? article.paa_questions : [];
 
   return (
     <div style={{ paddingTop: 'var(--nav)' }}>
@@ -585,11 +706,11 @@ function ArticlePage() {
       <div className="article-hero">
         <div className="hero-inner">
           <div className="breadcrumb">
-            <a href="index.html">Accueil</a>
+            <a href="/">Accueil</a>
             <span className="bc-sep">›</span>
-            <a href="blog.html">Blog IA</a>
+            <a href="/blog">Blog IA</a>
             <span className="bc-sep">›</span>
-            <a href={`blog.html?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
+            <a href={`/blog?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
           </div>
           <CatBadge cat={article.category} />
           <h1 className="article-title">{article.title}</h1>
@@ -623,10 +744,14 @@ function ArticlePage() {
 
           <FAQSection faq={faqData} />
 
+          {paaData.length > 0 && <PAASection questions={paaData} />}
+
           {/* TAGS */}
           {article.tags?.length > 0 && (
             <div className="tags-row">
-              {article.tags.map(tag => <span key={tag} className="tag-pill">#{tag}</span>)}
+              {article.tags.map(tag => (
+                <a key={tag} href={`/blog?q=${encodeURIComponent(tag)}`} className="tag-pill">#{tag}</a>
+              ))}
             </div>
           )}
 
@@ -636,7 +761,7 @@ function ArticlePage() {
             <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">𝕏 Twitter</a>
             <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">LinkedIn</a>
             <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">Facebook</a>
-            <button className="share-btn share-copy" onClick={copyLink}>{copied ? '✅ Copié !' : '🔗 Copier le lien'}</button>
+            <button className="share-btn" onClick={copyLink}>{copied ? '✅ Copié !' : '🔗 Copier le lien'}</button>
           </div>
 
           {/* CTA */}
@@ -645,15 +770,15 @@ function ArticlePage() {
             <h3>🚀 Passez à l'action avec un expert IA</h3>
             <p>Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business — en 48h.</p>
             <div className="cta-btns">
-              <a href="experts.html" className="cta-btn-primary">Explorer les experts IA →</a>
-              <a href="academie.html" className="cta-btn-ghost">Voir l'Academy</a>
+              <a href="/experts" className="cta-btn-primary">Explorer les experts IA →</a>
+              <a href="/academie" className="cta-btn-ghost">Voir l'Academy</a>
             </div>
           </div>
 
           {/* RELATED */}
           {related.length > 0 && (
             <div className="related-section">
-              <h2 className="related-title">Articles similaires</h2>
+              <h2 className="related-title">Articles connexes</h2>
               <div className="related-grid">
                 {related.map(a => <RelatedCard key={a.id} article={a} />)}
               </div>
@@ -661,7 +786,7 @@ function ArticlePage() {
           )}
         </div>
 
-        <RightSidebar />
+        <RightSidebar article={article} />
       </div>
     </div>
   );

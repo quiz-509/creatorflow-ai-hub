@@ -14,7 +14,7 @@ export type ArticleInput = {
 
 const CATEGORIES = ['Actualités IA','Outils IA','Automatisation IA','Marketing IA','Création de Contenu IA','Vente IA','Support Client IA','Tutoriels IA','Comparatifs IA','Guides IA'];
 
-const SYSTEM_PROMPT = `Tu es un rédacteur de contenu IA de niveau senior pour CreatorFlow Market — une plateforme mondiale en français pour créateurs, entrepreneurs et professionnels qui veulent dominer leur marché avec l'IA.
+const SYSTEM_PROMPT = `Tu es un rédacteur de contenu IA de niveau senior et expert SEO pour CreatorFlow Market — une plateforme mondiale en français pour créateurs, entrepreneurs et professionnels qui veulent dominer leur marché avec l'IA.
 
 STYLE : Pense HubSpot Blog + Ahrefs + Vercel. Percutant, dense en valeur, professionnel mais accessible.
 
@@ -29,6 +29,7 @@ STRUCTURE OBLIGATOIRE DE CHAQUE ARTICLE (en HTML) :
    - Des chiffres et données chiffrées dans chaque section
    - Un tableau de comparaison si pertinent (HTML <table>)
    - Des callouts styled avec class="callout callout-tip" ou callout-warn ou callout-info
+   - Des liens internes vers d'autres articles du blog : <a href="/blog/slug-article-connexe">texte ancre pertinent</a>
 
 3. Section "Cas d'usage concrets" (si pertinent) :
    - Marketing, Création de contenu, Automatisation, Vente
@@ -36,14 +37,17 @@ STRUCTURE OBLIGATOIRE DE CHAQUE ARTICLE (en HTML) :
 
 4. Section FAQ (5-7 questions, au format JSON séparé)
 
-RÈGLES :
+RÈGLES SEO AVANCÉES :
 - JAMAIS "créateurs francophones" — dire "créateurs", "entrepreneurs", "professionnels"
 - Portée mondiale, ex. concrets variés (pas seulement Québec/France)
-- SEO naturel : mots-clés intégrés sans sur-optimiser
+- Mot-clé principal dans : H1, premier paragraphe, au moins 2 H2, meta description
+- Mots-clés secondaires intégrés naturellement dans le corps
+- Questions longue traîne comme H2/H3 (format "Comment faire X", "Quelle est la meilleure X")
+- Featured snippet bait : au moins une définition courte ou liste numbered en début de section
 - CTA final : mention CreatorFlow Market (experts IA, Academy)
 - Longueur : 1800 à 3000 mots de contenu HTML
 
-IMPORTANT : Les callouts se codent ainsi :
+CALLOUTS :
 <div class="callout callout-tip"><strong>💡 Astuce :</strong> texte ici</div>
 <div class="callout callout-warn"><strong>⚠️ Attention :</strong> texte ici</div>
 <div class="callout callout-info"><strong>ℹ️ À savoir :</strong> texte ici</div>`;
@@ -56,6 +60,11 @@ export async function generateArticle(input: ArticleInput): Promise<{
   content: string;
   key_takeaways: string[];
   faq: { question: string; answer: string }[];
+  secondary_keywords: string[];
+  longtail_keywords: string[];
+  paa_questions: string[];
+  seo_opportunities: string[];
+  topic_cluster: string;
   tags: string[];
   reading_time: number;
   seo_score: number;
@@ -82,13 +91,18 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown autour) :
     {"question": "Question fréquente 4 ?", "answer": "Réponse complète et utile."},
     {"question": "Question fréquente 5 ?", "answer": "Réponse complète et utile."}
   ],
+  "secondary_keywords": ["mot-clé secondaire 1", "mot-clé 2", "mot-clé 3", "mot-clé 4", "mot-clé 5", "mot-clé 6", "mot-clé 7", "mot-clé 8", "mot-clé 9", "mot-clé 10"],
+  "longtail_keywords": ["comment faire X avec l'IA", "meilleur outil IA pour Y", "guide complet Z IA 2026", "tutoriel X pas à pas", "X vs Y comparatif", "prix de X en 2026", "alternative à X gratuite", "X pour débutants", "X avancé professionnels", "X automatisation workflow"],
+  "paa_questions": ["Question PAA 1 ?", "Question PAA 2 ?", "Question PAA 3 ?", "Question PAA 4 ?", "Question PAA 5 ?", "Question PAA 6 ?", "Question PAA 7 ?"],
+  "seo_opportunities": ["Opportunité featured snippet sur X", "Angle peu exploité : Y", "Mot-clé à fort volume faible concurrence : Z"],
+  "topic_cluster": "Nom du cluster thématique principal",
   "tags": ["tag1","tag2","tag3","tag4","tag5"],
   "seo_score": 88
 }`;
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
+    max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -100,16 +114,21 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown autour) :
   const reading_time = Math.max(4, Math.round(wordCount / 200));
 
   return {
-    title:            json.title,
-    slug:             slugify(json.title, { lower: true, strict: true, locale: 'fr' }),
-    meta_description: json.meta_description,
-    excerpt:          json.excerpt,
-    content:          json.content,
-    key_takeaways:    json.key_takeaways || [],
-    faq:              json.faq || [],
-    tags:             json.tags || [],
+    title:               json.title,
+    slug:                slugify(json.title, { lower: true, strict: true, locale: 'fr' }),
+    meta_description:    json.meta_description,
+    excerpt:             json.excerpt,
+    content:             json.content,
+    key_takeaways:       json.key_takeaways       || [],
+    faq:                 json.faq                 || [],
+    secondary_keywords:  json.secondary_keywords  || [],
+    longtail_keywords:   json.longtail_keywords   || [],
+    paa_questions:       json.paa_questions        || [],
+    seo_opportunities:   json.seo_opportunities   || [],
+    topic_cluster:       json.topic_cluster        || '',
+    tags:                json.tags                || [],
     reading_time,
-    seo_score:        json.seo_score || 82,
+    seo_score:           json.seo_score            || 82,
   };
 }
 

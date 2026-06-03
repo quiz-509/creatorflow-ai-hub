@@ -8,7 +8,15 @@
   <meta property="og:title" content="Blog IA — CreatorFlow Market">
   <meta property="og:description" content="Actualités IA, outils, tutoriels et stratégies pour créateurs et entrepreneurs.">
   <meta property="og:type" content="website">
-  <link rel="canonical" href="https://creatorflowmarket.com/blog.html"/>
+  <meta property="og:url" content="https://creatorflowmarket.com/blog">
+  <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@creatorflowmkt">
+  <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://creatorflowmarket.com/blog">
+  <link rel="alternate" type="application/rss+xml" title="CreatorFlow Market — Blog IA" href="https://creatorflowmarket.com/rss.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -116,6 +124,55 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function() {
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'CreatorFlow Market',
+      url: 'https://creatorflowmarket.com',
+      logo: { '@type': 'ImageObject', url: 'https://creatorflowmarket.com/og-image.jpg' },
+      sameAs: ['https://twitter.com/creatorflowmkt'],
+      description: 'Plateforme IA pour créateurs et entrepreneurs — experts IA, academy, blog et outils.',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'CreatorFlow Market',
+      url: 'https://creatorflowmarket.com',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: 'https://creatorflowmarket.com/blog?q={search_term_string}' },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://creatorflowmarket.com' },
+        { '@type': 'ListItem', position: 2, name: 'Blog IA', item: 'https://creatorflowmarket.com/blog' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      name: 'Blog IA — CreatorFlow Market',
+      url: 'https://creatorflowmarket.com/blog',
+      description: 'Actualités IA, outils, tutoriels et stratégies pour créateurs et entrepreneurs.',
+      inLanguage: 'fr',
+      publisher: { '@type': 'Organization', name: 'CreatorFlow Market', url: 'https://creatorflowmarket.com' },
+    },
+  ];
+  schemas.forEach(s => {
+    const el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.text = JSON.stringify(s);
+    document.head.appendChild(el);
+  });
+})();
+</script>
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
 const { createClient } = supabase;
@@ -180,7 +237,7 @@ function Thumb({article}){
 
 function ArticleCard({article}){
   return (
-    <a href={`blog-article.html?slug=${article.slug}`}>
+    <a href={`/blog/${article.slug}`}>
       <div className="article-card">
         <Thumb article={article}/>
         <div className="article-body">
@@ -203,7 +260,7 @@ function ArticleCard({article}){
 function Featured({article}){
   const color = catColor(article.category);
   return (
-    <a href={`blog-article.html?slug=${article.slug}`}>
+    <a href={`/blog/${article.slug}`}>
       <div className="featured-card">
         <div className="featured-img" style={{background:catGrad(article.category)}}>
           <div className="featured-img-bg" style={{background:catGrad(article.category)}}/>
