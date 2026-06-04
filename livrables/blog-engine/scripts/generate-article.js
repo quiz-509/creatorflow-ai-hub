@@ -140,7 +140,7 @@ ${keywords ? `MOTS-CLÉS : ${keywords}` : ''}
 Réponds UNIQUEMENT avec ce JSON valide (sans markdown) :
 {
   "title": "titre SEO puissant (55-65 chars)",
-  "meta_description": "meta description SEO (145-158 chars)",
+  "meta_description": "meta description SEO STRICTEMENT entre 120 et 155 chars — JAMAIS plus de 155",
   "excerpt": "accroche percutante pour cards (180-220 chars)",
   "content": "article HTML complet (minimum 1800 mots)",
   "key_takeaways": ["point 1","point 2","point 3","point 4","point 5"],
@@ -173,6 +173,10 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown) :
   const wordCount = json.content.replace(/<[^>]+>/g, '').split(/\s+/).length;
   const reading_time = Math.max(4, Math.round(wordCount / 200));
   const slug = `${slugify(json.title, { lower: true, strict: true, locale: 'fr' })}-${Date.now()}`;
+  // Garantie : meta_description <= 160 chars (contrainte Supabase)
+  if (json.meta_description && json.meta_description.length > 158) {
+    json.meta_description = json.meta_description.slice(0, 155) + '…';
+  }
 
   console.log(`\n✅ Article généré : "${json.title}"`);
   console.log(`   Slug         : ${slug}`);
