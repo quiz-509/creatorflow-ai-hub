@@ -49,9 +49,26 @@
 
     /* HERO */
     .article-hero{padding:calc(var(--nav)+48px) 0 40px;background:transparent;border-bottom:1px solid var(--border);}
-    .hero-inner{max-width:1240px;margin:0 auto;padding:0 24px;position:relative;}
-    .hero-deco{position:absolute;right:0;top:0;font-size:96px;opacity:0.13;line-height:1;pointer-events:none;user-select:none;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7));}
-    @media(max-width:680px){.hero-deco{font-size:52px;opacity:0.09;}}
+    .hero-inner{max-width:1240px;margin:0 auto;padding:0 24px;}
+    @media(min-width:1100px){.hero-inner{display:grid;grid-template-columns:1fr 268px;gap:44px;align-items:center;}}
+    /* HERO DASHBOARD */
+    .hero-dashboard{background:rgba(255,255,255,0.03);border-radius:18px;padding:18px;display:none;}
+    @media(min-width:1100px){.hero-dashboard{display:block;}}
+    .hd-header{display:flex;align-items:center;gap:7px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .hd-dots{display:flex;gap:5px;}
+    .hd-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+    .hd-ttl{font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:.06em;text-transform:uppercase;margin-left:2px;}
+    .hd-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
+    .hd-m{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 6px;text-align:center;}
+    .hd-m-val{display:block;font-size:15px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;}
+    .hd-m-lbl{display:block;font-size:10px;color:var(--text-3);margin-top:3px;line-height:1.3;}
+    .hd-chart{display:flex;align-items:flex-end;gap:5px;height:58px;margin-bottom:12px;padding:0 2px;}
+    .hd-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;}
+    .hd-bar{width:100%;border-radius:3px 3px 0 0;}
+    .hd-bar-day{font-size:9px;color:var(--text-3);font-weight:500;}
+    .hd-footer{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-3);}
+    .hd-dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);flex-shrink:0;animation:pdot 2s infinite;}
+    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.45}}
     .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-bottom:20px;}
     .breadcrumb a:hover{color:var(--text-2);}
     .bc-sep{opacity:.35;}
@@ -94,7 +111,8 @@
     .article-content em{color:var(--vs);font-style:italic;}
     .article-content a{color:var(--vs);text-decoration:underline;text-underline-offset:3px;}
     .article-content a:hover{color:var(--c);}
-    .article-content blockquote{border-left:3px solid var(--v);padding:16px 20px;background:rgba(124,58,237,0.06);border-radius:0 10px 10px 0;margin:28px 0;font-style:italic;color:#C4C4DC;}
+    .article-content blockquote{position:relative;border-left:3px solid var(--v);padding:20px 24px 20px 52px;background:rgba(124,58,237,0.05);border-radius:0 12px 12px 0;margin:36px 0;font-style:italic;color:#C4C4DC;font-size:17px;}
+    .article-content blockquote::before{content:'"';position:absolute;left:14px;top:4px;font-size:56px;line-height:1;color:var(--v);opacity:0.3;font-family:Georgia,"Times New Roman",serif;pointer-events:none;}
     .article-content blockquote strong{color:var(--vs);}
     .article-content code{background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:5px;font-size:.88em;font-family:'SFMono-Regular',Consolas,monospace;color:var(--c);}
     .article-content pre{background:var(--surf-3);border:1px solid var(--border);padding:20px;border-radius:12px;overflow-x:auto;margin:24px 0;}
@@ -106,14 +124,14 @@
     .article-content tr:hover td{background:rgba(255,255,255,0.02);}
 
     /* KEY TAKEAWAYS */
-    .key-takeaways{background:rgba(124,58,237,0.04);border:none;border-left:3px solid var(--v);border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin-bottom:36px;}
+    .key-takeaways{background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.1);border-left:3px solid var(--v);border-radius:0 var(--r-lg) var(--r-lg) 0;padding:22px 26px 18px;margin-bottom:40px;}
     .kt-title{font-size:14px;font-weight:700;color:var(--vs);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
     .kt-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
     .kt-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#C4C4DC;line-height:1.55;}
-    .kt-dot{width:20px;height:20px;border-radius:50%;background:rgba(124,58,237,0.2);color:var(--vs);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+    .kt-dot{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.15);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
 
     /* CALLOUTS */
-    .callout{border-radius:10px;padding:16px 20px;margin:24px 0;font-size:14px;line-height:1.6;}
+    .callout{border-radius:10px;padding:18px 22px;margin:32px 0;font-size:15px;line-height:1.65;}
     .callout-tip{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:var(--text-2);}
     .callout-tip strong{color:var(--green);}
     .callout-warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--text-2);}
@@ -595,7 +613,7 @@ function KeyTakeaways({ content, takeaways }) {
       <ul className={`kt-list${open?' kt-open':''}`}>
         {items.map((item, i) => (
           <li key={i} className="kt-item">
-            <span className="kt-dot">{i+1}</span>
+            <span className="kt-dot">✓</span>
             <span>{item}</span>
           </li>
         ))}
@@ -655,7 +673,14 @@ function InlineNewsletter() {
 }
 
 function TOC({ headings, activeId }) {
-  if (!headings.length) return null;
+  if (!headings.length) return (
+    <aside className="toc-sidebar">
+      <div className="toc-title">Dans cet article</div>
+      {[65,50,78,44,60].map((w,i)=>(
+        <div key={i} className="sk" style={{height:10,width:`${w}%`,marginBottom:10,borderRadius:4}}/>
+      ))}
+    </aside>
+  );
   return (
     <aside className="toc-sidebar">
       <div className="toc-title">Dans cet article</div>
@@ -797,6 +822,65 @@ function RightSidebar() {
         <a href="/experts">Voir les experts →</a>
       </div>
     </aside>
+  );
+}
+
+const DASHBOARD_METRICS = {
+  'Automatisation IA':      { m:[['+340%','Leads'],['11h','Économies'],['3.8x','ROI']],     bars:[72,85,91,78,94] },
+  'Marketing IA':           { m:[['+280%','Trafic'],['5x','Engage.'],['68%','Conv.']],       bars:[68,79,88,82,91] },
+  'Outils IA':              { m:[['1,200','Outils'],['4.2★','Score'],['Free','Trial']],      bars:[80,72,86,90,77] },
+  'Création de Contenu IA': { m:[['10x','Rapide'],['90%','Qualité'],['24/7','Actif']],       bars:[88,76,92,85,79] },
+  'Vente IA':               { m:[['+190%','Ventes'],['3.2x','Pipeline'],['48h','Setup']],    bars:[75,84,79,93,88] },
+  'Actualités IA':          { m:[['Daily','Updates'],['500+','Sources'],['Live','Réel']],    bars:[91,88,85,90,87] },
+  'Support Client IA':      { m:[['24/7','Dispo'],['<2min','Réponse'],['94%','Satisf.']],    bars:[89,92,87,95,91] },
+  'Tutoriels IA':           { m:[['100+','Guides'],['4.8★','Note'],['FR','Langue']],         bars:[77,83,88,74,91] },
+  'Comparatifs IA':         { m:[['50+','Outils'],['2026','Data'],['Expert','Analyse']],     bars:[82,78,90,85,88] },
+  'Guides IA':              { m:[['A→Z','Complet'],['Pratique','Guide'],['2026','Actuel']],  bars:[85,79,88,82,91] },
+};
+const DEFAULT_DASH = { m:[['+73%','Performance'],['3.8x','ROI'],['48h','Délai']], bars:[78,85,91,82,88] };
+
+function HeroDashboard({ article }) {
+  const catColor = CAT_COLORS[article.category] || '#7C3AED';
+  const d = DASHBOARD_METRICS[article.category] || DEFAULT_DASH;
+  const maxB = Math.max(...d.bars);
+  const days = ['L','M','M','J','V'];
+  return (
+    <div className="hero-dashboard" style={{
+      boxShadow:`0 0 60px ${catColor}25,0 24px 64px rgba(0,0,0,0.28)`,
+      border:`1px solid ${catColor}22`,
+    }}>
+      <div className="hd-header">
+        <div className="hd-dots">
+          <span className="hd-dot" style={{background:'#FF5F57'}}/>
+          <span className="hd-dot" style={{background:'#FFBD2E'}}/>
+          <span className="hd-dot" style={{background:'#28C840'}}/>
+        </div>
+        <span className="hd-ttl">IA Analytics</span>
+      </div>
+      <div className="hd-metrics">
+        {d.m.map(([val,lbl],i)=>(
+          <div key={i} className="hd-m">
+            <span className="hd-m-val" style={{color:catColor}}>{val}</span>
+            <span className="hd-m-lbl">{lbl}</span>
+          </div>
+        ))}
+      </div>
+      <div className="hd-chart">
+        {d.bars.map((h,i)=>(
+          <div key={i} className="hd-bar-col">
+            <div className="hd-bar" style={{
+              height:`${(h/maxB)*100}%`,
+              background: h===maxB ? catColor : `${catColor}55`,
+            }}/>
+            <span className="hd-bar-day">{days[i]}</span>
+          </div>
+        ))}
+      </div>
+      <div className="hd-footer">
+        <span className="hd-dot-live"/>
+        <span>Live · {new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'short'})}</span>
+      </div>
+    </div>
   );
 }
 
@@ -995,34 +1079,36 @@ function ArticlePage() {
       {/* HERO — titre + meta */}
       <div className="article-hero" style={{background:`linear-gradient(150deg,${catColor}1A 0%,${catColor}07 55%,transparent 100%)`}}>
         <div className="hero-inner">
-          <div className="hero-deco">{CAT_ICONS[article.category]||'🤖'}</div>
-          <div className="breadcrumb">
-            <a href="/">Accueil</a>
-            <span className="bc-sep">›</span>
-            <a href="/blog">Blog IA</a>
-            <span className="bc-sep">›</span>
-            <a href={`/blog?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
-          </div>
-          <CatBadge cat={article.category} />
-          <h1 className="article-title">{article.title}</h1>
-          {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
-          <div className="hero-meta">
-            <div className="author-mini">
-              <div className="author-mini-avatar">{CAT_ICONS[article.category]||'🤖'}</div>
-              <div className="author-mini-info">
-                <span className="author-mini-name">{article.author||'CreatorFlow AI'}</span>
-                <span className="author-mini-role">Expert IA · CreatorFlow Market</span>
-              </div>
+          <div className="hero-main-col">
+            <div className="breadcrumb">
+              <a href="/">Accueil</a>
+              <span className="bc-sep">›</span>
+              <a href="/blog">Blog IA</a>
+              <span className="bc-sep">›</span>
+              <a href={`/blog?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
             </div>
-            {article.reading_time > 0 && <span className="hero-meta-chip">📖 {article.reading_time} min de lecture</span>}
-            {article.views > 0 && <span className="hero-meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>}
-            {pubDate && <span className="hero-meta-chip">📅 {pubDate}</span>}
-            {article.seo_score > 0 && (
-              <span className={`seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
-                SEO {article.seo_score}/100
-              </span>
-            )}
+            <CatBadge cat={article.category} />
+            <h1 className="article-title">{article.title}</h1>
+            {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
+            <div className="hero-meta">
+              <div className="author-mini">
+                <div className="author-mini-avatar">{CAT_ICONS[article.category]||'🤖'}</div>
+                <div className="author-mini-info">
+                  <span className="author-mini-name">{article.author||'CreatorFlow AI'}</span>
+                  <span className="author-mini-role">Expert IA · CreatorFlow Market</span>
+                </div>
+              </div>
+              {article.reading_time > 0 && <span className="hero-meta-chip">📖 {article.reading_time} min de lecture</span>}
+              {article.views > 0 && <span className="hero-meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>}
+              {pubDate && <span className="hero-meta-chip">📅 {pubDate}</span>}
+              {article.seo_score > 0 && (
+                <span className={`seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
+                  SEO {article.seo_score}/100
+                </span>
+              )}
+            </div>
           </div>
+          <HeroDashboard article={article} />
         </div>
       </div>
 
