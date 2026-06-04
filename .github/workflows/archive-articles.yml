@@ -1,0 +1,34 @@
+name: Archive Old Articles
+
+on:
+  schedule:
+    # Chaque dimanche à 02h00 UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      days_threshold:
+        description: 'Archiver les articles sans vues depuis N jours (défaut: 120)'
+        required: false
+        default: '120'
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: livrables/blog-engine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Archive stale articles
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          ARCHIVE_DAYS: ${{ inputs.days_threshold || '120' }}
+        run: node scripts/auto-archive.mjs

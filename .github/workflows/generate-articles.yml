@@ -1,0 +1,53 @@
+name: Generate Blog Article
+
+on:
+  schedule:
+    # Lundi, mercredi, vendredi à 10h00 UTC (6h EST)
+    - cron: '0 10 * * 1'
+    - cron: '0 10 * * 3'
+    - cron: '0 10 * * 5'
+  workflow_dispatch:
+    inputs:
+      run_index:
+        description: 'Index du sujet (laisser vide = automatique)'
+        required: false
+        default: ''
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: livrables/blog-engine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: livrables/blog-engine/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env.local
+        run: |
+          cat > .env.local << EOF
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL=https://cjtglfutckaogsmwhfsv.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SECRET_KEY }}
+          EOF
+
+      - name: Generate article
+        env:
+          RUN_INDEX: ${{ inputs.run_index || github.run_number }}
+        run: node scripts/auto-generate.mjs
+
+      - name: Cleanup .env.local
+        if: always()
+        run: rm -f .env.local
