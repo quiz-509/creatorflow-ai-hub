@@ -58,9 +58,33 @@
     .articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
     .article-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 200ms var(--ease);display:flex;flex-direction:column;cursor:pointer;}
     .article-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
-    .article-thumb{height:180px;position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-    .thumb-pattern{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.8) 1px,transparent 0);background-size:24px 24px;}
-    .thumb-emoji{position:relative;font-size:40px;z-index:1;}
+    /* Generative covers */
+    .article-cover{position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+    .cover-bg{position:absolute;inset:0;}
+    .cover-dots{position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.07) 1px,transparent 0);background-size:22px 22px;}
+    .cover-glow{position:absolute;border-radius:50%;filter:blur(44px);}
+    .cover-icon{position:relative;z-index:2;font-size:52px;line-height:1;filter:drop-shadow(0 0 28px rgba(255,255,255,0.15));}
+
+    /* Featured article */
+    .featured-article{margin-bottom:8px;}
+    .featured-label-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    .featured-badge{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
+    .fc{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
+    .fc:hover{border-color:var(--border-3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
+    .fc-cover{height:300px;overflow:hidden;}
+    .fc-body{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;}
+    .fc-body h2{font-size:clamp(18px,2.2vw,26px);font-weight:800;line-height:1.25;letter-spacing:-0.02em;margin:12px 0 14px;color:var(--text);}
+    .fc-excerpt{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+    .fc-meta{display:flex;gap:14px;font-size:12px;color:var(--text-3);margin-bottom:22px;}
+    .fc-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:999px;font-size:13px;font-weight:600;color:var(--vs);transition:all 200ms;width:fit-content;}
+    .fc-btn:hover{background:rgba(124,58,237,0.25);transform:translateX(3px);}
+
+    /* Conversion banner */
+    .conv-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 28px;background:rgba(124,58,237,0.05);border:1px solid rgba(124,58,237,0.14);border-radius:var(--r-lg);margin-bottom:36px;flex-wrap:wrap;}
+    .conv-banner-text{font-size:15px;font-weight:600;color:var(--text);}
+    .conv-banner-sub{font-size:13px;color:var(--text-2);margin-top:3px;}
+    .conv-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap;transition:all 200ms;flex-shrink:0;}
+    .conv-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
     .article-body{padding:20px;display:flex;flex-direction:column;flex:1;gap:8px;}
     .cat-badge{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
     .article-title{font-size:15px;font-weight:700;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
@@ -127,6 +151,7 @@
     .footer-link:hover{color:var(--text-2);}
 
     @media(max-width:1024px){.seo-grid{grid-template-columns:1fr;}.articles-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:768px){.fc{grid-template-columns:1fr;}.fc-cover{height:220px;}.fc-body{padding:24px;}}
     @media(max-width:680px){
       .nav-links{display:none;}
       .btn-ghost{display:none;}
@@ -300,15 +325,63 @@ function CatBadge({cat}) {
   return <span className="cat-badge" style={{background:`${color}20`,color,border:`1px solid ${color}40`}}>{icon} {cat}</span>;
 }
 
-function ArticleThumb({article}) {
+function slugHash(slug) {
+  return (slug||'').split('').reduce((a,c) => ((a * 31 + c.charCodeAt(0)) | 0) >>> 0, 0x811c9dc5);
+}
+
+function ArticleCover({ article, height }) {
   const color = CAT_COLORS[article.category] || '#7C3AED';
+  const icon  = CAT_ICONS[article.category]  || '🤖';
+  const h     = slugHash(article.slug);
+  const angle = 125 + (h % 8) * 7;
+  const gx    = 20  + (h % 60);
+  const gy    = 25  + (h % 50);
+  const gs    = 150 + (h % 90);
   return (
-    <div className="article-thumb" style={{background:`linear-gradient(135deg,${color}22,${color}08)`}}>
-      <div className="thumb-pattern"/>
-      {article.featured_image
-        ? <img src={article.featured_image} alt={article.title} loading="lazy"/>
-        : <span className="thumb-emoji">{CAT_ICONS[article.category]||'🤖'}</span>
-      }
+    <div className="article-cover" style={{height:height||190}}>
+      <div className="cover-bg" style={{background:`linear-gradient(${angle}deg,${color}38 0%,${color}12 55%,rgba(4,4,10,0.85) 100%)`}}/>
+      <div className="cover-dots"/>
+      <div className="cover-glow" style={{width:gs,height:gs,background:`${color}28`,left:`${gx}%`,top:`${gy}%`,transform:'translate(-50%,-50%)'}}/>
+      <span className="cover-icon">{icon}</span>
+    </div>
+  );
+}
+
+function FeaturedCard({ article }) {
+  return (
+    <div className="featured-article">
+      <div className="featured-label-row">
+        <span className="featured-badge">✦ Article vedette</span>
+      </div>
+      <a href={`/blog/${article.slug}`}>
+        <div className="fc">
+          <div className="fc-cover">
+            <ArticleCover article={article} height={300}/>
+          </div>
+          <div className="fc-body">
+            <CatBadge cat={article.category}/>
+            <h2>{article.title}</h2>
+            <p className="fc-excerpt">{article.excerpt}</p>
+            <div className="fc-meta">
+              <span>📖 {article.reading_time||5} min de lecture</span>
+              <span>📅 {fmtDate(article.published_at)}</span>
+            </div>
+            <div className="fc-btn">Lire l'article →</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  );
+}
+
+function ConversionBanner({ catName, icon }) {
+  return (
+    <div className="conv-banner">
+      <div>
+        <div className="conv-banner-text">Besoin d'aide pour mettre en place ces stratégies ?</div>
+        <div className="conv-banner-sub">Nos experts certifiés implémentent ces méthodes dans votre business en moins de 48h.</div>
+      </div>
+      <a href="/experts" className="conv-btn">Parler à un expert {icon} →</a>
     </div>
   );
 }
@@ -317,7 +390,7 @@ function ArticleCard({article}) {
   return (
     <a href={`/blog/${article.slug}`}>
       <div className="article-card">
-        <ArticleThumb article={article}/>
+        <ArticleCover article={article} height={190}/>
         <div className="article-body">
           <CatBadge cat={article.category}/>
           <div className="article-title">{article.title}</div>
@@ -436,7 +509,6 @@ function CategoryPage({catName, data}) {
             <h1>{catName}</h1>
             <p className="cat-hero-desc">{data.subtitle}</p>
             <div className="cat-hero-stats">
-              <span className="cat-stat"><strong style={{color}}>{loading ? '…' : total}</strong> articles publiés</span>
               <span className="cat-stat">Mis à jour <strong>juin 2026</strong></span>
               <span className="cat-stat">Par <strong>CreatorFlow AI</strong></span>
             </div>
@@ -446,10 +518,24 @@ function CategoryPage({catName, data}) {
 
       <section className="articles-section">
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">
-              {loading ? 'Chargement…' : `${total} article${total > 1 ? 's' : ''} en ${catName}`}
-            </h2>
+          {/* Article vedette */}
+          {!loading && articles.length > 0 && (
+            <FeaturedCard article={articles[0]}/>
+          )}
+          {loading && (
+            <div className="sk-card" style={{marginBottom:8}}>
+              <div className="sk-thumb skeleton" style={{height:300}}/>
+            </div>
+          )}
+
+          {/* Bloc de conversion */}
+          {!loading && articles.length > 0 && (
+            <ConversionBanner catName={catName} icon={data.icon}/>
+          )}
+
+          {/* Grille des autres articles */}
+          <div className="section-header" style={{marginTop:8}}>
+            <h2 className="section-title">Tous les articles</h2>
             <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
               <option value="recent">Plus récents</option>
               <option value="popular">Plus populaires</option>
@@ -459,9 +545,11 @@ function CategoryPage({catName, data}) {
           <div className="articles-grid">
             {loading
               ? Array.from({length:6}).map((_,i) => <SkeletonCard key={i}/>)
-              : articles.length === 0
-                ? <div className="empty-state"><p>Aucun article publié pour le moment. Revenez bientôt !</p></div>
-                : articles.map(a => <ArticleCard key={a.id} article={a}/>)
+              : articles.length <= 1
+                ? articles.length === 0
+                  ? <div className="empty-state"><p>Aucun article publié pour le moment. Revenez bientôt !</p></div>
+                  : null
+                : articles.slice(1).map(a => <ArticleCard key={a.id} article={a}/>)
             }
           </div>
 
