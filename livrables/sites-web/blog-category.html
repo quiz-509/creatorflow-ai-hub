@@ -40,13 +40,26 @@
     .breadcrumb a{transition:color 150ms;}
     .breadcrumb a:hover{color:var(--text-2);}
     .breadcrumb-sep{opacity:0.4;}
-    .cat-hero-inner{position:relative;z-index:1;}
-    .cat-icon-wrap{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;border:1px solid;}
-    .cat-hero h1{font-size:clamp(28px,4vw,48px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:14px;}
-    .cat-hero-desc{font-size:17px;color:var(--text-2);max-width:600px;line-height:1.7;margin-bottom:24px;}
-    .cat-hero-stats{display:flex;gap:28px;flex-wrap:wrap;}
-    .cat-stat{font-size:13px;color:var(--text-3);}
-    .cat-stat strong{font-weight:600;}
+    .cat-hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:center;}
+    .cat-hero-left{}
+    .cat-icon-wrap{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;border:1px solid;}
+    .cat-hero h1{font-size:clamp(24px,3.5vw,40px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:10px;}
+    .cat-hero-desc{font-size:15px;color:var(--text-2);line-height:1.65;margin-bottom:18px;}
+    .cat-hero-stats{display:flex;gap:20px;flex-wrap:wrap;}
+    .cat-stat{font-size:12px;color:var(--text-3);}
+    .cat-stat strong{font-weight:600;color:var(--text-2);}
+    /* Newsletter mini */
+    .hero-nl-card{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:24px;}
+    .hero-nl-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+    .hero-nl-sub{font-size:12px;color:var(--text-3);margin-bottom:14px;}
+    .hero-nl-form{display:flex;gap:8px;}
+    .hero-nl-input{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:var(--f);min-width:0;}
+    .hero-nl-input::placeholder{color:var(--text-3);}
+    .hero-nl-input:focus{outline:none;border-color:rgba(124,58,237,0.5);}
+    .hero-nl-btn{padding:9px 14px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;flex-shrink:0;transition:opacity 150ms;}
+    .hero-nl-btn:hover{opacity:0.9;}
+    .hero-nl-proof{font-size:11px;color:var(--text-3);margin-top:10px;text-align:center;}
+    .hero-nl-done{font-size:13px;color:var(--green);font-weight:600;padding:8px 0;}
 
     /* Articles */
     .articles-section{padding:40px 0 64px;}
@@ -58,18 +71,14 @@
     .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
     .article-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 200ms var(--ease);display:flex;flex-direction:column;cursor:pointer;}
     .article-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
-    /* Generative covers */
+    /* Generative covers — tout en inline JSX */
     .article-cover{position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-    .cover-bg{position:absolute;inset:0;}
-    .cover-dots{position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.07) 1px,transparent 0);background-size:22px 22px;}
-    .cover-glow{position:absolute;border-radius:50%;filter:blur(44px);}
-    .cover-icon{position:relative;z-index:2;font-size:52px;line-height:1;filter:drop-shadow(0 0 28px rgba(255,255,255,0.15));}
 
     /* Featured article */
     .featured-article{margin-bottom:8px;}
     .featured-label-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
     .featured-badge{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
-    .fc{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
+    .fc{display:grid;grid-template-columns:55% 45%;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
     .fc:hover{border-color:var(--border-3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
     .fc-cover{height:300px;overflow:hidden;flex-shrink:0;}
     .fc-body{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;}
@@ -151,6 +160,7 @@
     .footer-link:hover{color:var(--text-2);}
 
     @media(max-width:1024px){.seo-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){.cat-hero-inner{grid-template-columns:1fr;}.hero-nl-card{display:none;}}
     @media(max-width:768px){.fc{grid-template-columns:1fr;}.fc-cover{height:220px;}.fc-body{padding:24px;}}
     @media(max-width:680px){
       .nav-links{display:none;}
@@ -329,20 +339,51 @@ function slugHash(slug) {
   return (slug||'').split('').reduce((a,c) => ((a * 31 + c.charCodeAt(0)) | 0) >>> 0, 0x811c9dc5);
 }
 
-function ArticleCover({ article, height }) {
+function ArticleCover({ article, height, featured }) {
   const color = CAT_COLORS[article.category] || '#7C3AED';
   const icon  = CAT_ICONS[article.category]  || '🤖';
   const h     = slugHash(article.slug);
   const angle = 125 + (h % 8) * 7;
-  const gx    = 20  + (h % 60);
-  const gy    = 25  + (h % 50);
-  const gs    = 150 + (h % 90);
+  const rx    = 15 + (h % 35);
+  const ry    = 20 + (h % 30);
+  const iconSize = featured ? '80px' : '56px';
+  const ringSize = featured ? 220 : 160;
   return (
-    <div className="article-cover" style={{height:height||190}}>
-      <div className="cover-bg" style={{background:`linear-gradient(${angle}deg,${color}38 0%,${color}12 55%,rgba(4,4,10,0.85) 100%)`}}/>
-      <div className="cover-dots"/>
-      <div className="cover-glow" style={{width:gs,height:gs,background:`${color}28`,left:`${gx}%`,top:`${gy}%`,transform:'translate(-50%,-50%)'}}/>
-      <span className="cover-icon">{icon}</span>
+    <div className="article-cover" style={{
+      height: height || 190,
+      background: `linear-gradient(${angle}deg, ${color}50 0%, ${color}22 45%, rgba(4,4,10,0.92) 100%)`
+    }}>
+      {/* Dot pattern */}
+      <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 1px 1px,rgba(255,255,255,0.1) 1px,transparent 0)',backgroundSize:'20px 20px'}}/>
+      {/* Decorative ring outer */}
+      <div style={{position:'absolute',width:ringSize,height:ringSize,borderRadius:'50%',border:`1px solid ${color}35`,left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
+      {/* Decorative ring inner */}
+      <div style={{position:'absolute',width:ringSize*.65,height:ringSize*.65,borderRadius:'50%',border:`1px solid ${color}20`,left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
+      {/* Glow blob */}
+      <div style={{position:'absolute',width:ringSize*.9,height:ringSize*.9,borderRadius:'50%',background:`${color}1E`,filter:'blur(32px)',left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
+      {/* Icon */}
+      <span style={{position:'relative',zIndex:2,fontSize:iconSize,lineHeight:1,filter:`drop-shadow(0 0 32px ${color}) drop-shadow(0 0 12px ${color}90)`}}>{icon}</span>
+    </div>
+  );
+}
+
+function HeroNewsletter({ catName }) {
+  const [email, setEmail] = useState('');
+  const [done,  setDone]  = useState(false);
+  const submit = e => { e.preventDefault(); if (email.trim()) setDone(true); };
+  return (
+    <div className="hero-nl-card">
+      <div className="hero-nl-title">Recevoir les guides {catName}</div>
+      <div className="hero-nl-sub">+2 400 abonnés · 1 email/semaine · 0 spam</div>
+      {done
+        ? <p className="hero-nl-done">✓ Inscription confirmée !</p>
+        : <form className="hero-nl-form" onSubmit={submit}>
+            <input className="hero-nl-input" type="email" placeholder="votre@email.com"
+              value={email} onChange={e=>setEmail(e.target.value)} required/>
+            <button className="hero-nl-btn" type="submit">→</button>
+          </form>
+      }
+      <div className="hero-nl-proof">Audit gratuit inclus à l'inscription</div>
     </div>
   );
 }
@@ -356,7 +397,7 @@ function FeaturedCard({ article }) {
       <a href={`/blog/${article.slug}`}>
         <div className="fc">
           <div className="fc-cover">
-            <ArticleCover article={article} height={300}/>
+            <ArticleCover article={article} height={300} featured={true}/>
           </div>
           <div className="fc-body">
             <CatBadge cat={article.category}/>
@@ -503,15 +544,18 @@ function CategoryPage({catName, data}) {
             <span style={{color}}>{catName}</span>
           </div>
           <div className="cat-hero-inner">
-            <div className="cat-icon-wrap" style={{background:`${color}18`,borderColor:`${color}30`,color}}>
-              {data.icon}
+            <div className="cat-hero-left">
+              <div className="cat-icon-wrap" style={{background:`${color}18`,borderColor:`${color}30`,color}}>
+                {data.icon}
+              </div>
+              <h1>{catName}</h1>
+              <p className="cat-hero-desc">{data.subtitle}</p>
+              <div className="cat-hero-stats">
+                <span className="cat-stat">Mis à jour <strong>juin 2026</strong></span>
+                <span className="cat-stat">Par <strong>CreatorFlow AI</strong></span>
+              </div>
             </div>
-            <h1>{catName}</h1>
-            <p className="cat-hero-desc">{data.subtitle}</p>
-            <div className="cat-hero-stats">
-              <span className="cat-stat">Mis à jour <strong>juin 2026</strong></span>
-              <span className="cat-stat">Par <strong>CreatorFlow AI</strong></span>
-            </div>
+            <HeroNewsletter catName={catName}/>
           </div>
         </div>
       </section>
@@ -528,18 +572,11 @@ function CategoryPage({catName, data}) {
             </div>
           )}
 
-          {/* Bloc de conversion */}
-          {!loading && articles.length > 0 && (
-            <ConversionBanner catName={catName} icon={data.icon}/>
-          )}
-
           {/* Grille des autres articles */}
           {(loading || articles.length > 1) && (
             <>
               <div className="section-header" style={{marginTop:8}}>
-                <h2 className="section-title">
-                  {articles.length > 1 ? `À lire aussi` : 'Chargement…'}
-                </h2>
+                <h2 className="section-title">À lire aussi</h2>
                 <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
                   <option value="recent">Plus récents</option>
                   <option value="popular">Plus populaires</option>
@@ -548,7 +585,16 @@ function CategoryPage({catName, data}) {
               <div className="articles-grid">
                 {loading
                   ? Array.from({length:6}).map((_,i) => <SkeletonCard key={i}/>)
-                  : articles.slice(1).map(a => <ArticleCard key={a.id} article={a}/>)
+                  : articles.slice(1).map((a,i) => (
+                      <React.Fragment key={a.id}>
+                        <ArticleCard article={a}/>
+                        {i === 2 && (
+                          <div style={{gridColumn:'1/-1'}}>
+                            <ConversionBanner catName={catName} icon={data.icon}/>
+                          </div>
+                        )}
+                      </React.Fragment>
+                    ))
                 }
               </div>
             </>
