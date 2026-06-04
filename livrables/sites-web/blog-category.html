@@ -34,7 +34,7 @@
     .container{max-width:1280px;margin:0 auto;padding:0 24px;}
 
     /* Hero */
-    .cat-hero{padding:56px 0 48px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .cat-hero{padding:96px 0 80px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
     .cat-hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.025) 1px,transparent 0);background-size:32px 32px;pointer-events:none;}
     .breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-3);margin-bottom:20px;position:relative;z-index:1;}
     .breadcrumb a{transition:color 150ms;}
@@ -68,7 +68,7 @@
     .sort-select{background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:500;color:var(--text);font-family:var(--f);cursor:pointer;min-width:160px;}
     .sort-select:focus{outline:none;border-color:var(--border-3);}
     .sort-select option{background:var(--surf-2);color:var(--text);}
-    .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+    .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px;}
     .article-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 200ms var(--ease);display:flex;flex-direction:column;cursor:pointer;}
     .article-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
     /* Generative covers — tout en inline JSX */
@@ -80,7 +80,7 @@
     .featured-badge{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
     .fc{display:grid;grid-template-columns:55% 45%;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
     .fc:hover{border-color:var(--border-3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
-    .fc-cover{height:300px;overflow:hidden;flex-shrink:0;}
+    .fc-cover{height:360px;overflow:hidden;flex-shrink:0;}
     .fc-body{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;}
     .fc-body h2{font-size:clamp(18px,2.2vw,26px);font-weight:800;line-height:1.25;letter-spacing:-0.02em;margin:12px 0 14px;color:var(--text);}
     .fc-excerpt{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
@@ -439,6 +439,30 @@ function FeaturedCard({ article }) {
   );
 }
 
+function DiscoverSection({ catName }) {
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    sb.from('blog_articles')
+      .select('id,slug,title,excerpt,category,author,reading_time,views,published_at,featured_image')
+      .eq('status','published')
+      .neq('category', catName)
+      .order('views',{ascending:false})
+      .limit(6)
+      .then(({data:rows}) => setItems(rows||[]));
+  }, [catName]);
+  if (!items.length) return null;
+  return (
+    <div style={{borderTop:'1px solid var(--border)',paddingTop:'52px',marginTop:'16px'}}>
+      <div className="section-header" style={{marginBottom:28}}>
+        <h2 className="section-title">Découvrir aussi sur CreatorFlow Market</h2>
+      </div>
+      <div className="articles-grid">
+        {items.map(a => <ArticleCard key={a.id} article={a}/>)}
+      </div>
+    </div>
+  );
+}
+
 function ConversionBanner({ catName, icon }) {
   return (
     <div className="conv-banner">
@@ -455,7 +479,7 @@ function ArticleCard({article}) {
   return (
     <a href={`/blog/${article.slug}`}>
       <div className="article-card">
-        <ArticleCover article={article} height={190}/>
+        <ArticleCover article={article} height={230}/>
         <div className="article-body">
           <CatBadge cat={article.category}/>
           <div className="article-title">{article.title}</div>
@@ -562,7 +586,7 @@ function CategoryPage({catName, data}) {
         backgroundImage:`url(${data.heroImage})`,backgroundSize:'cover',backgroundPosition:'center',
       } : {background:`linear-gradient(150deg,${color}18 0%,${color}07 55%,transparent 100%)`}}>
         {data.heroImage && <>
-          <div style={{position:'absolute',inset:0,background:'linear-gradient(90deg,rgba(4,4,10,0.94) 0%,rgba(4,4,10,0.82) 50%,rgba(4,4,10,0.60) 100%)',zIndex:0}}/>
+          <div style={{position:'absolute',inset:0,background:'linear-gradient(100deg,rgba(4,4,10,0.90) 0%,rgba(4,4,10,0.68) 45%,rgba(4,4,10,0.18) 100%)',zIndex:0}}/>
           <div style={{position:'absolute',inset:0,background:`${color}14`,zIndex:0}}/>
         </>}
         <div className="container">
@@ -639,6 +663,8 @@ function CategoryPage({catName, data}) {
               <button className="load-more-btn" onClick={loadMore}>Charger plus d'articles</button>
             </div>
           )}
+
+          <DiscoverSection catName={catName}/>
         </div>
       </section>
 
