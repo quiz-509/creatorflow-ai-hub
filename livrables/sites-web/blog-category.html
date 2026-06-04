@@ -34,7 +34,7 @@
     .container{max-width:1280px;margin:0 auto;padding:0 24px;}
 
     /* Hero */
-    .cat-hero{padding:96px 0 80px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .cat-hero{padding:64px 0 52px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
     .cat-hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.025) 1px,transparent 0);background-size:32px 32px;pointer-events:none;}
     .breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-3);margin-bottom:20px;position:relative;z-index:1;}
     .breadcrumb a{transition:color 150ms;}
@@ -95,7 +95,7 @@
     .conv-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap;transition:all 200ms;flex-shrink:0;}
     .conv-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
     .article-body{padding:20px;display:flex;flex-direction:column;flex:1;gap:8px;}
-    .cat-badge{display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+    .cat-badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
     .article-title{font-size:15px;font-weight:700;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
     .article-title:hover{color:var(--vs);}
     .article-excerpt{font-size:13px;color:var(--text-2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
@@ -120,11 +120,11 @@
     .benefits-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
     .benefit-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#C4C4DC;line-height:1.5;}
     .benefit-check{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.15);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
-    .seo-aside{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:28px;}
-    .seo-aside h3{font-size:16px;font-weight:700;margin-bottom:16px;}
-    .other-cats{display:flex;flex-direction:column;gap:8px;}
-    .other-cat-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);font-size:13px;color:var(--text-2);transition:all 150ms;}
-    .other-cat-link:hover{border-color:var(--border-2);color:var(--text);background:rgba(255,255,255,0.04);}
+    .seo-aside{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:20px;}
+    .seo-aside h3{font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);}
+    .other-cats{display:flex;flex-direction:column;gap:3px;}
+    .other-cat-link{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:transparent;border:none;font-size:12px;color:var(--text-2);transition:all 150ms;}
+    .other-cat-link:hover{background:rgba(255,255,255,0.04);color:var(--text);}
 
     /* FAQ */
     .faq-section{padding:64px 0;border-top:1px solid var(--border);}
@@ -248,7 +248,7 @@ const CAT_DATA = {
     ]
   },
   'Création de Contenu IA': {
-    color:'#EF4444', icon:'🎬', slug:'creation-contenu-ia',
+    color:'#14B8A6', icon:'🎬', slug:'creation-contenu-ia',
     heroImage:'https://images.unsplash.com/photo-1611241893603-3c359704e0ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     subtitle:"Créer du contenu vidéo, texte et visuel avec l'IA : guides, outils et stratégies 2026",
     desc:"Vidéos YouTube, posts Instagram, podcasts, newsletters : l'IA transforme chaque format de contenu. Apprenez à produire 10x plus sans sacrifier la qualité ni votre style personnel.",
@@ -604,6 +604,22 @@ function CategoryPage({catName, data}) {
               </div>
               <h1>{catName}</h1>
               <p className="cat-hero-desc">{data.subtitle}</p>
+              <div style={{display:'flex',gap:20,flexWrap:'wrap',marginBottom:16,alignItems:'center'}}>
+                <div style={{display:'flex',alignItems:'baseline',gap:4}}>
+                  <span style={{fontSize:18,fontWeight:900,color}}>+400</span>
+                  <span style={{fontSize:12,color:'var(--text-3)'}}>abonnés newsletter</span>
+                </div>
+                <span style={{color:'var(--border-3)',fontSize:14}}>·</span>
+                <div style={{display:'flex',alignItems:'baseline',gap:4}}>
+                  <span style={{fontSize:18,fontWeight:900,color}}>+25</span>
+                  <span style={{fontSize:12,color:'var(--text-3)'}}>guides publiés</span>
+                </div>
+                <span style={{color:'var(--border-3)',fontSize:14}}>·</span>
+                <div style={{display:'flex',alignItems:'baseline',gap:4}}>
+                  <span style={{fontSize:18,fontWeight:900,color}}>+10</span>
+                  <span style={{fontSize:12,color:'var(--text-3)'}}>experts IA</span>
+                </div>
+              </div>
               <div className="cat-hero-stats">
                 <span className="cat-stat">Mis à jour <strong>juin 2026</strong></span>
                 <span className="cat-stat">Par <strong>CreatorFlow AI</strong></span>
