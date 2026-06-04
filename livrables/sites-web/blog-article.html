@@ -452,20 +452,10 @@ function KeyTakeaways({ content, takeaways }) {
 }
 
 function HeroImage({ article }) {
-  if (!article) return null;
-  if (article.featured_image) {
-    return (
-      <div className="article-hero-img">
-        <img src={article.featured_image} alt={article.title} loading="lazy" />
-      </div>
-    );
-  }
+  if (!article || !article.featured_image) return null;
   return (
     <div className="article-hero-img">
-      <div className="article-hero-img-placeholder" style={{background:CAT_GRAD(article.category)}}>
-        <div className="hero-img-pattern" />
-        <span className="hero-img-emoji">{CAT_ICONS[article.category]||'🤖'}</span>
-      </div>
+      <img src={article.featured_image} alt={article.title} loading="lazy" />
     </div>
   );
 }
