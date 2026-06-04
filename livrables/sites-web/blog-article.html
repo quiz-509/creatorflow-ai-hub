@@ -212,6 +212,30 @@
     .hero-img-pattern{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.018) 40px,rgba(255,255,255,0.018) 80px);}
     .hero-img-emoji{font-size:80px;position:relative;z-index:1;filter:drop-shadow(0 4px 20px rgba(0,0,0,.6));}
 
+    /* INTRO FULL-WIDTH — visible immédiatement, avant la grid */
+    .article-intro{max-width:900px;margin:0 auto;padding:32px 24px 0;}
+    .article-intro .article-content p{font-size:18px;line-height:1.88;}
+    .article-intro .article-content p:first-child{font-size:19px;color:var(--text);font-weight:400;}
+
+    /* INLINE NEWSLETTER — scroll-triggered */
+    .inline-nl{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.05));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-xl);padding:32px 36px;margin:44px 0;}
+    .inline-nl-icon{font-size:28px;margin-bottom:8px;}
+    .inline-nl-headline{font-size:19px;font-weight:800;margin-bottom:5px;letter-spacing:-0.02em;}
+    .inline-nl-sub{font-size:13px;color:var(--text-3);margin-bottom:18px;line-height:1.5;}
+    .inline-nl-row{display:flex;gap:10px;max-width:480px;}
+    .inline-nl-row input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border-2);border-radius:8px;padding:11px 16px;font-size:14px;color:var(--text);font-family:var(--f);outline:none;}
+    .inline-nl-row input:focus{border-color:rgba(124,58,237,0.5);}
+    .inline-nl-btn{padding:11px 24px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;font-family:var(--f);}
+
+    /* MOBILE TOC STRIP — sticky sous la nav */
+    .mobile-toc-bar{display:none;position:sticky;top:var(--nav);z-index:200;background:rgba(4,4,10,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .mobile-toc-scroll{display:flex;align-items:center;gap:8px;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .mobile-toc-scroll::-webkit-scrollbar{display:none;}
+    .mobile-toc-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--text-3);white-space:nowrap;flex-shrink:0;}
+    .mobile-toc-pill{flex-shrink:0;padding:5px 12px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-2);cursor:pointer;white-space:nowrap;font-family:var(--f);transition:all 150ms;}
+    .mobile-toc-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3);color:var(--vs);}
+    @media(max-width:900px){.mobile-toc-bar{display:block;}}
+
     /* KEY TAKEAWAYS ACCORDION */
     .kt-toggle-btn{width:100%;background:none;border:none;padding:0;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
     .kt-chevron{font-size:11px;color:var(--text-3);display:none;transition:transform 200ms;flex-shrink:0;margin-left:auto;}
@@ -271,8 +295,10 @@
       .kt-list.kt-open{display:flex;}
       /* CALLOUTS */
       .callout{padding:12px 14px;font-size:13px;}
-      /* MOBILE NEWSLETTER */
-      .mobile-nl{display:block;}
+      /* INLINE NEWSLETTER MOBILE */
+      .inline-nl{padding:20px 16px;margin:28px 0;}
+      .inline-nl-row{flex-direction:column;}
+      .inline-nl-btn{width:100%;text-align:center;}
       /* CTA */
       .article-cta{padding:24px 16px;margin-top:28px;}
       .article-cta::before{display:none;}
@@ -397,6 +423,13 @@ const CAT_GRAD = c => {
   return `linear-gradient(135deg,${map[c]||'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
 };
 
+const splitContent = html => {
+  if (!html) return { intro: '', main: '' };
+  const idx = html.indexOf('<h2');
+  if (idx <= 0) return { intro: '', main: html };
+  return { intro: html.slice(0, idx), main: html.slice(idx) };
+};
+
 // Reads slug from injected window var, /blog/SLUG path, or ?slug= query param
 const getSlug = () => {
   if (typeof window.__BLOG_SLUG__ === 'string' && window.__BLOG_SLUG__) return window.__BLOG_SLUG__;
@@ -460,9 +493,19 @@ function HeroImage({ article }) {
   );
 }
 
-function MobileNewsletter() {
+function InlineNewsletter() {
+  const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVisible(true); },
+      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
   const submit = async e => {
     e.preventDefault();
     if (!email) return;
@@ -470,17 +513,23 @@ function MobileNewsletter() {
     setDone(true);
   };
   return (
-    <div className="mobile-nl">
-      <div className="mobile-nl-title">📨 Newsletter IA</div>
+    <div ref={ref} className="inline-nl" style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(24px)',
+      transition: 'opacity 700ms ease, transform 700ms ease',
+    }}>
+      <div className="inline-nl-icon">📨</div>
+      <div className="inline-nl-headline">Cet article vous plaît ?</div>
+      <div className="inline-nl-sub">Recevez les meilleurs articles IA chaque semaine, sans spam.</div>
       {done ? (
-        <p style={{fontSize:13,color:'#10B981',fontWeight:600}}>✅ Inscription confirmée !</p>
+        <p style={{color:'var(--green)',fontWeight:600,fontSize:14}}>✅ Inscription confirmée !</p>
       ) : (
-        <form onSubmit={submit}>
+        <form className="inline-nl-row" onSubmit={submit}>
           <input type="email" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required />
-          <button type="submit" className="mobile-nl-btn">S'abonner gratuitement</button>
+          <button type="submit" className="inline-nl-btn">S'abonner →</button>
         </form>
       )}
-      <p style={{fontSize:11,color:'var(--text-3)',marginTop:8,lineHeight:1.5}}>Meilleurs articles IA chaque semaine. Sans spam.</p>
+      <p style={{fontSize:11,color:'var(--text-3)',marginTop:10}}>Sans spam. Désabonnement en 1 clic.</p>
     </div>
   );
 }
@@ -504,6 +553,24 @@ function TOC({ headings, activeId }) {
         ))}
       </ul>
     </aside>
+  );
+}
+
+function MobileTOCBar({ headings, activeId }) {
+  const h2s = headings.filter(h => h.level === 2);
+  if (!h2s.length) return null;
+  return (
+    <div className="mobile-toc-bar">
+      <div className="mobile-toc-scroll">
+        <span className="mobile-toc-label">Chapitres</span>
+        {h2s.map(h => (
+          <button key={h.id}
+            className={`mobile-toc-pill${activeId === h.id ? ' active' : ''}`}
+            onClick={() => { const el = document.getElementById(h.id); if (el) el.scrollIntoView({behavior:'smooth',block:'start'}); }}
+          >{h.text}</button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -600,36 +667,15 @@ function RelatedCard({ article }) {
   );
 }
 
-function RightSidebar({ article }) {
-  const [email, setEmail] = useState('');
-  const [done, setDone] = useState(false);
-  const submit = async e => {
-    e.preventDefault();
-    if (!email) return;
-    try { await sb.from('blog_subscribers').insert({ email }); } catch {}
-    setDone(true);
-  };
+function RightSidebar() {
   return (
     <aside className="right-sidebar">
-      <div className="sidebar-card">
-        <div className="sidebar-title">📨 Newsletter IA</div>
-        {done ? (
-          <p style={{fontSize:13,color:'#10B981',fontWeight:600}}>✅ Inscription confirmée !</p>
-        ) : (
-          <form className="nl-mini" onSubmit={submit}>
-            <input type="email" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required />
-            <button type="submit" className="nl-mini-btn">S'abonner gratuitement</button>
-          </form>
-        )}
-        <p style={{fontSize:11,color:'var(--text-3)',marginTop:10,lineHeight:1.5}}>Meilleurs articles IA chaque semaine. Sans spam.</p>
-      </div>
       <div className="expert-cta-mini">
         <div style={{fontSize:28,marginBottom:8}}>🚀</div>
         <h4>Besoin d'un expert IA ?</h4>
         <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
         <a href="/experts">Voir les experts →</a>
       </div>
-      {article && <SEOIntelCard article={article} />}
     </aside>
   );
 }
@@ -820,10 +866,11 @@ function ArticlePage() {
     catch { return []; }
   })();
   const paaData = Array.isArray(article.paa_questions) ? article.paa_questions : [];
+  const { intro, main: mainContent } = splitContent(article.content || '');
 
   return (
     <div style={{ paddingTop: 'var(--nav)' }}>
-      {/* HERO */}
+      {/* HERO — titre + meta */}
       <div className="article-hero">
         <div className="hero-inner">
           <div className="breadcrumb">
@@ -852,6 +899,16 @@ function ArticlePage() {
 
       <HeroImage article={article} />
 
+      {/* INTRO — pleine largeur, visible immédiatement */}
+      {intro && (
+        <div className="article-intro">
+          <div className="article-content" dangerouslySetInnerHTML={{ __html: intro }} />
+        </div>
+      )}
+
+      {/* TOC MOBILE — strip horizontal sticky */}
+      <MobileTOCBar headings={headings} activeId={activeId} />
+
       {/* ARTICLE LAYOUT */}
       <div className="article-layout">
         <TOC headings={headings} activeId={activeId} />
@@ -859,15 +916,25 @@ function ArticlePage() {
         <div className="article-content-wrap">
           <KeyTakeaways content={article.content || ''} takeaways={article.key_takeaways} />
 
-          {article.content ? (
-            <div className="article-content" ref={contentRef} dangerouslySetInnerHTML={{ __html: article.content }} />
-          ) : (
-            <p style={{color:'var(--text-2)'}}>Contenu en cours de chargement…</p>
-          )}
+          <div className="article-content" ref={contentRef} dangerouslySetInnerHTML={{ __html: mainContent || article.content || '' }} />
+
+          {/* NEWSLETTER — apparaît après ~55% de lecture */}
+          <InlineNewsletter />
 
           <FAQSection faq={faqData} />
 
           {paaData.length > 0 && <PAASection questions={paaData} />}
+
+          {/* CTA EXPERT — après contenu complet */}
+          <div className="article-cta">
+            <div className="cta-label">CreatorFlow Market</div>
+            <h3>🚀 Passez à l'action avec un expert IA</h3>
+            <p>Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.</p>
+            <div className="cta-btns">
+              <a href="/experts" className="cta-btn-primary">Explorer les experts IA →</a>
+              <a href="/academie" className="cta-btn-ghost">Voir l'Academy</a>
+            </div>
+          </div>
 
           {/* TAGS */}
           {article.tags?.length > 0 && (
@@ -887,20 +954,7 @@ function ArticlePage() {
             <button className="share-btn" onClick={copyLink}>{copied ? '✅ Copié !' : '🔗 Copier le lien'}</button>
           </div>
 
-          <MobileNewsletter />
-
-          {/* CTA */}
-          <div className="article-cta">
-            <div className="cta-label">CreatorFlow Market</div>
-            <h3>🚀 Passez à l'action avec un expert IA</h3>
-            <p>Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business — en 48h.</p>
-            <div className="cta-btns">
-              <a href="/experts" className="cta-btn-primary">Explorer les experts IA →</a>
-              <a href="/academie" className="cta-btn-ghost">Voir l'Academy</a>
-            </div>
-          </div>
-
-          {/* RELATED */}
+          {/* ARTICLES CONNEXES */}
           {related.length > 0 && (
             <div className="related-section">
               <h2 className="related-title">Articles connexes</h2>
@@ -911,7 +965,7 @@ function ArticlePage() {
           )}
         </div>
 
-        <RightSidebar article={article} />
+        <RightSidebar />
       </div>
     </div>
   );
