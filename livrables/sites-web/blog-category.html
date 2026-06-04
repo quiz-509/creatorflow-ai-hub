@@ -341,27 +341,41 @@ function slugHash(slug) {
 
 function ArticleCover({ article, height, featured }) {
   const color = CAT_COLORS[article.category] || '#7C3AED';
-  const icon  = CAT_ICONS[article.category]  || '🤖';
-  const h     = slugHash(article.slug);
-  const angle = 125 + (h % 8) * 7;
-  const rx    = 15 + (h % 35);
-  const ry    = 20 + (h % 30);
+  const h     = height || 190;
+
+  if (article.featured_image) {
+    return (
+      <div className="article-cover" style={{height: h, background: '#0C0C18'}}>
+        <img
+          src={article.featured_image}
+          alt={article.title}
+          style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center'}}
+          loading="lazy"
+        />
+        {/* Bottom fade for text contrast */}
+        <div style={{position:'absolute',inset:0,background:`linear-gradient(to top, rgba(4,4,10,0.72) 0%, transparent 55%)`}}/>
+        {/* Subtle color tint overlay */}
+        <div style={{position:'absolute',inset:0,background:`${color}12`}}/>
+      </div>
+    );
+  }
+
+  // Fallback: CSS generative cover
+  const icon  = CAT_ICONS[article.category] || '🤖';
+  const sh    = slugHash(article.slug);
+  const angle = 125 + (sh % 8) * 7;
+  const rx    = 15 + (sh % 35);
   const iconSize = featured ? '80px' : '56px';
   const ringSize = featured ? 220 : 160;
   return (
     <div className="article-cover" style={{
-      height: height || 190,
+      height: h,
       background: `linear-gradient(${angle}deg, ${color}50 0%, ${color}22 45%, rgba(4,4,10,0.92) 100%)`
     }}>
-      {/* Dot pattern */}
       <div style={{position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 1px 1px,rgba(255,255,255,0.1) 1px,transparent 0)',backgroundSize:'20px 20px'}}/>
-      {/* Decorative ring outer */}
       <div style={{position:'absolute',width:ringSize,height:ringSize,borderRadius:'50%',border:`1px solid ${color}35`,left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
-      {/* Decorative ring inner */}
       <div style={{position:'absolute',width:ringSize*.65,height:ringSize*.65,borderRadius:'50%',border:`1px solid ${color}20`,left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
-      {/* Glow blob */}
       <div style={{position:'absolute',width:ringSize*.9,height:ringSize*.9,borderRadius:'50%',background:`${color}1E`,filter:'blur(32px)',left:`${rx}%`,top:'50%',transform:'translateY(-50%)'}}/>
-      {/* Icon */}
       <span style={{position:'relative',zIndex:2,fontSize:iconSize,lineHeight:1,filter:`drop-shadow(0 0 32px ${color}) drop-shadow(0 0 12px ${color}90)`}}>{icon}</span>
     </div>
   );
