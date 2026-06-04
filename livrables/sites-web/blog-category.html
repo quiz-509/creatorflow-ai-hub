@@ -55,7 +55,7 @@
     .sort-select{background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:500;color:var(--text);font-family:var(--f);cursor:pointer;min-width:160px;}
     .sort-select:focus{outline:none;border-color:var(--border-3);}
     .sort-select option{background:var(--surf-2);color:var(--text);}
-    .articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
     .article-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 200ms var(--ease);display:flex;flex-direction:column;cursor:pointer;}
     .article-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
     /* Generative covers */
@@ -71,7 +71,7 @@
     .featured-badge{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
     .fc{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
     .fc:hover{border-color:var(--border-3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
-    .fc-cover{height:300px;overflow:hidden;}
+    .fc-cover{height:300px;overflow:hidden;flex-shrink:0;}
     .fc-body{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;}
     .fc-body h2{font-size:clamp(18px,2.2vw,26px);font-weight:800;line-height:1.25;letter-spacing:-0.02em;margin:12px 0 14px;color:var(--text);}
     .fc-excerpt{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
@@ -150,7 +150,7 @@
     .footer-link{font-size:12px;color:var(--text-3);transition:color 150ms;}
     .footer-link:hover{color:var(--text-2);}
 
-    @media(max-width:1024px){.seo-grid{grid-template-columns:1fr;}.articles-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:1024px){.seo-grid{grid-template-columns:1fr;}}
     @media(max-width:768px){.fc{grid-template-columns:1fr;}.fc-cover{height:220px;}.fc-body{padding:24px;}}
     @media(max-width:680px){
       .nav-links{display:none;}
@@ -534,24 +534,29 @@ function CategoryPage({catName, data}) {
           )}
 
           {/* Grille des autres articles */}
-          <div className="section-header" style={{marginTop:8}}>
-            <h2 className="section-title">Tous les articles</h2>
-            <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
-              <option value="recent">Plus récents</option>
-              <option value="popular">Plus populaires</option>
-            </select>
-          </div>
+          {(loading || articles.length > 1) && (
+            <>
+              <div className="section-header" style={{marginTop:8}}>
+                <h2 className="section-title">
+                  {articles.length > 1 ? `À lire aussi` : 'Chargement…'}
+                </h2>
+                <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
+                  <option value="recent">Plus récents</option>
+                  <option value="popular">Plus populaires</option>
+                </select>
+              </div>
+              <div className="articles-grid">
+                {loading
+                  ? Array.from({length:6}).map((_,i) => <SkeletonCard key={i}/>)
+                  : articles.slice(1).map(a => <ArticleCard key={a.id} article={a}/>)
+                }
+              </div>
+            </>
+          )}
 
-          <div className="articles-grid">
-            {loading
-              ? Array.from({length:6}).map((_,i) => <SkeletonCard key={i}/>)
-              : articles.length <= 1
-                ? articles.length === 0
-                  ? <div className="empty-state"><p>Aucun article publié pour le moment. Revenez bientôt !</p></div>
-                  : null
-                : articles.slice(1).map(a => <ArticleCard key={a.id} article={a}/>)
-            }
-          </div>
+          {!loading && articles.length === 0 && (
+            <div className="empty-state"><p>Aucun article publié pour le moment. Revenez bientôt !</p></div>
+          )}
 
           {hasMore && !loading && (
             <div className="load-more-wrap">
