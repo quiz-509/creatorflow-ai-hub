@@ -49,12 +49,14 @@
 
     /* HERO */
     .article-hero{padding:calc(var(--nav)+48px) 0 40px;background:transparent;border-bottom:1px solid var(--border);}
-    .hero-inner{max-width:900px;margin:0 auto;padding:0 24px;}
+    .hero-inner{max-width:1240px;margin:0 auto;padding:0 24px;position:relative;}
+    .hero-deco{position:absolute;right:0;top:0;font-size:96px;opacity:0.13;line-height:1;pointer-events:none;user-select:none;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7));}
+    @media(max-width:680px){.hero-deco{font-size:52px;opacity:0.09;}}
     .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-bottom:20px;}
     .breadcrumb a:hover{color:var(--text-2);}
     .bc-sep{opacity:.35;}
     .cat-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:18px;}
-    .article-title{font-size:clamp(32px,4.5vw,52px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:14px;}
+    .article-title{font-size:clamp(32px,4.5vw,52px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:14px;max-width:800px;}
     .article-subtitle{font-size:18px;color:var(--text-2);line-height:1.6;margin-bottom:28px;max-width:720px;}
     .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;font-size:13px;color:var(--text-3);padding-top:20px;border-top:1px solid var(--border);}
     .hero-meta-chip{display:flex;align-items:center;gap:5px;}
@@ -63,8 +65,8 @@
     .seo-mid{background:rgba(245,158,11,.12);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
 
     /* LAYOUT */
-    .article-layout{display:grid;grid-template-columns:minmax(0,800px) 280px;gap:52px;max-width:1160px;margin:0 auto;padding:40px 24px 80px;align-items:start;}
-    @media(max-width:960px){.article-layout{grid-template-columns:1fr;}.right-sidebar{display:none;}}
+    .article-layout{display:grid;grid-template-columns:minmax(0,860px) 300px;gap:52px;max-width:1240px;margin:0 auto;padding:40px 24px 80px;align-items:start;}
+    @media(max-width:1000px){.article-layout{grid-template-columns:1fr;}.right-sidebar{display:none;}}
 
     /* TOC */
     .toc-sidebar{max-height:calc(60vh);overflow-y:auto;padding-right:8px;padding-bottom:4px;}
@@ -140,7 +142,17 @@
     .use-cases{margin:40px 0;}
     .uc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0;}
     .uc-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;transition:all 200ms var(--ease);}
-    .uc-card:hover{border-color:var(--border-2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+    .uc-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(124,58,237,0.08);}
+    /* AUTHOR MINI */
+    .author-mini{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .author-mini-avatar{width:36px;height:36px;border-radius:50%;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.22);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .author-mini-info{display:flex;flex-direction:column;gap:1px;}
+    .author-mini-name{font-size:13px;font-weight:600;color:var(--text);}
+    .author-mini-role{font-size:11px;color:var(--text-3);}
+    /* CTA PROOF */
+    .cta-proof-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;}
+    .cta-proof-item{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+    .cta-proof-item::before{content:'✓';color:var(--green);font-weight:700;font-size:14px;}
     .uc-icon{font-size:26px;margin-bottom:10px;}
     .uc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;}
     .uc-desc{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;}
@@ -251,12 +263,13 @@
     .hero-img-emoji{font-size:80px;position:relative;z-index:1;filter:drop-shadow(0 4px 20px rgba(0,0,0,.6));}
 
     /* INTRO FULL-WIDTH — visible immédiatement, avant la grid */
-    .article-intro{max-width:900px;margin:0 auto;padding:32px 24px 0;}
+    .article-intro{max-width:1240px;margin:0 auto;padding:32px 24px 0;}
+    .article-intro .article-content{max-width:860px;}
     .article-intro .article-content p{font-size:18px;line-height:1.88;}
     .article-intro .article-content p:first-child{font-size:19px;color:var(--text);font-weight:400;}
 
     /* INLINE NEWSLETTER — scroll-triggered */
-    .inline-nl{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.05));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-xl);padding:32px 36px;margin:44px 0;}
+    .inline-nl{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-xl);padding:32px 36px;margin:44px 0;}
     .inline-nl-icon{font-size:28px;margin-bottom:8px;}
     .inline-nl-headline{font-size:19px;font-weight:800;margin-bottom:5px;letter-spacing:-0.02em;}
     .inline-nl-sub{font-size:13px;color:var(--text-3);margin-bottom:18px;line-height:1.5;}
@@ -272,7 +285,7 @@
     .mobile-toc-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--text-3);white-space:nowrap;flex-shrink:0;}
     .mobile-toc-pill{flex-shrink:0;padding:5px 12px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-2);cursor:pointer;white-space:nowrap;font-family:var(--f);transition:all 150ms;}
     .mobile-toc-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3);color:var(--vs);}
-    @media(max-width:960px){.mobile-toc-bar{display:block;}}
+    @media(max-width:1000px){.mobile-toc-bar{display:block;}}
 
     /* KEY TAKEAWAYS ACCORDION */
     .kt-toggle-btn{width:100%;background:none;border:none;padding:0;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
@@ -965,6 +978,7 @@ function ArticlePage() {
   );
 
   const url = `https://creatorflowmarket.com/blog/${article.slug}`;
+  const catColor = CAT_COLORS[article.category] || '#7C3AED';
   const pubDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})
     : '';
@@ -979,8 +993,9 @@ function ArticlePage() {
   return (
     <div style={{ paddingTop: 'var(--nav)' }}>
       {/* HERO — titre + meta */}
-      <div className="article-hero">
+      <div className="article-hero" style={{background:`linear-gradient(150deg,${catColor}1A 0%,${catColor}07 55%,transparent 100%)`}}>
         <div className="hero-inner">
+          <div className="hero-deco">{CAT_ICONS[article.category]||'🤖'}</div>
           <div className="breadcrumb">
             <a href="/">Accueil</a>
             <span className="bc-sep">›</span>
@@ -992,7 +1007,13 @@ function ArticlePage() {
           <h1 className="article-title">{article.title}</h1>
           {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
           <div className="hero-meta">
-            <span className="hero-meta-chip">✍️ {article.author||'CreatorFlow AI'}</span>
+            <div className="author-mini">
+              <div className="author-mini-avatar">{CAT_ICONS[article.category]||'🤖'}</div>
+              <div className="author-mini-info">
+                <span className="author-mini-name">{article.author||'CreatorFlow AI'}</span>
+                <span className="author-mini-role">Expert IA · CreatorFlow Market</span>
+              </div>
+            </div>
             {article.reading_time > 0 && <span className="hero-meta-chip">📖 {article.reading_time} min de lecture</span>}
             {article.views > 0 && <span className="hero-meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>}
             {pubDate && <span className="hero-meta-chip">📅 {pubDate}</span>}
@@ -1037,6 +1058,11 @@ function ArticlePage() {
             <div className="cta-icon-large">{cta.icon}</div>
             <h3>{cta.headline}</h3>
             <p>{cta.body}</p>
+            <div className="cta-proof-row">
+              <span className="cta-proof-item">Audit gratuit</span>
+              <span className="cta-proof-item">Experts certifiés</span>
+              <span className="cta-proof-item">Résultats en 48h</span>
+            </div>
             <div className="cta-btns">
               <a href="/experts" className="cta-btn-primary">{cta.btn}</a>
               <a href={cta.subHref} className="cta-btn-ghost">{cta.sub}</a>
