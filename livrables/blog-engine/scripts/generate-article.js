@@ -41,6 +41,20 @@ const CATEGORIES = [
   'Tutoriels IA','Comparatifs IA','Guides IA'
 ];
 
+// CTA mid-article injecté programmatiquement — 1 par catégorie
+const MID_CTA = {
+  'Actualités IA':          { text: 'Vous voulez implémenter ces innovations avant vos concurrents ?',          btn: 'Parler à un expert IA →' },
+  'Outils IA':              { text: 'Besoin d\'aide pour choisir et configurer le bon outil ?',                  btn: 'Trouver mon expert outils →' },
+  'Automatisation IA':      { text: 'Vous voulez automatiser ces workflows dans votre business dès cette semaine ?', btn: 'Réserver un expert automatisation →' },
+  'Marketing IA':           { text: 'Vous voulez un système marketing IA qui génère des leads en continu ?',     btn: 'Booster mon marketing →' },
+  'Création de Contenu IA': { text: 'Vous voulez produire 10x plus de contenu sans effort supplémentaire ?',    btn: 'Scaler mon contenu →' },
+  'Vente IA':               { text: 'Vous voulez un système de vente IA qui travaille pendant que vous dormez ?', btn: 'Automatiser mes ventes →' },
+  'Support Client IA':      { text: 'Vous voulez un support client IA disponible 24h/24, déployé en 48h ?',     btn: 'Déployer mon IA support →' },
+  'Tutoriels IA':           { text: 'Vous voulez qu\'un expert implémente ce tutoriel pour vous directement ?',  btn: 'Déléguer à un expert →' },
+  'Comparatifs IA':         { text: 'Vous hésitez encore entre ces outils ? Un expert vous guide en 30 min.',   btn: 'Parler à un expert →' },
+  'Guides IA':              { text: 'Vous voulez passer de la théorie à l\'action avec un expert dès demain ?', btn: 'Passer à l\'action →' },
+};
+
 // Parse CLI args
 const args = process.argv.slice(2);
 const getArg = (flag) => {
@@ -176,6 +190,13 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown) :
   // Garantie : meta_description <= 160 chars (contrainte Supabase)
   if (json.meta_description && json.meta_description.length > 158) {
     json.meta_description = json.meta_description.slice(0, 155) + '…';
+  }
+
+  // Injection CTA mid-article avant la section use-cases
+  const midCta = MID_CTA[category];
+  if (midCta && json.content.includes('<section class="use-cases">')) {
+    const ctaHtml = `<div class="article-inline-cta"><p class="aic-text">🎯 <strong>${midCta.text}</strong></p><a href="/experts" class="aic-btn">${midCta.btn}</a></div>\n`;
+    json.content = json.content.replace('<section class="use-cases">', ctaHtml + '<section class="use-cases">');
   }
 
   console.log(`\n✅ Article généré : "${json.title}"`);

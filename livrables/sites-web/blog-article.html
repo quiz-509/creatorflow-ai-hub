@@ -120,6 +120,16 @@
     .callout-info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:var(--text-2);}
     .callout-info strong{color:var(--blue);}
 
+    /* INLINE CTA MID-ARTICLE — injecté par le générateur */
+    .article-inline-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.22);border-left:3px solid var(--v);border-radius:var(--r-lg);padding:18px 24px;margin:32px 0;flex-wrap:wrap;}
+    .aic-text{font-size:14px;color:var(--text-2);margin:0;flex:1;line-height:1.5;}
+    .aic-text strong{color:var(--text);}
+    .aic-btn{flex-shrink:0;padding:9px 20px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:13px;font-weight:700;white-space:nowrap;transition:all 200ms;}
+    .aic-btn:hover{opacity:.88;transform:translateY(-1px);}
+
+    /* CTA FIN D'ARTICLE — grand bloc contextuel */
+    .cta-icon-large{font-size:38px;margin-bottom:10px;}
+
     /* STATS ROW — section pourquoi c'est important */
     .why-matters{margin:36px 0;}
     .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0;}
@@ -324,6 +334,9 @@
       .kt-list.kt-open{display:flex;}
       /* CALLOUTS */
       .callout{padding:12px 14px;font-size:13px;}
+      /* INLINE CTA MID-ARTICLE MOBILE */
+      .article-inline-cta{flex-direction:column;align-items:flex-start;padding:16px;}
+      .aic-btn{width:100%;text-align:center;}
       /* INLINE NEWSLETTER MOBILE */
       .inline-nl{padding:20px 16px;margin:28px 0;}
       .inline-nl-row{flex-direction:column;}
@@ -457,6 +470,65 @@ const CAT_GRAD = c => {
     'Comparatifs IA':'rgba(249,115,22,0.18)','Guides IA':'rgba(132,204,22,0.18)',
   };
   return `linear-gradient(135deg,${map[c]||'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
+};
+
+// CTA fin d'article — spécifique à chaque catégorie
+const ARTICLE_CTA = {
+  'Actualités IA': {
+    icon:'⚡', headline:'Prenez de l\'avance sur vos concurrents',
+    body:'Nos experts IA implémentent ces innovations dans votre business avant que vos concurrents les découvrent.',
+    btn:'Réserver un expert IA →', sub:'Voir l\'Academy IA', subHref:'/academie',
+  },
+  'Outils IA': {
+    icon:'🛠', headline:'Configurez votre stack IA avec un expert',
+    body:'Un expert CreatorFlow Market sélectionne et configure vos outils IA de A à Z — vous n\'avez plus qu\'à utiliser.',
+    btn:'Trouver mon expert outils →', sub:'Formations outils IA', subHref:'/academie',
+  },
+  'Automatisation IA': {
+    icon:'⚡', headline:'Automatisez votre business en 48h',
+    body:'Nos experts n8n / Make construisent vos workflows IA sur mesure. Résultats concrets garantis.',
+    btn:'Automatiser avec un expert →', sub:'Academy Automatisation', subHref:'/academie',
+  },
+  'Marketing IA': {
+    icon:'📈', headline:'Multipliez vos résultats marketing avec l\'IA',
+    body:'Nos experts IA construisent votre système marketing automatisé : contenu, leads, conversions.',
+    btn:'Booster mon marketing IA →', sub:'Formations Marketing IA', subHref:'/academie',
+  },
+  'Création de Contenu IA': {
+    icon:'🎬', headline:'Créez 10x plus de contenu en moins de temps',
+    body:'Un expert CreatorFlow Market met en place votre pipeline de contenu IA clé en main.',
+    btn:'Scaler mon contenu IA →', sub:'Academy Création de Contenu', subHref:'/academie',
+  },
+  'Vente IA': {
+    icon:'💰', headline:'Augmentez vos ventes avec un système IA automatisé',
+    body:'Nos experts construisent votre funnel de vente automatisé : prospection, nurturing, closing.',
+    btn:'Construire mon système de vente →', sub:'Formations Vente IA', subHref:'/academie',
+  },
+  'Support Client IA': {
+    icon:'🤝', headline:'Automatisez votre support client 24h/24',
+    body:'Un expert déploie votre agent IA de support en 48h. Satisfaction client garantie.',
+    btn:'Déployer mon IA support →', sub:'Voir les solutions support', subHref:'/academie',
+  },
+  'Tutoriels IA': {
+    icon:'📚', headline:'Vous voulez qu\'un expert l\'implémente pour vous ?',
+    body:'Gagnez du temps : nos experts certifiés implémentent ce tutoriel dans votre business en 48h.',
+    btn:'Déléguer l\'implémentation →', sub:'Continuer à apprendre', subHref:'/academie',
+  },
+  'Comparatifs IA': {
+    icon:'⚖️', headline:'Vous ne savez toujours pas quel outil choisir ?',
+    body:'Un expert analyse votre situation et configure l\'outil parfait pour vous — en 30 minutes.',
+    btn:'Parler à un expert →', sub:'Voir tous les comparatifs', subHref:'/blog',
+  },
+  'Guides IA': {
+    icon:'🗺️', headline:'Passez de la théorie à l\'action dès demain',
+    body:'Ce guide vous montre quoi faire. Nos experts le font pour vous — résultats concrets en 48h.',
+    btn:'Passer à l\'action →', sub:'Continuer avec l\'Academy', subHref:'/academie',
+  },
+};
+const DEFAULT_CTA = {
+  icon:'🚀', headline:'Passez à l\'action avec un expert IA',
+  body:'Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.',
+  btn:'Explorer les experts IA →', sub:'Voir l\'Academy', subHref:'/academie',
 };
 
 const splitContent = html => {
@@ -903,6 +975,7 @@ function ArticlePage() {
   })();
   const paaData = Array.isArray(article.paa_questions) ? article.paa_questions : [];
   const { intro, main: mainContent } = splitContent(article.content || '');
+  const cta = ARTICLE_CTA[article.category] || DEFAULT_CTA;
 
   return (
     <div style={{ paddingTop: 'var(--nav)' }}>
@@ -961,14 +1034,15 @@ function ArticlePage() {
 
           {paaData.length > 0 && <PAASection questions={paaData} />}
 
-          {/* CTA EXPERT — après contenu complet */}
+          {/* CTA EXPERT — contextuel par catégorie */}
           <div className="article-cta">
             <div className="cta-label">CreatorFlow Market</div>
-            <h3>🚀 Passez à l'action avec un expert IA</h3>
-            <p>Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.</p>
+            <div className="cta-icon-large">{cta.icon}</div>
+            <h3>{cta.headline}</h3>
+            <p>{cta.body}</p>
             <div className="cta-btns">
-              <a href="/experts" className="cta-btn-primary">Explorer les experts IA →</a>
-              <a href="/academie" className="cta-btn-ghost">Voir l'Academy</a>
+              <a href="/experts" className="cta-btn-primary">{cta.btn}</a>
+              <a href={cta.subHref} className="cta-btn-ghost">{cta.sub}</a>
             </div>
           </div>
 
