@@ -298,6 +298,7 @@ function App(){
   const [total,    setTotal]    = useState(0);
   const [email,    setEmail]    = useState('');
   const [subDone,  setSubDone]  = useState(false);
+  const [subError, setSubError] = useState('');
   const PER = 9;
 
   const load = useCallback(async (c, search, p) => {
@@ -437,9 +438,18 @@ function App(){
             {subDone ? (
               <div style={{color:'#10B981',fontWeight:700,fontSize:16}}>✅ Merci ! Vous êtes inscrit à la newsletter CreatorFlow AI.</div>
             ) : (
-              <form className="nl-form" onSubmit={async e=>{e.preventDefault();if(!email)return;try{await sb.from('blog_subscribers').insert({email,source:'blog'});}catch{}setSubDone(true);}}>
-                <input type="email" className="nl-input" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
+              <form className="nl-form" onSubmit={async e=>{
+                e.preventDefault();
+                if(!email)return;
+                setSubError('');
+                const {error}=await sb.from('blog_subscribers').insert({email,source:'blog'});
+                if(!error){setSubDone(true);}
+                else if(error.code==='23505'){setSubError('Cet email est déjà inscrit.');}
+                else{setSubError('Une erreur est survenue. Réessayez.');}
+              }}>
+                <input type="email" className="nl-input" placeholder="votre@email.com" value={email} onChange={e=>{setEmail(e.target.value);setSubError('');}} required/>
                 <button type="submit" className="nl-btn">S'abonner gratuitement</button>
+                {subError&&<div style={{color:'#F59E0B',fontSize:13,fontWeight:600,marginTop:8,width:'100%'}}>{subError}</div>}
               </form>
             )}
           </div>

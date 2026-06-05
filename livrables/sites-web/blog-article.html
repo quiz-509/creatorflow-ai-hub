@@ -648,6 +648,7 @@ function InlineNewsletter() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
+  const [err, setErr] = useState('');
   const ref = useRef(null);
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -660,8 +661,11 @@ function InlineNewsletter() {
   const submit = async e => {
     e.preventDefault();
     if (!email) return;
-    try { await sb.from('blog_subscribers').insert({ email, source: 'article' }); } catch {}
-    setDone(true);
+    setErr('');
+    const { error } = await sb.from('blog_subscribers').insert({ email, source: 'article' });
+    if (!error) { setDone(true); }
+    else if (error.code === '23505') { setErr('Cet email est déjà inscrit.'); }
+    else { setErr('Une erreur est survenue. Réessayez.'); }
   };
   return (
     <div ref={ref} className="inline-nl" style={{
@@ -675,10 +679,13 @@ function InlineNewsletter() {
       {done ? (
         <p style={{color:'var(--green)',fontWeight:600,fontSize:14}}>✅ Inscription confirmée !</p>
       ) : (
-        <form className="inline-nl-row" onSubmit={submit}>
-          <input type="email" placeholder="votre@email.com" value={email} onChange={e=>setEmail(e.target.value)} required />
-          <button type="submit" className="inline-nl-btn">S'abonner →</button>
-        </form>
+        <>
+          <form className="inline-nl-row" onSubmit={submit}>
+            <input type="email" placeholder="votre@email.com" value={email} onChange={e=>{setEmail(e.target.value);setErr('');}} required />
+            <button type="submit" className="inline-nl-btn">S'abonner →</button>
+          </form>
+          {err && <p style={{color:'#F59E0B',fontWeight:600,fontSize:13,marginTop:8}}>{err}</p>}
+        </>
       )}
       <p style={{fontSize:11,color:'var(--text-3)',marginTop:10}}>Sans spam. Désabonnement en 1 clic.</p>
     </div>
