@@ -257,6 +257,19 @@
     .expert-cta-mini p{font-size:12px;color:var(--text-3);margin-bottom:14px;line-height:1.5;}
     .expert-cta-mini a{display:block;padding:9px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:12px;font-weight:600;color:var(--vs);transition:all 150ms;}
     .expert-cta-mini a:hover{background:rgba(124,58,237,0.25);}
+    .affil-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-top:20px;}
+    .affil-card-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+    .affil-card-title{font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.08em;}
+    .affil-card-badge{font-size:9px;font-weight:700;background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);border-radius:999px;padding:2px 7px;}
+    .affil-tool{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background 150ms;}
+    .affil-tool:last-child{border-bottom:none;}
+    .affil-tool:hover{background:rgba(255,255,255,0.03);}
+    .affil-tool-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
+    .affil-tool-info{flex:1;min-width:0;}
+    .affil-tool-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .affil-tool-desc{font-size:11px;color:var(--text-3);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .affil-tool-btn{font-size:10px;font-weight:600;color:var(--vs);white-space:nowrap;flex-shrink:0;padding:4px 8px;border-radius:6px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);transition:all 150ms;}
+    .affil-tool-btn:hover{background:rgba(124,58,237,0.18);}
 
     /* SEO INTELLIGENCE SIDEBAR CARD */
     .seo-intel-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
@@ -812,6 +825,86 @@ function RelatedCard({ article }) {
   );
 }
 
+const AFFIL_TOOLS = {
+  'Automatisation IA': [
+    { icon:'⚡', name:'Make', desc:'Automatise tes workflows sans code', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
+    { icon:'🔁', name:'n8n', desc:'Automatisation open-source puissante', url:'https://n8n.io/?ref=creatorflow', bg:'rgba(234,88,12,0.15)' },
+    { icon:'🤖', name:'Zapier', desc:'Connecte 6 000+ apps en quelques clics', url:'https://zapier.com/?utm_source=creatorflow', bg:'rgba(255,74,0,0.15)' },
+  ],
+  'Marketing IA': [
+    { icon:'📈', name:'Surfer SEO', desc:'Optimise ton contenu pour Google', url:'https://surferseo.com/?fpr=creatorflow', bg:'rgba(16,185,129,0.15)' },
+    { icon:'🎯', name:'Semrush', desc:'Analyse SEO et concurrence complète', url:'https://www.semrush.com/analytics/overview/?ref=creatorflow', bg:'rgba(255,122,0,0.15)' },
+    { icon:'✍️', name:'Jasper', desc:'Rédaction IA pour le marketing', url:'https://www.jasper.ai/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
+  ],
+  'Outils IA': [
+    { icon:'📝', name:'Notion AI', desc:'Workspace IA tout-en-un', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
+    { icon:'🎙️', name:'ElevenLabs', desc:'Voix IA ultra-réalistes en français', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
+    { icon:'🖼️', name:'Leonardo AI', desc:'Génération d\'images IA pro', url:'https://leonardo.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
+  ],
+  'Création de Contenu IA': [
+    { icon:'🎙️', name:'ElevenLabs', desc:'Voix-off IA en français parfait', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
+    { icon:'🎨', name:'Canva Pro', desc:'Designs pro avec IA intégrée', url:'https://www.canva.com/affiliates/creatorflow', bg:'rgba(0,196,204,0.15)' },
+    { icon:'🎬', name:'Runway', desc:'Vidéo IA de niveau cinématographique', url:'https://runwayml.com/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
+  ],
+  'Vente IA': [
+    { icon:'💼', name:'HubSpot', desc:'CRM avec IA pour les ventes', url:'https://hubspot.com/?ref=creatorflow', bg:'rgba(255,122,0,0.15)' },
+    { icon:'📧', name:'Instantly', desc:'Prospection email IA à grande échelle', url:'https://instantly.ai/?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
+    { icon:'🤝', name:'Clay', desc:'Enrichissement de leads par IA', url:'https://clay.com/?ref=creatorflow', bg:'rgba(99,102,241,0.15)' },
+  ],
+  'Support Client IA': [
+    { icon:'💬', name:'Crisp', desc:'Chat IA pour le support client', url:'https://crisp.chat/?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
+    { icon:'🤖', name:'Tidio', desc:'Chatbot IA pour e-commerce', url:'https://www.tidio.com/?ref=creatorflow', bg:'rgba(99,102,241,0.15)' },
+    { icon:'📞', name:'Intercom', desc:'Support client IA enterprise', url:'https://www.intercom.com/?ref=creatorflow', bg:'rgba(6,182,212,0.15)' },
+  ],
+  'Tutoriels IA': [
+    { icon:'🎓', name:'Coursera', desc:'Certifications IA reconnues', url:'https://www.coursera.org/?ref=creatorflow', bg:'rgba(0,86,210,0.15)' },
+    { icon:'📚', name:'Udemy', desc:'Cours IA pratiques à prix réduit', url:'https://www.udemy.com/?ref=creatorflow', bg:'rgba(164,69,190,0.15)' },
+    { icon:'🧠', name:'DeepLearning.AI', desc:'Formation IA par Andrew Ng', url:'https://www.deeplearning.ai/?ref=creatorflow', bg:'rgba(6,182,212,0.15)' },
+  ],
+  'Comparatifs IA': [
+    { icon:'🤖', name:'Claude', desc:'L\'IA la plus capable en 2026', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
+    { icon:'💡', name:'ChatGPT Plus', desc:'GPT-4o pour les pros', url:'https://openai.com/chatgpt?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
+    { icon:'🔮', name:'Gemini Advanced', desc:'IA Google multimodale', url:'https://gemini.google.com/?ref=creatorflow', bg:'rgba(66,133,244,0.15)' },
+  ],
+  'Guides IA': [
+    { icon:'⚡', name:'Make', desc:'Guide : automatise en 30 min', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
+    { icon:'📝', name:'Notion AI', desc:'Organise ton business avec l\'IA', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
+    { icon:'🎙️', name:'ElevenLabs', desc:'Crée ta voix IA personnalisée', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
+  ],
+  'Actualités IA': [
+    { icon:'🤖', name:'Claude', desc:'Teste les dernières capacités IA', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
+    { icon:'📰', name:'The Rundown AI', desc:'Newsletter IA #1 en anglais', url:'https://www.therundown.ai/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
+    { icon:'⚡', name:'Make', desc:'Automatise ta veille IA', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
+  ],
+};
+const DEFAULT_AFFIL = [
+  { icon:'🤖', name:'Claude', desc:'L\'assistant IA le plus puissant', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
+  { icon:'⚡', name:'Make', desc:'Automatise tes tâches répétitives', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
+  { icon:'📝', name:'Notion AI', desc:'Workspace IA tout-en-un', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
+];
+
+function AffiliateToolsCard({ category }) {
+  const tools = AFFIL_TOOLS[category] || DEFAULT_AFFIL;
+  return (
+    <div className="affil-card">
+      <div className="affil-card-head">
+        <span className="affil-card-title">Outils recommandés</span>
+        <span className="affil-card-badge">Sponsorisé</span>
+      </div>
+      {tools.map((t, i) => (
+        <a key={i} href={t.url} target="_blank" rel="noopener sponsored" className="affil-tool">
+          <div className="affil-tool-icon" style={{background:t.bg}}>{t.icon}</div>
+          <div className="affil-tool-info">
+            <div className="affil-tool-name">{t.name}</div>
+            <div className="affil-tool-desc">{t.desc}</div>
+          </div>
+          <span className="affil-tool-btn">Essayer →</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function RightSidebar() {
   return (
     <aside className="right-sidebar">
@@ -1184,7 +1277,7 @@ function ArticlePage() {
           )}
         </div>
 
-        {/* RIGHT SIDEBAR — TOC + Expert CTA */}
+        {/* RIGHT SIDEBAR — TOC + Expert CTA + Outils affiliés */}
         <aside className="right-sidebar">
           <TOC headings={headings} activeId={activeId} />
           <div className="expert-cta-mini">
@@ -1193,6 +1286,7 @@ function ArticlePage() {
             <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
             <a href="/experts">Voir les experts →</a>
           </div>
+          <AffiliateToolsCard category={article.category} />
         </aside>
       </div>
     </div>
