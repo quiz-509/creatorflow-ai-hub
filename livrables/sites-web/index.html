@@ -324,7 +324,7 @@ h1.hero-title { font-size:clamp(52px,7vw,92px); font-weight:800; letter-spacing:
 .exp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
 .exp-card {
   padding:26px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
-  transition:all 260ms var(--ease); cursor:default; min-height:210px;
+  transition:all 260ms var(--ease); cursor:pointer; min-height:210px;
   display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;
 }
 .exp-card::before { content:''; position:absolute; inset:0; background:radial-gradient(350px at var(--mx,50%) var(--my,50%),rgba(124,58,237,0.10),transparent 55%); opacity:0; transition:opacity 260ms; pointer-events:none; }
@@ -1008,14 +1008,14 @@ function Categories() {
   const IcCode  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>;
   const IcBrand = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>;
   const cats = [
-    {icon:<Ic.Bot/>,    name:'Agents IA',          a:'#7C3AED', b:'#9333EA'},
-    {icon:<Ic.Rocket/>, name:'Automatisation',      a:'#06B6D4', b:'#0891B2'},
-    {icon:<Ic.Match/>,  name:'Chatbots',            a:'#10B981', b:'#059669'},
-    {icon:<IcCode/>,    name:'Développement IA',    a:'#9333EA', b:'#7C3AED'},
-    {icon:<Ic.Pen/>,    name:'Prompt Engineering',  a:'#F59E0B', b:'#D97706'},
-    {icon:<IcVideo/>,   name:'Montage vidéo IA',    a:'#EC4899', b:'#DB2777'},
-    {icon:<IcBrand/>,   name:'Branding IA',         a:'#F97316', b:'#EA580C'},
-    {icon:<Ic.Grad/>,   name:'Formation IA',        a:'#3B82F6', b:'#2563EB'},
+    {icon:<Ic.Bot/>,    name:'Agents IA',          a:'#7C3AED', b:'#9333EA', href:'experts.html?cat=agents-ia'},
+    {icon:<Ic.Rocket/>, name:'Automatisation',      a:'#06B6D4', b:'#0891B2', href:'experts.html?cat=automatisation'},
+    {icon:<Ic.Match/>,  name:'Chatbots',            a:'#10B981', b:'#059669', href:'experts.html?cat=chatbots'},
+    {icon:<IcCode/>,    name:'Développement IA',    a:'#9333EA', b:'#7C3AED', href:'experts.html?cat=developpement-ia'},
+    {icon:<Ic.Pen/>,    name:'Prompt Engineering',  a:'#F59E0B', b:'#D97706', href:'experts.html?cat=prompt-engineering'},
+    {icon:<IcVideo/>,   name:'Montage vidéo IA',    a:'#EC4899', b:'#DB2777', href:'experts.html?cat=montage-video'},
+    {icon:<IcBrand/>,   name:'Branding IA',         a:'#F97316', b:'#EA580C', href:'experts.html?cat=branding-ia'},
+    {icon:<Ic.Grad/>,   name:'Formation IA',        a:'#3B82F6', b:'#2563EB', href:'academie.html'},
   ];
   return (
     <section className="pad-sm">
@@ -1029,7 +1029,10 @@ function Categories() {
           {cats.map((c,i) => (
             <Rv key={i} delay={i*50} className="cat-card"
               style={{'--cat-a':c.a,'--cat-b':c.b}}
-              onMouseMove={onTilt} onMouseLeave={offTilt}>
+              onMouseMove={onTilt} onMouseLeave={offTilt}
+              onClick={() => window.location.href = c.href}
+              role="link" tabIndex={0}
+              onKeyDown={e => e.key==='Enter' && (window.location.href = c.href)}>
               <div className="cat-ico">{c.icon}</div>
               <div className="cat-name">{c.name}</div>
               <div className="cat-arr"><Ic.Arrow/></div>
@@ -1043,13 +1046,31 @@ function Categories() {
 
 /* ── Expertise ── */
 function Expertise() {
+  const TAG_LINKS = {
+    'Make':       {href:'https://www.make.com/en/register?pc=creatorflow',  ext:true,  affil:true},
+    'n8n':        {href:'https://n8n.io/?ref=creatorflow',                  ext:true,  affil:true},
+    'LangChain':  {href:'https://python.langchain.com/docs/introduction/',   ext:true,  affil:false},
+    'Workshops':  {href:'academie.html',                                     ext:false, affil:false},
+    'Coaching':   {href:'inscription.html',                                  ext:false, affil:false},
+    'Audit':      {href:'brief.html',                                        ext:false, affil:false},
+    'Roadmap':    {href:'brief.html',                                        ext:false, affil:false},
+    'Copy':       {href:'https://www.jasper.ai/?fpr=creatorflow',            ext:true,  affil:true},
+    'Visuel':     {href:'https://www.canva.com/?ref=creatorflow',            ext:true,  affil:true},
+    'Vidéo':      {href:'https://www.descript.com/?ref=creatorflow',         ext:true,  affil:true},
+    'ML':         {href:'brief.html',                                        ext:false, affil:false},
+    'Predictive': {href:'brief.html',                                        ext:false, affil:false},
+    'Santé':      {href:'experts.html?secteur=sante',                        ext:false, affil:false},
+    'Finance':    {href:'experts.html?secteur=finance',                      ext:false, affil:false},
+    'E-com':      {href:'experts.html?secteur=ecommerce',                    ext:false, affil:false},
+    '+27':        {href:'experts.html',                                      ext:false, affil:false},
+  };
   const cards = [
-    {icon:<Ic.Bot/>,title:"Implémentation d'outils IA",text:'Automatisation de workflows, chatbots conversationnels, agents autonomes intégrés à vos systèmes.',tags:['Make','n8n','LangChain'],feat:true},
-    {icon:<Ic.Grad/>,title:'Formation des équipes',text:'Programmes sur mesure pour faire monter vos collaborateurs en compétence sur les outils IA.',tags:['Workshops','Coaching']},
-    {icon:<Ic.Compass/>,title:'Stratégie & conseil',text:'Roadmap de transformation IA, audit des cas d\'usage, accompagnement au changement.',tags:['Audit','Roadmap']},
-    {icon:<Ic.Pen/>,title:'Création de contenu IA',text:'Production à l\'échelle : copywriting, visuel, vidéo. Workflows IA pour équipes marketing.',tags:['Copy','Visuel','Vidéo']},
-    {icon:<Ic.Chart/>,title:'Analyse de données & IA',text:'Modèles prédictifs, scoring, dashboards augmentés. Tirez parti de vos données avec l\'IA.',tags:['ML','Predictive']},
-    {icon:<Ic.Layers/>,title:'IA par secteur',text:'Solutions verticales pour santé, finance, e-commerce, RH, éducation et bien plus encore.',tags:['Santé','Finance','E-com','+27']},
+    {icon:<Ic.Bot/>,    title:"Implémentation d'outils IA", text:'Automatisation de workflows, chatbots conversationnels, agents autonomes intégrés à vos systèmes.', tags:['Make','n8n','LangChain'], href:'brief.html?domaine=implementation', feat:true},
+    {icon:<Ic.Grad/>,   title:'Formation des équipes',      text:'Programmes sur mesure pour faire monter vos collaborateurs en compétence sur les outils IA.',        tags:['Workshops','Coaching'],     href:'brief.html?domaine=formation'},
+    {icon:<Ic.Compass/>,title:'Stratégie & conseil',        text:'Roadmap de transformation IA, audit des cas d\'usage, accompagnement au changement.',                 tags:['Audit','Roadmap'],          href:'brief.html?domaine=strategie'},
+    {icon:<Ic.Pen/>,    title:'Création de contenu IA',     text:'Production à l\'échelle : copywriting, visuel, vidéo. Workflows IA pour équipes marketing.',          tags:['Copy','Visuel','Vidéo'],    href:'brief.html?domaine=contenu'},
+    {icon:<Ic.Chart/>,  title:'Analyse de données & IA',    text:'Modèles prédictifs, scoring, dashboards augmentés. Tirez parti de vos données avec l\'IA.',          tags:['ML','Predictive'],          href:'brief.html?domaine=data'},
+    {icon:<Ic.Layers/>, title:'IA par secteur',              text:'Solutions verticales pour santé, finance, e-commerce, RH, éducation et bien plus encore.',           tags:['Santé','Finance','E-com','+27'], href:'brief.html?domaine=secteur'},
   ];
   return (
     <section id="domaines" className="pad">
@@ -1062,13 +1083,27 @@ function Expertise() {
         <div className="exp-grid">
           {cards.map((c,i)=>(
             <Rv key={i} delay={i*55} className={`exp-card ${c.feat?'feat':''}`}
+              onClick={() => window.location.href = c.href}
               onMouseMove={e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',`${e.clientX-r.left}px`);e.currentTarget.style.setProperty('--my',`${e.clientY-r.top}px`);}}>
               <div>
                 <div className="exp-icon">{c.icon}</div>
                 <h3>{c.title}</h3>
                 <p>{c.text}</p>
               </div>
-              <div className="tags">{c.tags.map(t=><span className="tag" key={t}>{t}</span>)}</div>
+              <div className="tags">
+                {c.tags.map(t => {
+                  const info = TAG_LINKS[t];
+                  if (!info) return <span className="tag" key={t}>{t}</span>;
+                  return (
+                    <a key={t} href={info.href} className="tag"
+                      target={info.ext ? '_blank' : '_self'}
+                      rel={info.affil ? 'noopener sponsored' : info.ext ? 'noopener noreferrer' : undefined}
+                      onClick={e => e.stopPropagation()}>
+                      {t}
+                    </a>
+                  );
+                })}
+              </div>
             </Rv>
           ))}
         </div>
