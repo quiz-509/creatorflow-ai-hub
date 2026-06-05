@@ -660,7 +660,7 @@ function InlineNewsletter() {
   const submit = async e => {
     e.preventDefault();
     if (!email) return;
-    try { await sb.from('blog_subscribers').insert({ email }); } catch {}
+    try { await sb.from('blog_subscribers').insert({ email, source: 'article' }); } catch {}
     setDone(true);
   };
   return (

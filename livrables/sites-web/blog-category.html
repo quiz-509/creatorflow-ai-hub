@@ -394,7 +394,7 @@ function ArticleCover({ article, height, featured }) {
 function HeroNewsletter({ catName }) {
   const [email, setEmail] = useState('');
   const [done,  setDone]  = useState(false);
-  const submit = e => { e.preventDefault(); if (email.trim()) setDone(true); };
+  const submit = async e => { e.preventDefault(); if (!email.trim()) return; try { await sb.from('blog_subscribers').insert({ email, source: 'category' }); } catch {} setDone(true); };
   return (
     <div className="hero-nl-card">
       <div className="hero-nl-title">Recevoir les guides {catName}</div>

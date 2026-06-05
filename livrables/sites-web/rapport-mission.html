@@ -255,11 +255,6 @@ function App() {
     if (!error && data) {
       setExistingReview(data);
       setReviewSuccess(true);
-      const { data: allRevs } = await sb.from('reviews').select('note').eq('expert_id', mission.expert_id);
-      if (allRevs && allRevs.length > 0) {
-        const avg = allRevs.reduce((s, r) => s + r.note, 0) / allRevs.length;
-        await sb.from('experts').update({ note_moyenne: Math.round(avg * 10) / 10, nb_avis: allRevs.length }).eq('id', mission.expert_id);
-      }
     }
     setSubmitting(false);
   }
