@@ -3,7 +3,7 @@ const cors = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const FROM = 'CreatorFlow Market <onboarding@resend.dev>';
+const FROM = 'CreatorFlow Market <noreply@creatorflowmarket.com>';
 const RESEND_URL = 'https://api.resend.com/emails';
 
 function baseTemplate(content: string): string {
