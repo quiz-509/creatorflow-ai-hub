@@ -779,16 +779,14 @@ function Nav() {
 /* ── Hero ── */
 function Hero() {
   const tickers = ['GPT-4 & Claude','LangChain','Automatisation','Chatbots','Agents IA','RAG','Vision par ordinateur','NLP','Fine-tuning','Vectorisation','Make & n8n','Voiceflow','Notion AI','Midjourney','Stable Diffusion'];
-  const [counts, setCounts] = useState({ experts: 0, missions: 0 });
+  const [counts, setCounts] = useState({ experts: 0, articles: 0 });
   useEffect(() => {
     Promise.all([
-      sb.from('experts').select('*', { count: 'exact', head: true }),
-      sb.from('missions').select('*', { count: 'exact', head: true }).eq('statut', 'termine')
-    ]).then(([{ count: ec }, { count: mc }]) => {
-      setCounts({ experts: ec ?? 0, missions: mc ?? 0 });
-    }).catch(() => {
-      setCounts({ experts: 0, missions: 0 });
-    });
+      sb.from('experts').select('*', { count: 'exact', head: true }).eq('statut', 'approved'),
+      sb.from('blog_articles').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+    ]).then(([{ count: ec }, { count: ac }]) => {
+      setCounts({ experts: ec ?? 0, articles: ac ?? 0 });
+    }).catch(() => {});
   }, []);
   return (
     <section className="hero">
@@ -815,16 +813,15 @@ function Hero() {
               <div className="proof-avatar" key={i}><img src={p} alt=""/></div>
             ))}
           </div>
-          <div className="proof-text"><strong>1 200+</strong> entreprises nous font confiance</div>
+          <div className="proof-text"><strong>Paiements sécurisés</strong> via Stripe</div>
           <div className="proof-sep"/>
           <div className="proof-badge"><Ic.Check/>Satisfait ou remboursé</div>
         </div>
         <div className="hero-stats">
           {[
-            {to:counts.experts||52,s:'+',l:'Experts certifiés'},
-            {to:counts.missions||128,s:'+',l:'Projets livrés'},
-            {to:97,s:'%',l:'Clients satisfaits'}
-          ].map((st,i)=>(
+            counts.experts > 0 && {to:counts.experts,s:'+',l:'Experts certifiés'},
+            counts.articles > 0 && {to:counts.articles,s:'+',l:'Articles publiés'},
+          ].filter(Boolean).map((st,i)=>(
             <div className="stat" key={i}>
               <div className="stat-n"><StatCount to={st.to} suffix={st.s}/></div>
               <div className="stat-l">{st.l}</div>
