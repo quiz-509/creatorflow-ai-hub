@@ -3,7 +3,24 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Académie IA — CreatorFlow Market</title>
+  <title>Académie IA — Formez-vous à l'IA | CreatorFlow Market</title>
+  <meta name="description" content="Maîtrisez l'intelligence artificielle avec les formations créées par des experts certifiés. Cours pratiques, certificats reconnus, accès à vie."/>
+  <link rel="canonical" href="https://creatorflowmarket.com/academie.html"/>
+  <meta name="robots" content="index, follow"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://creatorflowmarket.com/academie.html"/>
+  <meta property="og:title" content="Académie IA — Formez-vous à l'IA | CreatorFlow Market"/>
+  <meta property="og:description" content="Maîtrisez l'intelligence artificielle avec les formations créées par des experts certifiés. Cours pratiques, certificats reconnus, accès à vie."/>
+  <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:site_name" content="CreatorFlow Market"/>
+  <meta property="og:locale" content="fr_CA"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Académie IA — Formez-vous à l'IA | CreatorFlow Market"/>
+  <meta name="twitter:description" content="Maîtrisez l'intelligence artificielle avec les formations créées par des experts certifiés."/>
+  <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"EducationalOrganization","name":"Académie IA — CreatorFlow Market","url":"https://creatorflowmarket.com/academie.html","description":"Formations en intelligence artificielle par des experts certifiés","provider":{"@type":"Organization","name":"CreatorFlow Market","url":"https://creatorflowmarket.com"}}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet">
@@ -353,9 +370,9 @@ const PARCOURS = [
 ];
 
 const TRANSFORMATIONS = [
-  { avant:'3h/jour sur la création de contenu — en retard sur chaque publication.', apres:'45 minutes avec l\'IA. Calendrier 90 jours préparé en 2 heures.', metric:'×5 productivité', nom:'Marie L.', role:'Créatrice de contenu · Montréal', cours:'Marketing IA avec Rose', seed:'MarieLavallee' },
-  { avant:'0 client en ligne. Business local uniquement, impossible à scaler.', apres:'12 000 $ CA/mois en 90 jours grâce au funnel IA complet.', metric:'12k$/mois', nom:'Karim B.', role:'Entrepreneur · Paris', cours:'Marketing IA avec Rose', seed:'KarimBenali' },
-  { avant:'Tâches répétitives 4h/jour. Impossible de se concentrer sur la croissance.', apres:'Tout automatisé. 4h par semaine suffisent pour gérer l\'opérationnel.', metric:'-80% opérationnel', nom:'Sophia W.', role:'Consultante Marketing · Lyon', cours:'Marketing IA avec Rose', seed:'SophiaWilliams' },
+  { avant:'3h/jour sur la création de contenu, toujours en retard sur les publications.', apres:'Moins de temps sur les tâches répétitives grâce au prompt engineering et aux outils IA.', metric:'Gain de temps réel', nom:'Objectif Productivité', role:'Formation : Marketing IA avec Rose', cours:'Ce que vous pouvez viser', seed:'Productivite' },
+  { avant:'Présence en ligne limitée, difficile de trouver de nouveaux clients.', apres:'Stratégie de contenu IA active, pipeline de prospects automatisé.', metric:'Croissance organique', nom:'Objectif Acquisition', role:'Formation : Stratégie de Contenu IA', cours:'Ce que vous pouvez viser', seed:'Acquisition' },
+  { avant:'Tâches opérationnelles répétitives qui freinent la croissance du business.', apres:'Workflows automatisés avec Make & n8n, focus sur les tâches à haute valeur.', metric:'Moins d\'opérationnel', nom:'Objectif Automatisation', role:'Formation : Automatisation IA', cours:'Ce que vous pouvez viser', seed:'Automation' },
 ];
 
 function getCat(slug, title) {
@@ -675,9 +692,9 @@ function App() {
       {/* ── TRANSFORMATIONS ── */}
       <div className="ps">
         <div className="ps-head">
-          <div className="ps-label">Résultats réels</div>
-          <h2 className="ps-title">Des transformations, pas des témoignages</h2>
-          <p className="ps-sub">Ce que nos apprenants ont concrètement construit avec leurs formations.</p>
+          <div className="ps-label">Objectifs concrets</div>
+          <h2 className="ps-title">Ce que vous pouvez accomplir</h2>
+          <p className="ps-sub">Exemples de transformations réalistes grâce aux formations de l'Académie IA.</p>
         </div>
         <div className="tr-grid">
           {TRANSFORMATIONS.map((t,i) => (
@@ -739,7 +756,7 @@ function App() {
           <div>
             <div className="ps-label">Communauté</div>
             <h2 className="ps-title" style={{marginBottom:14}}>Vous n'apprenez pas seul</h2>
-            <p className="ps-sub" style={{marginBottom:32}}>Rejoignez des centaines d'entrepreneurs IA francophones. Sessions live mensuelles, feedback sur vos projets, accès direct aux formateurs.</p>
+            <p className="ps-sub" style={{marginBottom:32}}>Rejoignez la communauté d'entrepreneurs IA francophones. Sessions live, feedback sur vos projets, accès direct aux formateurs.</p>
             <div className="comm-feat">
               {[
                 { icon:'💬', t:'Discord privé CreatorFlow', d:'Canal dédié par formation, support en temps réel' },
@@ -753,7 +770,7 @@ function App() {
               ))}
             </div>
             <div className="comm-stats">
-              {[{n:'200+',l:'Membres actifs'},{n:'4/sem',l:'Sessions live'},{n:'24h',l:'Temps de réponse'},{n:'97%',l:'Satisfaction'}].map((s,i) => (
+              {[{n:'Discord',l:'Communauté privée'},{n:'1/mois',l:'Session live Q&A'},{n:'24h',l:'Temps de réponse'},{n:'Gratuit',l:'Accès communauté inclus'}].map((s,i) => (
                 <div key={i} className="comm-stat"><div className="comm-stat-n">{s.n}</div><div className="comm-stat-l">{s.l}</div></div>
               ))}
             </div>
