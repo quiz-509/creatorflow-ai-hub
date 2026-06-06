@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Experts IA — CreatorFlow Market</title>
-  <meta name="description" content="Trouvez l'expert IA certifié qu'il vous faut parmi nos 120+ profils vérifiés. Agents IA, automatisation, chatbots, développement IA." />
+  <meta name="description" content="Trouvez l'expert IA certifié qu'il vous faut. Agents IA, automatisation, chatbots, prompt engineering. Profils vérifiés, disponibilités en temps réel." />
   <link rel="canonical" href="https://creatorflowmarket.com/experts.html"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://creatorflowmarket.com/experts.html"/>
   <meta property="og:title" content="Experts IA certifiés — CreatorFlow Market"/>
-  <meta property="og:description" content="Parcourez 120+ experts IA vérifiés : agents IA, automatisation, chatbots, prompt engineering. Disponibilités en temps réel."/>
+  <meta property="og:description" content="Trouvez l'expert IA certifié pour votre projet : agents IA, automatisation, chatbots, prompt engineering. Profils vérifiés, disponibilités en temps réel."/>
   <meta property="og:site_name" content="CreatorFlow Market"/>
   <meta property="og:locale" content="fr_CA"/>
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
@@ -18,7 +18,7 @@
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg"/>
   <meta name="twitter:title" content="Experts IA certifiés — CreatorFlow Market"/>
-  <meta name="twitter:description" content="120+ experts IA vérifiés. Trouvez le bon profil pour votre projet en quelques clics."/>
+  <meta name="twitter:description" content="Trouvez l'expert IA certifié pour votre projet. Profils vérifiés, disponibilités en temps réel."/>
   <meta name="robots" content="index, follow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,10 +146,10 @@ img{display:block;max-width:100%;}
 </head>
 <body>
 <div id="cursor-glow"></div>
-<div id="root"></div>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect, useRef, useMemo } = React;
@@ -280,6 +280,7 @@ function ExpertCard({ expert, delay = 0 }) {
 }
 
 function App() {
+  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
   const [cat, setCat] = useState('Toutes');
   const [budget, setBudget] = useState('tous');
   const [dispo, setDispo] = useState('tous');

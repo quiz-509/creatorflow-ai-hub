@@ -10,12 +10,15 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://creatorflowmarket.com/blog">
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg">
-  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale" content="fr_CA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@creatorflowmkt">
+  <meta name="twitter:title" content="Blog IA — CreatorFlow Market">
+  <meta name="twitter:description" content="Actualités IA, outils, tutoriels et stratégies pour créateurs et entrepreneurs francophones.">
   <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://creatorflowmarket.com/blog">
+  <link rel="canonical" href="https://creatorflowmarket.com/blog.html">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Blog IA — CreatorFlow Market","url":"https://creatorflowmarket.com/blog.html","description":"Actualités IA, outils, tutoriels et stratégies pour créateurs et entrepreneurs francophones","inLanguage":"fr-CA","publisher":{"@type":"Organization","name":"CreatorFlow Market","url":"https://creatorflowmarket.com"}}</script>
   <link rel="alternate" type="application/rss+xml" title="CreatorFlow Market — Blog IA" href="https://creatorflowmarket.com/rss.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -119,7 +122,7 @@
   </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -289,6 +292,7 @@ function Featured({article}){
 }
 
 function App(){
+  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
   const [articles, setArticles] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [cat,      setCat]      = useState('all');
