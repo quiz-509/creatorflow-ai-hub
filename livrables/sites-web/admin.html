@@ -108,6 +108,37 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;}
 .btn-primary:hover{transform:translateY(-1px);}
 
+/* ACTION BUTTONS */
+.btn-approve{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(16,185,129,0.15);color:var(--green);border:1px solid rgba(16,185,129,0.3);cursor:pointer;transition:all 160ms;}
+.btn-approve:hover{background:rgba(16,185,129,0.25);}
+.btn-reject{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.10);color:var(--red);border:1px solid rgba(239,68,68,0.25);cursor:pointer;transition:all 160ms;margin-left:6px;}
+.btn-reject:hover{background:rgba(239,68,68,0.2);}
+.btn-save{padding:8px 20px;border-radius:99px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#9333EA,var(--v));color:#fff;border:none;cursor:pointer;transition:all 160ms;}
+.btn-save:hover{opacity:0.88;}
+.btn-save:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* NAV BADGE */
+.nav-pending{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:99px;min-width:16px;text-align:center;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);width:100%;max-width:560px;max-height:85vh;overflow-y:auto;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+.modal-title{font-size:16px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,0.05);border:1px solid var(--border);cursor:pointer;color:var(--text-2);font-size:16px;}
+.modal-close:hover{background:rgba(255,255,255,0.10);color:var(--text);}
+.modal-body{padding:20px 24px;}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.modal-row:last-child{border:none;}
+.modal-label{font-size:12px;color:var(--text-3);font-weight:500;}
+.modal-val{font-size:13px;font-weight:600;color:var(--text);text-align:right;max-width:280px;}
+.modal-section{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin:16px 0 8px;}
+.status-select{background:var(--surf-2);border:1px solid var(--border-2);color:var(--text);padding:6px 12px;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;}
+
+/* CLICKABLE ROW */
+.data-table tr.clickable{cursor:pointer;}
+.data-table tr.clickable:hover td{background:rgba(124,58,237,0.06);}
+
 /* RESPONSIVE */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);transition:transform 0.3s var(--ease);}
@@ -142,9 +173,10 @@ const fmtDate = (d) => d ? new Date(d).toLocaleDateString('fr-CA', {day:'2-digit
 const fmtMoney = (n) => n ? `${Number(n).toLocaleString('fr-CA')}$` : '0$';
 
 /* ── SIDEBAR NAV ── */
-function Sidebar({ tab, setTab, onLogout }) {
+function Sidebar({ tab, setTab, onLogout, pendingExperts }) {
   const items = [
     { id:'dashboard', label:'Dashboard', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> },
+    { id:'experts',   label:'Experts', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>, badge: pendingExperts },
     { id:'users',     label:'Utilisateurs', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
     { id:'missions',  label:'Missions', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
     { id:'payments',  label:'Paiements', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
@@ -157,6 +189,7 @@ function Sidebar({ tab, setTab, onLogout }) {
         {items.map(it => (
           <button key={it.id} className={`nav-item ${tab===it.id?'active':''}`} onClick={()=>setTab(it.id)}>
             {it.icon}{it.label}
+            {it.badge > 0 && <span className="nav-pending">{it.badge}</span>}
           </button>
         ))}
       </div>
@@ -365,22 +398,171 @@ function UsersTab() {
   );
 }
 
+/* ── EXPERTS TAB ── */
+function ExpertsTab({ onApproval }) {
+  const [experts, setExperts] = useState(null);
+  const [profiles, setProfiles] = useState({});
+  const [loading, setLoading] = useState({});
+  const [filter, setFilter] = useState('all');
+
+  const loadExperts = async () => {
+    const { data: exp } = await sb.from('experts').select('id,user_id,statut,tarif_min,tarif_max,note_moyenne,nb_avis,created_at').order('created_at', { ascending: false });
+    setExperts(exp || []);
+    if (exp && exp.length > 0) {
+      const ids = exp.map(e => e.user_id).filter(Boolean);
+      if (ids.length > 0) {
+        const { data: profs } = await sb.from('profiles').select('id,full_name,email').in('id', ids);
+        const map = {};
+        (profs || []).forEach(p => { map[p.id] = p; });
+        setProfiles(map);
+      }
+    }
+  };
+
+  useEffect(() => { loadExperts(); }, []);
+
+  const updateStatut = async (id, newStatut) => {
+    setLoading(l => ({...l, [id]: true}));
+    await sb.from('experts').update({ statut: newStatut }).eq('id', id);
+    await loadExperts();
+    if (onApproval) onApproval();
+    setLoading(l => ({...l, [id]: false}));
+  };
+
+  if (!experts) return <div className="spin" />;
+
+  const filtered = filter === 'all' ? experts : experts.filter(e => e.statut === filter);
+  const pending = experts.filter(e => e.statut === 'pending').length;
+
+  const statutBadge = (s) => {
+    const map = { approved:'badge-green', pending:'badge-amber', rejected:'badge-red' };
+    const labels = { approved:'Approuvé', pending:'En attente', rejected:'Rejeté' };
+    return <span className={`badge ${map[s]||'badge-gray'}`}>{labels[s]||s}</span>;
+  };
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Experts</div>
+          <div className="page-sub">{experts.length} experts inscrits — {pending} en attente d'approbation</div>
+        </div>
+      </div>
+
+      <div style={{display:'flex',gap:8,marginBottom:20}}>
+        {['all','pending','approved','rejected'].map(f => (
+          <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
+            {f==='all'?`Tous (${experts.length})`:f==='pending'?`En attente (${experts.filter(e=>e.statut==='pending').length})`:f==='approved'?`Approuvés (${experts.filter(e=>e.statut==='approved').length})`:`Rejetés (${experts.filter(e=>e.statut==='rejected').length})`}
+          </button>
+        ))}
+      </div>
+
+      {pending > 0 && filter !== 'approved' && filter !== 'rejected' && (
+        <div style={{background:'rgba(245,158,11,0.08)',border:'1px solid rgba(245,158,11,0.25)',borderRadius:12,padding:'12px 16px',marginBottom:16,fontSize:13,color:'var(--amber)'}}>
+          ⚠️ {pending} expert{pending > 1 ? 's' : ''} en attente d'approbation — ils ne sont pas visibles publiquement.
+        </div>
+      )}
+
+      <div className="section-card">
+        <div className="section-head">
+          <span className="section-title">Liste des experts</span>
+          <span className="section-count">{filtered.length} résultats</span>
+        </div>
+        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">⭐</div><div className="empty-text">Aucun expert</div></div> :
+          <table className="data-table">
+            <thead><tr><th>Expert</th><th>Tarif</th><th>Note</th><th>Statut</th><th>Actions</th></tr></thead>
+            <tbody>
+              {filtered.map(e => {
+                const prof = profiles[e.user_id] || {};
+                return (
+                  <tr key={e.id}>
+                    <td>
+                      <div className="user-row-info">
+                        <div className="mini-avatar" style={{background:avatarColor(prof.full_name)}}>{initials(prof.full_name)}</div>
+                        <div><div className="user-row-name">{prof.full_name||'—'}</div><div className="user-row-email">{prof.email||'—'}</div></div>
+                      </div>
+                    </td>
+                    <td style={{fontSize:12}}>{e.tarif_min && e.tarif_max ? `${e.tarif_min}$ – ${e.tarif_max}$` : '—'}</td>
+                    <td style={{fontSize:12}}>{e.note_moyenne ? `${e.note_moyenne}/5 (${e.nb_avis} avis)` : '—'}</td>
+                    <td>{statutBadge(e.statut)}</td>
+                    <td>
+                      {e.statut === 'pending' && (
+                        <>
+                          <button className="btn-approve" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'approved')}>
+                            {loading[e.id] ? '...' : '✓ Approuver'}
+                          </button>
+                          <button className="btn-reject" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'rejected')}>
+                            ✕ Rejeter
+                          </button>
+                        </>
+                      )}
+                      {e.statut === 'approved' && (
+                        <button className="btn-reject" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'rejected')}>
+                          Révoquer
+                        </button>
+                      )}
+                      {e.statut === 'rejected' && (
+                        <button className="btn-approve" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'approved')}>
+                          Réapprouver
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        }
+      </div>
+    </>
+  );
+}
+
 /* ── MISSIONS TAB ── */
 function MissionsTab() {
   const [missions, setMissions] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [selected, setSelected] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [newStatut, setNewStatut] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const loadMissions = async () => {
+    const { data } = await sb.from('missions').select('id,titre,statut,montant,prix,categorie,client_id,expert_id,deadline,progression,created_at').order('created_at', { ascending: false });
+    setMissions(data || []);
+  };
+
+  useEffect(() => { loadMissions(); }, []);
+
   useEffect(() => {
+    if (!selected) { setModalData(null); return; }
+    setModalData(null);
     (async () => {
-      const { data } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', { ascending: false });
-      setMissions(data || []);
+      const { data: m } = await sb.from('missions').select('*').eq('id', selected).single();
+      if (!m) return;
+      const results = await Promise.all([
+        m.client_id ? sb.from('profiles').select('full_name,email').eq('id', m.client_id).single() : Promise.resolve(null),
+        m.expert_id ? sb.from('profiles').select('full_name,email').eq('id', m.expert_id).single() : Promise.resolve(null),
+      ]);
+      setModalData({ mission: m, client: results[0]?.data || null, expert: results[1]?.data || null });
+      setNewStatut(m.statut || '');
     })();
-  }, []);
+  }, [selected]);
+
+  const saveStatut = async () => {
+    if (!selected || !newStatut) return;
+    setSaving(true);
+    await sb.from('missions').update({ statut: newStatut }).eq('id', selected);
+    await loadMissions();
+    setModalData(d => d ? {...d, mission: {...d.mission, statut: newStatut}} : d);
+    setSaving(false);
+  };
 
   if (!missions) return <div className="spin" />;
 
   const statuses = ['all','en_attente','en_cours','terminee','payee','annulee'];
   const filtered = filter === 'all' ? missions : missions.filter(m => m.statut === filter);
-  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s,m) => s + (Number(m.montant)||0), 0);
+  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s,m) => s + (Number(m.montant||m.prix)||0), 0);
 
   const statusBadge = (s) => {
     const map = { en_cours:'badge-blue', payee:'badge-green', terminee:'badge-green', annulee:'badge-red', en_attente:'badge-amber' };
@@ -408,17 +590,18 @@ function MissionsTab() {
       <div className="section-card">
         <div className="section-head">
           <span className="section-title">Liste des missions</span>
-          <span className="section-count">{filtered.length} résultats</span>
+          <span className="section-count">{filtered.length} résultats — cliquer pour les détails</span>
         </div>
         {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-text">Aucune mission</div></div> :
           <table className="data-table">
-            <thead><tr><th>Mission</th><th>Statut</th><th>Montant</th><th>Date</th></tr></thead>
+            <thead><tr><th>Mission</th><th>Catégorie</th><th>Statut</th><th>Montant</th><th>Date</th></tr></thead>
             <tbody>
               {filtered.map(m => (
-                <tr key={m.id}>
-                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div><div style={{fontSize:11,color:'var(--text-3)',fontFamily:'monospace'}}>{m.id.slice(0,8)}...</div></td>
+                <tr key={m.id} className="clickable" onClick={()=>setSelected(m.id)}>
+                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div></td>
+                  <td style={{fontSize:11,color:'var(--text-3)'}}>{m.categorie||'—'}</td>
                   <td>{statusBadge(m.statut)}</td>
-                  <td><span className="amount">{fmtMoney(m.montant)}</span></td>
+                  <td><span className="amount">{fmtMoney(m.montant||m.prix)}</span></td>
                   <td style={{fontSize:12,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</td>
                 </tr>
               ))}
@@ -426,6 +609,53 @@ function MissionsTab() {
           </table>
         }
       </div>
+
+      {selected && (
+        <div className="modal-overlay" onClick={e=>{ if(e.target===e.currentTarget) setSelected(null); }}>
+          <div className="modal">
+            <div className="modal-head">
+              <span className="modal-title">{modalData?.mission?.titre || 'Détail mission'}</span>
+              <button className="modal-close" onClick={()=>setSelected(null)}>✕</button>
+            </div>
+            <div className="modal-body">
+              {!modalData ? <div className="spin" /> : (
+                <>
+                  <div className="modal-section">Informations</div>
+                  <div className="modal-row"><span className="modal-label">Catégorie</span><span className="modal-val">{modalData.mission.categorie||'—'}</span></div>
+                  <div className="modal-row"><span className="modal-label">Montant</span><span className="modal-val">{fmtMoney(modalData.mission.montant||modalData.mission.prix)}</span></div>
+                  <div className="modal-row"><span className="modal-label">Deadline</span><span className="modal-val">{modalData.mission.deadline||'—'}</span></div>
+                  <div className="modal-row"><span className="modal-label">Progression</span><span className="modal-val">{modalData.mission.progression != null ? `${modalData.mission.progression}%` : '—'}</span></div>
+                  <div className="modal-row"><span className="modal-label">Créée le</span><span className="modal-val">{fmtDate(modalData.mission.created_at)}</span></div>
+
+                  <div className="modal-section">Parties</div>
+                  <div className="modal-row">
+                    <span className="modal-label">Client</span>
+                    <span className="modal-val">{modalData.client ? `${modalData.client.full_name} — ${modalData.client.email}` : '—'}</span>
+                  </div>
+                  <div className="modal-row">
+                    <span className="modal-label">Expert</span>
+                    <span className="modal-val">{modalData.expert ? `${modalData.expert.full_name} — ${modalData.expert.email}` : '—'}</span>
+                  </div>
+
+                  <div className="modal-section">Changer le statut</div>
+                  <div style={{display:'flex',gap:10,alignItems:'center',paddingTop:8}}>
+                    <select className="status-select" value={newStatut} onChange={e=>setNewStatut(e.target.value)}>
+                      <option value="en_attente">En attente</option>
+                      <option value="en_cours">En cours</option>
+                      <option value="terminee">Terminée</option>
+                      <option value="payee">Payée</option>
+                      <option value="annulee">Annulée</option>
+                    </select>
+                    <button className="btn-save" disabled={saving || newStatut === modalData.mission.statut} onClick={saveStatut}>
+                      {saving ? 'Enregistrement...' : 'Enregistrer'}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -598,12 +828,22 @@ function BlogTab() {
 function App() {
   const [session, setSession] = useState(undefined);
   const [tab, setTab] = useState('dashboard');
+  const [pendingExperts, setPendingExperts] = useState(0);
 
   useEffect(() => {
     sb.auth.getSession().then(({ data }) => setSession(data.session));
     const { data: { subscription } } = sb.auth.onAuthStateChange((_, s) => setSession(s));
     return () => subscription.unsubscribe();
   }, []);
+
+  const loadPending = useCallback(async () => {
+    const { count } = await sb.from('experts').select('id', { count: 'exact', head: true }).eq('statut', 'pending');
+    setPendingExperts(count || 0);
+  }, []);
+
+  useEffect(() => {
+    if (session?.user?.email === ADMIN_EMAIL) loadPending();
+  }, [session, loadPending]);
 
   const logout = async () => { await sb.auth.signOut(); };
 
@@ -624,7 +864,14 @@ function App() {
   }
 
   const userName = session.user?.email?.split('@')[0] || 'Admin';
-  const tabs = { dashboard: DashboardTab, users: UsersTab, missions: MissionsTab, payments: PaymentsTab, blog: BlogTab };
+  const tabs = {
+    dashboard: DashboardTab,
+    experts: () => <ExpertsTab onApproval={loadPending} />,
+    users: UsersTab,
+    missions: MissionsTab,
+    payments: PaymentsTab,
+    blog: BlogTab,
+  };
   const ActiveTab = tabs[tab];
 
   return (
@@ -643,7 +890,7 @@ function App() {
           </div>
         </div>
       </nav>
-      <Sidebar tab={tab} setTab={setTab} onLogout={logout} />
+      <Sidebar tab={tab} setTab={setTab} onLogout={logout} pendingExperts={pendingExperts} />
       <main className="main">
         <div className="main-inner">
           <ActiveTab />

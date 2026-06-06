@@ -292,6 +292,7 @@ function App() {
       const { data: expertsList, error } = await sb
         .from('experts')
         .select('*')
+        .eq('statut', 'approved')
         .order('created_at', { ascending: false });
 
       if (!error && expertsList?.length) {
