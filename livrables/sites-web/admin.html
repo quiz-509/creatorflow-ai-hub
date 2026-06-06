@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--sidebar:240px;--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
+.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
+.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.admin-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:99px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 10px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
+.user-chip:hover{border-color:var(--border-3);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--nav);left:0;bottom:0;width:var(--sidebar);background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-section{padding:16px 12px 8px;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 160ms;position:relative;border:none;background:none;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nav-item.active{background:rgba(124,58,237,0.12);color:var(--vs);}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--v);}
+.nav-item svg{opacity:0.7;flex-shrink:0;}
+.nav-item.active svg{opacity:1;}
+.sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid var(--border);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);padding-top:var(--nav);min-height:100vh;}
+.main-inner{padding:32px 32px 80px;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--text-2);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;position:relative;overflow:hidden;transition:border-color 180ms;}
+.stat-card:hover{border-color:var(--border-2);}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-size:18px;}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text-3);font-weight:500;}
+
+/* SECTION CARD */
+.section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.section-title{font-size:14px;font-weight:700;}
+.section-count{font-size:12px;color:var(--text-3);background:var(--surf-2);padding:2px 9px;border-radius:99px;border:1px solid var(--border);}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);padding:12px 20px;text-align:left;border-bottom:1px solid var(--border);}
+.data-table td{font-size:13px;padding:14px 20px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.015);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-blue{background:rgba(6,182,212,0.10);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+.badge-red{background:rgba(239,68,68,0.10);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.badge-gray{background:rgba(255,255,255,0.05);color:var(--text-3);border:1px solid var(--border);}
+
+/* USER ROW */
+.user-row-info{display:flex;align-items:center;gap:10px;}
+.mini-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-row-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px;}
+.user-row-email{font-size:11px;color:var(--text-3);}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+
+/* AMOUNT */
+.amount{font-size:13px;font-weight:700;color:var(--text);}
+
+/* EMPTY */
+.empty-state{padding:48px 20px;text-align:center;color:var(--text-3);}
+.empty-icon{font-size:32px;margin-bottom:12px;}
+.empty-text{font-size:13px;}
+
+/* SPINNER */
+.spin{width:20px;height:20px;border:2px solid var(--border-2);border-top-color:var(--vs);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ACCESS DENIED */
+.access-denied{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;text-align:center;padding:32px;}
+.access-denied h1{font-size:28px;font-weight:800;}
+.access-denied p{font-size:14px;color:var(--text-2);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;}
+.btn-primary:hover{transform:translateY(-1px);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s var(--ease);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const ADMIN_EMAIL = 'pjoacenel@gmail.com';
+
+const avatarColor = (str) => {
+  const colors = ['#7C3AED','#059669','#D97706','#DC2626','#2563EB','#DB2777','#0891B2'];
+  let h = 0; for (let c of (str||'')) h = (h * 31 + c.charCodeAt(0)) & 0xFFFFFF;
+  return colors[Math.abs(h) % colors.length];
+};
+const initials = (name) => (name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString('fr-CA', {day:'2-digit',month:'short',year:'numeric'}) : '';
+const fmtMoney = (n) => n ? `${Number(n).toLocaleString('fr-CA')}$` : '0$';
+
+/* ── SIDEBAR NAV ── */
+function Sidebar({ tab, setTab, onLogout }) {
+  const items = [
+    { id:'dashboard', label:'Dashboard', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> },
+    { id:'users',     label:'Utilisateurs', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
+    { id:'missions',  label:'Missions', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
+    { id:'payments',  label:'Paiements', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
+    { id:'blog',      label:'Blog', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> },
+  ];
+  return (
+    <aside className="sidebar" id="sidebar">
+      <div className="sidebar-section">
+        <div className="sidebar-label">Navigation</div>
+        {items.map(it => (
+          <button key={it.id} className={`nav-item ${tab===it.id?'active':''}`} onClick={()=>setTab(it.id)}>
+            {it.icon}{it.label}
+          </button>
+        ))}
+      </div>
+      <div className="sidebar-bottom">
+        <button className="nav-item" onClick={onLogout}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Déconnexion
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+/* ── DASHBOARD TAB ── */
+function DashboardTab() {
+  const [stats, setStats] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const [users, experts, missions, payments, articles, subs, enrollments] = await Promise.all([
+        sb.from('profiles').select('id', { count: 'exact', head: true }),
+        sb.from('experts').select('id', { count: 'exact', head: true }),
+        sb.from('missions').select('id', { count: 'exact', head: true }),
+        sb.from('missions').select('montant').eq('statut', 'payee'),
+        sb.from('blog_articles').select('id', { count: 'exact', head: true }).eq('status', 'published'),
+        sb.from('blog_subscribers').select('id', { count: 'exact', head: true }),
+        sb.from('academy_enrollments').select('id', { count: 'exact', head: true }),
+      ]);
+      const totalRevenue = (payments.data || []).reduce((s, m) => s + (Number(m.montant) || 0), 0);
+      setStats({
+        users: users.count || 0,
+        experts: experts.count || 0,
+        missions: missions.count || 0,
+        revenue: totalRevenue,
+        articles: articles.count || 0,
+        subscribers: subs.count || 0,
+        enrollments: enrollments.count || 0,
+      });
+    })();
+  }, []);
+
+  const [recentMissions, setRecentMissions] = useState([]);
+  const [recentUsers, setRecentUsers] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const { data: m } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', { ascending: false }).limit(5);
+      setRecentMissions(m || []);
+      const { data: u } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', { ascending: false }).limit(5);
+      setRecentUsers(u || []);
+    })();
+  }, []);
+
+  if (!stats) return <div className="spin" />;
+
+  const statCards = [
+    { label:'Revenus totaux', val: fmtMoney(stats.revenue), icon:'💰', color:'#7C3AED' },
+    { label:'Utilisateurs', val: stats.users, icon:'👥', color:'#06B6D4' },
+    { label:'Missions', val: stats.missions, icon:'📋', color:'#10B981' },
+    { label:'Abonnés newsletter', val: stats.subscribers, icon:'📧', color:'#F59E0B' },
+    { label:'Experts actifs', val: stats.experts, icon:'⭐', color:'#DB2777' },
+    { label:'Articles publiés', val: stats.articles, icon:'✍️', color:'#2563EB' },
+    { label:'Inscriptions Academy', val: stats.enrollments, icon:'🎓', color:'#059669' },
+  ];
+
+  const statusBadge = (s) => {
+    const map = { en_cours:'badge-blue', payee:'badge-green', terminee:'badge-green', annulee:'badge-red', en_attente:'badge-amber' };
+    return <span className={`badge ${map[s]||'badge-gray'}`}>{s?.replace('_',' ')}</span>;
+  };
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Dashboard Admin</div>
+          <div className="page-sub">Vue d'ensemble de CreatorFlow Market</div>
+        </div>
+      </div>
+
+      <div className="stats-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+        {statCards.slice(0,4).map(s => (
+          <div key={s.label} className="stat-card">
+            <div className="stat-icon" style={{background:`${s.color}18`}}><span>{s.icon}</span></div>
+            <div className="stat-val">{s.val}</div>
+            <div className="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="stats-grid" style={{gridTemplateColumns:'repeat(3,1fr)',marginTop:'-14px'}}>
+        {statCards.slice(4).map(s => (
+          <div key={s.label} className="stat-card">
+            <div className="stat-icon" style={{background:`${s.color}18`}}><span>{s.icon}</span></div>
+            <div className="stat-val">{s.val}</div>
+            <div className="stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="two-col">
+        <div className="section-card">
+          <div className="section-head">
+            <span className="section-title">Dernières missions</span>
+            <span className="section-count">{recentMissions.length} récentes</span>
+          </div>
+          {recentMissions.length === 0 ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-text">Aucune mission</div></div> :
+            <table className="data-table">
+              <thead><tr><th>Mission</th><th>Statut</th><th>Montant</th></tr></thead>
+              <tbody>
+                {recentMissions.map(m => (
+                  <tr key={m.id}>
+                    <td><div style={{fontWeight:600,color:'var(--text)',fontSize:12}}>{m.titre||'Sans titre'}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</div></td>
+                    <td>{statusBadge(m.statut)}</td>
+                    <td><span className="amount">{fmtMoney(m.montant)}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          }
+        </div>
+
+        <div className="section-card">
+          <div className="section-head">
+            <span className="section-title">Nouveaux utilisateurs</span>
+            <span className="section-count">{recentUsers.length} récents</span>
+          </div>
+          {recentUsers.length === 0 ? <div className="empty-state"><div className="empty-icon">👥</div><div className="empty-text">Aucun utilisateur</div></div> :
+            <table className="data-table">
+              <thead><tr><th>Utilisateur</th><th>Rôle</th></tr></thead>
+              <tbody>
+                {recentUsers.map(u => (
+                  <tr key={u.id}>
+                    <td>
+                      <div className="user-row-info">
+                        <div className="mini-avatar" style={{background:avatarColor(u.full_name)}}>{initials(u.full_name)}</div>
+                        <div><div className="user-row-name">{u.full_name||'—'}</div><div className="user-row-email">{u.email}</div></div>
+                      </div>
+                    </td>
+                    <td><span className={`badge ${u.role==='expert'?'badge-purple':'badge-blue'}`}>{u.role||'client'}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── USERS TAB ── */
+function UsersTab() {
+  const [users, setUsers] = useState(null);
+  const [filter, setFilter] = useState('all');
+  useEffect(() => {
+    (async () => {
+      const { data } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', { ascending: false });
+      setUsers(data || []);
+    })();
+  }, []);
+
+  if (!users) return <div className="spin" />;
+
+  const filtered = filter === 'all' ? users : users.filter(u => (u.role||'client') === filter);
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Utilisateurs</div>
+          <div className="page-sub">{users.length} comptes inscrits</div>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          {['all','client','expert'].map(f => (
+            <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
+              {f==='all'?'Tous':f==='client'?'Clients':'Experts'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="section-card">
+        <div className="section-head">
+          <span className="section-title">Liste des utilisateurs</span>
+          <span className="section-count">{filtered.length} résultats</span>
+        </div>
+        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">👥</div><div className="empty-text">Aucun utilisateur</div></div> :
+          <table className="data-table">
+            <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
+            <tbody>
+              {filtered.map(u => (
+                <tr key={u.id}>
+                  <td>
+                    <div className="user-row-info">
+                      <div className="mini-avatar" style={{background:avatarColor(u.full_name)}}>{initials(u.full_name)}</div>
+                      <div className="user-row-name">{u.full_name||'—'}</div>
+                    </div>
+                  </td>
+                  <td style={{color:'var(--text-3)',fontSize:12}}>{u.email}</td>
+                  <td><span className={`badge ${u.role==='expert'?'badge-purple':'badge-blue'}`}>{u.role||'client'}</span></td>
+                  <td style={{fontSize:12}}>{fmtDate(u.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        }
+      </div>
+    </>
+  );
+}
+
+/* ── MISSIONS TAB ── */
+function MissionsTab() {
+  const [missions, setMissions] = useState(null);
+  const [filter, setFilter] = useState('all');
+  useEffect(() => {
+    (async () => {
+      const { data } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', { ascending: false });
+      setMissions(data || []);
+    })();
+  }, []);
+
+  if (!missions) return <div className="spin" />;
+
+  const statuses = ['all','en_attente','en_cours','terminee','payee','annulee'];
+  const filtered = filter === 'all' ? missions : missions.filter(m => m.statut === filter);
+  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s,m) => s + (Number(m.montant)||0), 0);
+
+  const statusBadge = (s) => {
+    const map = { en_cours:'badge-blue', payee:'badge-green', terminee:'badge-green', annulee:'badge-red', en_attente:'badge-amber' };
+    const labels = { en_cours:'En cours', payee:'Payée', terminee:'Terminée', annulee:'Annulée', en_attente:'En attente' };
+    return <span className={`badge ${map[s]||'badge-gray'}`}>{labels[s]||s}</span>;
+  };
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Missions</div>
+          <div className="page-sub">{missions.length} missions — {fmtMoney(totalRevenue)} encaissés</div>
+        </div>
+      </div>
+
+      <div style={{display:'flex',gap:8,marginBottom:20,flexWrap:'wrap'}}>
+        {statuses.map(f => (
+          <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
+            {f==='all'?`Toutes (${missions.length})`:`${f.replace('_',' ')} (${missions.filter(m=>m.statut===f).length})`}
+          </button>
+        ))}
+      </div>
+
+      <div className="section-card">
+        <div className="section-head">
+          <span className="section-title">Liste des missions</span>
+          <span className="section-count">{filtered.length} résultats</span>
+        </div>
+        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-text">Aucune mission</div></div> :
+          <table className="data-table">
+            <thead><tr><th>Mission</th><th>Statut</th><th>Montant</th><th>Date</th></tr></thead>
+            <tbody>
+              {filtered.map(m => (
+                <tr key={m.id}>
+                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div><div style={{fontSize:11,color:'var(--text-3)',fontFamily:'monospace'}}>{m.id.slice(0,8)}...</div></td>
+                  <td>{statusBadge(m.statut)}</td>
+                  <td><span className="amount">{fmtMoney(m.montant)}</span></td>
+                  <td style={{fontSize:12,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        }
+      </div>
+    </>
+  );
+}
+
+/* ── PAYMENTS TAB ── */
+function PaymentsTab() {
+  const [missions, setMissions] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const { data } = await sb.from('missions').select('id,titre,montant,created_at,statut').eq('statut','payee').order('created_at', { ascending: false });
+      setMissions(data || []);
+    })();
+  }, []);
+
+  if (!missions) return <div className="spin" />;
+
+  const total = missions.reduce((s,m) => s + (Number(m.montant)||0), 0);
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Paiements</div>
+          <div className="page-sub">{missions.length} paiements confirmés</div>
+        </div>
+      </div>
+
+      <div className="stats-grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(16,185,129,0.12)'}}>💰</div>
+          <div className="stat-val">{fmtMoney(total)}</div>
+          <div className="stat-label">Revenus totaux</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)'}}>📊</div>
+          <div className="stat-val">{missions.length}</div>
+          <div className="stat-label">Transactions</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(6,182,212,0.12)'}}>📈</div>
+          <div className="stat-val">{missions.length > 0 ? fmtMoney(Math.round(total/missions.length)) : '0$'}</div>
+          <div className="stat-label">Panier moyen</div>
+        </div>
+      </div>
+
+      <div className="section-card">
+        <div className="section-head">
+          <span className="section-title">Historique des paiements</span>
+          <span className="section-count">{missions.length} entrées</span>
+        </div>
+        {missions.length === 0 ? <div className="empty-state"><div className="empty-icon">💳</div><div className="empty-text">Aucun paiement encore</div></div> :
+          <table className="data-table">
+            <thead><tr><th>Mission</th><th>Montant</th><th>Statut</th><th>Date</th></tr></thead>
+            <tbody>
+              {missions.map(m => (
+                <tr key={m.id}>
+                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div></td>
+                  <td><span className="amount">{fmtMoney(m.montant)}</span></td>
+                  <td><span className="badge badge-green">Payée</span></td>
+                  <td style={{fontSize:12,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        }
+      </div>
+    </>
+  );
+}
+
+/* ── BLOG TAB ── */
+function BlogTab() {
+  const [articles, setArticles] = useState(null);
+  const [subscribers, setSubscribers] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const [a, s] = await Promise.all([
+        sb.from('blog_articles').select('id,title,category,status,views,created_at').order('created_at', { ascending: false }).limit(50),
+        sb.from('blog_subscribers').select('id,email,source,created_at').order('created_at', { ascending: false }).limit(50),
+      ]);
+      setArticles(a.data || []);
+      setSubscribers(s.data || []);
+    })();
+  }, []);
+
+  if (!articles || !subscribers) return <div className="spin" />;
+
+  const published = articles.filter(a => a.status === 'published').length;
+  const totalViews = articles.reduce((s,a) => s + (Number(a.views)||0), 0);
+
+  return (
+    <>
+      <div className="page-header">
+        <div>
+          <div className="page-title">Blog & Newsletter</div>
+          <div className="page-sub">{published} articles publiés — {subscribers.length} abonnés</div>
+        </div>
+      </div>
+
+      <div className="stats-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)'}}>✍️</div>
+          <div className="stat-val">{articles.length}</div>
+          <div className="stat-label">Articles total</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(16,185,129,0.12)'}}>✅</div>
+          <div className="stat-val">{published}</div>
+          <div className="stat-label">Publiés</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(6,182,212,0.12)'}}>👁️</div>
+          <div className="stat-val">{totalViews.toLocaleString('fr-CA')}</div>
+          <div className="stat-label">Vues totales</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon" style={{background:'rgba(245,158,11,0.12)'}}>📧</div>
+          <div className="stat-val">{subscribers.length}</div>
+          <div className="stat-label">Abonnés</div>
+        </div>
+      </div>
+
+      <div className="two-col">
+        <div className="section-card">
+          <div className="section-head">
+            <span className="section-title">Articles récents</span>
+            <span className="section-count">{articles.length}</span>
+          </div>
+          {articles.length === 0 ? <div className="empty-state"><div className="empty-icon">✍️</div><div className="empty-text">Aucun article</div></div> :
+            <table className="data-table">
+              <thead><tr><th>Titre</th><th>Statut</th><th>Vues</th></tr></thead>
+              <tbody>
+                {articles.slice(0,15).map(a => (
+                  <tr key={a.id}>
+                    <td><div style={{fontWeight:600,color:'var(--text)',fontSize:12,maxWidth:220,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{a.title}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{a.category}</div></td>
+                    <td><span className={`badge ${a.status==='published'?'badge-green':'badge-amber'}`}>{a.status==='published'?'Publié':'Brouillon'}</span></td>
+                    <td style={{fontSize:12,fontWeight:600}}>{(Number(a.views)||0).toLocaleString('fr-CA')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          }
+        </div>
+
+        <div className="section-card">
+          <div className="section-head">
+            <span className="section-title">Abonnés newsletter</span>
+            <span className="section-count">{subscribers.length}</span>
+          </div>
+          {subscribers.length === 0 ? <div className="empty-state"><div className="empty-icon">📧</div><div className="empty-text">Aucun abonné</div></div> :
+            <table className="data-table">
+              <thead><tr><th>Email</th><th>Source</th></tr></thead>
+              <tbody>
+                {subscribers.slice(0,15).map(s => (
+                  <tr key={s.id}>
+                    <td style={{fontSize:12,color:'var(--text)'}}>{s.email}</td>
+                    <td><span className="badge badge-gray">{s.source||'blog'}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── APP ROOT ── */
+function App() {
+  const [session, setSession] = useState(undefined);
+  const [tab, setTab] = useState('dashboard');
+
+  useEffect(() => {
+    sb.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const logout = async () => { await sb.auth.signOut(); };
+
+  if (session === undefined) return <div className="spin" style={{marginTop:80}} />;
+
+  if (!session || session.user?.email !== ADMIN_EMAIL) {
+    return (
+      <div className="access-denied">
+        <div style={{fontSize:48}}>🔒</div>
+        <h1>Accès refusé</h1>
+        <p>Cette page est réservée à l'administrateur de CreatorFlow Market.</p>
+        {!session ?
+          <a href="/connexion.html" className="btn btn-primary">Se connecter</a> :
+          <button className="btn btn-primary" onClick={logout}>Changer de compte</button>
+        }
+      </div>
+    );
+  }
+
+  const userName = session.user?.email?.split('@')[0] || 'Admin';
+  const tabs = { dashboard: DashboardTab, users: UsersTab, missions: MissionsTab, payments: PaymentsTab, blog: BlogTab };
+  const ActiveTab = tabs[tab];
+
+  return (
+    <>
+      <nav className="nav">
+        <div className="nav-inner">
+          <div className="nav-brand">
+            <span className="nav-logo">CreatorFlow <em>Market</em></span>
+            <span className="admin-badge">Admin</span>
+          </div>
+          <div className="nav-right">
+            <div className="user-chip">
+              <div className="avatar">{initials(userName)}</div>
+              <span className="user-name">{userName}</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <Sidebar tab={tab} setTab={setTab} onLogout={logout} />
+      <main className="main">
+        <div className="main-inner">
+          <ActiveTab />
+        </div>
+      </main>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
