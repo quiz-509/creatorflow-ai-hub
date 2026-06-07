@@ -210,7 +210,7 @@ function App() {
   const loadData = async () => {
     setLoading(true);
     const { data: c } = await sb.from('academy_courses')
-      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,is_published')
+      .select('id,slug,title,subtitle,description,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,is_published')
       .eq('id', courseId).single();
     if (!c) { window.location.href = 'academie.html'; return; }
 
@@ -221,7 +221,7 @@ function App() {
       titre: c.title,
       categorie: cat,
       description_courte: c.subtitle,
-      description: c.subtitle,
+      description: c.description || c.subtitle,
       niveau: c.level || 'Débutant',
       langue: 'Français',
       image_url: c.thumbnail_url || THUMB_IMGS[cat] || DEFAULT_THUMB,
@@ -424,7 +424,11 @@ function App() {
         {activeTab === 'description' && (
           <div className="content-section">
             <h2>À propos de ce cours</h2>
-            <div className="desc-content">{course.description || 'Description complète à venir.'}</div>
+            <div className="desc-content">
+              {(course.description || 'Description complète à venir.').split('\n\n').map((p,i) => (
+                <p key={i} style={{marginBottom:'16px',color:'var(--text-2)',lineHeight:'1.75'}}>{p}</p>
+              ))}
+            </div>
           </div>
         )}
 
