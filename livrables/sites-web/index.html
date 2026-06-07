@@ -216,10 +216,11 @@ h1.hero-title { font-size:clamp(52px,7vw,92px); font-weight:800; letter-spacing:
 .hero-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:72px; }
 
 .hero-stats {
-  display:grid; grid-template-columns:repeat(3,1fr); max-width:720px; margin:0 auto;
+  display:flex; justify-content:center; max-width:720px; margin:0 auto;
   border:1px solid var(--border-2); border-radius:var(--r-xl);
   background:rgba(12,12,24,0.6); backdrop-filter:blur(16px); overflow:hidden;
 }
+.hero-stats .stat { flex:1; min-width:160px; }
 .stat { padding:28px 20px; text-align:center; position:relative; }
 .stat+.stat::before { content:''; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--border); }
 .stat-n { font-size:40px; font-weight:800; letter-spacing:-0.04em; background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.6) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
