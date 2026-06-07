@@ -425,7 +425,7 @@ function App() {
           <div className="content-section">
             <h2>À propos de ce cours</h2>
             <div className="desc-content">
-              {(course.description || 'Description complète à venir.').split('\n\n').map((p,i) => (
+              {(course.description || 'Description complète à venir.').split(/\r?\n\r?\n/).map((p,i) => (
                 <p key={i} style={{marginBottom:'16px',color:'var(--text-2)',lineHeight:'1.75'}}>{p}</p>
               ))}
             </div>
