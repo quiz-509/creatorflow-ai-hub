@@ -14,7 +14,7 @@ export async function onRequest(context) {
   let article = null;
   try {
     const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/blog_articles?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=title,excerpt,content,cover_image,category,author_name,published_at,views,slug&limit=1`,
+      `${SUPABASE_URL}/rest/v1/blog_articles?slug=eq.${encodeURIComponent(slug)}&status=eq.published&select=title,excerpt,content,featured_image,category,author,published_at,views,slug&limit=1`,
       {
         headers: {
           apikey: SUPABASE_URL.includes('supabase') ? SUPABASE_KEY : '',
@@ -34,11 +34,11 @@ export async function onRequest(context) {
 
   const title       = article.title || 'Article — CreatorFlow Market';
   const description = article.excerpt || `${title} — Découvrez cet article sur CreatorFlow Market`;
-  const image       = article.cover_image || `${BASE}/og-image.jpg`;
+  const image       = article.featured_image || `${BASE}/og-image.jpg`;
   const canonical   = `${BASE}/blog/${slug}`;
   const published   = article.published_at ? new Date(article.published_at).toISOString() : '';
   const category    = article.category || 'IA';
-  const author      = article.author_name || 'CreatorFlow Market';
+  const author      = article.author || 'CreatorFlow Market';
 
   // Sanitize description for safe HTML attribute
   const safeDesc  = description.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;').slice(0, 200);
