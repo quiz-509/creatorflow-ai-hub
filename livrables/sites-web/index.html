@@ -857,13 +857,18 @@ function Hero() {
         </div>
         <div className="hero-stats">
           {[
-            counts.experts > 0 && {to:counts.experts,s:'+',l:'Experts certifiés'},
-            counts.articles > 0 && {to:counts.articles,s:'+',l:'Articles publiés'},
+            counts.experts > 0 && {to:counts.experts,s:'+',l:'Experts certifiés',href:null},
+            counts.articles > 0 && {to:counts.articles,s:'+',l:'Articles publiés',href:'blog.html'},
           ].filter(Boolean).map((st,i)=>(
-            <div className="stat" key={i}>
-              <div className="stat-n"><StatCount to={st.to} suffix={st.s}/></div>
-              <div className="stat-l">{st.l}</div>
-            </div>
+            st.href
+              ? <a className="stat" key={i} href={st.href} style={{textDecoration:'none',cursor:'pointer'}} title="Voir tous les articles">
+                  <div className="stat-n"><StatCount to={st.to} suffix={st.s}/></div>
+                  <div className="stat-l">{st.l} →</div>
+                </a>
+              : <div className="stat" key={i}>
+                  <div className="stat-n"><StatCount to={st.to} suffix={st.s}/></div>
+                  <div className="stat-l">{st.l}</div>
+                </div>
           ))}
         </div>
       </div>
