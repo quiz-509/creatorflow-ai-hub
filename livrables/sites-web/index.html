@@ -967,9 +967,9 @@ function PlatformPreview() {
                 </div>
                 <div className="p-results">
                   {[
-                    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA · Paris',match:'98%',rate:'95$'},
-                    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA · Lyon',match:'94%',rate:'120$'},
-                    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie · Bordeaux',match:'91%',rate:'180$'},
+                    {ph:PHOTO.amelie,name:'Expert Agents IA',role:'LangChain & RAG · Certifié',match:'98%',rate:'95$'},
+                    {ph:PHOTO.julien,name:'Expert Formation IA',role:'Formateur certifié · Certifié',match:'94%',rate:'120$'},
+                    {ph:PHOTO.sarah,name:'Consultante Stratégie IA',role:'Audit & Roadmap · Certifiée',match:'91%',rate:'180$'},
                   ].map((r,i)=>(
                     <div className="p-result" key={i}>
                       <div className="p-avt"><img src={r.ph} alt=""/></div>
@@ -1156,11 +1156,26 @@ function Expertise() {
 
 /* ── Experts ── */
 function Experts() {
-  const list = [
-    {ph:PHOTO.amelie,name:'Amélie Dubois',role:'Architecte agents IA',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. 12 missions livrées en 2025.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:'95$',rating:'4.9',rev:47},
-    {ph:PHOTO.julien,name:'Julien Mercier',role:'Formateur IA pour équipes',bio:'Forme les équipes marketing et ops aux outils IA. 850+ collaborateurs accompagnés.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:'120$',rating:'5.0',rev:62},
-    {ph:PHOTO.sarah,name:'Sarah Kassimi',role:'Consultante stratégie IA',bio:'Roadmap IA et audit pour scale-ups. Ex-McKinsey, certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:'180$',rating:'4.9',rev:31},
+  const FALLBACK = [
+    {ph:PHOTO.amelie,name:'Expert Agents IA',role:'Spécialiste LangChain & RAG',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. Disponible pour missions courtes et longues.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:'95$',rating:null,rev:null},
+    {ph:PHOTO.julien,name:'Expert Formation IA',role:'Formateur IA pour équipes',bio:'Accompagne les équipes marketing et opérations dans leur montée en compétences IA.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:'120$',rating:null,rev:null},
+    {ph:PHOTO.sarah,name:'Consultante Stratégie IA',role:'Audit & Roadmap IA',bio:'Audit, roadmap et conduite du changement IA. Certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:'180$',rating:null,rev:null},
   ];
+  const [list, setList] = useState(FALLBACK);
+  useEffect(() => {
+    Promise.all([
+      sb.from('experts').select('id,specialite,bio,competences,tarif_horaire,photo_url,note_moyenne,nb_avis').eq('statut','approved').limit(3),
+      sb.from('profiles').select('id,prenom,nom,photo_url'),
+    ]).then(([{data:exps},{data:profs}]) => {
+      if (!exps || exps.length === 0) return;
+      const pm = {}; (profs||[]).forEach(p => { pm[p.id] = p; });
+      setList(exps.map(e => {
+        const p = pm[e.id] || {};
+        const n = ((p.prenom||'')+' '+(p.nom||'')).trim();
+        return {ph:e.photo_url||p.photo_url||PHOTO.extra1,name:n||'Expert IA',role:e.specialite||'Expert IA',bio:(e.bio||'').slice(0,140),skills:(e.competences||[]).slice(0,4),rate:e.tarif_horaire?e.tarif_horaire+'$':'Sur devis',rating:e.note_moyenne?e.note_moyenne.toFixed(1):null,rev:e.nb_avis||null};
+      }));
+    }).catch(()=>{});
+  }, []);
   return (
     <section id="experts" className="pad" style={{paddingTop:80}}>
       <div className="wrap">
@@ -1181,13 +1196,13 @@ function Experts() {
               <div className="tags" style={{marginBottom:18}}>{e.skills.map(s=><span className="tag" key={s}>{s}</span>)}</div>
               <div className="exp-foot">
                 <div className="exp-rate">{e.rate}<small>/heure</small></div>
-                <div className="exp-stars"><span className="s"><Ic.Star/></span>{e.rating}<span className="cnt">({e.rev})</span></div>
+                {e.rating && <div className="exp-stars"><span className="s"><Ic.Star/></span>{e.rating}{e.rev && <span className="cnt">({e.rev})</span>}</div>}
               </div>
             </Rv>
           ))}
         </div>
         <Rv className="experts-cta">
-          <button className="btn btn-ghost btn-lg">Voir tous les experts<Ic.Arrow/></button>
+          <a href="experts.html" className="btn btn-ghost btn-lg">Voir tous les experts<Ic.Arrow/></a>
         </Rv>
       </div>
     </section>
@@ -1208,21 +1223,21 @@ function Testimonials() {
             <div className="testi-quote">On a divisé par 4 le temps de traitement de nos tickets support en 6 semaines. L'expert trouvé via le Hub a tout setup, formé l'équipe et documenté chaque étape.</div>
             <div className="testi-by">
               <div className="testi-avt"><img src={PHOTO.camille} alt=""/></div>
-              <div><div className="testi-name">Camille Laurent</div><div className="testi-role">COO · Vinexa (e-commerce)</div></div>
+              <div><div className="testi-name">COO</div><div className="testi-role">COO · Secteur e-commerce</div></div>
             </div>
           </Rv>
           <Rv delay={100} className="testi">
             <div className="testi-quote">Briefing un mardi, expert sélectionné le jeudi, kick-off le lundi suivant. Imbattable.</div>
             <div className="testi-by">
               <div className="testi-avt"><img src={PHOTO.romain} alt=""/></div>
-              <div><div className="testi-name">Romain Béringer</div><div className="testi-role">Founder · Olin Studio</div></div>
+              <div><div className="testi-name">Entrepreneur</div><div className="testi-role">Fondateur · Startup tech, Canada</div></div>
             </div>
           </Rv>
           <Rv delay={200} className="testi">
             <div className="testi-quote">La qualité des profils est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la différence.</div>
             <div className="testi-by">
               <div className="testi-avt"><img src={PHOTO.nadia} alt=""/></div>
-              <div><div className="testi-name">Nadia Marchand</div><div className="testi-role">Head of Ops · Klara Santé</div></div>
+              <div><div className="testi-name">Head of Ops</div><div className="testi-role">Head of Ops · Scale-up Santé, Québec</div></div>
             </div>
           </Rv>
         </div>
