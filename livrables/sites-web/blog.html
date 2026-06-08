@@ -11,6 +11,8 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://creatorflowmarket.com/blog">
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg">
+  <meta property="og:image:width" content="1729">
+  <meta property="og:image:height" content="910">
   <meta property="og:locale" content="fr_CA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@creatorflowmkt">
@@ -33,7 +35,9 @@
     img{max-width:100%;display:block;}
     .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
     .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:32px;}
-    .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0;}
+    .brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+    .brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+    .brand span{margin-left:-18px;}
     .nav-links{display:flex;align-items:center;gap:4px;flex:1;}
     .nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
     .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.06);color:var(--text);}
@@ -120,6 +124,7 @@
     @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
     @media(max-width:1024px){.featured-card{grid-template-columns:1fr;}.featured-img{min-height:200px;}.articles-grid{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:680px){.nav-links{display:none;}.featured-content{padding:24px;}.featured-content h2{font-size:20px;}.articles-grid{grid-template-columns:1fr;}.nl-form{flex-direction:column;}.newsletter-card{padding:36px 20px;}.search-wrap input{width:140px;}}
+    @media(max-width:640px){.container{padding:0 16px;}.blog-hero{padding:48px 0 36px;}}
   </style>
 </head>
 <body>
@@ -345,10 +350,10 @@ function App(){
     <div className="page">
       <nav className="nav">
         <div className="nav-inner">
-          <a href="index.html" className="logo">CreatorFlow Market</a>
+          <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
           <div className="nav-links">
             <a href="experts.html"  className="nav-link">Experts</a>
-            <a href="briefs.html"   className="nav-link">Publier un brief</a>
+            <a href="brief.html"    className="nav-link">Publier un brief</a>
             <a href="academie.html" className="nav-link">Academy</a>
             <a href="pricing.html"  className="nav-link">Tarifs</a>
             <a href="blog.html"     className="nav-link active">Blog IA</a>
@@ -464,9 +469,9 @@ function App(){
       <footer className="footer">
         <div className="container">
           <div className="footer-inner">
-            <span className="footer-logo">CreatorFlow Market</span>
+            <a href="/" className="footer-logo">CreatorFlow Market</a>
             <div className="footer-links">
-              <a href="index.html"    className="footer-link">Accueil</a>
+              <a href="/"             className="footer-link">Accueil</a>
               <a href="experts.html"  className="footer-link">Experts</a>
               <a href="academie.html" className="footer-link">Academy</a>
               <a href="pricing.html"  className="footer-link">Tarifs</a>
