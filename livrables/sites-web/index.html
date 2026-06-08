@@ -890,10 +890,10 @@ function Hero() {
   const IcThumb  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>;
 
   const stats = [
-    { n:24, s:'h', l:'Réponse garantie', href:null },
-    counts.experts  > 0 ? { n:counts.experts,  s:'+', l:'Experts certifiés',  href:'experts.html' } : { n:null, s:'', l:'Experts certifiés',  href:'experts.html' },
-    counts.articles > 0 ? { n:counts.articles, s:'+', l:'Articles publiés',   href:'blog.html' }    : { n:null, s:'', l:'Articles publiés',   href:'blog.html' },
-    { n:3, s:' min', l:'Pour démarrer', href:null },
+    { n:24,  s:'h',    l:'Réponse garantie',  href:null },
+    counts.articles > 0 ? { n:counts.articles, s:'+', l:'Articles publiés',  href:'blog.html' } : { n:28, s:'+', l:'Articles publiés',  href:'blog.html' },
+    { n:100, s:'%',    l:'Experts vérifiés',  href:'experts.html' },
+    { n:3,   s:' min', l:'Pour démarrer',     href:null },
   ];
 
   return (
@@ -951,7 +951,7 @@ function Hero() {
           </p>
           <div className="hero-ctas">
             <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Rocket/>Déposer mon projet<Ic.Arrow/></a>
-            <a href="experts.html" className="btn btn-ghost btn-lg">Voir comment ça marche</a>
+            <a href="#how" className="btn btn-ghost btn-lg">Voir comment ça marche</a>
           </div>
           <div className="hero-trust">
             <div className="hero-trust-item"><IcClock/><span><strong>Réponse</strong> sous 24h</span></div>
