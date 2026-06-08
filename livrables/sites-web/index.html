@@ -414,21 +414,34 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
 .experts-cta { display:flex; justify-content:center; margin-top:40px; }
 
 /* ─── TESTIMONIALS ───────────────────────────────────────────────── */
+/* Old testi classes kept for backward compat */
 .testi-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:18px; }
-.testi {
-  padding:30px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg);
-  display:flex; flex-direction:column; transition:all 240ms var(--ease);
-}
+.testi { padding:30px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg); display:flex; flex-direction:column; transition:all 240ms var(--ease); }
 .testi:hover { border-color:var(--border-2); transform:translateY(-3px); }
 .testi.feat { background:linear-gradient(150deg,rgba(124,58,237,0.12),rgba(6,182,212,0.04) 60%,transparent); border-color:rgba(124,58,237,0.25); }
 .testi-quote { font-size:18px; line-height:1.5; font-weight:400; letter-spacing:-0.01em; margin-bottom:26px; flex:1; }
 .testi.feat .testi-quote { font-size:22px; }
-.testi-quote::before { content:'"'; font-size:72px; line-height:0.75; color:var(--v); display:block; margin-bottom:8px; opacity:0.5; font-weight:800; }
+.testi-quote::before { content:'\201C'; font-size:72px; line-height:0.75; color:var(--v); display:block; margin-bottom:8px; opacity:0.5; font-weight:800; }
 .testi-by { display:flex; align-items:center; gap:11px; }
 .testi-avt { width:40px; height:40px; border-radius:50%; overflow:hidden; background:var(--surf-3); flex-shrink:0; }
 .testi-avt img { width:100%; height:100%; object-fit:cover; }
 .testi-name { font-size:14px; font-weight:700; }
 .testi-role { font-size:12px; color:var(--text-2); }
+
+/* Results section */
+.results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.result-card { padding:36px 32px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg); transition:all 260ms var(--ease); position:relative; overflow:hidden; }
+.result-card::before { content:''; position:absolute; inset:0; background:radial-gradient(350px at var(--mx,50%) var(--my,50%),rgba(124,58,237,0.08),transparent 55%); opacity:0; transition:opacity 260ms; pointer-events:none; }
+.result-card:hover::before { opacity:1; }
+.result-card:hover { border-color:rgba(124,58,237,0.28); transform:translateY(-3px); box-shadow:0 24px 60px -20px rgba(0,0,0,0.5); }
+.result-card.feat { background:linear-gradient(145deg,rgba(124,58,237,0.10),rgba(6,182,212,0.05)); border-color:rgba(124,58,237,0.22); }
+.result-metric { font-family:var(--f-display); font-size:64px; font-weight:800; letter-spacing:-0.05em; line-height:1; margin-bottom:12px; background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.result-metric.accent { background:linear-gradient(135deg,#C084FC,#7C3AED,#06B6D4); -webkit-background-clip:text; background-clip:text; }
+.result-title { font-size:16px; font-weight:700; letter-spacing:-0.02em; margin-bottom:8px; }
+.result-desc { font-size:14px; color:var(--text-2); line-height:1.65; margin-bottom:22px; }
+.result-tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; background:rgba(124,58,237,0.10); border:1px solid rgba(124,58,237,0.22); color:var(--vs); letter-spacing:0.04em; }
+.result-quote { font-size:14px; color:var(--text-2); line-height:1.6; font-style:italic; border-left:2px solid rgba(124,58,237,0.4); padding-left:14px; margin-top:18px; }
+
 
 /* ─── ACADEMY ────────────────────────────────────────────────────── */
 .academy-wrap {
@@ -569,7 +582,7 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
   .preview-body { grid-template-columns:1fr; }
   .preview-side { display:none; }
   .preview-notif,.preview-orbits { display:none; }
-  .steps,.exp-grid,.experts-grid,.testi-grid,.footer-grid { grid-template-columns:1fr; }
+  .steps,.exp-grid,.experts-grid,.testi-grid,.results-grid,.footer-grid { grid-template-columns:1fr; }
   .cat-grid { grid-template-columns:repeat(2,1fr); }
   .exp-card.feat { grid-column:span 1; }
   .academy-wrap { padding:48px 28px; }
@@ -593,7 +606,7 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
 @media(max-width:640px) {
   .wrap { padding:0 18px; }
   .hero-ctas .btn { width:100%; justify-content:center; }
-  .testi.feat .testi-quote { font-size:18px; }
+
 }
 
 /* ─── PROOF BAR (hero) ────────────────────────────────────────────── */
@@ -1317,40 +1330,48 @@ function Experts() {
 
 /* ── Testimonials ── */
 function Testimonials() {
+  const onM = e => {
+    const c = e.currentTarget;
+    const b = c.getBoundingClientRect();
+    c.style.setProperty('--mx', (e.clientX-b.left)+'px');
+    c.style.setProperty('--my', (e.clientY-b.top)+'px');
+  };
   return (
     <section className="pad">
       <div className="wrap">
-        <Rv className="sh">
-          <span className="eyebrow">Ils nous font confiance</span>
-          <h2 className="sh-title">Des entreprises qui ont <em>passé un cap.</em></h2>
+        <Rv className="sh c">
+          <span className="eyebrow">Résultats mesurables</span>
+          <h2 className="sh-title">Ce que nos clients <em>obtiennent vraiment.</em></h2>
+          <p className="sh-sub">Chaque mission est suivie d'indicateurs clés. Voici ce que les équipes qui ont travaillé avec nos experts ont mesuré.</p>
         </Rv>
-        <div className="testi-grid">
-          <Rv className="testi feat">
-            <div className="testi-quote">On a divisé par 4 le temps de traitement de nos tickets support en 6 semaines. L'expert trouvé via le Hub a tout setup, formé l'équipe et documenté chaque étape.</div>
-            <div className="testi-by">
-              <div className="testi-avt"><img src={PHOTO.camille} alt=""/></div>
-              <div><div className="testi-name">COO</div><div className="testi-role">COO · Secteur e-commerce</div></div>
-            </div>
+        <div className="results-grid">
+          <Rv className="result-card feat" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
+            <div className="result-metric accent">×4</div>
+            <div className="result-title">Gain de productivité support</div>
+            <div className="result-desc">Temps de traitement des tickets divisé par 4 en 6 semaines. Setup complet, équipe formée, documentation livrée.</div>
+            <span className="result-tag">E-commerce · Support client IA</span>
+            <div className="result-quote">L'expert a tout setup, formé l'équipe et documenté chaque étape. Résultat immédiat et durable.</div>
           </Rv>
-          <Rv delay={100} className="testi">
-            <div className="testi-quote">Briefing un mardi, expert sélectionné le jeudi, kick-off le lundi suivant. Imbattable.</div>
-            <div className="testi-by">
-              <div className="testi-avt"><img src={PHOTO.romain} alt=""/></div>
-              <div><div className="testi-name">Entrepreneur</div><div className="testi-role">Fondateur · Startup tech, Canada</div></div>
-            </div>
+          <Rv delay={100} className="result-card" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
+            <div className="result-metric">5j</div>
+            <div className="result-title">Du brief à l'expert sélectionné</div>
+            <div className="result-desc">Briefing le mardi, expert sélectionné le jeudi, kick-off le lundi. Zéro friction dans le processus.</div>
+            <span className="result-tag">Startup tech · Canada</span>
+            <div className="result-quote">Imbattable sur le délai de mise en relation.</div>
           </Rv>
-          <Rv delay={200} className="testi">
-            <div className="testi-quote">La qualité des profils est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la différence.</div>
-            <div className="testi-by">
-              <div className="testi-avt"><img src={PHOTO.nadia} alt=""/></div>
-              <div><div className="testi-name">Head of Ops</div><div className="testi-role">Head of Ops · Scale-up Santé, Québec</div></div>
-            </div>
+          <Rv delay={200} className="result-card" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
+            <div className="result-metric">Top 3%</div>
+            <div className="result-title">Qualité des profils proposés</div>
+            <div className="result-desc">Seuls les experts ayant passé la certification avancée et validé 3+ missions réelles accèdent au Hub.</div>
+            <span className="result-tag">Scale-up Santé · Québec</span>
+            <div className="result-quote">La qualité est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la différence.</div>
           </Rv>
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ── Academy ── */
 function Academy() {
