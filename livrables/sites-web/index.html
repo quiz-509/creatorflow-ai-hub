@@ -597,11 +597,33 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
   .hero-stats-row { grid-template-columns:repeat(2,1fr); }
   .hero-stat+.hero-stat::before { display:none; }
   .hero-stat:nth-child(3),.hero-stat:nth-child(4) { border-top:1px solid var(--border); }
+  .pad { padding:72px 0; }
+  .pad-sm { padding:52px 0; }
+  .cta-banner { padding:72px 0; }
+  .hero-sub { max-width:100%; }
+  .sh-sub { font-size:15px; }
+  .result-card { padding:28px 24px; }
+  .result-metric { font-size:52px; }
+  .cta-banner-sub { font-size:15px; }
+  .footer-grid { gap:32px; }
 }
 @media(max-width:640px) {
   .wrap { padding:0 18px; }
+  .pad { padding:56px 0; }
+  .pad-sm { padding:40px 0; }
+  .cta-banner { padding:56px 0; }
+  h1.hero-title { font-size:clamp(36px,9.5vw,52px); }
+  .sh-title { font-size:clamp(26px,7.5vw,36px); }
+  .cta-banner h2 { font-size:clamp(28px,8vw,40px); }
   .hero-ctas .btn { width:100%; justify-content:center; }
   .hero-yt-wrap iframe { top:0; transform:translate(-65%, 0); }
+  .result-metric { font-size:44px; }
+  .result-card { padding:24px 20px; }
+  .cat-grid { grid-template-columns:1fr; }
+  .cta-banner-sub,.sh-sub { font-size:14px; }
+  .guar-strip { gap:14px; padding:20px 18px; }
+  .guar-item { font-size:12px; }
+  .footer-bottom { text-align:center; font-size:12px; }
 }
 
 /* ─── PROOF BAR (hero) ────────────────────────────────────────────── */
