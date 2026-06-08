@@ -13,8 +13,8 @@
   <meta property="og:title" content="Académie IA — Formez-vous à l'IA | CreatorFlow Market"/>
   <meta property="og:description" content="Maîtrisez l'intelligence artificielle avec les formations créées par des experts certifiés. Cours pratiques, certificats reconnus, accès à vie."/>
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:width" content="1729"/>
+  <meta property="og:image:height" content="910"/>
   <meta property="og:site_name" content="CreatorFlow Market"/>
   <meta property="og:locale" content="fr_CA"/>
   <meta name="twitter:card" content="summary_large_image"/>
@@ -43,8 +43,9 @@ img{display:block;max-width:100%;}
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.82);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 24px;}
-.nav-logo{font-size:16px;font-weight:800;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .nav-links{display:flex;align-items:center;gap:24px;}
 .nav-link{font-size:14px;color:var(--text-2);font-weight:500;transition:color 150ms;}
 .nav-link:hover{color:var(--text);}
@@ -535,9 +536,9 @@ function App() {
       {/* NAV */}
       <nav className="nav">
         <div className="nav-inner">
-          <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+          <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
           <div className="nav-links">
-            <a href="index.html" className="nav-link">Plateforme</a>
+            <a href="/" className="nav-link">Plateforme</a>
             <a href="experts.html" className="nav-link">Experts</a>
             <a href="academie.html" className="nav-link active">Académie</a>
           </div>
@@ -872,12 +873,13 @@ function App() {
       {/* FOOTER */}
       <footer className="footer">
         <div className="footer-inner">
-          <div className="footer-logo">CreatorFlow <em>Market</em></div>
+          <a href="/" className="footer-logo">CreatorFlow <em>Market</em></a>
           <div className="footer-links">
-            <a href="index.html" className="footer-link">Plateforme</a>
+            <a href="/" className="footer-link">Plateforme</a>
             <a href="experts.html" className="footer-link">Experts</a>
             <a href="academie.html" className="footer-link">Académie</a>
-            <a href="creer-cours.html" className="footer-link">Créer un cours</a>
+            <a href="cgu.html" className="footer-link">Mentions légales</a>
+            <a href="politique-confidentialite.html" className="footer-link">Confidentialité</a>
           </div>
           <div className="footer-copy">© 2026 CreatorFlow Market · Tous droits réservés</div>
         </div>
