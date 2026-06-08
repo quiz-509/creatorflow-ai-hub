@@ -195,49 +195,38 @@ h1,h2,h3,h4,h5 { font-family:var(--f); font-weight:700; letter-spacing:-0.03em; 
 .mobile-toggle { display:none; width:38px; height:38px; border-radius:var(--r-sm); border:1px solid var(--border-2); background:rgba(255,255,255,0.04); align-items:center; justify-content:center; }
 
 /* ─── HERO V2 ───────────────────────────────────────────────────── */
-.hero { padding:130px 0 0; overflow:hidden; position:relative; }
-.hero-grid {
+.hero { padding:150px 0 0; min-height:680px; position:relative; overflow:hidden; }
+
+/* Full-bleed background video zone */
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background:linear-gradient(145deg,#070710 0%,#0A0820 40%,#0C0C1E 70%,#06060E 100%);
+}
+.hero-bg-grid {
   position:absolute; inset:0; pointer-events:none;
-  background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
-  background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);
+  background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 90% 80% at 70% 40%,black,transparent);
+  -webkit-mask-image:radial-gradient(ellipse 90% 80% at 70% 40%,black,transparent);
 }
-.hero-orb { position:absolute; border-radius:50%; filter:blur(130px); pointer-events:none; }
-.hero-orb.a { width:700px; height:700px; background:var(--v); top:-300px; left:25%; opacity:0.28; animation:drift-a 20s ease-in-out infinite; }
-.hero-orb.b { width:500px; height:500px; background:var(--c); top:50px; right:-100px; opacity:0.14; animation:drift-b 25s ease-in-out infinite; }
-@keyframes drift-a { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(50px,40px) scale(1.07);} }
-@keyframes drift-b { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-60px,35px) scale(1.1);} }
-.hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; position:relative; z-index:1; padding:0 0 80px; }
-.hero-pill {
-  display:inline-flex; align-items:center; gap:8px; padding:5px 14px 5px 5px;
-  border-radius:999px; border:1px solid var(--border-2); background:rgba(255,255,255,0.035);
-  font-size:12px; color:var(--text-2); margin-bottom:28px; backdrop-filter:blur(8px);
-}
-.hero-pill-tag { padding:3px 9px; border-radius:999px; background:linear-gradient(135deg,var(--v),var(--v2)); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
-h1.hero-title { font-size:clamp(38px,5vw,66px); font-weight:800; letter-spacing:-0.04em; margin-bottom:22px; line-height:1.07; }
-.hero-title .grad {
-  background:linear-gradient(135deg,#C084FC,#7C3AED,#06B6D4,#A78BFA,#C084FC);
-  background-size:300% 300%;
-  -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; font-weight:700;
-  animation:grad-shift 5s ease-in-out infinite;
-}
-.hero-sub { font-size:clamp(15px,1.2vw,18px); color:var(--text-2); margin-bottom:38px; line-height:1.65; font-weight:400; max-width:480px; }
-.hero-ctas { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:44px; }
-.hero-trust { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; max-width:440px; }
-.hero-trust-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-2); font-weight:500; }
-.hero-trust-item svg { color:var(--green); flex-shrink:0; }
-.hero-trust-item strong { color:var(--text); }
-/* Video zone */
-.hero-video { position:relative; border-radius:24px; overflow:hidden; aspect-ratio:16/11; background:linear-gradient(145deg,#0A0A1A 0%,#07070F 50%,#0C0820 100%); border:1px solid var(--border-2); box-shadow:0 40px 120px -20px rgba(124,58,237,0.4),0 0 0 1px rgba(255,255,255,0.04) inset; }
-.hero-video-bg { position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 65% 30%,rgba(124,58,237,0.2) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 30% 70%,rgba(6,182,212,0.12) 0%,transparent 60%); }
-.hero-video-grid { position:absolute; inset:0; pointer-events:none; background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px); background-size:40px 40px; }
-.hero-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:76px; height:76px; border-radius:50%; background:rgba(255,255,255,0.10); border:1.5px solid rgba(255,255,255,0.28); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:grid; place-items:center; cursor:pointer; transition:all 280ms var(--ease); z-index:10; box-shadow:0 0 60px -10px rgba(124,58,237,0.5); }
-.hero-play:hover { background:rgba(255,255,255,0.20); transform:translate(-50%,-50%) scale(1.1); box-shadow:0 0 80px -8px rgba(124,58,237,0.7); }
-.hero-play-label { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:12px; font-weight:600; color:rgba(255,255,255,0.45); white-space:nowrap; letter-spacing:0.06em; }
-.hero-vid-card { position:absolute; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); background:rgba(10,10,26,0.92); border:1px solid var(--border-2); border-radius:14px; padding:12px 14px; box-shadow:0 16px 40px rgba(0,0,0,0.6); min-width:190px; }
-.hero-vid-card.c1 { top:16%; left:7%; animation:float 5s ease-in-out infinite; }
-.hero-vid-card.c2 { bottom:16%; right:7%; animation:float 5s ease-in-out 1.8s infinite; }
+.hero-bg-orb { position:absolute; border-radius:50%; filter:blur(120px); pointer-events:none; }
+.hero-bg-orb.a { width:600px; height:600px; background:var(--v); top:-200px; right:5%; opacity:0.30; animation:drift-a 20s ease-in-out infinite; }
+.hero-bg-orb.b { width:440px; height:440px; background:var(--c); bottom:-80px; right:30%; opacity:0.16; animation:drift-b 25s ease-in-out infinite; }
+@keyframes drift-a { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-50px,40px) scale(1.07);} }
+@keyframes drift-b { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(60px,-35px) scale(1.1);} }
+
+/* Left-to-right gradient so text stays readable */
+.hero-bg-fade { position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 28%, rgba(4,4,10,0.82) 48%, rgba(4,4,10,0.38) 68%, rgba(4,4,10,0.10) 100%); }
+
+/* Play button centered on right side */
+.hero-play { position:absolute; top:50%; right:26%; transform:translate(50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.10); border:1.5px solid rgba(255,255,255,0.28); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:grid; place-items:center; cursor:pointer; transition:all 280ms var(--ease); z-index:10; box-shadow:0 0 60px -10px rgba(124,58,237,0.5); }
+.hero-play:hover { background:rgba(255,255,255,0.20); transform:translate(50%,-50%) scale(1.1); box-shadow:0 0 80px -8px rgba(124,58,237,0.7); }
+.hero-play-label { position:absolute; top:calc(50% + 52px); right:26%; transform:translateX(50%); font-size:12px; font-weight:600; color:rgba(255,255,255,0.45); white-space:nowrap; letter-spacing:0.06em; z-index:10; }
+
+/* Floating cards */
+.hero-vid-card { position:absolute; z-index:10; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); background:rgba(10,10,26,0.92); border:1px solid var(--border-2); border-radius:14px; padding:12px 14px; box-shadow:0 16px 40px rgba(0,0,0,0.6); min-width:190px; }
+.hero-vid-card.c1 { top:22%; right:8%; animation:float 5s ease-in-out infinite; }
+.hero-vid-card.c2 { bottom:22%; right:4%; animation:float 5s ease-in-out 1.8s infinite; }
 .hvc-label { font-size:9px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:7px; }
 .hvc-row { display:flex; align-items:flex-start; gap:8px; }
 .hvc-dot { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); animation:pulse-green 1.6s ease-in-out infinite; flex-shrink:0; margin-top:3px; }
@@ -245,8 +234,33 @@ h1.hero-title { font-size:clamp(38px,5vw,66px); font-weight:800; letter-spacing:
 .hvc-sub { font-size:11px; color:var(--text-2); margin-top:2px; }
 .hvc-bar { height:3px; border-radius:999px; background:var(--surf-3); margin-top:10px; overflow:hidden; }
 .hvc-bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--v),var(--c)); width:72%; }
-/* Stats row */
-.hero-stats-row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:1; border:1px solid var(--border-2); border-radius:var(--r-xl); background:rgba(12,12,24,0.5); backdrop-filter:blur(16px); overflow:hidden; }
+
+/* Text overlaid on hero */
+.hero-content {
+  position:relative; z-index:5; max-width:580px; padding-bottom:80px;
+}
+.hero-pill {
+  display:inline-flex; align-items:center; gap:8px; padding:5px 14px 5px 5px;
+  border-radius:999px; border:1px solid var(--border-2); background:rgba(255,255,255,0.04);
+  font-size:12px; color:var(--text-2); margin-bottom:28px; backdrop-filter:blur(8px);
+}
+.hero-pill-tag { padding:3px 9px; border-radius:999px; background:linear-gradient(135deg,var(--v),var(--v2)); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+h1.hero-title { font-size:clamp(44px,5.5vw,74px); font-weight:800; letter-spacing:-0.04em; margin-bottom:22px; line-height:1.06; }
+.hero-title .grad {
+  background:linear-gradient(135deg,#C084FC,#7C3AED,#06B6D4,#A78BFA,#C084FC);
+  background-size:300% 300%;
+  -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; font-weight:700;
+  animation:grad-shift 5s ease-in-out infinite;
+}
+.hero-sub { font-size:clamp(15px,1.3vw,18px); color:var(--text-2); margin-bottom:38px; line-height:1.65; font-weight:400; max-width:480px; }
+.hero-ctas { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:44px; }
+.hero-trust { display:flex; gap:20px; flex-wrap:wrap; }
+.hero-trust-item { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-2); font-weight:500; }
+.hero-trust-item svg { color:var(--green); flex-shrink:0; }
+.hero-trust-item strong { color:var(--text); }
+
+/* Stats row below hero */
+.hero-stats-row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:5; border:1px solid var(--border-2); border-radius:var(--r-xl); background:rgba(12,12,24,0.6); backdrop-filter:blur(16px); overflow:hidden; }
 .hero-stat { padding:28px 20px; text-align:center; position:relative; }
 .hero-stat+.hero-stat::before { content:''; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--border); }
 .hero-stat-n { font-size:36px; font-weight:800; letter-spacing:-0.04em; background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.6) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
@@ -558,12 +572,21 @@ h1.hero-title { font-size:clamp(38px,5vw,66px); font-weight:800; letter-spacing:
   .exp-card.feat { grid-column:span 1; }
   .academy-wrap { padding:48px 28px; }
   .academy-inner { grid-template-columns:1fr; gap:36px; }
-  .hero { padding:110px 0 0; }
-  .hero-inner { grid-template-columns:1fr; gap:40px; padding:0 0 60px; }
+
+
   .stat+.stat::before { display:none; }
   .stat { border-top:1px solid var(--border); }
   .stat:first-child { border-top:none; }
   .footer-bottom { flex-direction:column; gap:12px; }
+  .hero { padding:110px 0 0; min-height:auto; }
+  .hero-bg-fade { background:linear-gradient(180deg, var(--bg) 0%, rgba(4,4,10,0.6) 100%); }
+  .hero-content { max-width:100%; padding-bottom:60px; }
+  .hero-trust { gap:14px; }
+  .hero-play,.hero-play-label { display:none; }
+  .hero-vid-card { display:none; }
+  .hero-stats-row { grid-template-columns:repeat(2,1fr); }
+  .hero-stat+.hero-stat::before { display:none; }
+  .hero-stat:nth-child(3),.hero-stat:nth-child(4) { border-top:1px solid var(--border); }
 }
 @media(max-width:640px) {
   .wrap { padding:0 18px; }
@@ -866,89 +889,92 @@ function Hero() {
 
   const stats = [
     { n:24, s:'h', l:'Réponse garantie', href:null },
-    counts.experts  > 0 ? { n:counts.experts,  s:'+', l:'Experts certifiés',   href:'experts.html' } : { n:null, s:'', l:'Experts certifiés',   href:'experts.html' },
-    counts.articles > 0 ? { n:counts.articles, s:'+', l:'Articles publiés',    href:'blog.html' }    : { n:null, s:'', l:'Articles publiés',    href:'blog.html' },
-    { n:3,  s:' min', l:'Pour démarrer', href:null },
+    counts.experts  > 0 ? { n:counts.experts,  s:'+', l:'Experts certifiés',  href:'experts.html' } : { n:null, s:'', l:'Experts certifiés',  href:'experts.html' },
+    counts.articles > 0 ? { n:counts.articles, s:'+', l:'Articles publiés',   href:'blog.html' }    : { n:null, s:'', l:'Articles publiés',   href:'blog.html' },
+    { n:3, s:' min', l:'Pour démarrer', href:null },
   ];
 
   return (
     <React.Fragment>
     <section className="hero">
-      <div className="hero-grid" />
-      <div className="hero-orb a" /><div className="hero-orb b" />
-      <div className="wrap">
-        <div className="hero-inner">
-          {/* LEFT */}
-          <div className="hero-left">
-            <div className="hero-pill">
-              <span className="hero-pill-tag">&#9889; En ligne</span>
-              Experts certifiés disponibles &middot; Réponse garantie sous 24h
-            </div>
-            <h1 className="hero-title">
-              L'expertise IA.<br/>Au service de<br/><span className="grad">vos ambitions.</span>
-            </h1>
-            <p className="hero-sub">
-              Trouvez l'expert idéal pour transformer vos idées en résultats concrets. Matching personnalisé, paiement sécurisé.
-            </p>
-            <div className="hero-ctas">
-              <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Rocket/>Déposer mon projet<Ic.Arrow/></a>
-              <a href="experts.html" className="btn btn-ghost btn-lg">Voir comment ça marche</a>
-            </div>
-            <div className="hero-trust">
-              <div className="hero-trust-item"><IcClock/><span><strong>Réponse</strong> sous 24h</span></div>
-              <div className="hero-trust-item"><IcShield/><span><strong>Experts</strong> vérifiés</span></div>
-              <div className="hero-trust-item"><IcLock/><span><strong>Paiement</strong> sécurisé</span></div>
-              <div className="hero-trust-item"><IcThumb/><span><strong>Satisfait</strong> ou remboursé</span></div>
+      {/* ── FULL-BLEED BACKGROUND ── */}
+      <div className="hero-bg">
+        <div className="hero-bg-grid" />
+        <div className="hero-bg-orb a" />
+        <div className="hero-bg-orb b" />
+        <div className="hero-bg-fade" />
+
+        {/* Floating cards on right side */}
+        <div className="hero-vid-card c1">
+          <div className="hvc-label">Mission en cours</div>
+          <div className="hvc-row">
+            <div className="hvc-dot" />
+            <div>
+              <div className="hvc-text">Automatisation IA</div>
+              <div className="hvc-sub">Expert assigné &middot; Phase 2/4</div>
             </div>
           </div>
-          {/* RIGHT – VIDEO ZONE */}
-          <div className="hero-right">
-            <div className="hero-video">
-              <div className="hero-video-bg" />
-              <div className="hero-video-grid" />
-              <div className="hero-vid-card c1">
-                <div className="hvc-label">Mission en cours</div>
-                <div className="hvc-row">
-                  <div className="hvc-dot" />
-                  <div>
-                    <div className="hvc-text">Automatisation IA</div>
-                    <div className="hvc-sub">Expert assigné &middot; Phase 2/4</div>
-                  </div>
-                </div>
-                <div className="hvc-bar"><div className="hvc-bar-fill" /></div>
-              </div>
-              <div className="hero-vid-card c2">
-                <div className="hvc-label">Nouveau match</div>
-                <div className="hvc-row">
-                  <div className="hvc-dot" style={{background:"var(--vs)",boxShadow:"0 0 10px var(--vs)"}} />
-                  <div>
-                    <div className="hvc-text">Expert LangChain</div>
-                    <div className="hvc-sub">Compatibilité 98% &middot; Disponible</div>
-                  </div>
-                </div>
-              </div>
-              <div className="hero-play">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-              </div>
-              <div className="hero-play-label">Voir la démo</div>
+          <div className="hvc-bar"><div className="hvc-bar-fill" /></div>
+        </div>
+        <div className="hero-vid-card c2">
+          <div className="hvc-label">Nouveau match</div>
+          <div className="hvc-row">
+            <div className="hvc-dot" style={{background:"var(--vs)",boxShadow:"0 0 10px var(--vs)"}} />
+            <div>
+              <div className="hvc-text">Expert LangChain</div>
+              <div className="hvc-sub">Compatibilité 98% &middot; Disponible</div>
             </div>
           </div>
         </div>
-        {/* STATS ROW */}
+
+        {/* Play button */}
+        <div className="hero-play">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div className="hero-play-label">Voir la démo</div>
+      </div>
+
+      {/* ── TEXT OVERLAID ON LEFT ── */}
+      <div className="wrap">
+        <div className="hero-content">
+          <div className="hero-pill">
+            <span className="hero-pill-tag">&#9889; En ligne</span>
+            Experts certifiés disponibles &middot; Réponse garantie sous 24h
+          </div>
+          <h1 className="hero-title">
+            L'expertise IA.<br/>Au service de<br/><span className="grad">vos ambitions.</span>
+          </h1>
+          <p className="hero-sub">
+            Trouvez l'expert idéal pour transformer vos idées en résultats concrets. Matching personnalisé, paiement sécurisé.
+          </p>
+          <div className="hero-ctas">
+            <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Rocket/>Déposer mon projet<Ic.Arrow/></a>
+            <a href="experts.html" className="btn btn-ghost btn-lg">Voir comment ça marche</a>
+          </div>
+          <div className="hero-trust">
+            <div className="hero-trust-item"><IcClock/><span><strong>Réponse</strong> sous 24h</span></div>
+            <div className="hero-trust-item"><IcShield/><span><strong>Experts</strong> vérifiés</span></div>
+            <div className="hero-trust-item"><IcLock/><span><strong>Paiement</strong> sécurisé</span></div>
+            <div className="hero-trust-item"><IcThumb/><span><strong>Satisfait</strong> ou remboursé</span></div>
+          </div>
+        </div>
+
+        {/* ── STATS ROW ── */}
         <div className="hero-stats-row">
           {stats.map((st,i) => (
             st.href
               ? <a className="hero-stat" key={i} href={st.href} style={{textDecoration:"none",cursor:"pointer"}}>
-                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)",fontWeight:600}}>Bientôt</span>}</div>
+                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)"}}>Bientôt</span>}</div>
                   <div className="hero-stat-l">{st.l}</div>
                 </a>
               : <div className="hero-stat" key={i}>
-                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)",fontWeight:600}}>—</span>}</div>
+                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)"}}>—</span>}</div>
                   <div className="hero-stat-l">{st.l}</div>
                 </div>
           ))}
         </div>
       </div>
+
       <div className="marquee">
         <div className="marquee-track">
           {[...tickers,...tickers].map((t,i)=><div className="marquee-item" key={i}><span className="dot"/>{t}</div>)}
@@ -958,6 +984,7 @@ function Hero() {
     </React.Fragment>
   );
 }
+
 
 
 /* ── Trusted By ── */
