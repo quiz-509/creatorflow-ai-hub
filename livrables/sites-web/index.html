@@ -618,8 +618,10 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
 .trust-bar { padding:40px 0; border-bottom:1px solid var(--border); background:rgba(12,12,24,0.4); }
 .trust-label { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-3); text-align:center; margin-bottom:22px; }
 .trust-logos { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; max-width:860px; margin:0 auto; }
-.trust-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border-radius:999px; background:var(--surf); border:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text-2); transition:all 200ms ease; cursor:default; }
+.trust-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border-radius:999px; background:var(--surf); border:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text-2); transition:all 200ms ease; cursor:default; text-decoration:none; }
 .trust-pill:hover { border-color:var(--border-2); color:var(--text); background:var(--surf-2); }
+a.trust-pill { cursor:pointer; }
+a.trust-pill:hover { border-color:rgba(124,58,237,0.4); color:var(--vs); }
 .trust-pill-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
 /* ─── GUARANTEE STRIP ────────────────────────────────────────────── */
@@ -817,7 +819,7 @@ function Nav() {
     <React.Fragment>
     <nav className={`nav ${stuck ? 'stuck' : ''}`} onClick={e => { if (e.target === e.currentTarget) setOpenMenu(null); }}>
       <div className="wrap nav-inner">
-        <a href="#" className="brand">
+        <a href="/" className="brand">
           <div className="brand-logo" style={{backgroundImage:"url('/logo.png')"}} />
           <span>CreatorFlow <em>Market</em></span>
         </a>
@@ -956,28 +958,32 @@ function Hero() {
 /* ── Trusted By ── */
 function TrustedBy() {
   const tools = [
-    {dot:'#10B981',name:'OpenAI / GPT-4'},
-    {dot:'#7C3AED',name:'LangChain'},
-    {dot:'#06B6D4',name:'Make'},
-    {dot:'#F59E0B',name:'n8n'},
-    {dot:'#EC4899',name:'ElevenLabs'},
-    {dot:'#3B82F6',name:'HubSpot'},
-    {dot:'#6366F1',name:'Notion AI'},
-    {dot:'#F97316',name:'Midjourney'},
-    {dot:'#10B981',name:'Supabase'},
-    {dot:'#8B5CF6',name:'Anthropic Claude'},
+    {dot:'#10B981',name:'OpenAI / GPT-4', url:null},
+    {dot:'#7C3AED',name:'LangChain',       url:null},
+    {dot:'#06B6D4',name:'Make',             url:'https://www.make.com/en/register?pc=creatorflow'},
+    {dot:'#F59E0B',name:'n8n',              url:null},
+    {dot:'#EC4899',name:'ElevenLabs',       url:null},
+    {dot:'#3B82F6',name:'HubSpot',          url:null},
+    {dot:'#6366F1',name:'Notion AI',        url:null},
+    {dot:'#F97316',name:'Midjourney',       url:null},
+    {dot:'#10B981',name:'Supabase',         url:null},
+    {dot:'#8B5CF6',name:'Anthropic Claude', url:null},
   ];
   return (
     <div className="trust-bar">
       <div className="wrap">
         <div className="trust-label">Nos experts maîtrisent les meilleurs outils du marché</div>
         <div className="trust-logos">
-          {tools.map((t,i)=>(
-            <div className="trust-pill" key={i}>
-              <span className="trust-pill-dot" style={{background:t.dot}}/>
-              {t.name}
-            </div>
-          ))}
+          {tools.map((t,i)=> t.url
+            ? <a className="trust-pill" key={i} href={t.url} target="_blank" rel="noopener noreferrer sponsored">
+                <span className="trust-pill-dot" style={{background:t.dot}}/>
+                {t.name}
+              </a>
+            : <div className="trust-pill" key={i}>
+                <span className="trust-pill-dot" style={{background:t.dot}}/>
+                {t.name}
+              </div>
+          )}
         </div>
       </div>
     </div>
@@ -1337,8 +1343,8 @@ function Academy() {
               <h2>Devenez expert certifié.<br/>Rejoignez le Hub.</h2>
               <p>L'académie CreatorFlow Market forme les futurs experts IA depuis 2023. À la sortie : accès direct au Hub, mentoring et premières missions garanties pour les diplômés du programme Advanced.</p>
               <div className="academy-btns">
-                <button className="btn btn-primary btn-lg">Découvrir l'académie<Ic.Arrow/></button>
-                <button className="btn btn-ghost btn-lg">Programme & tarifs</button>
+                <a href="academie.html" className="btn btn-primary btn-lg">Découvrir l'académie<Ic.Arrow/></a>
+                <a href="pricing.html" className="btn btn-ghost btn-lg">Programme &amp; tarifs</a>
               </div>
             </div>
             <div className="academy-vis">
@@ -1392,7 +1398,7 @@ function Footer() {
       <div className="wrap">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="#" className="brand">
+            <a href="/" className="brand">
               <div className="brand-logo" style={{backgroundImage:"url('/logo.png')"}}/>
               <span>CreatorFlow <em style={{fontStyle:'normal',color:'var(--vs)'}}>Market</em></span>
             </a>
@@ -1421,8 +1427,8 @@ function Footer() {
             Propulsé par <div className="brand-logo" style={{width:18,height:18,backgroundImage:"url('/logo.png')"}}/> <strong style={{color:'var(--text)',fontWeight:600}}>CreatorFlow AI Academy</strong>
           </div>
           <div style={{display:'flex',gap:18}}>
-            <a href="#" style={{color:'var(--text-3)'}}>Mentions légales</a>
-            <a href="#" style={{color:'var(--text-3)'}}>Confidentialité</a>
+            <a href="cgu.html" style={{color:'var(--text-3)'}}>Mentions légales</a>
+            <a href="politique-confidentialite.html" style={{color:'var(--text-3)'}}>Confidentialité</a>
           </div>
         </div>
       </div>
