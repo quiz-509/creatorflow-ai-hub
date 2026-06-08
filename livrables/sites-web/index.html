@@ -58,16 +58,6 @@
   --ease: cubic-bezier(0.16,1,0.3,1);
   --ease-in: cubic-bezier(0.4,0,1,1);
   --ease-out: cubic-bezier(0,0,0.2,1);
-  .hero-inner { grid-template-columns:1fr; gap:40px; padding:0 0 60px; }
-  .hero-right { order:-1; }
-  .hero-sub { max-width:100%; }
-  .hero-trust { grid-template-columns:repeat(2,1fr); }
-  .hero-stats-row { grid-template-columns:repeat(2,1fr); }
-  .hero-stat+.hero-stat::before { display:none; }
-  .hero-stat { border-top:1px solid var(--border); }
-  .hero-stat:first-child,.hero-stat:nth-child(2) { border-top:none; }
-  .hero-vid-card { display:none; }
-  .hero-video { aspect-ratio:16/9; }
 }
 
 /* ─── RESET ──────────────────────────────────────────────────────── */
@@ -919,7 +909,6 @@ function Hero() {
       {/* ── FULL-BLEED BACKGROUND ── */}
       <div className="hero-bg">
         <div className="hero-yt-wrap">
-        <div className="hero-yt-wrap">
           <iframe
             src={"https://www.youtube-nocookie.com/embed/aV2mzPdG3Y8?autoplay=1&mute=1&loop=1&playlist=aV2mzPdG3Y8&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"}
             allow="autoplay; encrypted-media"
@@ -953,6 +942,7 @@ function Hero() {
           </div>
         </div>
 
+      </div>
       {/* ── TEXT OVERLAID ON LEFT ── */}
       <div className="wrap">
         <div className="hero-content">
