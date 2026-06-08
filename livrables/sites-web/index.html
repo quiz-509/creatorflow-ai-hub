@@ -587,7 +587,7 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
   .stat { border-top:1px solid var(--border); }
   .stat:first-child { border-top:none; }
   .footer-bottom { flex-direction:column; gap:12px; }
-  .hero { padding:110px 0 0; min-height:auto; }
+  .hero { padding:100px 0 0; min-height:auto; }
   .hero-bg-fade { background:linear-gradient(180deg, var(--bg) 0%, rgba(4,4,10,0.6) 100%); }
   .hero-content { max-width:100%; padding-bottom:60px; }
   .hero-trust { gap:14px; }
@@ -600,7 +600,7 @@ h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); 
 @media(max-width:640px) {
   .wrap { padding:0 18px; }
   .hero-ctas .btn { width:100%; justify-content:center; }
-
+  .hero-yt-wrap { display:none; }
 }
 
 /* ─── PROOF BAR (hero) ────────────────────────────────────────────── */
@@ -918,38 +918,10 @@ function Hero() {
         <div className="hero-bg-orb a" />
         <div className="hero-bg-orb b" />
         <div className="hero-bg-fade" />
-
-        {/* Floating cards on right side */}
-        <div className="hero-vid-card c1">
-          <div className="hvc-label">Mission en cours</div>
-          <div className="hvc-row">
-            <div className="hvc-dot" />
-            <div>
-              <div className="hvc-text">Automatisation IA</div>
-              <div className="hvc-sub">Expert assigné &middot; Phase 2/4</div>
-            </div>
-          </div>
-          <div className="hvc-bar"><div className="hvc-bar-fill" /></div>
-        </div>
-        <div className="hero-vid-card c2">
-          <div className="hvc-label">Nouveau match</div>
-          <div className="hvc-row">
-            <div className="hvc-dot" style={{background:"var(--vs)",boxShadow:"0 0 10px var(--vs)"}} />
-            <div>
-              <div className="hvc-text">Expert LangChain</div>
-              <div className="hvc-sub">Compatibilité 98% &middot; Disponible</div>
-            </div>
-          </div>
-        </div>
-
       </div>
       {/* ── TEXT OVERLAID ON LEFT ── */}
       <div className="wrap">
         <div className="hero-content">
-          <div className="hero-pill">
-            <span className="hero-pill-tag">&#9889; En ligne</span>
-            Experts certifiés disponibles &middot; Réponse garantie sous 24h
-          </div>
           <h1 className="hero-title">
             L'expertise IA.<br/>Au service de<br/><span className="grad">vos ambitions.</span>
           </h1>
@@ -966,21 +938,6 @@ function Hero() {
             <div className="hero-trust-item"><IcLock/><span><strong>Paiement</strong> sécurisé</span></div>
             <div className="hero-trust-item"><IcThumb/><span><strong>Satisfait</strong> ou remboursé</span></div>
           </div>
-        </div>
-
-        {/* ── STATS ROW ── */}
-        <div className="hero-stats-row">
-          {stats.map((st,i) => (
-            st.href
-              ? <a className="hero-stat" key={i} href={st.href} style={{textDecoration:"none",cursor:"pointer"}}>
-                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)"}}>Bientôt</span>}</div>
-                  <div className="hero-stat-l">{st.l}</div>
-                </a>
-              : <div className="hero-stat" key={i}>
-                  <div className="hero-stat-n">{st.n != null ? <StatCount to={st.n} suffix={st.s}/> : <span style={{fontSize:13,color:"var(--text-3)"}}>—</span>}</div>
-                  <div className="hero-stat-l">{st.l}</div>
-                </div>
-          ))}
         </div>
       </div>
 
