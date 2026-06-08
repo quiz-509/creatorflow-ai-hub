@@ -202,8 +202,12 @@ h3,h4,h5 { font-family:var(--f); font-weight:700; letter-spacing:-0.025em; text-
 /* Full-bleed background video zone */
 .hero-bg {
   position:absolute; inset:0; z-index:0;
-  background:linear-gradient(145deg,#070710 0%,#0A0820 40%,#0C0C1E 70%,#06060E 100%);
+  background:#050510;
 }
+
+/* YouTube background */
+.hero-yt-wrap { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.hero-yt-wrap iframe { position:absolute; top:50%; left:50%; width:100vw; height:56.25vw; min-height:100%; min-width:177.78vh; transform:translate(-50%,-50%); border:none; opacity:0.55; }
 .hero-bg-grid {
   position:absolute; inset:0; pointer-events:none;
   background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);
@@ -914,6 +918,13 @@ function Hero() {
     <section className="hero">
       {/* ── FULL-BLEED BACKGROUND ── */}
       <div className="hero-bg">
+        <div className="hero-yt-wrap">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/aV2mzPdG3Y8?autoplay=1&mute=1&loop=1&playlist=aV2mzPdG3Y8&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          />
+        </div>
         <div className="hero-bg-grid" />
         <div className="hero-bg-orb a" />
         <div className="hero-bg-orb b" />
@@ -943,9 +954,9 @@ function Hero() {
         </div>
 
         {/* Play button */}
-        <div className="hero-play">
+        <a href="https://youtu.be/aV2mzPdG3Y8" target="_blank" rel="noopener" className="hero-play">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-        </div>
+        </a>
         <div className="hero-play-label">Voir la démo</div>
       </div>
 
