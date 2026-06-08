@@ -14,8 +14,8 @@
   <meta property="og:site_name" content="CreatorFlow Market"/>
   <meta property="og:locale" content="fr_CA"/>
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:width" content="1729"/>
+  <meta property="og:image:height" content="910"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Tarifs — CreatorFlow Market"/>
   <meta name="twitter:description" content="Modèle simple et transparent. Aucun abonnement. Commission de 15% uniquement sur les missions complétées."/>
@@ -47,8 +47,9 @@ img{display:block;max-width:100%;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid transparent;transition:all 300ms ease;}
 .nav.stuck{background:rgba(4,4,10,0.88);backdrop-filter:blur(20px);border-color:var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;display:flex;align-items:center;gap:6px;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .nav-links{display:flex;align-items:center;gap:4px;}
 .nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms ease;}
 .nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,0.05);}
@@ -163,10 +164,17 @@ img{display:block;max-width:100%;}
   .cta-section{padding:36px 24px;}
   .nav-links{display:none;}
 }
+@media(max-width:640px){
+  .wrap{padding:0 18px;}
+  .page-header{padding:88px 0 48px;}
+  .price-card{padding:24px 20px;}
+  .academy-section{padding:28px 20px;}
+  .cta-btns .btn{width:100%;justify-content:center;}
+}
   </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
@@ -215,7 +223,7 @@ function Nav() {
   return (
     <nav className={`nav ${stuck ? 'stuck' : ''}`}>
       <div className="wrap nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
         <div className="nav-links">
           <a href="experts.html" className="nav-link">Experts</a>
           <a href="brief.html" className="nav-link">Déposer un brief</a>
@@ -271,6 +279,7 @@ function FaqItem({ q, a }) {
 }
 
 function App() {
+  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
   return (
     <React.Fragment>
       <Nav/>
@@ -434,10 +443,12 @@ function App() {
         <div className="wrap footer-mini">
           <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
           <div className="footer-links">
-            <a href="index.html">Accueil</a>
+            <a href="/">Accueil</a>
             <a href="experts.html">Experts</a>
             <a href="academie.html">Academy</a>
             <a href="inscription.html">Devenir expert</a>
+            <a href="cgu.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Confidentialité</a>
           </div>
         </div>
       </footer>
