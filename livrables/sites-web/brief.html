@@ -14,8 +14,8 @@
   <meta property="og:site_name" content="CreatorFlow Market"/>
   <meta property="og:locale" content="fr_CA"/>
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:width" content="1729"/>
+  <meta property="og:image:height" content="910"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg"/>
   <meta name="twitter:title" content="Déposer un brief IA — CreatorFlow Market"/>
@@ -34,8 +34,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;background:rgba(4,4,10,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .nav-links{display:flex;gap:4px;}
 .nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms ease;}
 .nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
@@ -109,12 +110,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .footer-links{display:flex;gap:20px;}
 
 @media(max-width:980px){.brief-layout{grid-template-columns:1fr;}.brief-sidebar{position:static;}.nav-links{display:none;}.cat-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:640px){.wrap{padding:0 18px;}.form-row{grid-template-columns:1fr;}.form-card{padding:24px;}}
+@media(max-width:640px){.wrap{padding:0 18px;}.brief-layout{padding:20px 0 60px;}.form-row{grid-template-columns:1fr;}.form-card{padding:24px;}}
   </style>
 </head>
 <body>
 <div id="cursor-glow"></div>
-<div id="root"></div>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
@@ -139,6 +140,7 @@ const Ic = {
 const CATS = ['Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
 
 function App() {
+  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -198,7 +200,7 @@ function App() {
   return (
     <React.Fragment>
       <nav className="nav"><div className="wrap nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
         <div className="nav-links">
           <a href="experts.html" className="nav-link">Experts</a>
           <a href="brief.html" className="nav-link">Déposer un brief</a>
@@ -347,7 +349,7 @@ function App() {
                 {[
                   {icon:<Ic.Clock/>,title:'Réponse en 24h',sub:'Matching personnalisé garanti'},
                   {icon:<Ic.Shield/>,title:'Experts certifiés',sub:'Profils vérifiés par notre équipe'},
-                  {icon:<Ic.Star/>,title:'Note moyenne 4.9/5',sub:'Sur 200+ missions livrées'},
+                  {icon:<Ic.Star/>,title:'Missions sécurisées',sub:'Paiement libéré à la livraison'},
                 ].map((w,i) => (
                   <div key={i} className="why-item">
                     <div className="why-icon">{w.icon}</div>
@@ -369,7 +371,7 @@ function App() {
         </div>
         <footer><div className="wrap footer-mini">
           <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-          <div className="footer-links"><a href="index.html">Accueil</a><a href="experts.html">Experts</a></div>
+          <div className="footer-links"><a href="/">Accueil</a><a href="experts.html">Experts</a><a href="cgu.html">Mentions légales</a><a href="politique-confidentialite.html">Confidentialité</a></div>
         </div></footer>
       </div>
     </React.Fragment>
