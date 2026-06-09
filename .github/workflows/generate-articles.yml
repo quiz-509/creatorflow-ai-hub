@@ -41,6 +41,7 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL=https://cjtglfutckaogsmwhfsv.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei
           SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SECRET_KEY }}
+          UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}
           EOF
 
       - name: Generate article

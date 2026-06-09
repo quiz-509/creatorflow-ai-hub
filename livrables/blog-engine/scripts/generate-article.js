@@ -35,6 +35,68 @@ const sb = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const QUERY_MAP = [
+  ['gpt-5',                    'ai chatbot interface technology dark'],
+  ['claude-4',                 'machine learning neural network blue'],
+  ['openai-o3',                'artificial intelligence futuristic technology'],
+  ['gemini',                   'google ai technology digital interface'],
+  ['avancees-ia',              'artificial intelligence innovation business'],
+  ['automatiser-son-marketing','digital marketing automation dashboard'],
+  ['automatiser-sa-prospecti', 'sales business prospecting technology'],
+  ['automatiser-son-contenu',  'youtube video content creator studio'],
+  ['n8n-automatiser-contenu',  'social media automation workflow'],
+  ['jasper',                   'copywriting content writing creative workspace'],
+  ['n8n-vs-make',              'software workflow automation comparison'],
+  ['make-vs-zapier',           'automation integration software'],
+  ['midjourney',               'digital art creative colorful design'],
+  ['linkedin',                 'linkedin professional networking business'],
+  ['zero-a-10',                'entrepreneur success growth money laptop'],
+  ['lancer-son-business',      'startup launch entrepreneur office'],
+  ['seo-et-ia',                'seo google search analytics screen'],
+  ['strategie-contenu',        'content marketing strategy analytics'],
+  ['meilleurs-outils',         'productivity tools technology modern workspace'],
+  ['perplexity',               'ai search research technology screen'],
+  ['outils-ia-indispensables', 'creator digital tools workspace technology'],
+  ['top-10-outils',            'creator digital tools workspace technology'],
+  ['reduire-ses-tickets',      'customer support helpdesk technology'],
+  ['chatbot-ia',               'chatbot customer service conversation ai'],
+  ['api-claude',               'developer coding programming dark screen'],
+  ['tutoriel-n8n',             'workflow diagram automation process technology'],
+  ['crm-ia',                   'crm sales management dashboard technology'],
+  ['tripler-ses-ventes',       'sales growth funnel conversion success'],
+  ['whatsapp',                 'messaging chat mobile communication technology'],
+  ['script-de-vente',          'sales call business conversation success'],
+];
+
+const CATEGORY_QUERIES = {
+  'Actualités IA':            'artificial intelligence technology innovation',
+  'Automatisation IA':        'automation workflow technology process',
+  'Comparatifs IA':           'technology comparison analysis digital',
+  'Création de Contenu IA':   'content creation digital creative studio',
+  'Guides IA':                'business guide success entrepreneur laptop',
+  'Marketing IA':             'digital marketing strategy analytics',
+  'Outils IA':                'technology tools productivity workspace',
+  'Support Client IA':        'customer service support technology',
+  'Tutoriels IA':             'tutorial learning technology screen code',
+  'Vente IA':                 'sales business growth technology success',
+};
+
+async function fetchUnsplashImage(slug, cat) {
+  const key = process.env.UNSPLASH_ACCESS_KEY;
+  if (!key) return null;
+  const s = slug.toLowerCase();
+  let query = CATEGORY_QUERIES[cat] || 'artificial intelligence technology';
+  for (const [k, q] of QUERY_MAP) { if (s.includes(k)) { query = q; break; } }
+  try {
+    const res = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=5&content_filter=high`, {
+      headers: { Authorization: `Client-ID ${key}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.results?.[0]?.urls?.regular || null;
+  } catch { return null; }
+}
+
 const CATEGORIES = [
   'Actualités IA','Outils IA','Automatisation IA','Marketing IA',
   'Création de Contenu IA','Vente IA','Support Client IA',
@@ -235,6 +297,15 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown) :
   if (error) {
     console.error('❌ Erreur Supabase:', error.message);
     process.exit(1);
+  }
+
+  // Fetch Unsplash image and update article
+  const imageUrl = await fetchUnsplashImage(slug, category);
+  if (imageUrl) {
+    await sb.from('blog_articles').update({ featured_image: imageUrl, og_image: imageUrl }).eq('id', data.id);
+    console.log(`\n📸 Image Unsplash assignée`);
+  } else {
+    console.log(`\n⚠️  Pas d'image (UNSPLASH_ACCESS_KEY manquant ou erreur API)`);
   }
 
   console.log(`\n🎉 Article publié !`);
