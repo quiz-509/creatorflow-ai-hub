@@ -13,8 +13,8 @@
   <meta property="og:title" content="Devenez Expert IA Certifié | CreatorFlow Market"/>
   <meta property="og:description" content="Rejoignez CreatorFlow Market en tant qu'expert IA. Accédez à des clients qualifiés, fixez vos tarifs, développez votre activité freelance."/>
   <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:width" content="1729"/>
+  <meta property="og:image:height" content="910"/>
   <meta property="og:site_name" content="CreatorFlow Market"/>
   <meta property="og:locale" content="fr_CA"/>
   <meta name="twitter:card" content="summary_large_image"/>
@@ -33,8 +33,9 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
 .btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
@@ -172,7 +173,7 @@ function App() {
   return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
         <div style={{display:'flex',gap:10,alignItems:'center'}}>
           <a href="connexion.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Se connecter</a>
           <a href="inscription.html" className="btn btn-cyan" style={{padding:'8px 18px',fontSize:13}}>Devenir expert <Ic.Arrow style={{width:13,height:13}}/></a>
@@ -183,7 +184,7 @@ function App() {
         {/* HERO */}
         <div className="hero">
           <div className="container">
-            <div className="hero-badge">🚀 Plus de 280 experts certifiés</div>
+            <div className="hero-badge">Plateforme IA &amp; Automatisation — En lancement</div>
             <div className="hero-title fade-up">Monétisez votre expertise<br/><em>IA & Automatisation</em></div>
             <div className="hero-sub fade-up">Rejoignez la plateforme qui met en relation les meilleurs experts IA avec des entreprises prêtes à investir.</div>
             <div className="hero-cta fade-up">
@@ -193,9 +194,9 @@ function App() {
             <div className="hero-proof fade-up">
               {[
                 ['✓','Gratuit pour s\'inscrire'],
-                ['✓','Paiement garanti sous 48h'],
-                ['✓','Missions dès la première semaine'],
-                ['✓','Commission transparente à 5%'],
+                ['✓','Paiement sécurisé par escrow'],
+                ['✓','Accès aux briefs dès validation'],
+                ['✓','Commission transparente à 15%'],
               ].map(([ic,txt])=>(
                 <div key={txt} className="proof-item"><span className="proof-icon">{ic}</span>{txt}</div>
               ))}
@@ -208,7 +209,7 @@ function App() {
           <div className="stats-banner fade-up">
             <div className="stat-cell"><div className="stat-val cyan">15%</div><div className="stat-lbl">Commission seulement sur missions livrées</div></div>
             <div className="stat-cell"><div className="stat-val purple">0$</div><div className="stat-lbl">Inscription gratuite, aucun abonnement</div></div>
-            <div className="stat-cell"><div className="stat-val green">24h</div><div className="stat-lbl">Délai de mise en relation garanti</div></div>
+            <div className="stat-cell"><div className="stat-val green">48h</div><div className="stat-lbl">Délai de vérification de profil</div></div>
             <div className="stat-cell"><div className="stat-val orange">100%</div><div className="stat-lbl">Paiement sécurisé via Stripe</div></div>
           </div>
 
@@ -259,49 +260,38 @@ function App() {
 
           {/* EXPERTS */}
           <div className="section" style={{paddingTop:0}}>
-            <div className="section-tag">Nos experts</div>
-            <div className="section-title">Ils gagnent leur vie sur CreatorFlow Market</div>
-            <div className="section-sub">Des experts comme vous qui ont fait de l'IA leur métier à plein temps.</div>
+            <div className="section-tag">Profils recherchés</div>
+            <div className="section-title">Les spécialités les plus demandées</div>
+            <div className="section-sub">Voici les expertises que les entreprises cherchent en ce moment sur la plateforme.</div>
             <div className="experts-grid fade-up">
               {[
-                { name:'Amélie Chen', init:'AC', color:'#7C3AED', spec:'IA & Automatisation', missions:62, note:'4.9', earning:'6 800$/mois' },
-                { name:'Lucas Bernard', init:'LB', color:'#2563EB', spec:'No-Code & Zapier', missions:38, note:'4.8', earning:'4 200$/mois' },
-                { name:'Sofia Martins', init:'SM', color:'#0891B2', spec:'Data Science & ML', missions:29, note:'5.0', earning:'5 500$/mois' },
+                { name:'Expert Agents IA', init:'AI', color:'#7C3AED', spec:'Automatisation & Workflows' },
+                { name:'Expert No-Code', init:'NC', color:'#2563EB', spec:'Make, Zapier, n8n' },
+                { name:'Expert Data & ML', init:'ML', color:'#0891B2', spec:'Data Science & Modèles IA' },
               ].map(e=>(
                 <div key={e.name} className="expert-card">
                   <div className="ex-avatar" style={{background:e.color}}>{e.init}</div>
                   <div className="ex-name">{e.name}</div>
                   <div className="ex-spec">{e.spec}</div>
-                  <div className="ex-stats">
-                    <div className="ex-stat"><div className="ex-stat-val">{e.missions}</div><div className="ex-stat-lbl">Missions</div></div>
-                    <div className="ex-stat"><div className="ex-stat-val">{e.note}</div><div className="ex-stat-lbl">Note</div></div>
-                  </div>
-                  <div className="ex-earning">{e.earning}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* TESTIMONIALS */}
+          {/* VALUE PROPS */}
           <div className="section" style={{paddingTop:0}}>
-            <div className="section-tag">Témoignages</div>
-            <div className="section-title">Ce qu'ils disent</div>
+            <div className="section-tag">Pourquoi nous rejoindre</div>
+            <div className="section-title">Ce que vous gagnez concrètement</div>
             <div className="testimonials fade-up">
               {[
-                { quote:'Avant CreatorFlow, je perdais 30% de mon temps à prospecter. Maintenant je reçois des missions directement. Mon CA a doublé en 4 mois.', name:'Karim B.', role:'Expert Chatbots NLP', color:'#059669', earning:'+4 800$/mois' },
-                { quote:'Le système de paiement escrow est vraiment rassurant. On livre, on est payé. Aucun impayé depuis 18 mois sur la plateforme.', name:'Marie D.', role:'Experte Contenu IA', color:'#D97706', earning:'+3 200$/mois' },
-                { quote:'J\'ai eu mes 3 premières missions dans la première semaine. La qualité des clients est vraiment au-dessus de ce que j\'avais sur Malt.', name:'Antoine M.', role:'Expert Intégrations API', color:'#7C3AED', earning:'+5 100$/mois' },
-              ].map((t,i)=>(
+                { icon:'🛡️', title:'Paiement garanti avant démarrage', desc:'Le client bloque le paiement en escrow avant que vous commenciez. Vous livrez, vous êtes payé. Sans exception.' },
+                { icon:'📥', title:'Missions qui viennent à vous', desc:'Fini le démarchage. Les entreprises publient leurs briefs, vous postulez sur ce qui vous correspond. Zéro cold calling.' },
+                { icon:'⚙️', title:'Infrastructure déjà en place', desc:'Contrats, facturation, messagerie, paiement — tout est géré par la plateforme. Vous vous concentrez sur votre expertise.' },
+              ].map((v,i)=>(
                 <div key={i} className="testi-card">
-                  <div className="testi-quote">"{t.quote}"</div>
-                  <div className="testi-author">
-                    <div className="testi-av" style={{background:t.color}}>{t.name.slice(0,2)}</div>
-                    <div>
-                      <div className="testi-name">{t.name}</div>
-                      <div className="testi-role">{t.role}</div>
-                    </div>
-                    <div className="testi-earning">{t.earning}</div>
-                  </div>
+                  <div style={{fontSize:28,marginBottom:12}}>{v.icon}</div>
+                  <div style={{fontSize:14,fontWeight:800,marginBottom:8}}>{v.title}</div>
+                  <div className="testi-quote" style={{fontStyle:'normal'}}>{v.desc}</div>
                 </div>
               ))}
             </div>
@@ -316,7 +306,7 @@ function App() {
               Créer mon profil expert <Ic.Arrow/>
             </a>
             <div className="cta-steps">
-              {['Inscription gratuite','Profil vérifié sous 48h','Première mission en 7 jours','Paiement garanti'].map((s,i)=>(
+              {['Inscription gratuite','Profil vérifié sous 48h','Accès aux missions dès validation','Paiement garanti'].map((s,i)=>(
                 <div key={i} className="cta-step">
                   <div className="cta-step-num">{i+1}</div>{s}
                 </div>
@@ -330,7 +320,7 @@ function App() {
             <div style={{fontSize:14,color:'var(--text-2)',textAlign:'center',marginBottom:0}}>Tout ce que vous voulez savoir avant de postuler.</div>
             <div className="faq-grid fade-up">
               {[
-                { q:'Quelle commission prend CreatorFlow Market ?', a:'5% de commission sur chaque mission complétée. C\'est l\'une des commissions les plus basses du marché. Aucun abonnement mensuel.' },
+                { q:'Quelle commission prend CreatorFlow Market ?', a:'15% de commission sur chaque mission complétée. Aucun abonnement mensuel, aucun frais caché.' },
                 { q:'Qui peut devenir expert ?', a:'Tout professionnel ayant une expertise réelle en IA, automatisation, data ou no-code. Nous vérifions les profils et les compétences.' },
                 { q:'Comment fonctionne le paiement ?', a:'Le client paie en acompte au lancement. Les fonds sont sécurisés en escrow. Vous êtes payé automatiquement à la validation de chaque livrable.' },
                 { q:'Puis-je proposer mes propres tarifs ?', a:'Oui, vous fixez librement votre tarif horaire ou forfaitaire. Nous vous conseillons simplement sur les prix du marché selon votre niveau.' },
