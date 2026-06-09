@@ -130,9 +130,37 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .faq-q{font-size:14px;font-weight:700;margin-bottom:8px;}
 .faq-a{font-size:13px;color:var(--text-2);line-height:1.65;}
 
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:40px 0 28px;margin-top:0;}
+.footer-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;flex-direction:column;gap:24px;}
+.footer-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--text-3);transition:color 180ms;}
+.footer-links a:hover{color:var(--text-2);}
+.footer-bottom{font-size:12px;color:var(--text-3);}
+
 #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.05) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
 @keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
 .fade-up{animation:fade-up 600ms var(--ease) both;}
+
+@media(max-width:640px){
+  .container{padding:0 18px;}
+  .hero{padding:56px 0 40px;}
+  .hero-title{font-size:32px;}
+  .hero-sub{font-size:15px;}
+  .hero-proof{gap:10px;}
+  .hero-cta .btn-lg{width:100%;justify-content:center;}
+  .stats-banner{grid-template-columns:repeat(2,1fr);}
+  .hiw-grid{grid-template-columns:1fr;}
+  .benefits-grid{grid-template-columns:1fr;}
+  .experts-grid{grid-template-columns:1fr;}
+  .testimonials{grid-template-columns:1fr;}
+  .faq-grid{grid-template-columns:1fr;}
+  .cta-section{padding:36px 20px;}
+  .cta-steps{gap:12px;}
+  .footer-top{flex-direction:column;align-items:flex-start;}
+}
   </style>
 </head>
 <body>
@@ -336,6 +364,23 @@ function App() {
           </div>
         </div>
       </div>
+
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-top">
+            <a href="/" className="footer-logo">CreatorFlow Market</a>
+            <div className="footer-links">
+              <a href="/">Plateforme</a>
+              <a href="/experts.html">Experts</a>
+              <a href="/academie.html">Académie</a>
+              <a href="/blog">Blog</a>
+              <a href="/cgu.html">Mentions légales</a>
+              <a href="/politique-confidentialite.html">Confidentialité</a>
+            </div>
+          </div>
+          <div className="footer-bottom">© {new Date().getFullYear()} CreatorFlow Market. Tous droits réservés.</div>
+        </div>
+      </footer>
     </React.Fragment>
   );
 }
