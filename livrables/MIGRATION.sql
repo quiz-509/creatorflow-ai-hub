@@ -193,8 +193,8 @@ CREATE TABLE IF NOT EXISTS lessons (
   created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ─── 12. ACADEMY — TABLE enrollments ──────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS enrollments (
+-- ─── 12. ACADEMY — TABLE academy_enrollments ─────────────────────────────────
+CREATE TABLE IF NOT EXISTS academy_enrollments (
   id          UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id     UUID        REFERENCES profiles(id) ON DELETE CASCADE,
   course_id   UUID        REFERENCES courses(id) ON DELETE CASCADE,
@@ -285,25 +285,25 @@ DO $$ BEGIN
 END $$;
 
 -- ─── 17. RLS — enrollments ────────────────────────────────────────────────────
-ALTER TABLE enrollments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE academy_enrollments ENABLE ROW LEVEL SECURITY;
 
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='enrollments' AND policyname='Utilisateur voit ses inscriptions') THEN
-    CREATE POLICY "Utilisateur voit ses inscriptions" ON enrollments
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='academy_enrollments' AND policyname='Utilisateur voit ses inscriptions') THEN
+    CREATE POLICY "Utilisateur voit ses inscriptions" ON academy_enrollments
       FOR SELECT USING (auth.uid() = user_id);
   END IF;
 END $$;
 
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='enrollments' AND policyname='Utilisateur crée ses inscriptions') THEN
-    CREATE POLICY "Utilisateur crée ses inscriptions" ON enrollments
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='academy_enrollments' AND policyname='Utilisateur crée ses inscriptions') THEN
+    CREATE POLICY "Utilisateur crée ses inscriptions" ON academy_enrollments
       FOR INSERT WITH CHECK (auth.uid() = user_id);
   END IF;
 END $$;
 
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='enrollments' AND policyname='Utilisateur met à jour sa progression') THEN
-    CREATE POLICY "Utilisateur met à jour sa progression" ON enrollments
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename='academy_enrollments' AND policyname='Utilisateur met à jour sa progression') THEN
+    CREATE POLICY "Utilisateur met à jour sa progression" ON academy_enrollments
       FOR UPDATE USING (auth.uid() = user_id);
   END IF;
 END $$;
@@ -331,9 +331,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-DROP TRIGGER IF EXISTS trg_update_course_enrollments ON enrollments;
+DROP TRIGGER IF EXISTS trg_update_course_enrollments ON academy_enrollments;
 CREATE TRIGGER trg_update_course_enrollments
-  AFTER INSERT OR DELETE ON enrollments
+  AFTER INSERT OR DELETE ON academy_enrollments
   FOR EACH ROW EXECUTE FUNCTION update_course_enrollments();
 
 -- ─── 20. Trigger : duree_totale recalculée après ajout/suppression de leçon ───
