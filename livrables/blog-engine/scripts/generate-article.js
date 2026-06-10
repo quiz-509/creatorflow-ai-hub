@@ -242,7 +242,6 @@ Réponds UNIQUEMENT avec ce JSON valide (sans markdown) :
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
   });
-
   const raw = response.content[0].text.trim();
   const json = JSON.parse(raw.replace(/^```json\n?/, '').replace(/\n?```$/, ''));
 
