@@ -29,8 +29,9 @@ img{display:block;max-width:100%;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid transparent;transition:all 300ms ease;}
 .nav.stuck{background:rgba(4,4,10,0.88);backdrop-filter:blur(20px);border-color:var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .nav-links{display:flex;align-items:center;gap:4px;}
 .nav-link{padding:7px 14px;border-radius:8px;font-size:14px;color:var(--text-2);transition:all 180ms ease;}
 .nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
@@ -165,7 +166,7 @@ function Nav() {
   return (
     <nav className={`nav ${stuck ? 'stuck' : ''}`}>
       <div className="wrap nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
         <div className="nav-links">
           <a href="experts.html" className="nav-link">Experts</a>
           <a href="brief.html" className="nav-link">Déposer un brief</a>

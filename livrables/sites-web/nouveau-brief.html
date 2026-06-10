@@ -17,8 +17,9 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
 .btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
@@ -299,7 +300,7 @@ function App() {
   if (done) return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
       </div></nav>
       <div className="page"><div className="container">
         <div className="form-card" style={{marginTop:40}}>
@@ -331,7 +332,7 @@ function App() {
   return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
         <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Annuler</a>
       </div></nav>
 

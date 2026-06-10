@@ -20,8 +20,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
 .nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;}
-.nav-logo{font-size:15px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .admin-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:99px;}
 .nav-right{display:flex;align-items:center;gap:12px;}
 .user-chip{display:flex;align-items:center;gap:9px;padding:5px 10px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
@@ -880,7 +881,7 @@ function App() {
       <nav className="nav">
         <div className="nav-inner">
           <div className="nav-brand">
-            <span className="nav-logo">CreatorFlow <em>Market</em></span>
+            <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
             <span className="admin-badge">Admin</span>
           </div>
           <div className="nav-right">

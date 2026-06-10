@@ -20,8 +20,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .nav-secure{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);}
 .nav-secure::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);}
 .user-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);}
@@ -374,8 +375,8 @@ function App() {
   return (
     <React.Fragment>
       <nav className="nav"><div className="wrap nav-inner">
-        <a href={mode === 'course' ? 'academie.html' : 'index.html'} className="nav-logo">
-          CreatorFlow <em>{mode === 'course' ? 'Academy' : 'Market'}</em>
+        <a href={mode === 'course' ? '/academie.html' : '/'} className="brand">
+          <div className="brand-logo"></div><span>CreatorFlow {mode === 'course' ? 'Academy' : 'Market'}</span>
         </a>
         <div className="nav-secure"><Ic.Lock/>Paiement sécurisé SSL</div>
         <div className="user-chip">
