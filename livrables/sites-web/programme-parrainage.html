@@ -30,8 +30,9 @@ a{color:inherit;text-decoration:none;}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
-.nav-logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
-.nav-logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
 .btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
@@ -119,6 +120,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes fade-up{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
 .fade-up{animation:fade-up 500ms var(--ease) both;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+@keyframes spin{to{transform:rotate(360deg);}}
   </style>
 </head>
 <body>
@@ -126,12 +128,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <div id="root"></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
 <script type="text/babel">
 const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cjtglfutckaogsmwhfsv.supabase.co',
+  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
+);
 
-const CODE = 'THOMAS-X7K2';
-const SHARE_URL = `https://creatorflomarket.netlify.app?ref=${CODE}`;
+function genCode(uid) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let h = 0;
+  for (let i = 0; i < uid.length; i++) h = (Math.imul(31, h) + uid.charCodeAt(i)) | 0;
+  let code = '';
+  for (let i = 0; i < 8; i++) { code += chars[Math.abs(h >> i) % chars.length]; }
+  return code.slice(0,4) + '-' + code.slice(4);
+}
 
 const FAQS = [
   { q:'Combien puis-je gagner avec le parrainage ?', a:'Il n\'y a pas de limite. Chaque filleul qui complète une mission vous rapporte 50$ pour vous et 50$ de réduction pour lui. Vous pouvez parrainer autant de personnes que vous voulez.' },
@@ -141,17 +155,19 @@ const FAQS = [
   { q:'Mon filleul doit-il être un nouveau client ?', a:'Oui, la récompense s\'applique uniquement aux nouveaux comptes qui s\'inscrivent via votre lien ou code et qui complètent une première mission.' },
 ];
 
-const HISTORY = [
-  { name:'Sarah M.', init:'SM', color:'#7C3AED', date:'15 mai 2026', amount:'+50$', status:'paid', mission:'Automatisation CRM' },
-  { name:'Jean-Pierre K.', init:'JP', color:'#0891B2', date:'3 mai 2026', amount:'+50$', status:'paid', mission:'Chatbot e-commerce' },
-  { name:'Laura F.', init:'LF', color:'#059669', date:'20 avr. 2026', amount:'+50$', status:'paid', mission:'Pipeline IA analytics' },
-  { name:'Marc D.', init:'MD', color:'#D97706', date:'Inscrit le 10 avr.', amount:'+50$', status:'pending', mission:'En attente de mission' },
-];
-
 function App() {
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    sb.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user || null);
+      setLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
@@ -171,13 +187,18 @@ function App() {
     return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
   }, []);
 
+  const CODE = user ? genCode(user.id) : null;
+  const SHARE_URL = CODE ? `https://creatorflowmarket.com?ref=${CODE}` : '';
+
   const copyCode = () => {
+    if (!CODE) return;
     navigator.clipboard.writeText(CODE).catch(()=>{});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const copyLink = () => {
+    if (!SHARE_URL) return;
     navigator.clipboard.writeText(SHARE_URL).catch(()=>{});
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 2000);
@@ -186,9 +207,12 @@ function App() {
   return (
     <React.Fragment>
       <nav className="nav"><div className="nav-inner">
-        <a href="index.html" className="nav-logo">CreatorFlow <em>Market</em></a>
+        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
         <div style={{display:'flex',gap:10}}>
-          <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+          {user
+            ? <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
+            : <a href="connexion.html" className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}}>Connexion</a>
+          }
         </div>
       </div></nav>
 
@@ -206,33 +230,49 @@ function App() {
             </div>
 
             {/* CODE CARD */}
-            <div className="code-card fade-up">
-              <div className="code-label">Votre code de parrainage</div>
-              <div className="code-box">
-                <div className="code-value">{CODE}</div>
-                <button className={`copy-btn ${copied ? 'copied' : ''}`} onClick={copyCode}>
-                  {copied ? '✓ Copié !' : 'Copier'}
-                </button>
+            {loading ? (
+              <div className="code-card fade-up" style={{textAlign:'center',padding:'40px 32px'}}>
+                <div style={{width:32,height:32,border:'3px solid rgba(124,58,237,0.3)',borderTopColor:'var(--v)',borderRadius:'50%',animation:'spin 700ms linear infinite',margin:'0 auto'}}></div>
               </div>
-              <div className="share-row">
-                <button className="btn btn-ghost share-btn" onClick={copyLink}>
-                  🔗 {copiedLink ? 'Lien copié !' : 'Copier le lien'}
-                </button>
-                <a href={`https://wa.me/?text=Rejoins%20CreatorFlow%20Market%20avec%20mon%20code%20${CODE}%20et%20on%20gagne%20tous%20les%20deux%2050$%20!`}
-                  className="btn btn-ghost share-btn" target="_blank" rel="noopener">
-                  💬 WhatsApp
-                </a>
-                <a href={`mailto:?subject=Je%20t%27invite%20sur%20CreatorFlow%20Market&body=Rejoins-moi%20avec%20mon%20code%20de%20parrainage%20${CODE}%20et%20tu%20bénéficies%20de%2050$%20de%20réduction%20sur%20ta%20première%20mission%20IA%20!`}
-                  className="btn btn-ghost share-btn">
-                  📧 Email
-                </a>
+            ) : !user ? (
+              <div className="code-card fade-up" style={{textAlign:'center',padding:'40px 32px'}}>
+                <div style={{fontSize:32,marginBottom:12}}>🔒</div>
+                <div style={{fontSize:16,fontWeight:700,marginBottom:8}}>Connectez-vous pour accéder à votre code</div>
+                <div style={{fontSize:13,color:'var(--text-2)',marginBottom:20}}>Créez un compte gratuit ou connectez-vous pour obtenir votre code de parrainage unique.</div>
+                <div style={{display:'flex',gap:10,justifyContent:'center'}}>
+                  <a href="connexion.html" className="btn btn-ghost" style={{padding:'10px 20px'}}>Se connecter</a>
+                  <a href="inscription.html" className="btn btn-primary" style={{padding:'10px 20px'}}>Créer un compte</a>
+                </div>
               </div>
-              <div className="code-stats">
-                <div className="cstat"><div className="cstat-val">4</div><div className="cstat-lbl">Filleuls inscrits</div></div>
-                <div className="cstat"><div className="cstat-val" style={{color:'var(--green)'}}>3</div><div className="cstat-lbl">Missions complétées</div></div>
-                <div className="cstat"><div className="cstat-val" style={{color:'var(--orange)'}}>150$</div><div className="cstat-lbl">Crédits gagnés</div></div>
+            ) : (
+              <div className="code-card fade-up">
+                <div className="code-label">Votre code de parrainage</div>
+                <div className="code-box">
+                  <div className="code-value">{CODE}</div>
+                  <button className={`copy-btn ${copied ? 'copied' : ''}`} onClick={copyCode}>
+                    {copied ? '✓ Copié !' : 'Copier'}
+                  </button>
+                </div>
+                <div className="share-row">
+                  <button className="btn btn-ghost share-btn" onClick={copyLink}>
+                    🔗 {copiedLink ? 'Lien copié !' : 'Copier le lien'}
+                  </button>
+                  <a href={`https://wa.me/?text=Rejoins%20CreatorFlow%20Market%20avec%20mon%20code%20${CODE}%20et%20on%20gagne%20tous%20les%20deux%2050$%20!`}
+                    className="btn btn-ghost share-btn" target="_blank" rel="noopener">
+                    💬 WhatsApp
+                  </a>
+                  <a href={`mailto:?subject=Je%20t%27invite%20sur%20CreatorFlow%20Market&body=Rejoins-moi%20avec%20mon%20code%20de%20parrainage%20${CODE}%20et%20tu%20bénéficies%20de%2050$%20de%20réduction%20sur%20ta%20première%20mission%20IA%20!`}
+                    className="btn btn-ghost share-btn">
+                    📧 Email
+                  </a>
+                </div>
+                <div className="code-stats">
+                  <div className="cstat"><div className="cstat-val">0</div><div className="cstat-lbl">Filleuls inscrits</div></div>
+                  <div className="cstat"><div className="cstat-val" style={{color:'var(--green)'}}>0</div><div className="cstat-lbl">Missions complétées</div></div>
+                  <div className="cstat"><div className="cstat-val" style={{color:'var(--orange)'}}>0$</div><div className="cstat-lbl">Crédits gagnés</div></div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -281,22 +321,18 @@ function App() {
           {/* HISTORY */}
           <div className="history-card fade-up">
             <div className="history-title">Historique de vos parrainages</div>
-            {HISTORY.map((h,i)=>(
-              <div key={i} className="history-row">
-                <div className="hist-avatar" style={{background:h.color}}>{h.init}</div>
-                <div className="hist-info">
-                  <div className="hist-name">{h.name}</div>
-                  <div className="hist-date">{h.date} · {h.mission}</div>
-                </div>
-                <div style={{display:'flex',alignItems:'center',gap:10}}>
-                  <div className={`hist-status ${h.status==='paid'?'s-paid':'s-pending'}`}>{h.status==='paid'?'Payé':'En attente'}</div>
-                  <div className="hist-amount">{h.amount}</div>
-                </div>
+            {!user ? (
+              <div style={{textAlign:'center',padding:'24px 0',color:'var(--text-3)',fontSize:13}}>
+                Connectez-vous pour voir votre historique.
               </div>
-            ))}
+            ) : (
+              <div style={{textAlign:'center',padding:'24px 0',color:'var(--text-3)',fontSize:13}}>
+                Aucun parrainage pour l'instant. Partagez votre code pour commencer !
+              </div>
+            )}
             <div style={{marginTop:16,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderTop:'1px solid var(--border)'}}>
               <span style={{fontSize:14,fontWeight:700}}>Total crédits gagnés</span>
-              <span style={{fontSize:18,fontWeight:800,color:'var(--green)'}}>150$</span>
+              <span style={{fontSize:18,fontWeight:800,color:'var(--green)'}}>0$</span>
             </div>
           </div>
 
