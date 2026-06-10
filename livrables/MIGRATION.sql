@@ -17,10 +17,13 @@ ALTER TABLE experts ADD COLUMN IF NOT EXISTS bio          TEXT;
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS competences  TEXT[]       DEFAULT '{}';
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS categories   TEXT[]       DEFAULT '{}';
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS tarif_heure  INTEGER      DEFAULT 0;
-ALTER TABLE experts ADD COLUMN IF NOT EXISTS disponible   BOOLEAN      DEFAULT true;
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS disponible   BOOLEAN      DEFAULT false;
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS note_moyenne DECIMAL(3,2) DEFAULT 0;
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS nb_avis      INTEGER      DEFAULT 0;
 ALTER TABLE experts ADD COLUMN IF NOT EXISTS photo_url    TEXT;
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS niveau       TEXT;
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS linkedin     TEXT;
+ALTER TABLE experts ADD COLUMN IF NOT EXISTS statut       TEXT         DEFAULT 'pending';
 
 -- ─── 3. TABLE reviews — création ──────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS reviews (

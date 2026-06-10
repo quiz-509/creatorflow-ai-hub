@@ -198,8 +198,9 @@ function App() {
           bio: form.bio,
           competences: form.specialite ? [form.specialite] : [],
           categories: form.specialite ? [form.specialite] : [],
-          disponible: true,
+          disponible: false,
           tarif_heure: 0,
+          statut: 'pending',
         });
       }
       window.location.href = 'onboarding.html';

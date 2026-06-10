@@ -408,12 +408,12 @@ function ExpertsTab({ onApproval }) {
   const [filter, setFilter] = useState('all');
 
   const loadExperts = async () => {
-    const { data: exp } = await sb.from('experts').select('id,user_id,statut,tarif_min,tarif_max,note_moyenne,nb_avis,created_at').order('created_at', { ascending: false });
+    const { data: exp } = await sb.from('experts').select('id,statut,specialite,tarif_heure,note_moyenne,nb_avis,created_at').order('created_at', { ascending: false });
     setExperts(exp || []);
     if (exp && exp.length > 0) {
-      const ids = exp.map(e => e.user_id).filter(Boolean);
+      const ids = exp.map(e => e.id).filter(Boolean);
       if (ids.length > 0) {
-        const { data: profs } = await sb.from('profiles').select('id,full_name,email').in('id', ids);
+        const { data: profs } = await sb.from('profiles').select('id,prenom,nom,email').in('id', ids);
         const map = {};
         (profs || []).forEach(p => { map[p.id] = p; });
         setProfiles(map);
@@ -475,16 +475,17 @@ function ExpertsTab({ onApproval }) {
             <thead><tr><th>Expert</th><th>Tarif</th><th>Note</th><th>Statut</th><th>Actions</th></tr></thead>
             <tbody>
               {filtered.map(e => {
-                const prof = profiles[e.user_id] || {};
+                const prof = profiles[e.id] || {};
+                const fullName = `${prof.prenom||''} ${prof.nom||''}`.trim() || '—';
                 return (
                   <tr key={e.id}>
                     <td>
                       <div className="user-row-info">
-                        <div className="mini-avatar" style={{background:avatarColor(prof.full_name)}}>{initials(prof.full_name)}</div>
-                        <div><div className="user-row-name">{prof.full_name||'—'}</div><div className="user-row-email">{prof.email||'—'}</div></div>
+                        <div className="mini-avatar" style={{background:avatarColor(fullName)}}>{initials(fullName)}</div>
+                        <div><div className="user-row-name">{fullName}</div><div className="user-row-email">{prof.email||'—'}</div><div style={{fontSize:10,color:'var(--text-3)'}}>{e.specialite||''}</div></div>
                       </div>
                     </td>
-                    <td style={{fontSize:12}}>{e.tarif_min && e.tarif_max ? `${e.tarif_min}$ – ${e.tarif_max}$` : '—'}</td>
+                    <td style={{fontSize:12}}>{e.tarif_heure ? `${e.tarif_heure}$/h` : '—'}</td>
                     <td style={{fontSize:12}}>{e.note_moyenne ? `${e.note_moyenne}/5 (${e.nb_avis} avis)` : '—'}</td>
                     <td>{statutBadge(e.statut)}</td>
                     <td>
