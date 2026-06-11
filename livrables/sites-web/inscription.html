@@ -86,6 +86,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .form-login{text-align:center;margin-top:16px;font-size:13px;color:var(--text-3);}
 .form-login a{color:var(--vs);transition:color 160ms;}
 .form-login a:hover{color:#fff;}
+.form-terms{display:flex;align-items:flex-start;gap:10px;padding:14px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;margin-bottom:18px;}
+.form-terms input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--v);cursor:pointer;}
+.form-terms-label{font-size:13px;color:var(--text-2);line-height:1.55;}
+.form-terms-label a{color:var(--vs);}
+.form-terms-label a:hover{text-decoration:underline;}
 .success-card{text-align:center;padding:48px 32px;}
 .success-icon{width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);display:grid;place-items:center;color:var(--green);margin:0 auto 20px;font-size:28px;}
 
@@ -233,6 +238,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPwd, setShowPwd] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [form, setForm] = useState({
     prenom: '',
     nom: '',
@@ -278,6 +284,10 @@ function App() {
     e.preventDefault();
     if (form.password.length < 8) {
       setError('Le mot de passe doit contenir au moins 8 caractères.');
+      return;
+    }
+    if (!termsAccepted) {
+      setError('Veuillez accepter les CGU et la politique de confidentialité pour continuer.');
       return;
     }
     setLoading(true);
@@ -607,7 +617,25 @@ function App() {
     value: form.bio,
     onChange: e => set('bio', e.target.value),
     required: true
-  }))), error && /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "form-terms"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    id: "terms-check",
+    checked: termsAccepted,
+    onChange: e => setTermsAccepted(e.target.checked)
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "terms-check",
+    className: "form-terms-label"
+  }, "J'ai lu et j'accepte les ", /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "Conditions G\xE9n\xE9rales d'Utilisation"), " et la ", /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, "Politique de confidentialit\xE9"), " de CreatorFlow Market.")), error && /*#__PURE__*/React.createElement("div", {
     style: {
       color: '#EF4444',
       fontSize: 13,
