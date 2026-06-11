@@ -21,7 +21,8 @@
   <meta name="robots" content="index, follow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
   <style>
 :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -170,6 +171,8 @@ function App() {
   const [openFaq, setOpenFaq] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [referrals, setReferrals] = useState([]);
+  const [referralsLoading, setReferralsLoading] = useState(false);
   useEffect(() => {
     sb.auth.getSession().then(({
       data
@@ -178,6 +181,24 @@ function App() {
       setLoading(false);
     });
   }, []);
+  useEffect(() => {
+    if (!user) return;
+    sb.from('profiles').update({ referral_code: genCode(user.id) }).eq('id', user.id).is('referral_code', null);
+    setReferralsLoading(true);
+    sb.from('referrals')
+      .select('id, status, created_at, referred_id')
+      .eq('referrer_id', user.id)
+      .order('created_at', { ascending: false })
+      .then(async ({ data: refs }) => {
+        if (!refs || refs.length === 0) { setReferrals([]); setReferralsLoading(false); return; }
+        const ids = refs.map(r => r.referred_id).filter(Boolean);
+        const { data: profs } = ids.length ? await sb.from('profiles').select('id, prenom, nom, email').in('id', ids) : { data: [] };
+        const pm = {};
+        (profs || []).forEach(p => { pm[p.id] = p; });
+        setReferrals(refs.map(r => ({ ...r, referred: pm[r.referred_id] || null })));
+        setReferralsLoading(false);
+      });
+  }, [user]);
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
     const move = e => {
@@ -457,14 +478,63 @@ function App() {
       color: 'var(--text-3)',
       fontSize: 13
     }
-  }, "Connectez-vous pour voir votre historique.") : /*#__PURE__*/React.createElement("div", {
+  }, "Connectez-vous pour voir votre historique.") : referralsLoading ? /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: 'center',
       padding: '24px 0',
       color: 'var(--text-3)',
       fontSize: 13
     }
-  }, "Aucun parrainage pour l'instant. Partagez votre code pour commencer !"), /*#__PURE__*/React.createElement("div", {
+  }, "Chargement…") : referrals.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '24px 0',
+      color: 'var(--text-3)',
+      fontSize: 13
+    }
+  }, "Aucun parrainage pour l'instant. Partagez votre code pour commencer !") : /*#__PURE__*/React.createElement(React.Fragment, null, referrals.map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.id,
+    className: "history-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: '50%',
+      background: 'var(--surf-2)',
+      border: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 16,
+      flexShrink: 0
+    }
+  }, "👤"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, r.referred ? (r.referred.prenom ? (r.referred.prenom + (r.referred.nom ? ' ' + r.referred.nom : '')) : r.referred.email) : 'Utilisateur'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 2
+    }
+  }, new Date(r.created_at).toLocaleDateString('fr-CA'))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      color: r.status === 'rewarded' ? 'var(--green)' : 'var(--text-3)',
+      flexShrink: 0
+    }
+  }, r.status === 'rewarded' ? '+50 $' : 'En attente')))), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 16,
       display: 'flex',
@@ -484,7 +554,7 @@ function App() {
       fontWeight: 800,
       color: 'var(--green)'
     }
-  }, "0$"))), /*#__PURE__*/React.createElement("div", {
+  }, (referrals.filter(r => r.status === 'rewarded').length * 50) + ' $'))), /*#__PURE__*/React.createElement("div", {
     className: "faq fade-up"
   }, /*#__PURE__*/React.createElement("div", {
     className: "section-title",

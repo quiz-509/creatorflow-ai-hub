@@ -21,7 +21,8 @@
   <meta name="robots" content="index, follow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
   <style>
 :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -226,6 +227,14 @@ const Ic = {
   }))
 };
 const PHOTOS = ['https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=faces&q=80', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces&q=80', 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=faces&q=80'];
+function genCode(uid) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let h = 0;
+  for (let i = 0; i < uid.length; i++) h = Math.imul(31, h) + uid.charCodeAt(i) | 0;
+  let code = '';
+  for (let i = 0; i < 8; i++) { code += chars[Math.abs(h >> i) % chars.length]; }
+  return code.slice(0, 4) + '-' + code.slice(4);
+}
 function App() {
   useEffect(() => {
     document.getElementById('cfm-loader')?.remove();
@@ -239,6 +248,7 @@ function App() {
   const [error, setError] = useState('');
   const [showPwd, setShowPwd] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const refParam = new URLSearchParams(window.location.search).get('ref');
   const [form, setForm] = useState({
     prenom: '',
     nom: '',
@@ -321,6 +331,23 @@ function App() {
           onConflict: 'id',
           ignoreDuplicates: true
         });
+        await sb.from('profiles').update({
+          referral_code: genCode(userId),
+          ...(refParam ? { referred_by: refParam } : {})
+        }).eq('id', userId);
+        if (refParam) {
+          const { data: referrer } = await sb.from('profiles')
+            .select('id')
+            .eq('referral_code', refParam)
+            .single();
+          if (referrer) {
+            await sb.from('referrals').insert({
+              referrer_id: referrer.id,
+              referred_id: userId,
+              referral_code: refParam
+            });
+          }
+        }
       }
       if (userId && tab === 'expert') {
         await sb.from('experts').insert({
