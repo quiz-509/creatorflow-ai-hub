@@ -382,7 +382,7 @@ function App() {
     (async () => {
       const {
         data: expertsList
-      } = await sb.from('experts').select('*');
+      } = await sb.from('experts').select('*').eq('statut', 'approved');
       if (expertsList?.length) {
         const ids = expertsList.map(e => e.id);
         const {
@@ -404,7 +404,7 @@ function App() {
             spec: exp.specialite ? `Expert ${exp.specialite}` : 'Expert IA',
             about: exp.bio || 'Expert disponible sur CreatorFlow Market.',
             tags: exp.competences || (exp.specialite ? [exp.specialite] : []),
-            rating: exp.note || 5.0,
+            rating: exp.note_moyenne || null,
             reviews: exp.nb_avis || 0,
             missions: 0,
             response: '< 24h',

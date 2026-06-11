@@ -411,11 +411,13 @@ function TagsInput({
   }), " ", s))));
 }
 function App() {
+  const targetExpertId = new URLSearchParams(window.location.search).get('expert_id') || null;
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [user, setUser] = useState(null);
+  const [targetExpert, setTargetExpert] = useState(null);
   const [form, setForm] = useState({
     category: '',
     title: '',
@@ -427,6 +429,10 @@ function App() {
     files: []
   });
   useEffect(() => {
+    if (targetExpertId) {
+      sb.from('profiles').select('prenom, nom').eq('id', targetExpertId).single()
+        .then(({ data }) => { if (data) setTargetExpert(data); });
+    }
     sb.auth.getSession().then(({
       data
     }) => {
@@ -638,7 +644,20 @@ function App() {
     className: "page"
   }, /*#__PURE__*/React.createElement("div", {
     className: "container"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, targetExpert && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: '10px 16px',
+      background: 'rgba(124,58,237,0.08)',
+      border: '1px solid rgba(124,58,237,0.20)',
+      borderRadius: 'var(--r)',
+      marginBottom: 20,
+      fontSize: 13,
+      color: 'var(--vs)'
+    }
+  }, "👤 Brief destin\xE9 \xE0\xA0", /*#__PURE__*/React.createElement("strong", null, ((targetExpert.prenom || '') + ' ' + (targetExpert.nom || '')).trim())), /*#__PURE__*/React.createElement("div", {
     className: "stepper-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "progress-bar"
