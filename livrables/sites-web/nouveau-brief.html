@@ -132,88 +132,283 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useRef, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useRef,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Check:(p)=><svg {...p} width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  SmCheck:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  ArrowLeft:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M11 19l-7-7 7-7"/></svg>,
-  X:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Plus:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  Upload:(p)=><svg {...p} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>,
-  Dashboard:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>,
-  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "28",
+    height: "28",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  SmCheck: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  ArrowLeft: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M11 19l-7-7 7-7"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  Upload: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "20",
+    height: "20",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 16 12 12 8 16"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "12",
+    x2: "12",
+    y2: "21"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"
+  })),
+  Dashboard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  }))
 };
-
-const categories = [
-  { emoji: '🤖', name: 'Chatbot & IA', desc: 'Agents, chatbots, GPT' },
-  { emoji: '⚡', name: 'Automatisation', desc: 'Make, Zapier, n8n' },
-  { emoji: '📊', name: 'Data & Analytics', desc: 'Tableaux de bord, BI' },
-  { emoji: '✍️', name: 'Contenu IA', desc: 'Génération, copywriting' },
-  { emoji: '🎨', name: 'Image & Vidéo', desc: 'Midjourney, Runway' },
-  { emoji: '🔗', name: 'Intégrations', desc: 'API, CRM, ERP' },
-];
-
-const budgets = [
-  { range: '< 500$', label: 'Micro projet', key: 'xs' },
-  { range: '500–2k$', label: 'Projet standard', key: 'sm' },
-  { range: '2k–5k$', label: 'Projet moyen', key: 'md' },
-  { range: '5k$ +', label: 'Grand projet', key: 'lg' },
-];
-
-const timelines = [
-  { val: '< 1 sem.', lbl: 'Express', key: 'xs' },
-  { val: '1–2 sem.', lbl: 'Rapide', key: 'sm' },
-  { val: '1 mois', lbl: 'Standard', key: 'md' },
-  { val: '2 mois +', lbl: 'Long terme', key: 'lg' },
-];
-
-const suggestedTags = ['ChatGPT','Make.com','Python','LangChain','Zapier','n8n','Notion','Airtable','Slack','API REST'];
-
-const steps = ['Catégorie','Détails','Budget','Récapitulatif'];
-
-function TagsInput({ tags, setTags }) {
+const categories = [{
+  emoji: '🤖',
+  name: 'Chatbot & IA',
+  desc: 'Agents, chatbots, GPT'
+}, {
+  emoji: '⚡',
+  name: 'Automatisation',
+  desc: 'Make, Zapier, n8n'
+}, {
+  emoji: '📊',
+  name: 'Data & Analytics',
+  desc: 'Tableaux de bord, BI'
+}, {
+  emoji: '✍️',
+  name: 'Contenu IA',
+  desc: 'Génération, copywriting'
+}, {
+  emoji: '🎨',
+  name: 'Image & Vidéo',
+  desc: 'Midjourney, Runway'
+}, {
+  emoji: '🔗',
+  name: 'Intégrations',
+  desc: 'API, CRM, ERP'
+}];
+const budgets = [{
+  range: '< 500$',
+  label: 'Micro projet',
+  key: 'xs'
+}, {
+  range: '500–2k$',
+  label: 'Projet standard',
+  key: 'sm'
+}, {
+  range: '2k–5k$',
+  label: 'Projet moyen',
+  key: 'md'
+}, {
+  range: '5k$ +',
+  label: 'Grand projet',
+  key: 'lg'
+}];
+const timelines = [{
+  val: '< 1 sem.',
+  lbl: 'Express',
+  key: 'xs'
+}, {
+  val: '1–2 sem.',
+  lbl: 'Rapide',
+  key: 'sm'
+}, {
+  val: '1 mois',
+  lbl: 'Standard',
+  key: 'md'
+}, {
+  val: '2 mois +',
+  lbl: 'Long terme',
+  key: 'lg'
+}];
+const suggestedTags = ['ChatGPT', 'Make.com', 'Python', 'LangChain', 'Zapier', 'n8n', 'Notion', 'Airtable', 'Slack', 'API REST'];
+const steps = ['Catégorie', 'Détails', 'Budget', 'Récapitulatif'];
+function TagsInput({
+  tags,
+  setTags
+}) {
   const [val, setVal] = useState('');
   const inputRef = useRef();
-
-  const addTag = (t) => {
+  const addTag = t => {
     const clean = t.trim();
     if (clean && !tags.includes(clean) && tags.length < 8) {
       setTags([...tags, clean]);
       setVal('');
     }
   };
-
   const handleKey = e => {
-    if ((e.key === 'Enter' || e.key === ',') && val) { e.preventDefault(); addTag(val); }
-    if (e.key === 'Backspace' && !val && tags.length) setTags(tags.slice(0,-1));
+    if ((e.key === 'Enter' || e.key === ',') && val) {
+      e.preventDefault();
+      addTag(val);
+    }
+    if (e.key === 'Backspace' && !val && tags.length) setTags(tags.slice(0, -1));
   };
-
-  return (
-    <div>
-      <div className="tags-wrap" onClick={() => inputRef.current.focus()}>
-        {tags.map(t => (
-          <span key={t} className="tag-item">{t}<span className="tag-remove" onClick={()=>setTags(tags.filter(x=>x!==t))}><Ic.X/></span></span>
-        ))}
-        <input ref={inputRef} className="tags-input" placeholder={tags.length === 0 ? 'Tapez une technologie et appuyez sur Entrée…' : ''} value={val} onChange={e=>setVal(e.target.value)} onKeyDown={handleKey}/>
-      </div>
-      <div className="tag-suggestions">
-        {suggestedTags.filter(s=>!tags.includes(s)).slice(0,6).map(s => (
-          <button key={s} className="tag-sug" onClick={()=>addTag(s)}><Ic.Plus style={{width:9,height:9}}/> {s}</button>
-        ))}
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "tags-wrap",
+    onClick: () => inputRef.current.focus()
+  }, tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "tag-item"
+  }, t, /*#__PURE__*/React.createElement("span", {
+    className: "tag-remove",
+    onClick: () => setTags(tags.filter(x => x !== t))
+  }, /*#__PURE__*/React.createElement(Ic.X, null)))), /*#__PURE__*/React.createElement("input", {
+    ref: inputRef,
+    className: "tags-input",
+    placeholder: tags.length === 0 ? 'Tapez une technologie et appuyez sur Entrée…' : '',
+    value: val,
+    onChange: e => setVal(e.target.value),
+    onKeyDown: handleKey
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "tag-suggestions"
+  }, suggestedTags.filter(s => !tags.includes(s)).slice(0, 6).map(s => /*#__PURE__*/React.createElement("button", {
+    key: s,
+    className: "tag-sug",
+    onClick: () => addTag(s)
+  }, /*#__PURE__*/React.createElement(Ic.Plus, {
+    style: {
+      width: 9,
+      height: 9
+    }
+  }), " ", s))));
 }
-
 function App() {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
@@ -228,17 +423,26 @@ function App() {
     budget: '',
     timeline: '',
     tags: [],
-    files: [],
+    files: []
   });
-
   useEffect(() => {
-    sb.auth.getSession().then(({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
+    sb.auth.getSession().then(({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       setUser(data.session.user);
     });
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -246,24 +450,33 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  const clearErr = k => setErrors(e => { const n={...e}; delete n[k]; return n; });
-
+  const set = (k, v) => setForm(f => ({
+    ...f,
+    [k]: v
+  }));
+  const clearErr = k => setErrors(e => {
+    const n = {
+      ...e
+    };
+    delete n[k];
+    return n;
+  });
   const validate = () => {
     const e = {};
     if (step === 0 && !form.category) e.category = 'Sélectionnez une catégorie';
     if (step === 1) {
-      if (!form.title.trim()) e.title = 'Le titre est requis';
-      else if (form.title.length < 10) e.title = 'Minimum 10 caractères';
-      if (!form.description.trim()) e.description = 'La description est requise';
-      else if (form.description.length < 50) e.description = 'Minimum 50 caractères (actuellement ' + form.description.length + ')';
+      if (!form.title.trim()) e.title = 'Le titre est requis';else if (form.title.length < 10) e.title = 'Minimum 10 caractères';
+      if (!form.description.trim()) e.description = 'La description est requise';else if (form.description.length < 50) e.description = 'Minimum 50 caractères (actuellement ' + form.description.length + ')';
     }
     if (step === 2) {
       if (!form.budget) e.budget = 'Sélectionnez un budget';
@@ -272,17 +485,25 @@ function App() {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-
-  const next = () => { if (validate()) setStep(s => s + 1); };
-  const back = () => { setStep(s => s - 1); setErrors({}); };
+  const next = () => {
+    if (validate()) setStep(s => s + 1);
+  };
+  const back = () => {
+    setStep(s => s - 1);
+    setErrors({});
+  };
   const submit = async () => {
     if (!user) return;
     setSubmitting(true);
-    const { data: profile } = await sb.from('profiles').select('prenom,nom').eq('id', user.id).single();
+    const {
+      data: profile
+    } = await sb.from('profiles').select('prenom,nom').eq('id', user.id).single();
     const budgetLabel = budgets.find(b => b.key === form.budget)?.range || form.budget;
     const delaiLabel = timelines.find(t => t.key === form.timeline)?.val || form.timeline;
     const fullDesc = [form.title, form.description, form.context ? 'Contexte : ' + form.context : ''].filter(Boolean).join('\n\n');
-    const { error } = await sb.from('briefs').insert({
+    const {
+      error
+    } = await sb.from('briefs').insert({
       user_id: user.id,
       categorie: form.category,
       budget: budgetLabel,
@@ -290,257 +511,492 @@ function App() {
       description: fullDesc,
       nom_contact: `${profile?.prenom || ''} ${profile?.nom || ''}`.trim(),
       email_contact: user.email,
-      statut: 'ouvert',
+      statut: 'ouvert'
     });
     setSubmitting(false);
     if (!error) setDone(true);
   };
-
-  const progress = ((step + (done ? 1 : 0)) / steps.length) * 100;
-
-  if (done) return (
-    <React.Fragment>
-      <nav className="nav"><div className="nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-      </div></nav>
-      <div className="page"><div className="container">
-        <div className="form-card" style={{marginTop:40}}>
-          <div className="success-wrap fade-up">
-            <div className="success-ring"><Ic.Check style={{color:'var(--green)'}}/></div>
-            <div className="success-title">Brief publié avec succès !</div>
-            <div className="success-sub">
-              Votre brief <strong>"{form.title}"</strong> est maintenant visible par les experts de la plateforme.<br/>
-              Vous recevrez des propositions d'experts dans les prochaines 24–48h.
-            </div>
-            <div style={{marginTop:24,padding:20,background:'var(--surf-2)',borderRadius:'var(--r)',border:'1px solid var(--border)'}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,textAlign:'left'}}>
-                <div><div style={{fontSize:11,color:'var(--text-3)',marginBottom:3}}>Référence brief</div><div style={{fontSize:14,fontWeight:700,color:'var(--vs)'}}>#BRF-{Math.floor(Math.random()*9000+1000)}</div></div>
-                <div><div style={{fontSize:11,color:'var(--text-3)',marginBottom:3}}>Catégorie</div><div style={{fontSize:14,fontWeight:600}}>{form.category}</div></div>
-                <div><div style={{fontSize:11,color:'var(--text-3)',marginBottom:3}}>Budget</div><div style={{fontSize:14,fontWeight:600,color:'var(--green)'}}>{budgets.find(b=>b.key===form.budget)?.range}</div></div>
-                <div><div style={{fontSize:11,color:'var(--text-3)',marginBottom:3}}>Délai</div><div style={{fontSize:14,fontWeight:600}}>{timelines.find(t=>t.key===form.timeline)?.val}</div></div>
-              </div>
-            </div>
-            <div className="success-actions">
-              <a href="dashboard-client.html" className="btn btn-primary"><Ic.Dashboard/>Mon dashboard</a>
-              <a href="recherche.html" className="btn btn-ghost"><Ic.Search/>Chercher un expert</a>
-            </div>
-          </div>
-        </div>
-      </div></div>
-    </React.Fragment>
-  );
-
-  return (
-    <React.Fragment>
-      <nav className="nav"><div className="nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-        <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Annuler</a>
-      </div></nav>
-
-      <div className="page">
-        <div className="container">
-          <div className="stepper-wrap">
-            {/* Progress bar */}
-            <div className="progress-bar">
-              <div className="progress-fill" style={{width:`${progress}%`}}/>
-            </div>
-
-            {/* Stepper */}
-            <div className="stepper">
-              {steps.map((s, i) => (
-                <div key={i} className="step">
-                  {i > 0 && <div className={`step-line ${i <= step ? 'done' : ''}`}/>}
-                  <div className={`step-dot ${i === step ? 'active' : i < step ? 'done' : ''}`}>
-                    {i < step ? <Ic.SmCheck style={{color:'var(--green)',width:14,height:14}}/> : i+1}
-                  </div>
-                  <div className={`step-label ${i === step ? 'active' : ''}`}>{s}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* STEP 0 — Catégorie */}
-            {step === 0 && (
-              <div className="fade-up">
-                <div className="form-card">
-                  <div className="card-title">Quelle est votre besoin ?</div>
-                  <div className="card-sub">Sélectionnez la catégorie qui correspond le mieux à votre projet.</div>
-                  <div className="cat-grid">
-                    {categories.map(c => (
-                      <div key={c.name} className={`cat-card ${form.category === c.name ? 'selected' : ''}`}
-                        onClick={() => { set('category', c.name); clearErr('category'); }}>
-                        <div className="cat-emoji">{c.emoji}</div>
-                        <div className="cat-name">{c.name}</div>
-                        <div className="cat-desc">{c.desc}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {errors.category && <div className="error-msg" style={{marginTop:12}}>{errors.category}</div>}
-                </div>
-                <div className="form-nav">
-                  <div/>
-                  <button className="btn btn-primary" onClick={next}>Continuer <Ic.Arrow/></button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 1 — Détails */}
-            {step === 1 && (
-              <div className="fade-up">
-                <div className="form-card">
-                  <div className="card-title">Décrivez votre projet</div>
-                  <div className="card-sub">Plus votre brief est détaillé, plus les propositions seront pertinentes.</div>
-
-                  <div className="field">
-                    <div className="label-row">
-                      <label className="label" style={{margin:0}}>Titre du brief</label>
-                      <span className="label-hint">{form.title.length}/80</span>
-                    </div>
-                    <input className={`input ${errors.title ? 'error' : ''}`} placeholder="Ex : Créer un chatbot IA pour notre service client e-commerce" maxLength={80}
-                      value={form.title} onChange={e => { set('title', e.target.value); clearErr('title'); }}/>
-                    {errors.title && <div className="error-msg">{errors.title}</div>}
-                  </div>
-
-                  <div className="field">
-                    <div className="label-row">
-                      <label className="label" style={{margin:0}}>Description du projet</label>
-                      <span className="label-hint">{form.description.length}/1000</span>
-                    </div>
-                    <textarea className={`input ${errors.description ? 'error' : ''}`} rows={5} placeholder="Décrivez votre besoin : contexte, objectifs, résultats attendus, contraintes techniques…" maxLength={1000}
-                      value={form.description} onChange={e => { set('description', e.target.value); clearErr('description'); }}/>
-                    {errors.description && <div className="error-msg">{errors.description}</div>}
-                  </div>
-
-                  <div className="field">
-                    <label className="label">Contexte / Entreprise <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                    <textarea className="input" rows={3} placeholder="Secteur d'activité, taille de l'équipe, stack technique existant…"
-                      value={form.context} onChange={e => set('context', e.target.value)}/>
-                  </div>
-
-                  <div className="field" style={{marginBottom:0}}>
-                    <label className="label">Technologies souhaitées</label>
-                    <TagsInput tags={form.tags} setTags={v => set('tags', v)}/>
-                  </div>
-                </div>
-                <div className="form-nav">
-                  <button className="btn btn-ghost" onClick={back}><Ic.ArrowLeft/>Retour</button>
-                  <button className="btn btn-primary" onClick={next}>Continuer <Ic.Arrow/></button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 2 — Budget */}
-            {step === 2 && (
-              <div className="fade-up">
-                <div className="form-card">
-                  <div className="card-title">Budget & délai</div>
-                  <div className="card-sub">Aidez les experts à vous faire des propositions adaptées.</div>
-
-                  <div className="field">
-                    <label className="label">Budget estimé</label>
-                    <div className="budget-row">
-                      {budgets.map(b => (
-                        <div key={b.key} className={`budget-opt ${form.budget === b.key ? 'selected' : ''}`}
-                          onClick={() => { set('budget', b.key); clearErr('budget'); }}>
-                          <div className="budget-range">{b.range}</div>
-                          <div className="budget-label">{b.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                    {errors.budget && <div className="error-msg" style={{marginTop:8}}>{errors.budget}</div>}
-                  </div>
-
-                  <div className="field">
-                    <label className="label">Délai souhaité</label>
-                    <div className="timeline-grid">
-                      {timelines.map(t => (
-                        <div key={t.key} className={`tl-opt ${form.timeline === t.key ? 'selected' : ''}`}
-                          onClick={() => { set('timeline', t.key); clearErr('timeline'); }}>
-                          <div className="tl-val">{t.val}</div>
-                          <div className="tl-lbl">{t.lbl}</div>
-                        </div>
-                      ))}
-                    </div>
-                    {errors.timeline && <div className="error-msg" style={{marginTop:8}}>{errors.timeline}</div>}
-                  </div>
-
-                  {/* File upload zone */}
-                  <div className="field" style={{marginBottom:0}}>
-                    <label className="label">Documents joints <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                    <div style={{border:'2px dashed var(--border-2)',borderRadius:'var(--r)',padding:'24px',textAlign:'center',cursor:'pointer',transition:'border-color 200ms'}}
-                      onMouseEnter={e=>e.currentTarget.style.borderColor='rgba(124,58,237,0.4)'}
-                      onMouseLeave={e=>e.currentTarget.style.borderColor='var(--border-2)'}>
-                      <Ic.Upload style={{color:'var(--text-3)',margin:'0 auto 8px',display:'block'}}/>
-                      <div style={{fontSize:13,color:'var(--text-2)',fontWeight:600}}>Glissez vos fichiers ici</div>
-                      <div style={{fontSize:12,color:'var(--text-3)',marginTop:4}}>PDF, images, docs — max 10 Mo par fichier</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="form-nav">
-                  <button className="btn btn-ghost" onClick={back}><Ic.ArrowLeft/>Retour</button>
-                  <button className="btn btn-primary" onClick={next}>Voir le récapitulatif <Ic.Arrow/></button>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 3 — Récapitulatif */}
-            {step === 3 && (
-              <div className="fade-up">
-                <div className="form-card">
-                  <div className="card-title">Récapitulatif de votre brief</div>
-                  <div className="card-sub">Vérifiez les informations avant de publier.</div>
-                  <div className="summary-grid">
-                    <div className="sum-row">
-                      <span className="sum-key">Catégorie</span>
-                      <span className="sum-val">{form.category}</span>
-                    </div>
-                    <div className="sum-row">
-                      <span className="sum-key">Titre</span>
-                      <span className="sum-val">{form.title}</span>
-                    </div>
-                    <div className="sum-row" style={{flexDirection:'column',gap:8}}>
-                      <span className="sum-key">Description</span>
-                      <div style={{fontSize:13,color:'var(--text-2)',lineHeight:1.65}}>{form.description}</div>
-                    </div>
-                    {form.context && (
-                      <div className="sum-row" style={{flexDirection:'column',gap:8}}>
-                        <span className="sum-key">Contexte</span>
-                        <div style={{fontSize:13,color:'var(--text-2)',lineHeight:1.65}}>{form.context}</div>
-                      </div>
-                    )}
-                    <div className="sum-row">
-                      <span className="sum-key">Budget</span>
-                      <span className="sum-val" style={{color:'var(--green)',fontWeight:700}}>{budgets.find(b=>b.key===form.budget)?.range}</span>
-                    </div>
-                    <div className="sum-row">
-                      <span className="sum-key">Délai</span>
-                      <span className="sum-val">{timelines.find(t=>t.key===form.timeline)?.val}</span>
-                    </div>
-                    {form.tags.length > 0 && (
-                      <div className="sum-row">
-                        <span className="sum-key">Technologies</span>
-                        <div className="sum-tags">{form.tags.map(t=><span key={t} className="sum-tag">{t}</span>)}</div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div style={{marginTop:20,padding:14,background:'rgba(16,185,129,0.07)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--r)',display:'flex',alignItems:'center',gap:10}}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    <div style={{fontSize:13,color:'var(--text-2)'}}>Votre brief sera visible uniquement par des experts vérifiés sur CreatorFlow Market.</div>
-                  </div>
-                </div>
-                <div className="form-nav">
-                  <button className="btn btn-ghost" onClick={back}><Ic.ArrowLeft/>Modifier</button>
-                  <button className="btn btn-primary" onClick={submit} disabled={submitting}>{submitting ? 'Publication…' : <><span>Publier le brief</span> <Ic.Arrow/></>}</button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  const progress = (step + (done ? 1 : 0)) / steps.length * 100;
+  if (done) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card",
+    style: {
+      marginTop: 40
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-wrap fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: 'var(--green)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "success-title"
+  }, "Brief publi\xE9 avec succ\xE8s !"), /*#__PURE__*/React.createElement("div", {
+    className: "success-sub"
+  }, "Votre brief ", /*#__PURE__*/React.createElement("strong", null, "\"", form.title, "\""), " est maintenant visible par les experts de la plateforme.", /*#__PURE__*/React.createElement("br", null), "Vous recevrez des propositions d'experts dans les prochaines 24\u201348h."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 24,
+      padding: 20,
+      background: 'var(--surf-2)',
+      borderRadius: 'var(--r)',
+      border: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 12,
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "R\xE9f\xE9rence brief"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--vs)'
+    }
+  }, "#BRF-", Math.floor(Math.random() * 9000 + 1000))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600
+    }
+  }, form.category)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "Budget"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: 'var(--green)'
+    }
+  }, budgets.find(b => b.key === form.budget)?.range)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "D\xE9lai"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600
+    }
+  }, timelines.find(t => t.key === form.timeline)?.val)))), /*#__PURE__*/React.createElement("div", {
+    className: "success-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard"), /*#__PURE__*/React.createElement("a", {
+    href: "recherche.html",
+    className: "btn btn-ghost"
+  }, /*#__PURE__*/React.createElement(Ic.Search, null), "Chercher un expert")))))));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Annuler"))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stepper-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "stepper"
+  }, steps.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "step"
+  }, i > 0 && /*#__PURE__*/React.createElement("div", {
+    className: `step-line ${i <= step ? 'done' : ''}`
+  }), /*#__PURE__*/React.createElement("div", {
+    className: `step-dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }, i < step ? /*#__PURE__*/React.createElement(Ic.SmCheck, {
+    style: {
+      color: 'var(--green)',
+      width: 14,
+      height: 14
+    }
+  }) : i + 1), /*#__PURE__*/React.createElement("div", {
+    className: `step-label ${i === step ? 'active' : ''}`
+  }, s)))), step === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Quelle est votre besoin ?"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "S\xE9lectionnez la cat\xE9gorie qui correspond le mieux \xE0 votre projet."), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, categories.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.name,
+    className: `cat-card ${form.category === c.name ? 'selected' : ''}`,
+    onClick: () => {
+      set('category', c.name);
+      clearErr('category');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-emoji"
+  }, c.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "cat-name"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "cat-desc"
+  }, c.desc)))), errors.category && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 12
+    }
+  }, errors.category)), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 1 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "D\xE9crivez votre projet"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Plus votre brief est d\xE9taill\xE9, plus les propositions seront pertinentes."), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label-row"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label",
+    style: {
+      margin: 0
+    }
+  }, "Titre du brief"), /*#__PURE__*/React.createElement("span", {
+    className: "label-hint"
+  }, form.title.length, "/80")), /*#__PURE__*/React.createElement("input", {
+    className: `input ${errors.title ? 'error' : ''}`,
+    placeholder: "Ex : Cr\xE9er un chatbot IA pour notre service client e-commerce",
+    maxLength: 80,
+    value: form.title,
+    onChange: e => {
+      set('title', e.target.value);
+      clearErr('title');
+    }
+  }), errors.title && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg"
+  }, errors.title)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label-row"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label",
+    style: {
+      margin: 0
+    }
+  }, "Description du projet"), /*#__PURE__*/React.createElement("span", {
+    className: "label-hint"
+  }, form.description.length, "/1000")), /*#__PURE__*/React.createElement("textarea", {
+    className: `input ${errors.description ? 'error' : ''}`,
+    rows: 5,
+    placeholder: "D\xE9crivez votre besoin : contexte, objectifs, r\xE9sultats attendus, contraintes techniques\u2026",
+    maxLength: 1000,
+    value: form.description,
+    onChange: e => {
+      set('description', e.target.value);
+      clearErr('description');
+    }
+  }), errors.description && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg"
+  }, errors.description)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Contexte / Entreprise ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    rows: 3,
+    placeholder: "Secteur d'activit\xE9, taille de l'\xE9quipe, stack technique existant\u2026",
+    value: form.context,
+    onChange: e => set('context', e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Technologies souhait\xE9es"), /*#__PURE__*/React.createElement(TagsInput, {
+    tags: form.tags,
+    setTags: v => set('tags', v)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 2 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Budget & d\xE9lai"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Aidez les experts \xE0 vous faire des propositions adapt\xE9es."), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Budget estim\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "budget-row"
+  }, budgets.map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.key,
+    className: `budget-opt ${form.budget === b.key ? 'selected' : ''}`,
+    onClick: () => {
+      set('budget', b.key);
+      clearErr('budget');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "budget-range"
+  }, b.range), /*#__PURE__*/React.createElement("div", {
+    className: "budget-label"
+  }, b.label)))), errors.budget && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 8
+    }
+  }, errors.budget)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "D\xE9lai souhait\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "timeline-grid"
+  }, timelines.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.key,
+    className: `tl-opt ${form.timeline === t.key ? 'selected' : ''}`,
+    onClick: () => {
+      set('timeline', t.key);
+      clearErr('timeline');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tl-val"
+  }, t.val), /*#__PURE__*/React.createElement("div", {
+    className: "tl-lbl"
+  }, t.lbl)))), errors.timeline && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 8
+    }
+  }, errors.timeline)), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Documents joints ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: '2px dashed var(--border-2)',
+      borderRadius: 'var(--r)',
+      padding: '24px',
+      textAlign: 'center',
+      cursor: 'pointer',
+      transition: 'border-color 200ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)',
+    onMouseLeave: e => e.currentTarget.style.borderColor = 'var(--border-2)'
+  }, /*#__PURE__*/React.createElement(Ic.Upload, {
+    style: {
+      color: 'var(--text-3)',
+      margin: '0 auto 8px',
+      display: 'block'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      fontWeight: 600
+    }
+  }, "Glissez vos fichiers ici"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 4
+    }
+  }, "PDF, images, docs \u2014 max 10 Mo par fichier")))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Voir le r\xE9capitulatif ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 3 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "R\xE9capitulatif de votre brief"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "V\xE9rifiez les informations avant de publier."), /*#__PURE__*/React.createElement("div", {
+    className: "summary-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, form.category)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Titre"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, form.title)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row",
+    style: {
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Description"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      lineHeight: 1.65
+    }
+  }, form.description)), form.context && /*#__PURE__*/React.createElement("div", {
+    className: "sum-row",
+    style: {
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Contexte"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      lineHeight: 1.65
+    }
+  }, form.context)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Budget"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val",
+    style: {
+      color: 'var(--green)',
+      fontWeight: 700
+    }
+  }, budgets.find(b => b.key === form.budget)?.range)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "D\xE9lai"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, timelines.find(t => t.key === form.timeline)?.val)), form.tags.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Technologies"), /*#__PURE__*/React.createElement("div", {
+    className: "sum-tags"
+  }, form.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "sum-tag"
+  }, t))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      padding: 14,
+      background: 'rgba(16,185,129,0.07)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 'var(--r)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "var(--green)",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)'
+    }
+  }, "Votre brief sera visible uniquement par des experts v\xE9rifi\xE9s sur CreatorFlow Market."))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Modifier"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: submit,
+    disabled: submitting
+  }, submitting ? 'Publication…' : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, "Publier le brief"), " ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))))))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

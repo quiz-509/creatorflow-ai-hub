@@ -220,61 +220,91 @@ select.finput{cursor:pointer;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script type="text/babel">
-
-const { useState, useEffect, useCallback } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 
 /* ── CONSTANTS ── */
-const CATS = [
-  {name:'Agents IA',icon:'🤖'},{name:'Prompt Engineering',icon:'✍️'},
-  {name:'Data & Analytics',icon:'📊'},{name:'Automatisation',icon:'⚡'},
-  {name:'Marketing IA',icon:'📈'},{name:'Développement',icon:'💻'},
-  {name:'Design IA',icon:'🎨'},{name:'Autre',icon:'📚'},
-];
-const NIVEAUX = ['Débutant','Intermédiaire','Avancé'];
-const LANGUES = ['Français','English','Créole haïtien','Espagnol','Portugais'];
+const CATS = [{
+  name: 'Agents IA',
+  icon: '🤖'
+}, {
+  name: 'Prompt Engineering',
+  icon: '✍️'
+}, {
+  name: 'Data & Analytics',
+  icon: '📊'
+}, {
+  name: 'Automatisation',
+  icon: '⚡'
+}, {
+  name: 'Marketing IA',
+  icon: '📈'
+}, {
+  name: 'Développement',
+  icon: '💻'
+}, {
+  name: 'Design IA',
+  icon: '🎨'
+}, {
+  name: 'Autre',
+  icon: '📚'
+}];
+const NIVEAUX = ['Débutant', 'Intermédiaire', 'Avancé'];
+const LANGUES = ['Français', 'English', 'Créole haïtien', 'Espagnol', 'Portugais'];
 const THUMB_IMGS = {
-  'Agents IA':          'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
+  'Agents IA': 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
   'Prompt Engineering': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=640&q=80',
-  'Data & Analytics':   'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
-  'Automatisation':     'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
-  'Marketing IA':       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
-  'Développement':      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
-  'Design IA':          'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80',
+  'Data & Analytics': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
+  'Automatisation': 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
+  'Marketing IA': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
+  'Développement': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
+  'Design IA': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80'
 };
-const TITLE_TIPS = [
-  "Maîtriser les Agents IA : de Zéro à l'Autonomie Complète",
-  "Prompt Engineering Pro : Multipliez votre Productivité par 10",
-  "Marketing IA : 90 jours pour Automatiser votre Business",
-  "ChatGPT & Claude pour Créateurs : Guide Pratique Complet",
-];
-const DESC_TIPS = [
-  "Apprenez à créer des agents IA capables de gérer vos tâches répétitives et d'automatiser vos workflows en moins de 30 jours.",
-  "Découvrez les stratégies de prompt engineering utilisées par les meilleurs développeurs IA pour obtenir des résultats 10x meilleurs.",
-];
+const TITLE_TIPS = ["Maîtriser les Agents IA : de Zéro à l'Autonomie Complète", "Prompt Engineering Pro : Multipliez votre Productivité par 10", "Marketing IA : 90 jours pour Automatiser votre Business", "ChatGPT & Claude pour Créateurs : Guide Pratique Complet"];
+const DESC_TIPS = ["Apprenez à créer des agents IA capables de gérer vos tâches répétitives et d'automatiser vos workflows en moins de 30 jours.", "Découvrez les stratégies de prompt engineering utilisées par les meilleurs développeurs IA pour obtenir des résultats 10x meilleurs."];
 
 /* ── HELPERS ── */
 const uid = () => Math.random().toString(36).slice(2);
-const newLesson = () => ({ _id: uid(), titre:'', type:'video', contenu_url:'', duree:'', gratuite:false });
-const newModule = () => ({ _id: uid(), titre:'', open:true, lessons:[newLesson()] });
-
-function computeScore({ titre, descCourte, description, imageUrl, gratuit, prix, modules }) {
+const newLesson = () => ({
+  _id: uid(),
+  titre: '',
+  type: 'video',
+  contenu_url: '',
+  duree: '',
+  gratuite: false
+});
+const newModule = () => ({
+  _id: uid(),
+  titre: '',
+  open: true,
+  lessons: [newLesson()]
+});
+function computeScore({
+  titre,
+  descCourte,
+  description,
+  imageUrl,
+  gratuit,
+  prix,
+  modules
+}) {
   let s = 0;
   if (titre.trim().length > 4) s += 25;
   if (descCourte.trim().length > 15) s += 20;
   if (description.trim().length > 40) s += 15;
   if (imageUrl.trim()) s += 10;
-  if (gratuit || (prix && parseInt(prix) > 0)) s += 10;
+  if (gratuit || prix && parseInt(prix) > 0) s += 10;
   if (modules.some(m => m.titre.trim() && m.lessons.some(l => l.titre.trim()))) s += 20;
   return Math.min(s, 100);
 }
-
 function scoreColor(s) {
   if (s >= 70) return 'var(--green)';
   if (s >= 40) return 'var(--amber)';
@@ -282,156 +312,268 @@ function scoreColor(s) {
 }
 
 /* ── MODULE CARD ── */
-function ModuleCard({ mod, mIdx, total, updateTitle, toggleOpen, addLesson, updateLesson, removeLesson, removeModule }) {
-  return (
-    <div className={`mod-card${mod.open?' open':''}`}>
-      <div className="mod-header" onClick={() => toggleOpen(mIdx)}>
-        <span className="mod-drag" onClick={e=>e.stopPropagation()}>⠿</span>
-        <span className="mod-badge">MODULE {mIdx+1}</span>
-        <input
-          className="mod-name"
-          type="text"
-          placeholder="Titre du module (ex: Les fondations, Mise en pratique…)"
-          value={mod.titre}
-          onChange={e => { e.stopPropagation(); updateTitle(mIdx, e.target.value); }}
-          onClick={e => e.stopPropagation()}
-        />
-        {total > 1 && (
-          <button className="btn-danger" onClick={e=>{e.stopPropagation();removeModule(mIdx);}}>✕</button>
-        )}
-        <span className={`mod-toggle${mod.open?' open':''}`}>▼</span>
-      </div>
-      {mod.open && (
-        <div className="mod-body">
-          {mod.lessons.map((l, lIdx) => (
-            <div key={l._id} className="lesson-row">
-              <select className="l-type" value={l.type} onChange={e=>updateLesson(mIdx,lIdx,'type',e.target.value)}>
-                <option value="video">🎬 Vidéo</option>
-                <option value="texte">📄 Texte</option>
-              </select>
-              <input className="l-title" type="text" placeholder="Titre de la leçon…" value={l.titre} onChange={e=>updateLesson(mIdx,lIdx,'titre',e.target.value)}/>
-              <input className="l-url" type="url" placeholder="URL vidéo (opt.)" value={l.contenu_url} onChange={e=>updateLesson(mIdx,lIdx,'contenu_url',e.target.value)}/>
-              <input className="l-dur" type="number" min="0" placeholder="min" value={l.duree} onChange={e=>updateLesson(mIdx,lIdx,'duree',e.target.value)}/>
-              <label className="l-preview-lbl">
-                <input type="checkbox" checked={l.gratuite} onChange={e=>updateLesson(mIdx,lIdx,'gratuite',e.target.checked)} style={{accentColor:'var(--c)',width:12,height:12}}/>
-                Aperçu
-              </label>
-              {mod.lessons.length > 1 && (
-                <button style={{color:'var(--text-3)',fontSize:13,padding:'0 2px',flexShrink:0}} onClick={()=>removeLesson(mIdx,lIdx)}>✕</button>
-              )}
-            </div>
-          ))}
-          <button className="add-lesson-btn" onClick={()=>addLesson(mIdx)}>+ Ajouter une leçon</button>
-        </div>
-      )}
-    </div>
-  );
+function ModuleCard({
+  mod,
+  mIdx,
+  total,
+  updateTitle,
+  toggleOpen,
+  addLesson,
+  updateLesson,
+  removeLesson,
+  removeModule
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: `mod-card${mod.open ? ' open' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mod-header",
+    onClick: () => toggleOpen(mIdx)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mod-drag",
+    onClick: e => e.stopPropagation()
+  }, "\u283F"), /*#__PURE__*/React.createElement("span", {
+    className: "mod-badge"
+  }, "MODULE ", mIdx + 1), /*#__PURE__*/React.createElement("input", {
+    className: "mod-name",
+    type: "text",
+    placeholder: "Titre du module (ex: Les fondations, Mise en pratique\u2026)",
+    value: mod.titre,
+    onChange: e => {
+      e.stopPropagation();
+      updateTitle(mIdx, e.target.value);
+    },
+    onClick: e => e.stopPropagation()
+  }), total > 1 && /*#__PURE__*/React.createElement("button", {
+    className: "btn-danger",
+    onClick: e => {
+      e.stopPropagation();
+      removeModule(mIdx);
+    }
+  }, "\u2715"), /*#__PURE__*/React.createElement("span", {
+    className: `mod-toggle${mod.open ? ' open' : ''}`
+  }, "\u25BC")), mod.open && /*#__PURE__*/React.createElement("div", {
+    className: "mod-body"
+  }, mod.lessons.map((l, lIdx) => /*#__PURE__*/React.createElement("div", {
+    key: l._id,
+    className: "lesson-row"
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "l-type",
+    value: l.type,
+    onChange: e => updateLesson(mIdx, lIdx, 'type', e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "video"
+  }, "\uD83C\uDFAC Vid\xE9o"), /*#__PURE__*/React.createElement("option", {
+    value: "texte"
+  }, "\uD83D\uDCC4 Texte")), /*#__PURE__*/React.createElement("input", {
+    className: "l-title",
+    type: "text",
+    placeholder: "Titre de la le\xE7on\u2026",
+    value: l.titre,
+    onChange: e => updateLesson(mIdx, lIdx, 'titre', e.target.value)
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "l-url",
+    type: "url",
+    placeholder: "URL vid\xE9o (opt.)",
+    value: l.contenu_url,
+    onChange: e => updateLesson(mIdx, lIdx, 'contenu_url', e.target.value)
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "l-dur",
+    type: "number",
+    min: "0",
+    placeholder: "min",
+    value: l.duree,
+    onChange: e => updateLesson(mIdx, lIdx, 'duree', e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "l-preview-lbl"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: l.gratuite,
+    onChange: e => updateLesson(mIdx, lIdx, 'gratuite', e.target.checked),
+    style: {
+      accentColor: 'var(--c)',
+      width: 12,
+      height: 12
+    }
+  }), "Aper\xE7u"), mod.lessons.length > 1 && /*#__PURE__*/React.createElement("button", {
+    style: {
+      color: 'var(--text-3)',
+      fontSize: 13,
+      padding: '0 2px',
+      flexShrink: 0
+    },
+    onClick: () => removeLesson(mIdx, lIdx)
+  }, "\u2715"))), /*#__PURE__*/React.createElement("button", {
+    className: "add-lesson-btn",
+    onClick: () => addLesson(mIdx)
+  }, "+ Ajouter une le\xE7on")));
 }
 
 /* ── LIVE PREVIEW ── */
-function LivePreview({ titre, categorie, niveau, prix, gratuit, imageUrl, instrName, instrSeed }) {
+function LivePreview({
+  titre,
+  categorie,
+  niveau,
+  prix,
+  gratuit,
+  imageUrl,
+  instrName,
+  instrSeed
+}) {
   const thumbSrc = imageUrl.trim() || THUMB_IMGS[categorie] || THUMB_IMGS['Agents IA'];
-  const catObj = CATS.find(c=>c.name===categorie) || CATS[0];
-  const prixLabel = gratuit ? 'Gratuit' : (prix ? `${prix} $` : 'Gratuit');
-  const instrAvatar = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrSeed||'Expert')}`;
-
-  return (
-    <div className="preview-card">
-      <div className="preview-label">Aperçu en temps réel</div>
-      <div className="preview-thumb">
-        <img src={thumbSrc} alt="cover" onError={e=>{e.target.style.display='none';}}/>
-        {categorie && <div className="preview-cat-badge">{categorie}</div>}
-        <div className={`preview-price-badge ${gratuit||!prix?'free':'paid'}`}>{prixLabel}</div>
-      </div>
-      <div className="preview-body">
-        <div className="preview-cat-text">{catObj.icon} {categorie}</div>
-        <div className={`preview-title${!titre?' empty':''}`}>
-          {titre || 'Votre titre apparaîtra ici…'}
-        </div>
-        <div className="preview-meta">
-          <span className="preview-tag">{niveau}</span>
-          <span className="preview-tag">🌐 Français</span>
-          <span className="preview-tag">Certifié</span>
-        </div>
-        <div className="preview-instr">
-          <div className="preview-instr-av">
-            <img src={instrAvatar} alt={instrName}/>
-          </div>
-          <div className="preview-instr-name">Par {instrName||'Vous'}</div>
-        </div>
-        <div className="preview-price-row">
-          <div className={`preview-price-big${gratuit||!prix?' free':''}`}>{prixLabel}</div>
-          <div className="preview-enroll-btn">S'inscrire</div>
-        </div>
-      </div>
-    </div>
-  );
+  const catObj = CATS.find(c => c.name === categorie) || CATS[0];
+  const prixLabel = gratuit ? 'Gratuit' : prix ? `${prix} $` : 'Gratuit';
+  const instrAvatar = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrSeed || 'Expert')}`;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "preview-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-label"
+  }, "Aper\xE7u en temps r\xE9el"), /*#__PURE__*/React.createElement("div", {
+    className: "preview-thumb"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: thumbSrc,
+    alt: "cover",
+    onError: e => {
+      e.target.style.display = 'none';
+    }
+  }), categorie && /*#__PURE__*/React.createElement("div", {
+    className: "preview-cat-badge"
+  }, categorie), /*#__PURE__*/React.createElement("div", {
+    className: `preview-price-badge ${gratuit || !prix ? 'free' : 'paid'}`
+  }, prixLabel)), /*#__PURE__*/React.createElement("div", {
+    className: "preview-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-cat-text"
+  }, catObj.icon, " ", categorie), /*#__PURE__*/React.createElement("div", {
+    className: `preview-title${!titre ? ' empty' : ''}`
+  }, titre || 'Votre titre apparaîtra ici…'), /*#__PURE__*/React.createElement("div", {
+    className: "preview-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "preview-tag"
+  }, niveau), /*#__PURE__*/React.createElement("span", {
+    className: "preview-tag"
+  }, "\uD83C\uDF10 Fran\xE7ais"), /*#__PURE__*/React.createElement("span", {
+    className: "preview-tag"
+  }, "Certifi\xE9")), /*#__PURE__*/React.createElement("div", {
+    className: "preview-instr"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-instr-av"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: instrAvatar,
+    alt: instrName
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "preview-instr-name"
+  }, "Par ", instrName || 'Vous')), /*#__PURE__*/React.createElement("div", {
+    className: "preview-price-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `preview-price-big${gratuit || !prix ? ' free' : ''}`
+  }, prixLabel), /*#__PURE__*/React.createElement("div", {
+    className: "preview-enroll-btn"
+  }, "S'inscrire"))));
 }
 
 /* ── READINESS CARD ── */
-function ReadinessCard({ score, checks, saving, canPublish, onDraft, onPublish }) {
+function ReadinessCard({
+  score,
+  checks,
+  saving,
+  canPublish,
+  onDraft,
+  onPublish
+}) {
   const color = scoreColor(score);
   const barColor = score >= 70 ? 'var(--green)' : score >= 40 ? 'var(--amber)' : 'rgba(255,255,255,0.15)';
-
-  return (
-    <div className="readiness-card">
-      <div className="readiness-top">
-        <div>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',color:'var(--text-3)',marginBottom:4}}>Score de publication</div>
-          <div className="readiness-title">{score>=70?'✅ Prêt à publier':score>=40?'⚡ Presque prêt':'📝 En cours…'}</div>
-        </div>
-        <div className="score-ring" style={{background:`conic-gradient(${color} ${score*3.6}deg,rgba(255,255,255,0.05) 0deg)`,color}}>
-          {score}%
-        </div>
-      </div>
-      <div className="readiness-bar-wrap">
-        <div className="readiness-bar-fill" style={{width:`${score}%`,background:barColor}}/>
-      </div>
-      <div className="r-checks">
-        {checks.map((c,i) => (
-          <div key={i} className={`r-check ${c.ok?'ok':'miss'}`}>
-            <div className="r-check-icon">{c.ok?'✓':'○'}</div>
-            <span>{c.label}</span>
-          </div>
-        ))}
-      </div>
-      <button className="btn btn-primary" style={{width:'100%',justifyContent:'center',padding:'12px'}} disabled={saving||!canPublish} onClick={onPublish}>
-        {saving ? '⏳ Publication…' : '🚀 Publier le cours'}
-      </button>
-      <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:8,padding:'10px'}} disabled={saving} onClick={onDraft}>
-        {saving ? '⏳ Sauvegarde…' : 'Sauvegarder en brouillon'}
-      </button>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "readiness-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "readiness-top"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      color: 'var(--text-3)',
+      marginBottom: 4
+    }
+  }, "Score de publication"), /*#__PURE__*/React.createElement("div", {
+    className: "readiness-title"
+  }, score >= 70 ? '✅ Prêt à publier' : score >= 40 ? '⚡ Presque prêt' : '📝 En cours…')), /*#__PURE__*/React.createElement("div", {
+    className: "score-ring",
+    style: {
+      background: `conic-gradient(${color} ${score * 3.6}deg,rgba(255,255,255,0.05) 0deg)`,
+      color
+    }
+  }, score, "%")), /*#__PURE__*/React.createElement("div", {
+    className: "readiness-bar-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "readiness-bar-fill",
+    style: {
+      width: `${score}%`,
+      background: barColor
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "r-checks"
+  }, checks.map((c, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `r-check ${c.ok ? 'ok' : 'miss'}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "r-check-icon"
+  }, c.ok ? '✓' : '○'), /*#__PURE__*/React.createElement("span", null, c.label)))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      padding: '12px'
+    },
+    disabled: saving || !canPublish,
+    onClick: onPublish
+  }, saving ? '⏳ Publication…' : '🚀 Publier le cours'), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      marginTop: 8,
+      padding: '10px'
+    },
+    disabled: saving,
+    onClick: onDraft
+  }, saving ? '⏳ Sauvegarde…' : 'Sauvegarder en brouillon'));
 }
 
 /* ── APP ── */
 function App() {
-  const [user, setUser]     = useState(null);
+  const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState(null);
   const [published, setPublished] = useState(false);
 
   /* form */
-  const [titre,      setTitre]     = useState('');
-  const [descCourte, setDescCourte]= useState('');
-  const [description,setDescription]=useState('');
-  const [categorie,  setCategorie] = useState('Agents IA');
-  const [niveau,     setNiveau]    = useState('Débutant');
-  const [langue,     setLangue]    = useState('Français');
-  const [prix,       setPrix]      = useState('');
-  const [gratuit,    setGratuit]   = useState(true);
-  const [imageUrl,   setImageUrl]  = useState('');
-  const [modules,    setModules]   = useState([newModule()]);
+  const [titre, setTitre] = useState('');
+  const [descCourte, setDescCourte] = useState('');
+  const [description, setDescription] = useState('');
+  const [categorie, setCategorie] = useState('Agents IA');
+  const [niveau, setNiveau] = useState('Débutant');
+  const [langue, setLangue] = useState('Français');
+  const [prix, setPrix] = useState('');
+  const [gratuit, setGratuit] = useState(true);
+  const [imageUrl, setImageUrl] = useState('');
+  const [modules, setModules] = useState([newModule()]);
 
   /* auth */
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href='connexion.html'; return; }
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const u = data.session.user;
       setUser(u);
-      const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',u.id).single();
+      const {
+        data: p
+      } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
       setProfile(p);
     });
   }, []);
@@ -440,354 +582,517 @@ function App() {
   useEffect(() => {
     if (typeof gsap === 'undefined') return;
     gsap.from('.fs', {
-      opacity: 0, y: 30, stagger: 0.10, duration: 0.7, ease: 'power3.out', delay: 0.15,
+      opacity: 0,
+      y: 30,
+      stagger: 0.10,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.15
     });
     gsap.from('.creator-sidebar > *', {
-      opacity: 0, x: 20, stagger: 0.12, duration: 0.7, ease: 'power3.out', delay: 0.3,
+      opacity: 0,
+      x: 20,
+      stagger: 0.12,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.3
     });
   }, []);
 
   /* score */
-  const score = computeScore({ titre, descCourte, description, imageUrl, gratuit, prix, modules });
+  const score = computeScore({
+    titre,
+    descCourte,
+    description,
+    imageUrl,
+    gratuit,
+    prix,
+    modules
+  });
   const canPublish = score >= 45;
-
-  const checks = [
-    { label:'Titre du cours (obligatoire)', ok: titre.trim().length > 4 },
-    { label:'Description courte (obligatoire)', ok: descCourte.trim().length > 15 },
-    { label:'Description complète', ok: description.trim().length > 40 },
-    { label:'Image de couverture', ok: !!imageUrl.trim() },
-    { label:'Prix défini', ok: gratuit || (prix && parseInt(prix) > 0) },
-    { label:'Au moins un module avec une leçon', ok: modules.some(m=>m.titre.trim()&&m.lessons.some(l=>l.titre.trim())) },
-  ];
+  const checks = [{
+    label: 'Titre du cours (obligatoire)',
+    ok: titre.trim().length > 4
+  }, {
+    label: 'Description courte (obligatoire)',
+    ok: descCourte.trim().length > 15
+  }, {
+    label: 'Description complète',
+    ok: description.trim().length > 40
+  }, {
+    label: 'Image de couverture',
+    ok: !!imageUrl.trim()
+  }, {
+    label: 'Prix défini',
+    ok: gratuit || prix && parseInt(prix) > 0
+  }, {
+    label: 'Au moins un module avec une leçon',
+    ok: modules.some(m => m.titre.trim() && m.lessons.some(l => l.titre.trim()))
+  }];
 
   /* module helpers */
-  const updateModuleTitle = (idx,val) => setModules(p=>p.map((m,i)=>i===idx?{...m,titre:val}:m));
-  const toggleModuleOpen  = (idx) => setModules(p=>p.map((m,i)=>i===idx?{...m,open:!m.open}:m));
-  const addModule         = () => setModules(p=>[...p,newModule()]);
-  const removeModule      = (idx) => setModules(p=>p.filter((_,i)=>i!==idx));
-  const addLesson         = (mi) => setModules(p=>p.map((m,i)=>i===mi?{...m,lessons:[...m.lessons,newLesson()]}:m));
-  const updateLesson      = (mi,li,f,v) => setModules(p=>p.map((m,i)=>i!==mi?m:{...m,lessons:m.lessons.map((l,j)=>j!==li?l:{...l,[f]:v})}));
-  const removeLesson      = (mi,li) => setModules(p=>p.map((m,i)=>i!==mi?m:{...m,lessons:m.lessons.filter((_,j)=>j!==li)}));
+  const updateModuleTitle = (idx, val) => setModules(p => p.map((m, i) => i === idx ? {
+    ...m,
+    titre: val
+  } : m));
+  const toggleModuleOpen = idx => setModules(p => p.map((m, i) => i === idx ? {
+    ...m,
+    open: !m.open
+  } : m));
+  const addModule = () => setModules(p => [...p, newModule()]);
+  const removeModule = idx => setModules(p => p.filter((_, i) => i !== idx));
+  const addLesson = mi => setModules(p => p.map((m, i) => i === mi ? {
+    ...m,
+    lessons: [...m.lessons, newLesson()]
+  } : m));
+  const updateLesson = (mi, li, f, v) => setModules(p => p.map((m, i) => i !== mi ? m : {
+    ...m,
+    lessons: m.lessons.map((l, j) => j !== li ? l : {
+      ...l,
+      [f]: v
+    })
+  }));
+  const removeLesson = (mi, li) => setModules(p => p.map((m, i) => i !== mi ? m : {
+    ...m,
+    lessons: m.lessons.filter((_, j) => j !== li)
+  }));
 
   /* save */
-  const handleSave = useCallback(async (status='brouillon') => {
-    if (!titre.trim()) { alert('Le titre est obligatoire.'); return null; }
+  const handleSave = useCallback(async (status = 'brouillon') => {
+    if (!titre.trim()) {
+      alert('Le titre est obligatoire.');
+      return null;
+    }
     setSaving(true);
     const courseData = {
       instructor_id: user.id,
       titre: titre.trim(),
       description_courte: descCourte.trim(),
       description: description.trim(),
-      categorie, niveau, langue,
-      prix: gratuit ? 0 : (parseInt(prix,10)||0),
-      image_url: imageUrl.trim()||null,
-      statut: status,
+      categorie,
+      niveau,
+      langue,
+      prix: gratuit ? 0 : parseInt(prix, 10) || 0,
+      image_url: imageUrl.trim() || null,
+      statut: status
     };
     let cid = savedId;
     if (!cid) {
-      const { data, error } = await sb.from('courses').insert(courseData).select('id').single();
-      if (error||!data) { alert('Erreur lors de la sauvegarde.'); setSaving(false); return null; }
-      cid = data.id; setSavedId(cid);
+      const {
+        data,
+        error
+      } = await sb.from('courses').insert(courseData).select('id').single();
+      if (error || !data) {
+        alert('Erreur lors de la sauvegarde.');
+        setSaving(false);
+        return null;
+      }
+      cid = data.id;
+      setSavedId(cid);
     } else {
-      await sb.from('courses').update(courseData).eq('id',cid);
+      await sb.from('courses').update(courseData).eq('id', cid);
     }
     /* modules & lessons */
-    await sb.from('modules').delete().eq('course_id',cid);
-    for (let mi=0;mi<modules.length;mi++) {
+    await sb.from('modules').delete().eq('course_id', cid);
+    for (let mi = 0; mi < modules.length; mi++) {
       const mod = modules[mi];
       if (!mod.titre.trim()) continue;
-      const { data: md } = await sb.from('modules').insert({course_id:cid,titre:mod.titre,ordre:mi+1}).select('id').single();
+      const {
+        data: md
+      } = await sb.from('modules').insert({
+        course_id: cid,
+        titre: mod.titre,
+        ordre: mi + 1
+      }).select('id').single();
       if (!md) continue;
-      for (let li=0;li<mod.lessons.length;li++) {
+      for (let li = 0; li < mod.lessons.length; li++) {
         const l = mod.lessons[li];
         if (!l.titre.trim()) continue;
-        await sb.from('lessons').insert({course_id:cid,module_id:md.id,titre:l.titre,type:l.type,contenu_url:l.contenu_url||null,duree:parseInt(l.duree,10)||0,ordre:li+1,gratuite:l.gratuite||false});
+        await sb.from('lessons').insert({
+          course_id: cid,
+          module_id: md.id,
+          titre: l.titre,
+          type: l.type,
+          contenu_url: l.contenu_url || null,
+          duree: parseInt(l.duree, 10) || 0,
+          ordre: li + 1,
+          gratuite: l.gratuite || false
+        });
       }
     }
-    if (status==='publié') setPublished(true);
+    if (status === 'publié') setPublished(true);
     setSaving(false);
     return cid;
-  }, [user,titre,descCourte,description,categorie,niveau,langue,prix,gratuit,imageUrl,modules,savedId]);
-
-  const instrName = profile ? `${profile.prenom||''} ${profile.nom||''}`.trim() : 'Vous';
+  }, [user, titre, descCourte, description, categorie, niveau, langue, prix, gratuit, imageUrl, modules, savedId]);
+  const instrName = profile ? `${profile.prenom || ''} ${profile.nom || ''}`.trim() : 'Vous';
   const instrSeed = instrName || 'Expert';
 
   /* ── SUCCESS ── */
-  if (published) return (
-    <div className="success-wrap">
-      <div className="success-inner">
-        <span className="success-icon">🎉</span>
-        <div className="success-title">Cours publié !</div>
-        <div className="success-sub">Votre cours est maintenant visible dans l'académie CreatorFlow. Partagez-le avec votre communauté pour vos premières inscriptions.</div>
-        <div className="success-actions">
-          <a href={`cours.html?id=${savedId}`} className="btn btn-primary btn-lg">Voir mon cours →</a>
-          <a href="academie.html" className="btn btn-ghost">Retour à l'académie</a>
-          <button className="btn btn-ghost" onClick={()=>{setPublished(false);setSavedId(null);setTitre('');setDescCourte('');setDescription('');setImageUrl('');setPrix('');setGratuit(true);setModules([newModule()]);}}>
-            Créer un autre cours
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  if (published) return /*#__PURE__*/React.createElement("div", {
+    className: "success-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-inner"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "success-icon"
+  }, "\uD83C\uDF89"), /*#__PURE__*/React.createElement("div", {
+    className: "success-title"
+  }, "Cours publi\xE9 !"), /*#__PURE__*/React.createElement("div", {
+    className: "success-sub"
+  }, "Votre cours est maintenant visible dans l'acad\xE9mie CreatorFlow. Partagez-le avec votre communaut\xE9 pour vos premi\xE8res inscriptions."), /*#__PURE__*/React.createElement("div", {
+    className: "success-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: `cours.html?id=${savedId}`,
+    className: "btn btn-primary btn-lg"
+  }, "Voir mon cours \u2192"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-ghost"
+  }, "Retour \xE0 l'acad\xE9mie"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: () => {
+      setPublished(false);
+      setSavedId(null);
+      setTitre('');
+      setDescCourte('');
+      setDescription('');
+      setImageUrl('');
+      setPrix('');
+      setGratuit(true);
+      setModules([newModule()]);
+    }
+  }, "Cr\xE9er un autre cours"))));
 
   /* ── MAIN ── */
-  return (
-    <React.Fragment>
-
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="academie.html" className="nav-back">← <span>Académie</span></a>
-          <div className="nav-title">Créer un cours</div>
-          <button className="btn btn-ghost btn-sm" onClick={()=>handleSave('brouillon')} disabled={saving}>
-            {saving?'Sauvegarde…':'💾 Brouillon'}
-          </button>
-        </div>
-      </nav>
-
-      {/* PROGRESS STRIP */}
-      <div className="prog-strip">
-        <div className="prog-fill" style={{width:`${score}%`,background:score>=70?'linear-gradient(90deg,var(--green),#34d399)':score>=40?'linear-gradient(90deg,var(--amber),#fbbf24)':'linear-gradient(90deg,var(--v),var(--c))'}}/>
-      </div>
-
-      {/* TWO-COLUMN LAYOUT */}
-      <div className="creator-wrap">
-
-        {/* ──── LEFT: FORM ──── */}
-        <div className="creator-form">
-
-          {/* SECTION A: Identité du cours */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Identité</div>
-              <div className="fs-title">Titre & accroche</div>
-              <div className="fs-sub">Ce sont les premiers éléments que les apprenants verront. Soyez percutant.</div>
-            </div>
-
-            <div className="field">
-              <div className="flabel">
-                <span>Titre du cours<span className="req">*</span></span>
-                <span className="counter">{titre.length}/80</span>
-              </div>
-              <input
-                className="ftitle-input"
-                type="text"
-                placeholder="Maîtriser les Agents IA…"
-                value={titre}
-                onChange={e=>setTitre(e.target.value)}
-                maxLength={80}
-              />
-              <div className="tips-block">
-                <div className="tips-head">💡 Exemples de titres performants — cliquez pour appliquer</div>
-                <div>{TITLE_TIPS.map(t=>(
-                  <button key={t} className="tip-chip" onClick={()=>setTitre(t)}>{t}</button>
-                ))}</div>
-              </div>
-            </div>
-
-            <div className="field">
-              <div className="flabel">
-                <span>Description courte<span className="req">*</span></span>
-                <span className="counter">{descCourte.length}/200</span>
-              </div>
-              <textarea
-                className="finput"
-                placeholder="En 2 phrases : ce que l'apprenant va maîtriser et comment ça va changer son business."
-                value={descCourte}
-                onChange={e=>setDescCourte(e.target.value)}
-                maxLength={200}
-                rows={3}
-              />
-              {!descCourte && (
-                <div style={{marginTop:6}}>
-                  {DESC_TIPS.map(t=>(
-                    <button key={t} className="tip-chip" onClick={()=>setDescCourte(t)} style={{marginBottom:4,display:'inline-flex',textAlign:'left'}}>{t}</button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* SECTION B: Catégorie & Niveau */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Classification</div>
-              <div className="fs-title">Catégorie, niveau & langue</div>
-            </div>
-
-            <div className="field">
-              <div className="flabel">Catégorie</div>
-              <div className="cat-grid">
-                {CATS.map(c=>(
-                  <button key={c.name} className={`cat-pill${categorie===c.name?' active':''}`} onClick={()=>setCategorie(c.name)}>
-                    <span className="cat-pill-icon">{c.icon}</span>
-                    <span className="cat-pill-name">{c.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="field" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
-              <div>
-                <div className="flabel">Niveau</div>
-                <div className="seg-row">
-                  {NIVEAUX.map(n=>(
-                    <button key={n} className={`seg-btn${niveau===n?' active':''}`} onClick={()=>setNiveau(n)}>{n}</button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="flabel">Langue</div>
-                <select className="finput" value={langue} onChange={e=>setLangue(e.target.value)}>
-                  {LANGUES.map(l=><option key={l}>{l}</option>)}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* SECTION C: Image de couverture */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Visuel</div>
-              <div className="fs-title">Image de couverture</div>
-              <div className="fs-sub">Un visuel 16:9 de qualité peut doubler vos inscriptions. Utilisez Unsplash, Canva ou vos propres créations.</div>
-            </div>
-            <div className={`img-preview${imageUrl?' has-img':''}`}>
-              {imageUrl
-                ? <img src={imageUrl} alt="cover" onError={e=>{e.target.src='';}}/>
-                : <span style={{fontSize:24}}>🖼️</span>
-              }
-            </div>
-            <div className="field" style={{marginBottom:0}}>
-              <div className="flabel">URL de l'image</div>
-              <input className="finput" type="url" placeholder="https://images.unsplash.com/photo-…" value={imageUrl} onChange={e=>setImageUrl(e.target.value)}/>
-              <div className="fhint">Recommandé : 1280×720px, format 16:9 · Unsplash, Pexels, Canva</div>
-            </div>
-          </div>
-
-          {/* SECTION D: Prix */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Monétisation</div>
-              <div className="fs-title">Définissez votre prix</div>
-              <div className="fs-sub">Vous gardez 70% du prix de vente. Gratuit pour construire votre audience, payant pour monétiser.</div>
-            </div>
-            <div className="price-opts">
-              <button className={`price-opt${gratuit?' active':''}`} onClick={()=>setGratuit(true)}>
-                <div className="price-opt-icon">🆓</div>
-                <div className="price-opt-title">Gratuit</div>
-                <div className="price-opt-desc">Idéal pour attirer une audience et démontrer votre expertise.</div>
-              </button>
-              <button className={`price-opt${!gratuit?' active':''}`} onClick={()=>setGratuit(false)}>
-                <div className="price-opt-icon">💰</div>
-                <div className="price-opt-title">Payant</div>
-                <div className="price-opt-desc">Monétisez vos compétences. Revenus passifs à vie.</div>
-              </button>
-            </div>
-            {!gratuit && (
-              <div className="price-input-row">
-                <span className="price-sym">$</span>
-                <input className="price-num" type="number" min="1" placeholder="79" value={prix} onChange={e=>setPrix(e.target.value)}/>
-                <span className="price-suffix">CAD</span>
-              </div>
-            )}
-            {!gratuit && (
-              <div className="fhint" style={{marginTop:8}}>💡 Fourchette recommandée : 47–197 $ · Les cours à 97 $ ont le meilleur ratio conversion/valeur perçue.</div>
-            )}
-          </div>
-
-          {/* SECTION E: Description complète */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Contenu</div>
-              <div className="fs-title">Description complète</div>
-              <div className="fs-sub">Détaillez le contenu, les prérequis et à qui ce cours est destiné. Minimum 100 mots recommandé.</div>
-            </div>
-            <div className="field" style={{marginBottom:0}}>
-              <div className="flabel">
-                <span>Description</span>
-                <span className="counter">{description.length} car.</span>
-              </div>
-              <textarea
-                className="finput"
-                placeholder={`Décrivez :\n• Ce que l'apprenant va apprendre\n• À qui ce cours est destiné\n• Les prérequis\n• Ce qui rend votre approche unique`}
-                value={description}
-                onChange={e=>setDescription(e.target.value)}
-                rows={8}
-              />
-            </div>
-          </div>
-
-          {/* SECTION F: Programme */}
-          <div className="fs">
-            <div className="fs-head">
-              <div className="fs-lbl">Programme</div>
-              <div className="fs-title">Structure de votre cours</div>
-              <div className="fs-sub">Organisez votre cours en modules et leçons. Ajoutez les URLs vidéo (YouTube, Vimeo, Loom…).</div>
-            </div>
-            <div className="modules-stack">
-              {modules.map((mod,mIdx)=>(
-                <ModuleCard
-                  key={mod._id}
-                  mod={mod} mIdx={mIdx} total={modules.length}
-                  updateTitle={updateModuleTitle}
-                  toggleOpen={toggleModuleOpen}
-                  addLesson={addLesson}
-                  updateLesson={updateLesson}
-                  removeLesson={removeLesson}
-                  removeModule={removeModule}
-                />
-              ))}
-            </div>
-            <button className="add-mod-btn" style={{marginTop:12}} onClick={addModule}>
-              + Ajouter un module
-            </button>
-            <div className="fhint" style={{marginTop:10}}>💡 Un bon cours contient 3–7 modules avec 3–8 leçons chacun. Total recommandé : 2–5h de contenu.</div>
-          </div>
-
-        </div>{/* end creator-form */}
-
-        {/* ──── RIGHT: SIDEBAR ──── */}
-        <div className="creator-sidebar">
-          <LivePreview
-            titre={titre} categorie={categorie} niveau={niveau}
-            prix={prix} gratuit={gratuit} imageUrl={imageUrl}
-            instrName={instrName} instrSeed={instrSeed}
-          />
-          <ReadinessCard
-            score={score} checks={checks} saving={saving} canPublish={canPublish}
-            onDraft={()=>handleSave('brouillon')}
-            onPublish={()=>handleSave('publié')}
-          />
-        </div>
-
-      </div>{/* end creator-wrap */}
-
-      {/* STICKY FOOTER */}
-      <div className="sticky-foot">
-        <div className="sticky-foot-inner">
-          <div className="foot-left">
-            <div style={{width:120,height:5,background:'rgba(255,255,255,0.06)',borderRadius:99,overflow:'hidden'}}>
-              <div style={{width:`${score}%`,height:'100%',background:score>=70?'var(--green)':score>=40?'var(--amber)':'var(--v)',borderRadius:99,transition:'width 600ms var(--ease)'}}/>
-            </div>
-            <div className="foot-score-lbl">{score}% complet</div>
-          </div>
-          <div className="foot-right">
-            <button className="btn btn-ghost btn-sm" disabled={saving} onClick={()=>handleSave('brouillon')}>
-              {saving?'…':'Sauvegarder brouillon'}
-            </button>
-            <button className="btn btn-primary" disabled={saving||!canPublish} onClick={()=>handleSave('publié')} title={!canPublish?'Complétez le titre et la description pour publier':''}>
-              {saving?'Publication…':'🚀 Publier le cours'}
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "nav-back"
+  }, "\u2190 ", /*#__PURE__*/React.createElement("span", null, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-title"
+  }, "Cr\xE9er un cours"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost btn-sm",
+    onClick: () => handleSave('brouillon'),
+    disabled: saving
+  }, saving ? 'Sauvegarde…' : '💾 Brouillon'))), /*#__PURE__*/React.createElement("div", {
+    className: "prog-strip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: `${score}%`,
+      background: score >= 70 ? 'linear-gradient(90deg,var(--green),#34d399)' : score >= 40 ? 'linear-gradient(90deg,var(--amber),#fbbf24)' : 'linear-gradient(90deg,var(--v),var(--c))'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "creator-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "creator-form"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Identit\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "Titre & accroche"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-sub"
+  }, "Ce sont les premiers \xE9l\xE9ments que les apprenants verront. Soyez percutant.")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, /*#__PURE__*/React.createElement("span", null, "Titre du cours", /*#__PURE__*/React.createElement("span", {
+    className: "req"
+  }, "*")), /*#__PURE__*/React.createElement("span", {
+    className: "counter"
+  }, titre.length, "/80")), /*#__PURE__*/React.createElement("input", {
+    className: "ftitle-input",
+    type: "text",
+    placeholder: "Ma\xEEtriser les Agents IA\u2026",
+    value: titre,
+    onChange: e => setTitre(e.target.value),
+    maxLength: 80
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "tips-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tips-head"
+  }, "\uD83D\uDCA1 Exemples de titres performants \u2014 cliquez pour appliquer"), /*#__PURE__*/React.createElement("div", null, TITLE_TIPS.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t,
+    className: "tip-chip",
+    onClick: () => setTitre(t)
+  }, t))))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, /*#__PURE__*/React.createElement("span", null, "Description courte", /*#__PURE__*/React.createElement("span", {
+    className: "req"
+  }, "*")), /*#__PURE__*/React.createElement("span", {
+    className: "counter"
+  }, descCourte.length, "/200")), /*#__PURE__*/React.createElement("textarea", {
+    className: "finput",
+    placeholder: "En 2 phrases : ce que l'apprenant va ma\xEEtriser et comment \xE7a va changer son business.",
+    value: descCourte,
+    onChange: e => setDescCourte(e.target.value),
+    maxLength: 200,
+    rows: 3
+  }), !descCourte && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6
+    }
+  }, DESC_TIPS.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t,
+    className: "tip-chip",
+    onClick: () => setDescCourte(t),
+    style: {
+      marginBottom: 4,
+      display: 'inline-flex',
+      textAlign: 'left'
+    }
+  }, t))))), /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Classification"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "Cat\xE9gorie, niveau & langue")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, CATS.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c.name,
+    className: `cat-pill${categorie === c.name ? ' active' : ''}`,
+    onClick: () => setCategorie(c.name)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cat-pill-icon"
+  }, c.icon), /*#__PURE__*/React.createElement("span", {
+    className: "cat-pill-name"
+  }, c.name))))), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, "Niveau"), /*#__PURE__*/React.createElement("div", {
+    className: "seg-row"
+  }, NIVEAUX.map(n => /*#__PURE__*/React.createElement("button", {
+    key: n,
+    className: `seg-btn${niveau === n ? ' active' : ''}`,
+    onClick: () => setNiveau(n)
+  }, n)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, "Langue"), /*#__PURE__*/React.createElement("select", {
+    className: "finput",
+    value: langue,
+    onChange: e => setLangue(e.target.value)
+  }, LANGUES.map(l => /*#__PURE__*/React.createElement("option", {
+    key: l
+  }, l)))))), /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Visuel"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "Image de couverture"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-sub"
+  }, "Un visuel 16:9 de qualit\xE9 peut doubler vos inscriptions. Utilisez Unsplash, Canva ou vos propres cr\xE9ations.")), /*#__PURE__*/React.createElement("div", {
+    className: `img-preview${imageUrl ? ' has-img' : ''}`
+  }, imageUrl ? /*#__PURE__*/React.createElement("img", {
+    src: imageUrl,
+    alt: "cover",
+    onError: e => {
+      e.target.src = '';
+    }
+  }) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 24
+    }
+  }, "\uD83D\uDDBC\uFE0F")), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, "URL de l'image"), /*#__PURE__*/React.createElement("input", {
+    className: "finput",
+    type: "url",
+    placeholder: "https://images.unsplash.com/photo-\u2026",
+    value: imageUrl,
+    onChange: e => setImageUrl(e.target.value)
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "fhint"
+  }, "Recommand\xE9 : 1280\xD7720px, format 16:9 \xB7 Unsplash, Pexels, Canva"))), /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Mon\xE9tisation"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "D\xE9finissez votre prix"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-sub"
+  }, "Vous gardez 70% du prix de vente. Gratuit pour construire votre audience, payant pour mon\xE9tiser.")), /*#__PURE__*/React.createElement("div", {
+    className: "price-opts"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `price-opt${gratuit ? ' active' : ''}`,
+    onClick: () => setGratuit(true)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-icon"
+  }, "\uD83C\uDD93"), /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-title"
+  }, "Gratuit"), /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-desc"
+  }, "Id\xE9al pour attirer une audience et d\xE9montrer votre expertise.")), /*#__PURE__*/React.createElement("button", {
+    className: `price-opt${!gratuit ? ' active' : ''}`,
+    onClick: () => setGratuit(false)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-icon"
+  }, "\uD83D\uDCB0"), /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-title"
+  }, "Payant"), /*#__PURE__*/React.createElement("div", {
+    className: "price-opt-desc"
+  }, "Mon\xE9tisez vos comp\xE9tences. Revenus passifs \xE0 vie."))), !gratuit && /*#__PURE__*/React.createElement("div", {
+    className: "price-input-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-sym"
+  }, "$"), /*#__PURE__*/React.createElement("input", {
+    className: "price-num",
+    type: "number",
+    min: "1",
+    placeholder: "79",
+    value: prix,
+    onChange: e => setPrix(e.target.value)
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "price-suffix"
+  }, "CAD")), !gratuit && /*#__PURE__*/React.createElement("div", {
+    className: "fhint",
+    style: {
+      marginTop: 8
+    }
+  }, "\uD83D\uDCA1 Fourchette recommand\xE9e : 47\u2013197 $ \xB7 Les cours \xE0 97 $ ont le meilleur ratio conversion/valeur per\xE7ue.")), /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Contenu"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "Description compl\xE8te"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-sub"
+  }, "D\xE9taillez le contenu, les pr\xE9requis et \xE0 qui ce cours est destin\xE9. Minimum 100 mots recommand\xE9.")), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "flabel"
+  }, /*#__PURE__*/React.createElement("span", null, "Description"), /*#__PURE__*/React.createElement("span", {
+    className: "counter"
+  }, description.length, " car.")), /*#__PURE__*/React.createElement("textarea", {
+    className: "finput",
+    placeholder: `Décrivez :\n• Ce que l'apprenant va apprendre\n• À qui ce cours est destiné\n• Les prérequis\n• Ce qui rend votre approche unique`,
+    value: description,
+    onChange: e => setDescription(e.target.value),
+    rows: 8
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "fs"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fs-lbl"
+  }, "Programme"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-title"
+  }, "Structure de votre cours"), /*#__PURE__*/React.createElement("div", {
+    className: "fs-sub"
+  }, "Organisez votre cours en modules et le\xE7ons. Ajoutez les URLs vid\xE9o (YouTube, Vimeo, Loom\u2026).")), /*#__PURE__*/React.createElement("div", {
+    className: "modules-stack"
+  }, modules.map((mod, mIdx) => /*#__PURE__*/React.createElement(ModuleCard, {
+    key: mod._id,
+    mod: mod,
+    mIdx: mIdx,
+    total: modules.length,
+    updateTitle: updateModuleTitle,
+    toggleOpen: toggleModuleOpen,
+    addLesson: addLesson,
+    updateLesson: updateLesson,
+    removeLesson: removeLesson,
+    removeModule: removeModule
+  }))), /*#__PURE__*/React.createElement("button", {
+    className: "add-mod-btn",
+    style: {
+      marginTop: 12
+    },
+    onClick: addModule
+  }, "+ Ajouter un module"), /*#__PURE__*/React.createElement("div", {
+    className: "fhint",
+    style: {
+      marginTop: 10
+    }
+  }, "\uD83D\uDCA1 Un bon cours contient 3\u20137 modules avec 3\u20138 le\xE7ons chacun. Total recommand\xE9 : 2\u20135h de contenu."))), /*#__PURE__*/React.createElement("div", {
+    className: "creator-sidebar"
+  }, /*#__PURE__*/React.createElement(LivePreview, {
+    titre: titre,
+    categorie: categorie,
+    niveau: niveau,
+    prix: prix,
+    gratuit: gratuit,
+    imageUrl: imageUrl,
+    instrName: instrName,
+    instrSeed: instrSeed
+  }), /*#__PURE__*/React.createElement(ReadinessCard, {
+    score: score,
+    checks: checks,
+    saving: saving,
+    canPublish: canPublish,
+    onDraft: () => handleSave('brouillon'),
+    onPublish: () => handleSave('publié')
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "sticky-foot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sticky-foot-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "foot-left"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 120,
+      height: 5,
+      background: 'rgba(255,255,255,0.06)',
+      borderRadius: 99,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: `${score}%`,
+      height: '100%',
+      background: score >= 70 ? 'var(--green)' : score >= 40 ? 'var(--amber)' : 'var(--v)',
+      borderRadius: 99,
+      transition: 'width 600ms var(--ease)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "foot-score-lbl"
+  }, score, "% complet")), /*#__PURE__*/React.createElement("div", {
+    className: "foot-right"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost btn-sm",
+    disabled: saving,
+    onClick: () => handleSave('brouillon')
+  }, saving ? '…' : 'Sauvegarder brouillon'), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    disabled: saving || !canPublish,
+    onClick: () => handleSave('publié'),
+    title: !canPublish ? 'Complétez le titre et la description pour publier' : ''
+  }, saving ? 'Publication…' : '🚀 Publier le cours')))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

@@ -126,60 +126,113 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script type="text/babel">
-
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-);
-const PlayIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-);
-const DocIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-);
-const StarIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-);
-
+<script>
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const CheckIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "14",
+  height: "14",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.5",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("polyline", {
+  points: "20 6 9 17 4 12"
+}));
+const PlayIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "14",
+  height: "14",
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "5 3 19 12 5 21 5 3"
+}));
+const DocIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "14",
+  height: "14",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "14 2 14 8 20 8"
+}));
+const StarIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "13",
+  height: "13",
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+}));
 const THUMB_IMGS = {
-  'Agents IA':          'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
+  'Agents IA': 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
   'Prompt Engineering': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=640&q=80',
-  'Data & Analytics':   'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
-  'Automatisation':     'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
-  'Marketing IA':       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
-  'Développement':      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
-  'Design IA':          'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80',
+  'Data & Analytics': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
+  'Automatisation': 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
+  'Marketing IA': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
+  'Développement': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
+  'Design IA': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80'
 };
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
-
 const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
-const FORMATEURS = [
-  { nom:'Rose',   domaine:'Marketing IA',       img:`${SB_STORAGE}/Rose.jpg`,   couleur:'#10B981', bio:'Experte en marketing digital IA, Rose a accompagné plus de 200 entrepreneurs à automatiser et accélérer leur présence en ligne grâce à l\'IA.' },
-  { nom:'Phelix', domaine:'Agents IA',          img:`${SB_STORAGE}/Phelix.jpg`, couleur:'#7C3AED', bio:'Spécialiste des agents autonomes, Phelix conçoit des systèmes IA qui travaillent pour toi 24h/24 sans intervention manuelle.' },
-  { nom:'Rémy',   domaine:'Automatisation',     img:`${SB_STORAGE}/Remy.jpg`,   couleur:'#F59E0B', bio:'Expert automation, Rémy transforme les workflows manuels en pipelines automatisés avec n8n, Make et l\'IA.' },
-  { nom:'Jay',    domaine:'Développement IA',   img:`${SB_STORAGE}/Jay.jpg`,    couleur:'#06B6D4', bio:'Développeur IA full-stack, Jay enseigne à créer des apps et APIs IA sans être ingénieur senior.' },
-  { nom:'Louvie', domaine:'Business & Prompts', img:`${SB_STORAGE}/Louvie.jpg`, couleur:'#EC4899', bio:'Stratège business IA, Louvie maîtrise l\'art du prompt engineering et la monétisation des compétences IA.' },
-];
-
+const FORMATEURS = [{
+  nom: 'Rose',
+  domaine: 'Marketing IA',
+  img: `${SB_STORAGE}/Rose.jpg`,
+  couleur: '#10B981',
+  bio: 'Experte en marketing digital IA, Rose a accompagné plus de 200 entrepreneurs à automatiser et accélérer leur présence en ligne grâce à l\'IA.'
+}, {
+  nom: 'Phelix',
+  domaine: 'Agents IA',
+  img: `${SB_STORAGE}/Phelix.jpg`,
+  couleur: '#7C3AED',
+  bio: 'Spécialiste des agents autonomes, Phelix conçoit des systèmes IA qui travaillent pour toi 24h/24 sans intervention manuelle.'
+}, {
+  nom: 'Rémy',
+  domaine: 'Automatisation',
+  img: `${SB_STORAGE}/Remy.jpg`,
+  couleur: '#F59E0B',
+  bio: 'Expert automation, Rémy transforme les workflows manuels en pipelines automatisés avec n8n, Make et l\'IA.'
+}, {
+  nom: 'Jay',
+  domaine: 'Développement IA',
+  img: `${SB_STORAGE}/Jay.jpg`,
+  couleur: '#06B6D4',
+  bio: 'Développeur IA full-stack, Jay enseigne à créer des apps et APIs IA sans être ingénieur senior.'
+}, {
+  nom: 'Louvie',
+  domaine: 'Business & Prompts',
+  img: `${SB_STORAGE}/Louvie.jpg`,
+  couleur: '#EC4899',
+  bio: 'Stratège business IA, Louvie maîtrise l\'art du prompt engineering et la monétisation des compétences IA.'
+}];
 const getCat = (slug, title) => {
-  const s = ((slug||'') + ' ' + (title||'')).toLowerCase();
+  const s = ((slug || '') + ' ' + (title || '')).toLowerCase();
   if (/marketing/.test(s)) return 'Marketing IA';
-  if (/agent/.test(s))     return 'Agents IA';
-  if (/automat/.test(s))   return 'Automatisation';
-  if (/d[eé]velop/.test(s))return 'Développement';
+  if (/agent/.test(s)) return 'Agents IA';
+  if (/automat/.test(s)) return 'Automatisation';
+  if (/d[eé]velop/.test(s)) return 'Développement';
   if (/prompt|business/.test(s)) return 'Prompt Engineering';
   return 'Formation IA';
 };
-
-const normMod = m => ({ ...m, titre: m.title || m.titre || 'Module', ordre: m.order_num ?? m.ordre ?? 0 });
+const normMod = m => ({
+  ...m,
+  titre: m.title || m.titre || 'Module',
+  ordre: m.order_num ?? m.ordre ?? 0
+});
 const normLesson = l => ({
   ...l,
   titre: l.title || l.titre || 'Leçon',
@@ -187,9 +240,8 @@ const normLesson = l => ({
   duree: l.duration_minutes ?? l.duree ?? 0,
   ordre: l.order_num ?? l.ordre ?? 0,
   gratuite: l.is_free ?? l.gratuite ?? false,
-  contenu_url: l.content_url || l.contenu_url || null,
+  contenu_url: l.content_url || l.contenu_url || null
 });
-
 function App() {
   const courseId = new URLSearchParams(window.location.search).get('id');
   const [user, setUser] = useState(null);
@@ -202,19 +254,22 @@ function App() {
   const [activeTab, setActiveTab] = useState('programme');
   const [openModules, setOpenModules] = useState({});
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    if (!courseId) { window.location.href = 'academie.html'; return; }
+    if (!courseId) {
+      window.location.href = 'academie.html';
+      return;
+    }
     loadData();
   }, []);
-
   const loadData = async () => {
     setLoading(true);
-    const { data: c } = await sb.from('academy_courses')
-      .select('id,slug,title,subtitle,description,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,is_published')
-      .eq('id', courseId).single();
-    if (!c) { window.location.href = 'academie.html'; return; }
-
+    const {
+      data: c
+    } = await sb.from('academy_courses').select('id,slug,title,subtitle,description,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,is_published').eq('id', courseId).single();
+    if (!c) {
+      window.location.href = 'academie.html';
+      return;
+    }
     const cat = getCat(c.slug, c.title);
     const form = FORMATEURS.find(f => f.nom.toLowerCase() === (c.instructor || '').toLowerCase());
     setCourse({
@@ -226,234 +281,333 @@ function App() {
       niveau: c.level || 'Débutant',
       langue: 'Français',
       image_url: c.thumbnail_url || THUMB_IMGS[cat] || DEFAULT_THUMB,
-      note_moyenne: 0, nb_avis: 0, nb_inscrits: 0,
-      duree_totale: c.duration_minutes || 0,
+      note_moyenne: 0,
+      nb_avis: 0,
+      nb_inscrits: 0,
+      duree_totale: c.duration_minutes || 0
     });
-    setInstructor(form
-      ? { prenom: form.nom, nom: '', specialite: form.domaine, bio: form.bio, _img: form.img, _couleur: form.couleur }
-      : { prenom: c.instructor || 'Expert', nom: '', specialite: 'Expert IA', bio: '', _img: null });
-
-    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
-    const normMods = (mods || []).map(normMod).sort((a,b) => a.ordre - b.ordre);
+    setInstructor(form ? {
+      prenom: form.nom,
+      nom: '',
+      specialite: form.domaine,
+      bio: form.bio,
+      _img: form.img,
+      _couleur: form.couleur
+    } : {
+      prenom: c.instructor || 'Expert',
+      nom: '',
+      specialite: 'Expert IA',
+      bio: '',
+      _img: null
+    });
+    const {
+      data: mods
+    } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
+    const normMods = (mods || []).map(normMod).sort((a, b) => a.ordre - b.ordre);
     setModules(normMods);
-    if (normMods.length) setOpenModules({ [normMods[0].id]: true });
-
-    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
-    setLessons((lsns || []).map(normLesson).sort((a,b) => a.ordre - b.ordre));
-
-    const { data: sess } = await sb.auth.getSession();
+    if (normMods.length) setOpenModules({
+      [normMods[0].id]: true
+    });
+    const {
+      data: lsns
+    } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
+    setLessons((lsns || []).map(normLesson).sort((a, b) => a.ordre - b.ordre));
+    const {
+      data: sess
+    } = await sb.auth.getSession();
     if (sess.session) {
       const u = sess.session.user;
-      const { data: pr } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
-      setUser({ ...u, ...pr });
-      const { data: enr } = await sb.from('academy_enrollments').select('id').eq('user_id', u.id).eq('course_id', courseId).single();
+      const {
+        data: pr
+      } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
+      setUser({
+        ...u,
+        ...pr
+      });
+      const {
+        data: enr
+      } = await sb.from('academy_enrollments').select('id').eq('user_id', u.id).eq('course_id', courseId).single();
       setEnrolled(!!enr);
     }
     setLoading(false);
   };
-
   const handleEnroll = async () => {
-    if (!user) { window.location.href = `connexion.html?redirect=cours.html?id=${courseId}`; return; }
-    if (enrolled) { window.location.href = `lecteur.html?id=${courseId}`; return; }
-    if (course.prix > 0) { window.location.href = `paiement.html?course_id=${courseId}`; return; }
+    if (!user) {
+      window.location.href = `connexion.html?redirect=cours.html?id=${courseId}`;
+      return;
+    }
+    if (enrolled) {
+      window.location.href = `lecteur.html?id=${courseId}`;
+      return;
+    }
+    if (course.prix > 0) {
+      window.location.href = `paiement.html?course_id=${courseId}`;
+      return;
+    }
     setEnrolling(true);
-    const { error } = await sb.from('academy_enrollments').insert({ user_id: user.id, course_id: courseId });
-    if (!error) { setEnrolled(true); window.location.href = `lecteur.html?id=${courseId}`; }
+    const {
+      error
+    } = await sb.from('academy_enrollments').insert({
+      user_id: user.id,
+      course_id: courseId
+    });
+    if (!error) {
+      setEnrolled(true);
+      window.location.href = `lecteur.html?id=${courseId}`;
+    }
     setEnrolling(false);
   };
-
-  const toggleModule = (id) => setOpenModules(prev => ({ ...prev, [id]: !prev[id] }));
-
+  const toggleModule = id => setOpenModules(prev => ({
+    ...prev,
+    [id]: !prev[id]
+  }));
   const totalLessons = lessons.length;
   const totalDuration = lessons.reduce((s, l) => s + (l.duree || 0), 0);
-
-  if (loading) return (
-    <div style={{display:'grid',placeItems:'center',minHeight:'100vh',color:'var(--text-3)'}}>
-      <div style={{textAlign:'center'}}>
-        <div style={{fontSize:36,marginBottom:12}}>⏳</div>
-        <div>Chargement du cours…</div>
-      </div>
-    </div>
-  );
-
+  if (loading) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      placeItems: 'center',
+      minHeight: '100vh',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 36,
+      marginBottom: 12
+    }
+  }, "\u23F3"), /*#__PURE__*/React.createElement("div", null, "Chargement du cours\u2026")));
   if (!course) return null;
-
   const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $CAD`;
-  const instrName = instructor ? `${instructor.prenom||''} ${instructor.nom||''}`.trim() : 'Expert';
-  const instrInitials = instrName ? (instrName.split(' ').map(w=>w[0]).join('')).toUpperCase().slice(0,2) : 'EX';
-
-  return (
-    <React.Fragment>
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="academie.html" className="nav-logo">← <em>Académie</em></a>
-          <div className="nav-right">
-            {user
-              ? <span style={{fontSize:13,color:'var(--text-2)'}}>Bonjour, {user.prenom || 'Apprenant'}</span>
-              : <a href="connexion.html" className="btn btn-ghost btn-sm">Se connecter</a>
-            }
-          </div>
-        </div>
-      </nav>
-
-      {/* HERO */}
-      <div className="course-hero">
-        <div className="course-hero-inner">
-          <div>
-            <div className="breadcrumb">
-              <a href="academie.html">Académie</a> / <span>{course.categorie || 'Formation'}</span>
-            </div>
-            <div className="course-cat-badge">{course.categorie || 'Formation IA'}</div>
-            <h1 className="course-hero-title">{course.titre}</h1>
-            <p className="course-hero-desc">{course.description_courte || course.description?.slice(0,200)}</p>
-            <div className="course-meta-row">
-              <div className="meta-item">
-                <div className="stars-row">{[1,2,3,4,5].map(i=><StarIcon key={i}/>)}</div>
-                <strong>{course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—'}</strong>
-                <span style={{color:'var(--text-3)'}}>({course.nb_avis||0} avis)</span>
-              </div>
-              <div className="meta-item">👥 <strong>{course.nb_inscrits||0}</strong> inscrits</div>
-              <div className="meta-item">📚 <strong>{totalLessons}</strong> leçons</div>
-              {totalDuration > 0 && <div className="meta-item">⏱ <strong>{Math.floor(totalDuration/60)}h{totalDuration%60 > 0 ? totalDuration%60+'min' : ''}</strong></div>}
-              <div className="meta-item">🎯 <strong>{course.niveau || 'Débutant'}</strong></div>
-              <div className="meta-item">🌐 <strong>{course.langue || 'Français'}</strong></div>
-            </div>
-            {instructor && (
-              <div className="instructor-mini">
-                <img src={instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar" style={{objectFit:'cover',background:'var(--surf-3)'}}/>
-                <div>
-                  <div className="instr-name">{instrName}</div>
-                  <div className="instr-spec">{instructor.specialite || 'Expert IA certifié'}</div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* STICKY CARD */}
-          <div className="sticky-card">
-            <div className="card-preview">
-              <img src={course.image_url || THUMB_IMGS[course.categorie] || DEFAULT_THUMB} alt={course.titre} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-              <div className="play-overlay">
-                <div className="play-btn"><PlayIcon/></div>
-              </div>
-            </div>
-            <div className="card-body">
-              <div className={`card-price ${course.prix===0?'free':''}`}>{prix}</div>
-              <div className="card-includes">
-                {totalLessons > 0 && <div className="include-item"><CheckIcon/>{totalLessons} leçon{totalLessons>1?'s':''}</div>}
-                {totalDuration > 0 && <div className="include-item"><CheckIcon/>{Math.floor(totalDuration/60)}h de contenu</div>}
-                <div className="include-item"><CheckIcon/>Accès à vie</div>
-                <div className="include-item"><CheckIcon/>Certificat de complétion</div>
-                <div className="include-item"><CheckIcon/>Accès mobile</div>
-              </div>
-              <button className="btn btn-primary card-enroll-btn" onClick={handleEnroll} disabled={enrolling}>
-                {enrolling ? 'Inscription…' : enrolled ? '▶ Continuer le cours' : course.prix===0 ? 'S\'inscrire gratuitement' : `S'inscrire · ${prix}`}
-              </button>
-              <div className="card-guarantee">
-                {course.prix > 0 ? '✓ Satisfait ou remboursé 30 jours' : '✓ 100% gratuit, aucune carte requise'}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* TABS */}
-      <div className="course-tabs">
-        {[{id:'programme',label:'Programme'},{id:'description',label:'Description'},{id:'instructeur',label:'Instructeur'}].map(t => (
-          <button key={t.id} className={`tab-btn ${activeTab===t.id?'active':''}`} onClick={() => setActiveTab(t.id)}>{t.label}</button>
-        ))}
-      </div>
-
-      {/* TAB CONTENT */}
-      <div className="tab-content">
-        {activeTab === 'programme' && (
-          <div>
-            <div className="content-section">
-              <h2>Ce que vous apprendrez</h2>
-              {course.description ? (
-                <div className="learn-grid">
-                  {course.description.split('\n').filter(l=>l.trim()).slice(0,8).map((item,i) => (
-                    <div key={i} className="learn-item"><CheckIcon/><span>{item.replace(/^[-•*]\s*/,'')}</span></div>
-                  ))}
-                </div>
-              ) : (
-                <p style={{color:'var(--text-3)',fontSize:14}}>Détails du programme à venir.</p>
-              )}
-            </div>
-
-            <div className="content-section">
-              <h2>Contenu du cours</h2>
-              <div style={{fontSize:13,color:'var(--text-3)',marginBottom:16}}>
-                {modules.length} section{modules.length>1?'s':''} · {totalLessons} leçon{totalLessons>1?'s':''}{totalDuration>0?` · ${Math.floor(totalDuration/60)}h de contenu`:''}
-              </div>
-              {modules.length === 0 ? (
-                <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',background:'var(--surf)',borderRadius:'var(--r)',border:'1px solid var(--border)'}}>
-                  <div style={{fontSize:28,marginBottom:8}}>📦</div>
-                  <div>Le contenu du cours sera ajouté prochainement.</div>
-                </div>
-              ) : modules.map(mod => {
-                const modLessons = lessons.filter(l => l.module_id === mod.id);
-                const isOpen = openModules[mod.id];
-                return (
-                  <div key={mod.id} className="module-block">
-                    <div className="module-header" onClick={() => toggleModule(mod.id)}>
-                      <div className="module-title">{mod.titre}</div>
-                      <div className="module-meta">{modLessons.length} leçon{modLessons.length>1?'s':''} · {isOpen?'▲':'▼'}</div>
-                    </div>
-                    {isOpen && (
-                      <div className="lesson-list">
-                        {modLessons.map(l => (
-                          <div key={l.id} className="lesson-item">
-                            <div className="lesson-icon">
-                              {l.type==='video' ? <PlayIcon/> : <DocIcon/>}
-                            </div>
-                            <div className={`lesson-title ${l.gratuite?'free':''}`}>{l.titre}</div>
-                            {l.gratuite && <span className="lesson-free-badge">Aperçu</span>}
-                            {l.duree > 0 && <div className="lesson-duration">{l.duree} min</div>}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'description' && (
-          <div className="content-section">
-            <h2>À propos de ce cours</h2>
-            <div className="desc-content">
-              {(course.description || 'Description complète à venir.').split(/\r?\n\r?\n/).map((p,i) => (
-                <p key={i} style={{marginBottom:'16px',color:'var(--text-2)',lineHeight:'1.75'}}>{p}</p>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'instructeur' && instructor && (
-          <div className="content-section">
-            <h2>Votre instructeur</h2>
-            <div className="instructor-card">
-              <div className="instr-header">
-                <img src={instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`} alt={instrName} className="instr-avatar-lg" style={{objectFit:'cover',background:'var(--surf-3)',borderRadius:'50%'}}/>
-                <div>
-                  <div style={{fontSize:18,fontWeight:700}}>{instrName}</div>
-                  <div style={{fontSize:13,color:'var(--text-2)'}}>{instructor.specialite || 'Expert IA certifié'}</div>
-                </div>
-              </div>
-              <div className="instr-bio">{instructor.bio || 'Expert certifié CreatorFlow AI Academy.'}</div>
-            </div>
-          </div>
-        )}
-      </div>
-    </React.Fragment>
-  );
+  const instrName = instructor ? `${instructor.prenom || ''} ${instructor.nom || ''}`.trim() : 'Expert';
+  const instrInitials = instrName ? instrName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : 'EX';
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "nav-logo"
+  }, "\u2190 ", /*#__PURE__*/React.createElement("em", null, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, user ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)'
+    }
+  }, "Bonjour, ", user.prenom || 'Apprenant') : /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Se connecter")))), /*#__PURE__*/React.createElement("div", {
+    className: "course-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-hero-inner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html"
+  }, "Acad\xE9mie"), " / ", /*#__PURE__*/React.createElement("span", null, course.categorie || 'Formation')), /*#__PURE__*/React.createElement("div", {
+    className: "course-cat-badge"
+  }, course.categorie || 'Formation IA'), /*#__PURE__*/React.createElement("h1", {
+    className: "course-hero-title"
+  }, course.titre), /*#__PURE__*/React.createElement("p", {
+    className: "course-hero-desc"
+  }, course.description_courte || course.description?.slice(0, 200)), /*#__PURE__*/React.createElement("div", {
+    className: "course-meta-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stars-row"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(StarIcon, {
+    key: i
+  }))), /*#__PURE__*/React.createElement("strong", null, course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—'), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "(", course.nb_avis || 0, " avis)")), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, "\uD83D\uDC65 ", /*#__PURE__*/React.createElement("strong", null, course.nb_inscrits || 0), " inscrits"), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, "\uD83D\uDCDA ", /*#__PURE__*/React.createElement("strong", null, totalLessons), " le\xE7ons"), totalDuration > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, "\u23F1 ", /*#__PURE__*/React.createElement("strong", null, Math.floor(totalDuration / 60), "h", totalDuration % 60 > 0 ? totalDuration % 60 + 'min' : '')), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, "\uD83C\uDFAF ", /*#__PURE__*/React.createElement("strong", null, course.niveau || 'Débutant')), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, "\uD83C\uDF10 ", /*#__PURE__*/React.createElement("strong", null, course.langue || 'Français'))), instructor && /*#__PURE__*/React.createElement("div", {
+    className: "instructor-mini"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`,
+    alt: instrName,
+    className: "instr-avatar",
+    style: {
+      objectFit: 'cover',
+      background: 'var(--surf-3)'
+    }
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "instr-name"
+  }, instrName), /*#__PURE__*/React.createElement("div", {
+    className: "instr-spec"
+  }, instructor.specialite || 'Expert IA certifié')))), /*#__PURE__*/React.createElement("div", {
+    className: "sticky-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-preview"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: course.image_url || THUMB_IMGS[course.categorie] || DEFAULT_THUMB,
+    alt: course.titre,
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "play-overlay"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "play-btn"
+  }, /*#__PURE__*/React.createElement(PlayIcon, null)))), /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `card-price ${course.prix === 0 ? 'free' : ''}`
+  }, prix), /*#__PURE__*/React.createElement("div", {
+    className: "card-includes"
+  }, totalLessons > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "include-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), totalLessons, " le\xE7on", totalLessons > 1 ? 's' : ''), totalDuration > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "include-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), Math.floor(totalDuration / 60), "h de contenu"), /*#__PURE__*/React.createElement("div", {
+    className: "include-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), "Acc\xE8s \xE0 vie"), /*#__PURE__*/React.createElement("div", {
+    className: "include-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), "Certificat de compl\xE9tion"), /*#__PURE__*/React.createElement("div", {
+    className: "include-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), "Acc\xE8s mobile")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary card-enroll-btn",
+    onClick: handleEnroll,
+    disabled: enrolling
+  }, enrolling ? 'Inscription…' : enrolled ? '▶ Continuer le cours' : course.prix === 0 ? 'S\'inscrire gratuitement' : `S'inscrire · ${prix}`), /*#__PURE__*/React.createElement("div", {
+    className: "card-guarantee"
+  }, course.prix > 0 ? '✓ Satisfait ou remboursé 30 jours' : '✓ 100% gratuit, aucune carte requise'))))), /*#__PURE__*/React.createElement("div", {
+    className: "course-tabs"
+  }, [{
+    id: 'programme',
+    label: 'Programme'
+  }, {
+    id: 'description',
+    label: 'Description'
+  }, {
+    id: 'instructeur',
+    label: 'Instructeur'
+  }].map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    className: `tab-btn ${activeTab === t.id ? 'active' : ''}`,
+    onClick: () => setActiveTab(t.id)
+  }, t.label))), /*#__PURE__*/React.createElement("div", {
+    className: "tab-content"
+  }, activeTab === 'programme' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "content-section"
+  }, /*#__PURE__*/React.createElement("h2", null, "Ce que vous apprendrez"), course.description ? /*#__PURE__*/React.createElement("div", {
+    className: "learn-grid"
+  }, course.description.split('\n').filter(l => l.trim()).slice(0, 8).map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "learn-item"
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), /*#__PURE__*/React.createElement("span", null, item.replace(/^[-•*]\s*/, ''))))) : /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-3)',
+      fontSize: 14
+    }
+  }, "D\xE9tails du programme \xE0 venir.")), /*#__PURE__*/React.createElement("div", {
+    className: "content-section"
+  }, /*#__PURE__*/React.createElement("h2", null, "Contenu du cours"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)',
+      marginBottom: 16
+    }
+  }, modules.length, " section", modules.length > 1 ? 's' : '', " \xB7 ", totalLessons, " le\xE7on", totalLessons > 1 ? 's' : '', totalDuration > 0 ? ` · ${Math.floor(totalDuration / 60)}h de contenu` : ''), modules.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      background: 'var(--surf)',
+      borderRadius: 'var(--r)',
+      border: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCE6"), /*#__PURE__*/React.createElement("div", null, "Le contenu du cours sera ajout\xE9 prochainement.")) : modules.map(mod => {
+    const modLessons = lessons.filter(l => l.module_id === mod.id);
+    const isOpen = openModules[mod.id];
+    return /*#__PURE__*/React.createElement("div", {
+      key: mod.id,
+      className: "module-block"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "module-header",
+      onClick: () => toggleModule(mod.id)
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "module-title"
+    }, mod.titre), /*#__PURE__*/React.createElement("div", {
+      className: "module-meta"
+    }, modLessons.length, " le\xE7on", modLessons.length > 1 ? 's' : '', " \xB7 ", isOpen ? '▲' : '▼')), isOpen && /*#__PURE__*/React.createElement("div", {
+      className: "lesson-list"
+    }, modLessons.map(l => /*#__PURE__*/React.createElement("div", {
+      key: l.id,
+      className: "lesson-item"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "lesson-icon"
+    }, l.type === 'video' ? /*#__PURE__*/React.createElement(PlayIcon, null) : /*#__PURE__*/React.createElement(DocIcon, null)), /*#__PURE__*/React.createElement("div", {
+      className: `lesson-title ${l.gratuite ? 'free' : ''}`
+    }, l.titre), l.gratuite && /*#__PURE__*/React.createElement("span", {
+      className: "lesson-free-badge"
+    }, "Aper\xE7u"), l.duree > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "lesson-duration"
+    }, l.duree, " min")))));
+  }))), activeTab === 'description' && /*#__PURE__*/React.createElement("div", {
+    className: "content-section"
+  }, /*#__PURE__*/React.createElement("h2", null, "\xC0 propos de ce cours"), /*#__PURE__*/React.createElement("div", {
+    className: "desc-content"
+  }, (course.description || 'Description complète à venir.').split(/\r?\n\r?\n/).map((p, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    style: {
+      marginBottom: '16px',
+      color: 'var(--text-2)',
+      lineHeight: '1.75'
+    }
+  }, p)))), activeTab === 'instructeur' && instructor && /*#__PURE__*/React.createElement("div", {
+    className: "content-section"
+  }, /*#__PURE__*/React.createElement("h2", null, "Votre instructeur"), /*#__PURE__*/React.createElement("div", {
+    className: "instructor-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "instr-header"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: instructor._img || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(instrName)}`,
+    alt: instrName,
+    className: "instr-avatar-lg",
+    style: {
+      objectFit: 'cover',
+      background: 'var(--surf-3)',
+      borderRadius: '50%'
+    }
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 18,
+      fontWeight: 700
+    }
+  }, instrName), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)'
+    }
+  }, instructor.specialite || 'Expert IA certifié'))), /*#__PURE__*/React.createElement("div", {
+    className: "instr-bio"
+  }, instructor.bio || 'Expert certifié CreatorFlow AI Academy.')))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

@@ -85,16 +85,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script type="text/babel">
-
-const { useState, useEffect, useMemo } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+const {
+  useState,
+  useEffect,
+  useMemo
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const toEmbedUrl = url => {
   if (!url) return null;
   if (url.includes('/embed/') || url.includes('player.vimeo') || url.includes('loom.com/embed')) return url;
@@ -106,27 +106,59 @@ const toEmbedUrl = url => {
   if (vim) return `https://player.vimeo.com/video/${vim[1]}`;
   return url;
 };
-
-const normMod = m => ({ ...m, titre: m.title || m.titre || 'Module', ordre: m.order_num ?? m.ordre ?? 0 });
+const normMod = m => ({
+  ...m,
+  titre: m.title || m.titre || 'Module',
+  ordre: m.order_num ?? m.ordre ?? 0
+});
 const normLesson = l => ({
   ...l,
   titre: l.title || l.titre || 'Leçon',
   type: l.type || 'video',
   duree: l.duration_minutes ?? l.duree ?? 0,
   ordre: l.order_num ?? l.ordre ?? 0,
-  contenu_url: toEmbedUrl(l.content_url || l.contenu_url || null),
+  contenu_url: toEmbedUrl(l.content_url || l.contenu_url || null)
 });
-
-const CheckIcon = ({size=14}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-);
-const PlayIcon = ({size=12}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-);
-const DocIcon = ({size=12}) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-);
-
+const CheckIcon = ({
+  size = 14
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.5",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("polyline", {
+  points: "20 6 9 17 4 12"
+}));
+const PlayIcon = ({
+  size = 12
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "5 3 19 12 5 21 5 3"
+}));
+const DocIcon = ({
+  size = 12
+}) => /*#__PURE__*/React.createElement("svg", {
+  width: size,
+  height: size,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+}), /*#__PURE__*/React.createElement("polyline", {
+  points: "14 2 14 8 20 8"
+}));
 function App() {
   const courseId = new URLSearchParams(window.location.search).get('id');
   const [user, setUser] = useState(null);
@@ -138,195 +170,268 @@ function App() {
   const [enrollment, setEnrollment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notEnrolled, setNotEnrolled] = useState(false);
-
   useEffect(() => {
-    if (!courseId) { window.location.href = 'academie.html'; return; }
+    if (!courseId) {
+      window.location.href = 'academie.html';
+      return;
+    }
     loadData();
   }, []);
-
   const loadData = async () => {
-    const { data: sess } = await sb.auth.getSession();
-    if (!sess.session) { window.location.href = 'connexion.html'; return; }
+    const {
+      data: sess
+    } = await sb.auth.getSession();
+    if (!sess.session) {
+      window.location.href = 'connexion.html';
+      return;
+    }
     const u = sess.session.user;
-    const { data: pr } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
-    setUser({ ...u, ...pr });
-
-    const { data: enr } = await sb.from('academy_enrollments').select('*').eq('user_id', u.id).eq('course_id', courseId).single();
-    if (!enr) { setNotEnrolled(true); setLoading(false); return; }
+    const {
+      data: pr
+    } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
+    setUser({
+      ...u,
+      ...pr
+    });
+    const {
+      data: enr
+    } = await sb.from('academy_enrollments').select('*').eq('user_id', u.id).eq('course_id', courseId).single();
+    if (!enr) {
+      setNotEnrolled(true);
+      setLoading(false);
+      return;
+    }
     setEnrollment(enr);
-
-    const { data: c } = await sb.from('academy_courses').select('id,slug,title,thumbnail_url').eq('id', courseId).single();
-    setCourse(c ? { ...c, titre: c.title } : null);
-
-    const { data: mods } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
-    setModules((mods || []).map(normMod).sort((a,b) => a.ordre - b.ordre));
-
-    const { data: lsns } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
-    const normLessons = (lsns || []).map(normLesson).sort((a,b) => a.ordre - b.ordre);
+    const {
+      data: c
+    } = await sb.from('academy_courses').select('id,slug,title,thumbnail_url').eq('id', courseId).single();
+    setCourse(c ? {
+      ...c,
+      titre: c.title
+    } : null);
+    const {
+      data: mods
+    } = await sb.from('academy_modules').select('*').eq('course_id', courseId);
+    setModules((mods || []).map(normMod).sort((a, b) => a.ordre - b.ordre));
+    const {
+      data: lsns
+    } = await sb.from('academy_lessons').select('*').eq('course_id', courseId);
+    const normLessons = (lsns || []).map(normLesson).sort((a, b) => a.ordre - b.ordre);
     setLessons(normLessons);
     if (normLessons.length) setActiveLesson(normLessons[0]);
-
-    const { data: comps } = await sb.from('academy_progress').select('lesson_id').eq('user_id', u.id).eq('course_id', courseId);
+    const {
+      data: comps
+    } = await sb.from('academy_progress').select('lesson_id').eq('user_id', u.id).eq('course_id', courseId);
     setCompletedIds(new Set((comps || []).map(r => r.lesson_id)));
-
     setLoading(false);
   };
-
   const handleComplete = async () => {
     if (!activeLesson || !user) return;
     if (completedIds.has(activeLesson.id)) {
       await sb.from('academy_progress').delete().eq('user_id', user.id).eq('lesson_id', activeLesson.id);
-      setCompletedIds(prev => { const s = new Set(prev); s.delete(activeLesson.id); return s; });
+      setCompletedIds(prev => {
+        const s = new Set(prev);
+        s.delete(activeLesson.id);
+        return s;
+      });
     } else {
-      await sb.from('academy_progress').insert({ user_id: user.id, lesson_id: activeLesson.id, course_id: courseId });
+      await sb.from('academy_progress').insert({
+        user_id: user.id,
+        lesson_id: activeLesson.id,
+        course_id: courseId
+      });
       setCompletedIds(prev => new Set([...prev, activeLesson.id]));
     }
   };
-
   const currentIndex = lessons.findIndex(l => l.id === activeLesson?.id);
-  const progress = lessons.length > 0 ? Math.round((completedIds.size / lessons.length) * 100) : 0;
+  const progress = lessons.length > 0 ? Math.round(completedIds.size / lessons.length * 100) : 0;
   const allDone = lessons.length > 0 && completedIds.size === lessons.length;
-
-  if (loading) return (
-    <div style={{display:'grid',placeItems:'center',height:'100vh',color:'var(--text-3)'}}>
-      <div style={{textAlign:'center'}}><div style={{fontSize:36,marginBottom:12}}>⏳</div><div>Chargement…</div></div>
-    </div>
-  );
-
-  if (notEnrolled) return (
-    <div style={{display:'grid',placeItems:'center',height:'100vh'}}>
-      <div style={{textAlign:'center'}}>
-        <div style={{fontSize:40,marginBottom:12}}>🔒</div>
-        <div style={{fontSize:18,fontWeight:700,marginBottom:8}}>Accès restreint</div>
-        <div style={{fontSize:14,color:'var(--text-2)',marginBottom:20}}>Vous n'êtes pas inscrit à ce cours.</div>
-        <a href={`cours.html?id=${courseId}`} style={{display:'inline-flex',alignItems:'center',gap:7,padding:'10px 24px',borderRadius:'999px',background:'linear-gradient(135deg,var(--v),var(--v2))',color:'#fff',fontWeight:600,fontSize:14}}>Voir le cours</a>
-      </div>
-    </div>
-  );
-
-  return (
-    <React.Fragment>
-      {/* NAV */}
-      <nav className="nav">
-        <a href="academie.html" className="nav-logo">← <em>Académie</em></a>
-        <div className="nav-course-title">{course?.titre}</div>
-        <div className="nav-prog">
-          <div className="prog-bar"><div className="prog-fill" style={{width:progress+'%'}}/></div>
-          <span>{progress}%</span>
-        </div>
-        <a href={`cours.html?id=${courseId}`} className="nav-btn">Détails</a>
-      </nav>
-
-      <div className="player-layout">
-        {/* MAIN */}
-        <div className="player-main">
-          {/* VIDEO */}
-          <div className="video-area">
-            {activeLesson?.contenu_url ? (
-              activeLesson.type === 'video' ? (
-                <iframe
-                  src={activeLesson.contenu_url}
-                  style={{width:'100%',height:'100%',border:'none'}}
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
-              ) : (
-                <div className="video-placeholder">
-                  <div className="icon">📄</div>
-                  <p>Contenu texte disponible. <a href={activeLesson.contenu_url} target="_blank" rel="noopener">Ouvrir →</a></p>
-                </div>
-              )
-            ) : (
-              <div className="video-placeholder">
-                <div className="icon">🎬</div>
-                <p>La vidéo de cette leçon sera disponible prochainement.</p>
-                <p style={{marginTop:8,fontSize:12}}>L'instructeur ajoute le contenu progressivement.</p>
-              </div>
-            )}
-          </div>
-
-          {/* LESSON INFO */}
-          {activeLesson && (
-            <div className="lesson-info">
-              <div className="lesson-title">{activeLesson.titre}</div>
-              <div className="lesson-meta">
-                <span>{activeLesson.type === 'video' ? '🎬 Vidéo' : '📄 Texte'}</span>
-                {activeLesson.duree > 0 && <span>⏱ {activeLesson.duree} min</span>}
-                <button className={`complete-btn ${completedIds.has(activeLesson.id)?'done':''}`} onClick={handleComplete}>
-                  <CheckIcon/> {completedIds.has(activeLesson.id) ? 'Complétée ✓' : 'Marquer comme complétée'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* CERTIFICATE */}
-          {allDone && (
-            <div className="certificate-section">
-              <div className="cert-icon">🎓</div>
-              <div className="cert-title">Félicitations ! Cours terminé.</div>
-              <div className="cert-sub">Vous avez complété toutes les leçons de "{course?.titre}"</div>
-              <button className="cert-btn" onClick={() => alert('Certificat PDF bientôt disponible !')}>
-                🏆 Télécharger mon certificat
-              </button>
-            </div>
-          )}
-
-          {/* NAV LESSONS */}
-          <div className="nav-lessons">
-            <button className="prev-btn" disabled={currentIndex <= 0} onClick={() => setActiveLesson(lessons[currentIndex-1])}>← Précédent</button>
-            <div style={{flex:1,textAlign:'center',fontSize:12,color:'var(--text-3)'}}>
-              Leçon {currentIndex+1} / {lessons.length}
-            </div>
-            <button className="next-btn" disabled={currentIndex >= lessons.length-1} onClick={() => setActiveLesson(lessons[currentIndex+1])}>Suivant →</button>
-          </div>
-        </div>
-
-        {/* SIDEBAR */}
-        <aside className="player-sidebar">
-          <div className="sidebar-header">
-            Contenu du cours · {completedIds.size}/{lessons.length} leçons
-          </div>
-          {modules.map(mod => {
-            const modLessons = lessons.filter(l => l.module_id === mod.id);
-            const modDone = modLessons.filter(l => completedIds.has(l.id)).length;
-            return (
-              <div key={mod.id} className="module-group">
-                <div className="module-group-header">
-                  <span>{mod.titre}</span>
-                  <span>{modDone}/{modLessons.length}</span>
-                </div>
-                {modLessons.map(l => (
-                  <div
-                    key={l.id}
-                    className={`lesson-row ${activeLesson?.id===l.id?'active':''} ${completedIds.has(l.id)?'completed':''}`}
-                    onClick={() => setActiveLesson(l)}
-                  >
-                    <div className="lesson-row-icon">
-                      {completedIds.has(l.id)
-                        ? <CheckIcon size={12}/>
-                        : l.type==='video' ? <PlayIcon/> : <DocIcon/>
-                      }
-                    </div>
-                    <div className="lesson-row-title">{l.titre}</div>
-                    {l.duree > 0 && <div className="lesson-row-dur">{l.duree}min</div>}
-                  </div>
-                ))}
-              </div>
-            );
-          })}
-          {modules.length === 0 && (
-            <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)',fontSize:13}}>
-              <div style={{fontSize:28,marginBottom:8}}>📦</div>
-              <div>Contenu en cours d'ajout</div>
-            </div>
-          )}
-        </aside>
-      </div>
-    </React.Fragment>
-  );
+  if (loading) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      placeItems: 'center',
+      height: '100vh',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 36,
+      marginBottom: 12
+    }
+  }, "\u23F3"), /*#__PURE__*/React.createElement("div", null, "Chargement\u2026")));
+  if (notEnrolled) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      placeItems: 'center',
+      height: '100vh'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 12
+    }
+  }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 18,
+      fontWeight: 700,
+      marginBottom: 8
+    }
+  }, "Acc\xE8s restreint"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginBottom: 20
+    }
+  }, "Vous n'\xEAtes pas inscrit \xE0 ce cours."), /*#__PURE__*/React.createElement("a", {
+    href: `cours.html?id=${courseId}`,
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 7,
+      padding: '10px 24px',
+      borderRadius: '999px',
+      background: 'linear-gradient(135deg,var(--v),var(--v2))',
+      color: '#fff',
+      fontWeight: 600,
+      fontSize: 14
+    }
+  }, "Voir le cours")));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "nav-logo"
+  }, "\u2190 ", /*#__PURE__*/React.createElement("em", null, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-course-title"
+  }, course?.titre), /*#__PURE__*/React.createElement("div", {
+    className: "nav-prog"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: progress + '%'
+    }
+  })), /*#__PURE__*/React.createElement("span", null, progress, "%")), /*#__PURE__*/React.createElement("a", {
+    href: `cours.html?id=${courseId}`,
+    className: "nav-btn"
+  }, "D\xE9tails")), /*#__PURE__*/React.createElement("div", {
+    className: "player-layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "player-main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "video-area"
+  }, activeLesson?.contenu_url ? activeLesson.type === 'video' ? /*#__PURE__*/React.createElement("iframe", {
+    src: activeLesson.contenu_url,
+    style: {
+      width: '100%',
+      height: '100%',
+      border: 'none'
+    },
+    allowFullScreen: true,
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "video-placeholder"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "icon"
+  }, "\uD83D\uDCC4"), /*#__PURE__*/React.createElement("p", null, "Contenu texte disponible. ", /*#__PURE__*/React.createElement("a", {
+    href: activeLesson.contenu_url,
+    target: "_blank",
+    rel: "noopener"
+  }, "Ouvrir \u2192"))) : /*#__PURE__*/React.createElement("div", {
+    className: "video-placeholder"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "icon"
+  }, "\uD83C\uDFAC"), /*#__PURE__*/React.createElement("p", null, "La vid\xE9o de cette le\xE7on sera disponible prochainement."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: 8,
+      fontSize: 12
+    }
+  }, "L'instructeur ajoute le contenu progressivement."))), activeLesson && /*#__PURE__*/React.createElement("div", {
+    className: "lesson-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lesson-title"
+  }, activeLesson.titre), /*#__PURE__*/React.createElement("div", {
+    className: "lesson-meta"
+  }, /*#__PURE__*/React.createElement("span", null, activeLesson.type === 'video' ? '🎬 Vidéo' : '📄 Texte'), activeLesson.duree > 0 && /*#__PURE__*/React.createElement("span", null, "\u23F1 ", activeLesson.duree, " min"), /*#__PURE__*/React.createElement("button", {
+    className: `complete-btn ${completedIds.has(activeLesson.id) ? 'done' : ''}`,
+    onClick: handleComplete
+  }, /*#__PURE__*/React.createElement(CheckIcon, null), " ", completedIds.has(activeLesson.id) ? 'Complétée ✓' : 'Marquer comme complétée'))), allDone && /*#__PURE__*/React.createElement("div", {
+    className: "certificate-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-icon"
+  }, "\uD83C\uDF93"), /*#__PURE__*/React.createElement("div", {
+    className: "cert-title"
+  }, "F\xE9licitations ! Cours termin\xE9."), /*#__PURE__*/React.createElement("div", {
+    className: "cert-sub"
+  }, "Vous avez compl\xE9t\xE9 toutes les le\xE7ons de \"", course?.titre, "\""), /*#__PURE__*/React.createElement("button", {
+    className: "cert-btn",
+    onClick: () => alert('Certificat PDF bientôt disponible !')
+  }, "\uD83C\uDFC6 T\xE9l\xE9charger mon certificat")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-lessons"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "prev-btn",
+    disabled: currentIndex <= 0,
+    onClick: () => setActiveLesson(lessons[currentIndex - 1])
+  }, "\u2190 Pr\xE9c\xE9dent"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      textAlign: 'center',
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "Le\xE7on ", currentIndex + 1, " / ", lessons.length), /*#__PURE__*/React.createElement("button", {
+    className: "next-btn",
+    disabled: currentIndex >= lessons.length - 1,
+    onClick: () => setActiveLesson(lessons[currentIndex + 1])
+  }, "Suivant \u2192"))), /*#__PURE__*/React.createElement("aside", {
+    className: "player-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-header"
+  }, "Contenu du cours \xB7 ", completedIds.size, "/", lessons.length, " le\xE7ons"), modules.map(mod => {
+    const modLessons = lessons.filter(l => l.module_id === mod.id);
+    const modDone = modLessons.filter(l => completedIds.has(l.id)).length;
+    return /*#__PURE__*/React.createElement("div", {
+      key: mod.id,
+      className: "module-group"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "module-group-header"
+    }, /*#__PURE__*/React.createElement("span", null, mod.titre), /*#__PURE__*/React.createElement("span", null, modDone, "/", modLessons.length)), modLessons.map(l => /*#__PURE__*/React.createElement("div", {
+      key: l.id,
+      className: `lesson-row ${activeLesson?.id === l.id ? 'active' : ''} ${completedIds.has(l.id) ? 'completed' : ''}`,
+      onClick: () => setActiveLesson(l)
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "lesson-row-icon"
+    }, completedIds.has(l.id) ? /*#__PURE__*/React.createElement(CheckIcon, {
+      size: 12
+    }) : l.type === 'video' ? /*#__PURE__*/React.createElement(PlayIcon, null) : /*#__PURE__*/React.createElement(DocIcon, null)), /*#__PURE__*/React.createElement("div", {
+      className: "lesson-row-title"
+    }, l.titre), l.duree > 0 && /*#__PURE__*/React.createElement("div", {
+      className: "lesson-row-dur"
+    }, l.duree, "min"))));
+  }), modules.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCE6"), /*#__PURE__*/React.createElement("div", null, "Contenu en cours d'ajout")))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

@@ -131,7 +131,6 @@
 <div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function() {
@@ -182,151 +181,317 @@
   });
 })();
 </script>
-<script type="text/babel">
-const { useState, useEffect, useCallback } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const CATS = [
-  { id:'all',                    label:'Tout',               color:'#7C3AED' },
-  { id:'Actualités IA',          label:'Actualités IA',      color:'#F59E0B' },
-  { id:'Outils IA',              label:'Outils IA',          color:'#06B6D4' },
-  { id:'Tutoriels IA',           label:'Tutoriels IA',       color:'#3B82F6' },
-  { id:'Comparatifs IA',         label:'Comparatifs IA',     color:'#F97316' },
-  { id:'Guides IA',              label:'Guides IA',          color:'#84CC16' },
-  { id:'Automatisation IA',      label:'Automatisation IA',  color:'#10B981' },
-  { id:'Marketing IA',           label:'Marketing IA',       color:'#7C3AED' },
-  { id:'Création de Contenu IA', label:'Contenu IA',         color:'#EF4444' },
-  { id:'Vente IA',               label:'Vente IA',           color:'#8B5CF6' },
-];
-const ICONS = {'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈','Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝','Tutoriels IA':'📚','Comparatifs IA':'⚖️','Guides IA':'🗺️'};
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const CATS = [{
+  id: 'all',
+  label: 'Tout',
+  color: '#7C3AED'
+}, {
+  id: 'Actualités IA',
+  label: 'Actualités IA',
+  color: '#F59E0B'
+}, {
+  id: 'Outils IA',
+  label: 'Outils IA',
+  color: '#06B6D4'
+}, {
+  id: 'Tutoriels IA',
+  label: 'Tutoriels IA',
+  color: '#3B82F6'
+}, {
+  id: 'Comparatifs IA',
+  label: 'Comparatifs IA',
+  color: '#F97316'
+}, {
+  id: 'Guides IA',
+  label: 'Guides IA',
+  color: '#84CC16'
+}, {
+  id: 'Automatisation IA',
+  label: 'Automatisation IA',
+  color: '#10B981'
+}, {
+  id: 'Marketing IA',
+  label: 'Marketing IA',
+  color: '#7C3AED'
+}, {
+  id: 'Création de Contenu IA',
+  label: 'Contenu IA',
+  color: '#EF4444'
+}, {
+  id: 'Vente IA',
+  label: 'Vente IA',
+  color: '#8B5CF6'
+}];
+const ICONS = {
+  'Actualités IA': '🔥',
+  'Outils IA': '🛠',
+  'Automatisation IA': '⚡',
+  'Marketing IA': '📈',
+  'Création de Contenu IA': '🎬',
+  'Vente IA': '💰',
+  'Support Client IA': '🤝',
+  'Tutoriels IA': '📚',
+  'Comparatifs IA': '⚖️',
+  'Guides IA': '🗺️'
+};
 const catColor = c => CATS.find(x => x.id === c)?.color || '#7C3AED';
-const catGrad  = c => ({
-  'Actualités IA':         'linear-gradient(135deg,rgba(245,158,11,0.22),rgba(245,158,11,0.06))',
-  'Outils IA':             'linear-gradient(135deg,rgba(6,182,212,0.22),rgba(6,182,212,0.06))',
-  'Automatisation IA':     'linear-gradient(135deg,rgba(16,185,129,0.22),rgba(16,185,129,0.06))',
-  'Marketing IA':          'linear-gradient(135deg,rgba(124,58,237,0.22),rgba(124,58,237,0.06))',
-  'Création de Contenu IA':'linear-gradient(135deg,rgba(239,68,68,0.22),rgba(239,68,68,0.06))',
-  'Vente IA':              'linear-gradient(135deg,rgba(139,92,246,0.22),rgba(139,92,246,0.06))',
-  'Support Client IA':     'linear-gradient(135deg,rgba(236,72,153,0.22),rgba(236,72,153,0.06))',
-}[c] || 'linear-gradient(135deg,rgba(124,58,237,0.18),rgba(6,182,212,0.08))');
-
-const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA',{day:'numeric',month:'short',year:'numeric'}) : '';
-
-const DEMO = [
-  {id:'1',slug:'claude-4-anthropic-revolution-llm-2026',title:"Claude 4 d'Anthropic Révolutionne le Développement IA",excerpt:"Anthropic vient de lancer Claude 4, son modèle le plus avancé. Avec des capacités de raisonnement étendues et une fenêtre de contexte de 500k tokens, ce modèle change la donne pour les développeurs et créateurs de contenu francophones.",category:'Actualités IA',author:'CreatorFlow AI',reading_time:8,views:2847,is_featured:true,published_at:'2026-06-01T10:00:00Z',featured_image:null},
-  {id:'2',slug:'top-10-outils-ia-createurs-2026',title:'10 Outils IA Indispensables pour les Créateurs en 2026',excerpt:"De la génération vidéo à l'automatisation des réseaux sociaux, voici les outils IA qui transforment le workflow des créateurs de contenu les plus performants cette année.",category:'Outils IA',author:'CreatorFlow AI',reading_time:12,views:5234,is_featured:false,published_at:'2026-05-30T09:00:00Z',featured_image:null},
-  {id:'3',slug:'n8n-automatiser-contenu-reseaux-sociaux',title:'n8n : Automatiser 100% de Votre Contenu Réseaux Sociaux',excerpt:"Découvrez comment configurer un workflow n8n qui génère, planifie et publie automatiquement votre contenu sur Instagram, TikTok, YouTube et LinkedIn sans lever le petit doigt.",category:'Automatisation IA',author:'CreatorFlow AI',reading_time:15,views:8912,is_featured:false,published_at:'2026-05-28T14:00:00Z',featured_image:null},
-  {id:'4',slug:'prompt-engineering-ventes-strategies-avancees',title:'Prompt Engineering Avancé pour Multiplier vos Ventes',excerpt:"Maîtrisez les techniques de prompt engineering qui permettent aux meilleurs copywriters IA de générer des séquences d'emails et des pages de vente à fort taux de conversion.",category:'Vente IA',author:'CreatorFlow AI',reading_time:10,views:3456,is_featured:false,published_at:'2026-05-25T11:00:00Z',featured_image:null},
-  {id:'5',slug:'strategie-contenu-ia-youtube-tiktok',title:'Dominer YouTube et TikTok avec l\'IA en 2026',excerpt:"Comment les créateurs utilisent l'IA pour produire 30 vidéos par mois, optimiser leurs titres et miniatures, et atteindre la monétisation en moins de 6 mois.",category:'Marketing IA',author:'CreatorFlow AI',reading_time:11,views:7123,is_featured:false,published_at:'2026-05-22T08:00:00Z',featured_image:null},
-  {id:'6',slug:'comparatif-gpt4o-gemini-claude-2026',title:'GPT-4o vs Gemini Pro vs Claude : Comparatif Honnête 2026',excerpt:"Nous avons testé les trois grands modèles IA sur 50 tâches différentes : rédaction, code, analyse, créativité et pricing. Résultats honnêtes pour savoir lequel choisir selon votre usage.",category:'Actualités IA',author:'CreatorFlow AI',reading_time:18,views:15782,is_featured:false,published_at:'2026-05-20T12:00:00Z',featured_image:null},
-  {id:'7',slug:'creer-chatbot-ia-service-client-2026',title:'Créer un Chatbot IA pour Votre Service Client en 2h',excerpt:"Guide pas à pas pour déployer un assistant IA qui répond à 80% de vos questions clients automatiquement, en français, intégré à votre site ou WhatsApp.",category:'Support Client IA',author:'CreatorFlow AI',reading_time:14,views:4567,is_featured:false,published_at:'2026-05-18T10:00:00Z',featured_image:null},
-  {id:'8',slug:'midjourney-dalle-flux-comparatif-images-ia',title:'Midjourney vs DALL-E vs Flux : Quelle IA Génère les Meilleures Images ?',excerpt:"Test exhaustif des générateurs d'images IA les plus populaires sur des cas d'usage réels : marketing, miniatures YouTube, visuels produits et contenu Instagram.",category:'Création de Contenu IA',author:'CreatorFlow AI',reading_time:9,views:11230,is_featured:false,published_at:'2026-05-15T09:00:00Z',featured_image:null},
-];
-
-function CatBadge({cat}){
+const catGrad = c => ({
+  'Actualités IA': 'linear-gradient(135deg,rgba(245,158,11,0.22),rgba(245,158,11,0.06))',
+  'Outils IA': 'linear-gradient(135deg,rgba(6,182,212,0.22),rgba(6,182,212,0.06))',
+  'Automatisation IA': 'linear-gradient(135deg,rgba(16,185,129,0.22),rgba(16,185,129,0.06))',
+  'Marketing IA': 'linear-gradient(135deg,rgba(124,58,237,0.22),rgba(124,58,237,0.06))',
+  'Création de Contenu IA': 'linear-gradient(135deg,rgba(239,68,68,0.22),rgba(239,68,68,0.06))',
+  'Vente IA': 'linear-gradient(135deg,rgba(139,92,246,0.22),rgba(139,92,246,0.06))',
+  'Support Client IA': 'linear-gradient(135deg,rgba(236,72,153,0.22),rgba(236,72,153,0.06))'
+})[c] || 'linear-gradient(135deg,rgba(124,58,237,0.18),rgba(6,182,212,0.08))';
+const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric'
+}) : '';
+const DEMO = [{
+  id: '1',
+  slug: 'claude-4-anthropic-revolution-llm-2026',
+  title: "Claude 4 d'Anthropic Révolutionne le Développement IA",
+  excerpt: "Anthropic vient de lancer Claude 4, son modèle le plus avancé. Avec des capacités de raisonnement étendues et une fenêtre de contexte de 500k tokens, ce modèle change la donne pour les développeurs et créateurs de contenu francophones.",
+  category: 'Actualités IA',
+  author: 'CreatorFlow AI',
+  reading_time: 8,
+  views: 2847,
+  is_featured: true,
+  published_at: '2026-06-01T10:00:00Z',
+  featured_image: null
+}, {
+  id: '2',
+  slug: 'top-10-outils-ia-createurs-2026',
+  title: '10 Outils IA Indispensables pour les Créateurs en 2026',
+  excerpt: "De la génération vidéo à l'automatisation des réseaux sociaux, voici les outils IA qui transforment le workflow des créateurs de contenu les plus performants cette année.",
+  category: 'Outils IA',
+  author: 'CreatorFlow AI',
+  reading_time: 12,
+  views: 5234,
+  is_featured: false,
+  published_at: '2026-05-30T09:00:00Z',
+  featured_image: null
+}, {
+  id: '3',
+  slug: 'n8n-automatiser-contenu-reseaux-sociaux',
+  title: 'n8n : Automatiser 100% de Votre Contenu Réseaux Sociaux',
+  excerpt: "Découvrez comment configurer un workflow n8n qui génère, planifie et publie automatiquement votre contenu sur Instagram, TikTok, YouTube et LinkedIn sans lever le petit doigt.",
+  category: 'Automatisation IA',
+  author: 'CreatorFlow AI',
+  reading_time: 15,
+  views: 8912,
+  is_featured: false,
+  published_at: '2026-05-28T14:00:00Z',
+  featured_image: null
+}, {
+  id: '4',
+  slug: 'prompt-engineering-ventes-strategies-avancees',
+  title: 'Prompt Engineering Avancé pour Multiplier vos Ventes',
+  excerpt: "Maîtrisez les techniques de prompt engineering qui permettent aux meilleurs copywriters IA de générer des séquences d'emails et des pages de vente à fort taux de conversion.",
+  category: 'Vente IA',
+  author: 'CreatorFlow AI',
+  reading_time: 10,
+  views: 3456,
+  is_featured: false,
+  published_at: '2026-05-25T11:00:00Z',
+  featured_image: null
+}, {
+  id: '5',
+  slug: 'strategie-contenu-ia-youtube-tiktok',
+  title: 'Dominer YouTube et TikTok avec l\'IA en 2026',
+  excerpt: "Comment les créateurs utilisent l'IA pour produire 30 vidéos par mois, optimiser leurs titres et miniatures, et atteindre la monétisation en moins de 6 mois.",
+  category: 'Marketing IA',
+  author: 'CreatorFlow AI',
+  reading_time: 11,
+  views: 7123,
+  is_featured: false,
+  published_at: '2026-05-22T08:00:00Z',
+  featured_image: null
+}, {
+  id: '6',
+  slug: 'comparatif-gpt4o-gemini-claude-2026',
+  title: 'GPT-4o vs Gemini Pro vs Claude : Comparatif Honnête 2026',
+  excerpt: "Nous avons testé les trois grands modèles IA sur 50 tâches différentes : rédaction, code, analyse, créativité et pricing. Résultats honnêtes pour savoir lequel choisir selon votre usage.",
+  category: 'Actualités IA',
+  author: 'CreatorFlow AI',
+  reading_time: 18,
+  views: 15782,
+  is_featured: false,
+  published_at: '2026-05-20T12:00:00Z',
+  featured_image: null
+}, {
+  id: '7',
+  slug: 'creer-chatbot-ia-service-client-2026',
+  title: 'Créer un Chatbot IA pour Votre Service Client en 2h',
+  excerpt: "Guide pas à pas pour déployer un assistant IA qui répond à 80% de vos questions clients automatiquement, en français, intégré à votre site ou WhatsApp.",
+  category: 'Support Client IA',
+  author: 'CreatorFlow AI',
+  reading_time: 14,
+  views: 4567,
+  is_featured: false,
+  published_at: '2026-05-18T10:00:00Z',
+  featured_image: null
+}, {
+  id: '8',
+  slug: 'midjourney-dalle-flux-comparatif-images-ia',
+  title: 'Midjourney vs DALL-E vs Flux : Quelle IA Génère les Meilleures Images ?',
+  excerpt: "Test exhaustif des générateurs d'images IA les plus populaires sur des cas d'usage réels : marketing, miniatures YouTube, visuels produits et contenu Instagram.",
+  category: 'Création de Contenu IA',
+  author: 'CreatorFlow AI',
+  reading_time: 9,
+  views: 11230,
+  is_featured: false,
+  published_at: '2026-05-15T09:00:00Z',
+  featured_image: null
+}];
+function CatBadge({
+  cat
+}) {
   const color = catColor(cat);
-  return <span className="cat-badge" style={{background:`${color}20`,color,border:`1px solid ${color}40`}}>{ICONS[cat]||'🤖'} {cat}</span>;
+  return /*#__PURE__*/React.createElement("span", {
+    className: "cat-badge",
+    style: {
+      background: `${color}20`,
+      color,
+      border: `1px solid ${color}40`
+    }
+  }, ICONS[cat] || '🤖', " ", cat);
 }
-
-function Thumb({article}){
-  return (
-    <div className="article-thumb" style={{background:catGrad(article.category)}}>
-      <div className="thumb-pattern"/>
-      {article.featured_image
-        ? <img src={article.featured_image} alt={article.title} loading="lazy"/>
-        : <span className="thumb-emoji">{ICONS[article.category]||'🤖'}</span>
-      }
-    </div>
-  );
+function Thumb({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "article-thumb",
+    style: {
+      background: catGrad(article.category)
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "thumb-pattern"
+  }), article.featured_image ? /*#__PURE__*/React.createElement("img", {
+    src: article.featured_image,
+    alt: article.title,
+    loading: "lazy"
+  }) : /*#__PURE__*/React.createElement("span", {
+    className: "thumb-emoji"
+  }, ICONS[article.category] || '🤖'));
 }
-
-function ArticleCard({article}){
-  return (
-    <a href={`/blog/${article.slug}`}>
-      <div className="article-card">
-        <Thumb article={article}/>
-        <div className="article-body">
-          <CatBadge cat={article.category}/>
-          <div className="article-title">{article.title}</div>
-          <div className="article-excerpt">{article.excerpt}</div>
-          <div className="article-footer">
-            <div className="af-left">
-              <span>📖 {article.reading_time||5} min</span>
-              <span>👁 {(article.views||0).toLocaleString()}</span>
-            </div>
-            <span>{fmtDate(article.published_at)}</span>
-          </div>
-        </div>
-      </div>
-    </a>
-  );
+function ArticleCard({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("a", {
+    href: `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-card"
+  }, /*#__PURE__*/React.createElement(Thumb, {
+    article: article
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-body"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-title"
+  }, article.title), /*#__PURE__*/React.createElement("div", {
+    className: "article-excerpt"
+  }, article.excerpt), /*#__PURE__*/React.createElement("div", {
+    className: "article-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "af-left"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCD6 ", article.reading_time || 5, " min"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41 ", (article.views || 0).toLocaleString())), /*#__PURE__*/React.createElement("span", null, fmtDate(article.published_at))))));
 }
-
-function Featured({article}){
+function Featured({
+  article
+}) {
   const color = catColor(article.category);
-  return (
-    <a href={`/blog/${article.slug}`}>
-      <div className="featured-card">
-        <div className="featured-img" style={{background:catGrad(article.category)}}>
-          <div className="featured-img-bg" style={{background:catGrad(article.category)}}/>
-          <div className="featured-img-pattern"/>
-          {article.featured_image
-            ? <img src={article.featured_image} alt={article.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}}/>
-            : <span style={{position:'relative',zIndex:1,fontSize:'80px'}}>{ICONS[article.category]||'🤖'}</span>
-          }
-          <div className="featured-label">⭐ Article Vedette</div>
-        </div>
-        <div className="featured-content">
-          <CatBadge cat={article.category}/>
-          <h2>{article.title}</h2>
-          <p>{article.excerpt}</p>
-          <div className="article-meta">
-            <span>✍️ {article.author||'CreatorFlow AI'}</span>
-            <span>📖 {article.reading_time||5} min</span>
-            <span>👁 {(article.views||0).toLocaleString()} vues</span>
-            <span>📅 {fmtDate(article.published_at)}</span>
-          </div>
-          <div className="read-btn">Lire l'article →</div>
-        </div>
-      </div>
-    </a>
-  );
+  return /*#__PURE__*/React.createElement("a", {
+    href: `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "featured-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "featured-img",
+    style: {
+      background: catGrad(article.category)
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "featured-img-bg",
+    style: {
+      background: catGrad(article.category)
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "featured-img-pattern"
+  }), article.featured_image ? /*#__PURE__*/React.createElement("img", {
+    src: article.featured_image,
+    alt: article.title,
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  }) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'relative',
+      zIndex: 1,
+      fontSize: '80px'
+    }
+  }, ICONS[article.category] || '🤖'), /*#__PURE__*/React.createElement("div", {
+    className: "featured-label"
+  }, "\u2B50 Article Vedette")), /*#__PURE__*/React.createElement("div", {
+    className: "featured-content"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h2", null, article.title), /*#__PURE__*/React.createElement("p", null, article.excerpt), /*#__PURE__*/React.createElement("div", {
+    className: "article-meta"
+  }, /*#__PURE__*/React.createElement("span", null, "\u270D\uFE0F ", article.author || 'CreatorFlow AI'), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCD6 ", article.reading_time || 5, " min"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41 ", (article.views || 0).toLocaleString(), " vues"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCC5 ", fmtDate(article.published_at))), /*#__PURE__*/React.createElement("div", {
+    className: "read-btn"
+  }, "Lire l'article \u2192"))));
 }
-
-function App(){
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
+function App() {
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
   const [articles, setArticles] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [cat,      setCat]      = useState('all');
-  const [q,        setQ]        = useState('');
-  const [page,     setPage]     = useState(1);
-  const [hasMore,  setHasMore]  = useState(false);
-  const [total,    setTotal]    = useState(0);
-  const [email,    setEmail]    = useState('');
-  const [subDone,  setSubDone]  = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cat, setCat] = useState('all');
+  const [q, setQ] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [email, setEmail] = useState('');
+  const [subDone, setSubDone] = useState(false);
   const [subError, setSubError] = useState('');
   const PER = 9;
-
   const load = useCallback(async (c, search, p) => {
     if (p === 1) setLoading(true);
     try {
-      let q2 = sb.from('blog_articles')
-        .select('id,slug,title,excerpt,category,author,reading_time,views,is_featured,published_at,featured_image',{count:'exact'})
-        .eq('status','published')
-        .order('published_at',{ascending:false})
-        .range((p-1)*PER, p*PER-1);
-      if (c !== 'all')    q2 = q2.eq('category', c);
-      if (search.trim())  q2 = q2.ilike('title', `%${search.trim()}%`);
-      const { data, count, error } = await q2;
+      let q2 = sb.from('blog_articles').select('id,slug,title,excerpt,category,author,reading_time,views,is_featured,published_at,featured_image', {
+        count: 'exact'
+      }).eq('status', 'published').order('published_at', {
+        ascending: false
+      }).range((p - 1) * PER, p * PER - 1);
+      if (c !== 'all') q2 = q2.eq('category', c);
+      if (search.trim()) q2 = q2.ilike('title', `%${search.trim()}%`);
+      const {
+        data,
+        count,
+        error
+      } = await q2;
       if (error) throw error;
-      if (p === 1) setArticles(data || []);
-      else         setArticles(prev => [...prev, ...(data||[])]);
+      if (p === 1) setArticles(data || []);else setArticles(prev => [...prev, ...(data || [])]);
       setTotal(count || 0);
-      setHasMore((count||0) > p * PER);
+      setHasMore((count || 0) > p * PER);
     } catch {
       const f = DEMO.filter(a => {
         if (c !== 'all' && a.category !== c) return false;
@@ -340,153 +505,257 @@ function App(){
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => { setPage(1); load(cat, q, 1); }, [cat, q, load]);
-
+  useEffect(() => {
+    setPage(1);
+    load(cat, q, 1);
+  }, [cat, q, load]);
   const featured = articles.find(a => a.is_featured) || articles[0];
-  const grid     = articles.filter(a => a.id !== featured?.id);
-
-  return (
-    <div className="page">
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-          <div className="nav-links">
-            <a href="experts.html"  className="nav-link">Experts</a>
-            <a href="brief.html"    className="nav-link">Publier un brief</a>
-            <a href="academie.html" className="nav-link">Academy</a>
-            <a href="pricing.html"  className="nav-link">Tarifs</a>
-            <a href="blog.html"     className="nav-link active">Blog IA</a>
-          </div>
-          <div className="nav-actions">
-            <a href="connexion.html"    className="btn btn-ghost">Connexion</a>
-            <a href="inscription.html"  className="btn btn-primary">Rejoindre</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="blog-hero">
-        <div className="container">
-          <div className="blog-badge"><span className="blog-badge-dot"/> CreatorFlow AI News Engine</div>
-          <h1>Le meilleur de l'<span>Intelligence Artificielle</span><br/>pour les créateurs et entrepreneurs</h1>
-          <p>Actualités IA, outils, stratégies et tutoriels publiés chaque semaine pour rester à la pointe.</p>
-          <div className="blog-stats">
-            <span className="blog-stat"><strong>{total || DEMO.length}+</strong> articles</span>
-            <span className="blog-stat"><strong>10</strong> catégories</span>
-            <span className="blog-stat"><strong>100%</strong> en français</span>
-            <span className="blog-stat"><strong>Mis à jour</strong> chaque semaine</span>
-          </div>
-        </div>
-      </div>
-
-      {!loading && featured && (
-        <div className="featured-section">
-          <div className="container"><Featured article={featured}/></div>
-        </div>
-      )}
-
-      <div className="filters-section">
-        <div className="container">
-          <div className="filters-inner">
-            {CATS.map(c => (
-              <button key={c.id} className={`filter-btn${cat===c.id?' active':''}`}
-                style={cat===c.id?{background:c.color,borderColor:c.color}:{}}
-                onClick={()=>setCat(c.id)}>
-                {c.label}
-              </button>
-            ))}
-            <div className="search-wrap">
-              <span className="search-icon">🔍</span>
-              <input type="text" placeholder="Rechercher..." value={q} onChange={e=>setQ(e.target.value)}/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="articles-section">
-        <div className="container">
-          {loading && page===1 ? (
-            <div className="articles-grid">
-              {[1,2,3,4,5,6].map(i=>(
-                <div key={i} className="article-card">
-                  <div className="skeleton" style={{height:180}}/>
-                  <div style={{padding:20,display:'flex',flexDirection:'column',gap:10}}>
-                    <div className="skeleton" style={{height:18,width:'40%',borderRadius:999}}/>
-                    <div className="skeleton" style={{height:22,width:'90%'}}/>
-                    <div className="skeleton" style={{height:22,width:'70%'}}/>
-                    <div className="skeleton" style={{height:56,marginTop:4}}/>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : grid.length===0&&!loading ? (
-            <div className="empty-state">
-              <div style={{fontSize:48,marginBottom:16}}>🔍</div>
-              <h3>Aucun article trouvé</h3>
-              <p style={{color:'var(--text-3)'}}>Essayez une autre catégorie ou un autre mot-clé.</p>
-            </div>
-          ) : (
-            <div className="articles-grid">
-              {grid.map(a=><ArticleCard key={a.id} article={a}/>)}
-            </div>
-          )}
-          {hasMore && (
-            <div className="load-more-wrap">
-              <button className="load-more-btn" onClick={()=>{const n=page+1;setPage(n);load(cat,q,n);}} disabled={loading}>
-                {loading?'Chargement…':"Voir plus d'articles"}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="newsletter-section">
-        <div className="container">
-          <div className="newsletter-card">
-            <h2>🚀 Ne ratez aucune actualité IA</h2>
-            <p>Recevez chaque semaine les meilleurs articles, outils et opportunités IA directement dans votre boîte mail.</p>
-            {subDone ? (
-              <div style={{color:'#10B981',fontWeight:700,fontSize:16}}>✅ Merci ! Vous êtes inscrit à la newsletter CreatorFlow AI.</div>
-            ) : (
-              <form className="nl-form" onSubmit={async e=>{
-                e.preventDefault();
-                if(!email)return;
-                setSubError('');
-                const {error}=await sb.from('blog_subscribers').insert({email,source:'blog'});
-                if(!error){setSubDone(true);}
-                else if(error.code==='23505'){setSubError('Cet email est déjà inscrit.');}
-                else{setSubError('Une erreur est survenue. Réessayez.');}
-              }}>
-                <input type="email" className="nl-input" placeholder="votre@email.com" value={email} onChange={e=>{setEmail(e.target.value);setSubError('');}} required/>
-                <button type="submit" className="nl-btn">S'abonner gratuitement</button>
-                {subError&&<div style={{color:'#F59E0B',fontSize:13,fontWeight:600,marginTop:8,width:'100%'}}>{subError}</div>}
-              </form>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-inner">
-            <a href="/" className="footer-logo">CreatorFlow Market</a>
-            <div className="footer-links">
-              <a href="/"             className="footer-link">Accueil</a>
-              <a href="experts.html"  className="footer-link">Experts</a>
-              <a href="academie.html" className="footer-link">Academy</a>
-              <a href="pricing.html"  className="footer-link">Tarifs</a>
-              <a href="cgu.html"      className="footer-link">CGU</a>
-              <a href="politique-confidentialite.html" className="footer-link">Vie privée</a>
-            </div>
-            <span style={{fontSize:12,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+  const grid = articles.filter(a => a.id !== featured?.id);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "nav-link"
+  }, "Publier un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "nav-link"
+  }, "Academy"), /*#__PURE__*/React.createElement("a", {
+    href: "pricing.html",
+    className: "nav-link"
+  }, "Tarifs"), /*#__PURE__*/React.createElement("a", {
+    href: "blog.html",
+    className: "nav-link active"
+  }, "Blog IA")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost"
+  }, "Connexion"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-primary"
+  }, "Rejoindre")))), /*#__PURE__*/React.createElement("div", {
+    className: "blog-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "blog-badge"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "blog-badge-dot"
+  }), " CreatorFlow AI News Engine"), /*#__PURE__*/React.createElement("h1", null, "Le meilleur de l'", /*#__PURE__*/React.createElement("span", null, "Intelligence Artificielle"), /*#__PURE__*/React.createElement("br", null), "pour les cr\xE9ateurs et entrepreneurs"), /*#__PURE__*/React.createElement("p", null, "Actualit\xE9s IA, outils, strat\xE9gies et tutoriels publi\xE9s chaque semaine pour rester \xE0 la pointe."), /*#__PURE__*/React.createElement("div", {
+    className: "blog-stats"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "blog-stat"
+  }, /*#__PURE__*/React.createElement("strong", null, total || DEMO.length, "+"), " articles"), /*#__PURE__*/React.createElement("span", {
+    className: "blog-stat"
+  }, /*#__PURE__*/React.createElement("strong", null, "10"), " cat\xE9gories"), /*#__PURE__*/React.createElement("span", {
+    className: "blog-stat"
+  }, /*#__PURE__*/React.createElement("strong", null, "100%"), " en fran\xE7ais"), /*#__PURE__*/React.createElement("span", {
+    className: "blog-stat"
+  }, /*#__PURE__*/React.createElement("strong", null, "Mis \xE0 jour"), " chaque semaine")))), !loading && featured && /*#__PURE__*/React.createElement("div", {
+    className: "featured-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement(Featured, {
+    article: featured
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "filters-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filters-inner"
+  }, CATS.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c.id,
+    className: `filter-btn${cat === c.id ? ' active' : ''}`,
+    style: cat === c.id ? {
+      background: c.color,
+      borderColor: c.color
+    } : {},
+    onClick: () => setCat(c.id)
+  }, c.label)), /*#__PURE__*/React.createElement("div", {
+    className: "search-wrap"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "search-icon"
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    placeholder: "Rechercher...",
+    value: q,
+    onChange: e => setQ(e.target.value)
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "articles-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, loading && page === 1 ? /*#__PURE__*/React.createElement("div", {
+    className: "articles-grid"
+  }, [1, 2, 3, 4, 5, 6].map(i => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "article-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 180
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 20,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 18,
+      width: '40%',
+      borderRadius: 999
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 22,
+      width: '90%'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 22,
+      width: '70%'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 56,
+      marginTop: 4
+    }
+  }))))) : grid.length === 0 && !loading ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 48,
+      marginBottom: 16
+    }
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("h3", null, "Aucun article trouv\xE9"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Essayez une autre cat\xE9gorie ou un autre mot-cl\xE9.")) : /*#__PURE__*/React.createElement("div", {
+    className: "articles-grid"
+  }, grid.map(a => /*#__PURE__*/React.createElement(ArticleCard, {
+    key: a.id,
+    article: a
+  }))), hasMore && /*#__PURE__*/React.createElement("div", {
+    className: "load-more-wrap"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "load-more-btn",
+    onClick: () => {
+      const n = page + 1;
+      setPage(n);
+      load(cat, q, n);
+    },
+    disabled: loading
+  }, loading ? 'Chargement…' : "Voir plus d'articles")))), /*#__PURE__*/React.createElement("div", {
+    className: "newsletter-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "newsletter-card"
+  }, /*#__PURE__*/React.createElement("h2", null, "\uD83D\uDE80 Ne ratez aucune actualit\xE9 IA"), /*#__PURE__*/React.createElement("p", null, "Recevez chaque semaine les meilleurs articles, outils et opportunit\xE9s IA directement dans votre bo\xEEte mail."), subDone ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#10B981',
+      fontWeight: 700,
+      fontSize: 16
+    }
+  }, "\u2705 Merci ! Vous \xEAtes inscrit \xE0 la newsletter CreatorFlow AI.") : /*#__PURE__*/React.createElement("form", {
+    className: "nl-form",
+    onSubmit: async e => {
+      e.preventDefault();
+      if (!email) return;
+      setSubError('');
+      const {
+        error
+      } = await sb.from('blog_subscribers').insert({
+        email,
+        source: 'blog'
+      });
+      if (!error) {
+        setSubDone(true);
+      } else if (error.code === '23505') {
+        setSubError('Cet email est déjà inscrit.');
+      } else {
+        setSubError('Une erreur est survenue. Réessayez.');
+      }
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "email",
+    className: "nl-input",
+    placeholder: "votre@email.com",
+    value: email,
+    onChange: e => {
+      setEmail(e.target.value);
+      setSubError('');
+    },
+    required: true
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "nl-btn"
+  }, "S'abonner gratuitement"), subError && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#F59E0B',
+      fontSize: 13,
+      fontWeight: 600,
+      marginTop: 8,
+      width: '100%'
+    }
+  }, subError))))), /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "footer-logo"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "footer-link"
+  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "footer-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "footer-link"
+  }, "Academy"), /*#__PURE__*/React.createElement("a", {
+    href: "pricing.html",
+    className: "footer-link"
+  }, "Tarifs"), /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    className: "footer-link"
+  }, "CGU"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    className: "footer-link"
+  }, "Vie priv\xE9e")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "\xA9 2026 CreatorFlow Market")))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

@@ -152,160 +152,274 @@ img{display:block;max-width:100%;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect, useRef, useMemo } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const AVATAR_GRADS = [
-  'linear-gradient(135deg,#7C3AED,#A78BFA)',
-  'linear-gradient(135deg,#0891B2,#06B6D4)',
-  'linear-gradient(135deg,#059669,#10B981)',
-  'linear-gradient(135deg,#9333EA,#C084FC)',
-  'linear-gradient(135deg,#DC2626,#F87171)',
-  'linear-gradient(135deg,#D97706,#FCD34D)',
-];
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef,
+  useMemo
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const AVATAR_GRADS = ['linear-gradient(135deg,#7C3AED,#A78BFA)', 'linear-gradient(135deg,#0891B2,#06B6D4)', 'linear-gradient(135deg,#059669,#10B981)', 'linear-gradient(135deg,#9333EA,#C084FC)', 'linear-gradient(135deg,#DC2626,#F87171)', 'linear-gradient(135deg,#D97706,#FCD34D)'];
 function avatarGrad(name) {
-  const code = (name||'').charCodeAt(0) || 0;
+  const code = (name || '').charCodeAt(0) || 0;
   return AVATAR_GRADS[code % AVATAR_GRADS.length];
 }
-
-const CATS = ['Toutes','Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
-
+const CATS = ['Toutes', 'Agents IA', 'Automatisation', 'Chatbots', 'Développement IA', 'Prompt Engineering', 'Montage vidéo IA', 'Branding IA', 'Formation IA'];
 const Ic = {
-  Star:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Check:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
-  Filter:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m20 20-3.5-3.5"
+  })),
+  Filter: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+  }))
 };
-
 function Nav() {
   const [stuck, setStuck] = useState(false);
   const [authUser, setAuthUser] = useState(null);
   const [userType, setUserType] = useState('client');
-
   useEffect(() => {
     const h = () => setStuck(window.scrollY > 10);
-    window.addEventListener('scroll', h, { passive: true });
-    sb.auth.getSession().then(async ({ data }) => {
+    window.addEventListener('scroll', h, {
+      passive: true
+    });
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
       if (data.session) {
         setAuthUser(data.session.user);
-        const { data: profile } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
+        const {
+          data: profile
+        } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
         if (profile) setUserType(profile.type_utilisateur || 'client');
       }
     });
     return () => window.removeEventListener('scroll', h);
   }, []);
-
   const dashboardUrl = userType === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
-
-  return (
-    <nav className={`nav ${stuck ? 'stuck' : ''}`}>
-      <div className="wrap nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-        <div className="nav-links">
-          <a href="experts.html" className="nav-link active">Experts</a>
-          <a href="brief.html" className="nav-link">Déposer un brief</a>
-          <a href="inscription.html" className="nav-link">Devenir expert</a>
-        </div>
-        <div className="nav-ctas">
-          {authUser
-            ? <a href={dashboardUrl} className="btn btn-ghost btn-sm">Mon espace</a>
-            : <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
-          }
-          <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <Ic.Arrow/></a>
-        </div>
-      </div>
-    </nav>
-  );
+  return /*#__PURE__*/React.createElement("nav", {
+    className: `nav ${stuck ? 'stuck' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link active"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "nav-link"
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "nav-link"
+  }, "Devenir expert")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-ctas"
+  }, authUser ? /*#__PURE__*/React.createElement("a", {
+    href: dashboardUrl,
+    className: "btn btn-ghost btn-sm"
+  }, "Mon espace") : /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Connexion"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-sm"
+  }, "Je cherche un expert ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
 }
-
-function ExpertCard({ expert, delay = 0 }) {
+function ExpertCard({
+  expert,
+  delay = 0
+}) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
-    const el = ref.current; if (!el) return;
+    const el = ref.current;
+    if (!el) return;
     const obs = new IntersectionObserver(e => {
-      e.forEach(en => { if (en.isIntersecting) { setTimeout(() => setShown(true), delay); obs.unobserve(el); } });
-    }, { threshold: 0.1 });
-    obs.observe(el); return () => obs.disconnect();
+      e.forEach(en => {
+        if (en.isIntersecting) {
+          setTimeout(() => setShown(true), delay);
+          obs.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
-
   function onTilt(e) {
     const r = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - r.left, y = e.clientY - r.top;
-    const rx = ((y - r.height/2) / (r.height/2)) * -5;
-    const ry = ((x - r.width/2) / (r.width/2)) * 5;
+    const x = e.clientX - r.left,
+      y = e.clientY - r.top;
+    const rx = (y - r.height / 2) / (r.height / 2) * -5;
+    const ry = (x - r.width / 2) / (r.width / 2) * 5;
     e.currentTarget.style.transform = `translateY(-4px) perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
   }
-  function offTilt(e) { e.currentTarget.style.transform = ''; }
-
-  return (
-    <div ref={ref} className={`expert-card ${shown ? 'in' : 'rv'}`} style={{ animationDelay: delay + 'ms' }}
-      onMouseMove={onTilt} onMouseLeave={offTilt}>
-      <div className="cert-badge"><Ic.Check/>Certifié</div>
-      <div className={`avail-badge ${expert.available ? '' : 'busy'}`}>
-        <div className="avail-dot"/>
-        {expert.available ? 'Disponible' : 'Occupé ce mois'}
-      </div>
-      <div className="exp-head">
-        <div className="exp-avt" style={{overflow:'hidden'}}>
-          {expert.photoUrl
-            ? <img src={expert.photoUrl} alt={expert.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>
-            : <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:avatarGrad(expert.name),color:'#fff',fontWeight:700,fontSize:18}}>
-                {expert.name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?'}
-              </div>
-          }
-        </div>
-        <div>
-          <div className="exp-name">{expert.name}</div>
-          <div className="exp-role">{expert.role}</div>
-        </div>
-      </div>
-      <p className="exp-bio">{expert.bio}</p>
-      <div className="tags">{expert.skills.map(s => <span className="tag" key={s}>{s}</span>)}</div>
-      <div className="exp-foot">
-        <div className="exp-rate">{expert.rate}$<small>/heure</small></div>
-        <div className="exp-stars"><span className="s"><Ic.Star/></span>{expert.rating}<span className="cnt">({expert.reviews})</span></div>
-      </div>
-      <div className="exp-actions">
-        <a href={`profil-expert.html?id=${expert.id}`} className="btn btn-ghost btn-sm">Voir le profil</a>
-        <a href="brief.html" className="btn btn-primary btn-sm">Contacter <Ic.Arrow/></a>
-      </div>
-    </div>
-  );
+  function offTilt(e) {
+    e.currentTarget.style.transform = '';
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    className: `expert-card ${shown ? 'in' : 'rv'}`,
+    style: {
+      animationDelay: delay + 'ms'
+    },
+    onMouseMove: onTilt,
+    onMouseLeave: offTilt
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-badge"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Certifi\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: `avail-badge ${expert.available ? '' : 'busy'}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avail-dot"
+  }), expert.available ? 'Disponible' : 'Occupé ce mois'), /*#__PURE__*/React.createElement("div", {
+    className: "exp-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-avt",
+    style: {
+      overflow: 'hidden'
+    }
+  }, expert.photoUrl ? /*#__PURE__*/React.createElement("img", {
+    src: expert.photoUrl,
+    alt: expert.name,
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: avatarGrad(expert.name),
+      color: '#fff',
+      fontWeight: 700,
+      fontSize: 18
+    }
+  }, expert.name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "exp-name"
+  }, expert.name), /*#__PURE__*/React.createElement("div", {
+    className: "exp-role"
+  }, expert.role))), /*#__PURE__*/React.createElement("p", {
+    className: "exp-bio"
+  }, expert.bio), /*#__PURE__*/React.createElement("div", {
+    className: "tags"
+  }, expert.skills.map(s => /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    key: s
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "exp-foot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-rate"
+  }, expert.rate, "$", /*#__PURE__*/React.createElement("small", null, "/heure")), /*#__PURE__*/React.createElement("div", {
+    className: "exp-stars"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "s"
+  }, /*#__PURE__*/React.createElement(Ic.Star, null)), expert.rating, /*#__PURE__*/React.createElement("span", {
+    className: "cnt"
+  }, "(", expert.reviews, ")"))), /*#__PURE__*/React.createElement("div", {
+    className: "exp-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: `profil-expert.html?id=${expert.id}`,
+    className: "btn btn-ghost btn-sm"
+  }, "Voir le profil"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-sm"
+  }, "Contacter ", /*#__PURE__*/React.createElement(Ic.Arrow, null))));
 }
-
 function App() {
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
   const [cat, setCat] = useState('Toutes');
   const [budget, setBudget] = useState('tous');
   const [dispo, setDispo] = useState('tous');
   const [sort, setSort] = useState('note');
   const [experts, setExperts] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     (async () => {
-      const { data: expertsList, error } = await sb
-        .from('experts')
-        .select('*')
-        .eq('statut', 'approved')
-        .order('created_at', { ascending: false });
-
+      const {
+        data: expertsList,
+        error
+      } = await sb.from('experts').select('*').eq('statut', 'approved').order('created_at', {
+        ascending: false
+      });
       if (!error && expertsList?.length) {
         const ids = expertsList.map(e => e.id);
-        const { data: profilesList } = await sb
-          .from('profiles')
-          .select('id, prenom, nom, photo_url')
-          .in('id', ids);
+        const {
+          data: profilesList
+        } = await sb.from('profiles').select('id, prenom, nom, photo_url').in('id', ids);
         const pm = {};
-        (profilesList || []).forEach(p => { pm[p.id] = p; });
+        (profilesList || []).forEach(p => {
+          pm[p.id] = p;
+        });
         const merged = expertsList.map(exp => {
           const p = pm[exp.id] || {};
           const prenom = p.prenom || '';
@@ -321,20 +435,22 @@ function App() {
             rate: exp.tarif_heure || 0,
             rating: parseFloat(exp.note_moyenne) || 0,
             reviews: exp.nb_avis || 0,
-            cats: Array.isArray(exp.categories) && exp.categories.length > 0
-              ? exp.categories
-              : exp.specialite ? [exp.specialite] : [],
-            available: exp.disponible ?? true,
+            cats: Array.isArray(exp.categories) && exp.categories.length > 0 ? exp.categories : exp.specialite ? [exp.specialite] : [],
+            available: exp.disponible ?? true
           };
         });
         setExperts(merged);
       }
       setLoading(false);
     })();
-
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -342,14 +458,16 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
       btn.appendChild(span);
       setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
   const filtered = useMemo(() => {
     let list = [...experts];
     if (cat !== 'Toutes') list = list.filter(e => e.cats.includes(cat));
@@ -363,95 +481,141 @@ function App() {
     if (sort === 'avis') list.sort((a, b) => b.reviews - a.reviews);
     return list;
   }, [experts, cat, budget, dispo, sort]);
-
-  return (
-    <React.Fragment>
-      <Nav/>
-      <div className="page-header">
-        <div className="wrap">
-          <span className="eyebrow">{loading ? '...' : experts.length > 0 ? `${experts.length}+ experts certifiés` : 'Plateforme en cours de lancement'}</span>
-          <h1 className="page-title">Trouvez votre expert <em>IA idéal.</em></h1>
-          <p className="page-sub">Chaque profil est vérifié par notre équipe. Compétences certifiées, références validées.</p>
-        </div>
-      </div>
-      <div className="wrap filter-wrap">
-        <div className="filter-bar">
-          <div className="filter-group">
-            <span className="filter-label"><Ic.Filter style={{display:'inline',marginRight:4}}/>Catégorie</span>
-            <select className="filter-select" value={cat} onChange={e => setCat(e.target.value)}>
-              {CATS.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div className="filter-divider"/>
-          <div className="filter-group">
-            <span className="filter-label">Budget / heure</span>
-            <select className="filter-select" value={budget} onChange={e => setBudget(e.target.value)}>
-              <option value="tous">Tous les budgets</option>
-              <option value="moins100">Moins de 100$</option>
-              <option value="100-150">100$ — 150$</option>
-              <option value="plus150">Plus de 150$</option>
-            </select>
-          </div>
-          <div className="filter-divider"/>
-          <div className="filter-group">
-            <span className="filter-label">Disponibilité</span>
-            <select className="filter-select" value={dispo} onChange={e => setDispo(e.target.value)}>
-              <option value="tous">Tous</option>
-              <option value="dispo">Disponibles uniquement</option>
-            </select>
-          </div>
-          <div className="filter-divider"/>
-          <div className="filter-group">
-            <span className="filter-label">Trier par</span>
-            <select className="filter-select" value={sort} onChange={e => setSort(e.target.value)}>
-              <option value="note">Meilleure note</option>
-              <option value="avis">Plus d'avis</option>
-              <option value="tarif-asc">Tarif croissant</option>
-              <option value="tarif-desc">Tarif décroissant</option>
-            </select>
-          </div>
-          <div className="filter-divider"/>
-          <span className="filter-count"><span>{filtered.length}</span> expert{filtered.length > 1 ? 's' : ''}</span>
-          <button className="filter-reset" onClick={() => { setCat('Toutes'); setBudget('tous'); setDispo('tous'); setSort('note'); }}>Réinitialiser</button>
-        </div>
-      </div>
-      <div className="wrap experts-section">
-        {loading
-          ? <div className="empty"><p style={{color:'var(--text-3)'}}>Chargement des experts…</p></div>
-          : filtered.length === 0
-            ? <div className="empty">
-                {experts.length === 0
-                  ? <React.Fragment>
-                      <h3>Aucun expert disponible pour l'instant</h3>
-                      <p>La plateforme accueille ses premiers experts. <a href="landing-expert.html" style={{color:'var(--vs)'}}>Rejoindre en tant qu'expert →</a></p>
-                    </React.Fragment>
-                  : <React.Fragment>
-                      <h3>Aucun expert trouvé</h3>
-                      <p>Essaie de modifier tes filtres.</p>
-                    </React.Fragment>
-                }
-              </div>
-            : <div className="experts-grid">
-                {filtered.map((e, i) => <ExpertCard key={e.id} expert={e} delay={i * 60}/>)}
-              </div>
-        }
-      </div>
-      <footer>
-        <div className="wrap footer-mini">
-          <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-          <div className="footer-links">
-            <a href="/">Accueil</a>
-            <a href="brief.html">Déposer un brief</a>
-            <a href="inscription.html">Devenir expert</a>
-            <a href="cgu.html">Mentions légales</a>
-            <a href="politique-confidentialite.html">Confidentialité</a>
-          </div>
-        </div>
-      </footer>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, loading ? '...' : experts.length > 0 ? `${experts.length}+ experts certifiés` : 'Plateforme en cours de lancement'), /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Trouvez votre expert ", /*#__PURE__*/React.createElement("em", null, "IA id\xE9al.")), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, "Chaque profil est v\xE9rifi\xE9 par notre \xE9quipe. Comp\xE9tences certifi\xE9es, r\xE9f\xE9rences valid\xE9es."))), /*#__PURE__*/React.createElement("div", {
+    className: "wrap filter-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "filter-label"
+  }, /*#__PURE__*/React.createElement(Ic.Filter, {
+    style: {
+      display: 'inline',
+      marginRight: 4
+    }
+  }), "Cat\xE9gorie"), /*#__PURE__*/React.createElement("select", {
+    className: "filter-select",
+    value: cat,
+    onChange: e => setCat(e.target.value)
+  }, CATS.map(c => /*#__PURE__*/React.createElement("option", {
+    key: c,
+    value: c
+  }, c)))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "filter-label"
+  }, "Budget / heure"), /*#__PURE__*/React.createElement("select", {
+    className: "filter-select",
+    value: budget,
+    onChange: e => setBudget(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "tous"
+  }, "Tous les budgets"), /*#__PURE__*/React.createElement("option", {
+    value: "moins100"
+  }, "Moins de 100$"), /*#__PURE__*/React.createElement("option", {
+    value: "100-150"
+  }, "100$ \u2014 150$"), /*#__PURE__*/React.createElement("option", {
+    value: "plus150"
+  }, "Plus de 150$"))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "filter-label"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement("select", {
+    className: "filter-select",
+    value: dispo,
+    onChange: e => setDispo(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "tous"
+  }, "Tous"), /*#__PURE__*/React.createElement("option", {
+    value: "dispo"
+  }, "Disponibles uniquement"))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "filter-label"
+  }, "Trier par"), /*#__PURE__*/React.createElement("select", {
+    className: "filter-select",
+    value: sort,
+    onChange: e => setSort(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "note"
+  }, "Meilleure note"), /*#__PURE__*/React.createElement("option", {
+    value: "avis"
+  }, "Plus d'avis"), /*#__PURE__*/React.createElement("option", {
+    value: "tarif-asc"
+  }, "Tarif croissant"), /*#__PURE__*/React.createElement("option", {
+    value: "tarif-desc"
+  }, "Tarif d\xE9croissant"))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-divider"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "filter-count"
+  }, /*#__PURE__*/React.createElement("span", null, filtered.length), " expert", filtered.length > 1 ? 's' : ''), /*#__PURE__*/React.createElement("button", {
+    className: "filter-reset",
+    onClick: () => {
+      setCat('Toutes');
+      setBudget('tous');
+      setDispo('tous');
+      setSort('note');
+    }
+  }, "R\xE9initialiser"))), /*#__PURE__*/React.createElement("div", {
+    className: "wrap experts-section"
+  }, loading ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Chargement des experts\u2026")) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, experts.length === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "Aucun expert disponible pour l'instant"), /*#__PURE__*/React.createElement("p", null, "La plateforme accueille ses premiers experts. ", /*#__PURE__*/React.createElement("a", {
+    href: "landing-expert.html",
+    style: {
+      color: 'var(--vs)'
+    }
+  }, "Rejoindre en tant qu'expert \u2192"))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "Aucun expert trouv\xE9"), /*#__PURE__*/React.createElement("p", null, "Essaie de modifier tes filtres."))) : /*#__PURE__*/React.createElement("div", {
+    className: "experts-grid"
+  }, filtered.map((e, i) => /*#__PURE__*/React.createElement(ExpertCard, {
+    key: e.id,
+    expert: e,
+    delay: i * 60
+  })))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("div", {
+    className: "wrap footer-mini"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)'
+    }
+  }, "\xA9 2026 CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html"
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html"
+  }, "Devenir expert"), /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html"
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html"
+  }, "Confidentialit\xE9")))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

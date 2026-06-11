@@ -108,23 +108,88 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Bell:(p)=><svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-  Check:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  CheckAll:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="15 3 9 17 4 12"/></svg>,
-  Trash:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>,
-  Settings:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  CheckAll: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "15 3 9 17 4 12"
+  })),
+  Trash: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "3 6 5 6 21 6"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+  })),
+  Settings: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+  }))
 };
-
 function getGroup(dateStr) {
   const d = new Date(dateStr);
   const now = new Date();
@@ -135,26 +200,53 @@ function getGroup(dateStr) {
   if (diffDays <= 7) return 'Cette semaine';
   return 'Plus ancien';
 }
-
 function getTimeAgo(dateStr) {
   const d = new Date(dateStr);
   const diff = Math.floor((Date.now() - d) / 1000);
   if (diff < 60) return "À l'instant";
-  if (diff < 3600) return `Il y a ${Math.floor(diff/60)} min`;
-  if (diff < 86400) return `Il y a ${Math.floor(diff/3600)}h`;
-  if (diff < 172800) return `Hier, ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
-  return d.toLocaleDateString('fr-FR', { weekday:'short', hour:'2-digit', minute:'2-digit' });
+  if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `Il y a ${Math.floor(diff / 3600)}h`;
+  if (diff < 172800) return `Hier, ${d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
+  return d.toLocaleDateString('fr-FR', {
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
-
-const SETTINGS_DATA = [
-  { name:'Nouvelles propositions', desc:'Quand un expert répond à l\'un de vos briefs', key:'proposals', default:true },
-  { name:'Messages', desc:'Nouveaux messages dans vos conversations', key:'messages', default:true },
-  { name:'Mises à jour de mission', desc:'Jalons, livrables et changements de statut', key:'missions', default:true },
-  { name:'Paiements', desc:'Confirmations, factures et remboursements', key:'payments', default:true },
-  { name:'Rappels', desc:'Délais approchants et actions requises', key:'reminders', default:true },
-  { name:'Newsletters & promos', desc:'Actualités et offres de CreatorFlow Market', key:'marketing', default:false },
-];
-
+const SETTINGS_DATA = [{
+  name: 'Nouvelles propositions',
+  desc: 'Quand un expert répond à l\'un de vos briefs',
+  key: 'proposals',
+  default: true
+}, {
+  name: 'Messages',
+  desc: 'Nouveaux messages dans vos conversations',
+  key: 'messages',
+  default: true
+}, {
+  name: 'Mises à jour de mission',
+  desc: 'Jalons, livrables et changements de statut',
+  key: 'missions',
+  default: true
+}, {
+  name: 'Paiements',
+  desc: 'Confirmations, factures et remboursements',
+  key: 'payments',
+  default: true
+}, {
+  name: 'Rappels',
+  desc: 'Délais approchants et actions requises',
+  key: 'reminders',
+  default: true
+}, {
+  name: 'Newsletters & promos',
+  desc: 'Actualités et offres de CreatorFlow Market',
+  key: 'marketing',
+  default: false
+}];
 function App() {
   const [tab, setTab] = useState('toutes');
   const [notifs, setNotifs] = useState([]);
@@ -165,16 +257,31 @@ function App() {
     SETTINGS_DATA.forEach(x => s[x.key] = x.default);
     return s;
   });
-
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { window.location.href = 'connexion.html'; return; }
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const u = session.user;
-      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
-      setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
-      const { data: rows } = await sb.from('notifications')
-        .select('*').eq('user_id', u.id).order('created_at', { ascending: false });
+      const {
+        data: profile
+      } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+      setUser({
+        ...u,
+        prenom: profile?.prenom || '',
+        nom: profile?.nom || ''
+      });
+      const {
+        data: rows
+      } = await sb.from('notifications').select('*').eq('user_id', u.id).order('created_at', {
+        ascending: false
+      });
       if (rows) {
         setNotifs(rows.map(n => ({
           ...n,
@@ -184,14 +291,19 @@ function App() {
           iconClass: n.icon_class || 'icon-purple',
           badgeClass: n.badge_class || 'badge-purple',
           desc: n.description,
-          action: n.href ? 'Voir' : null,
+          action: n.href ? 'Voir' : null
         })));
       }
       setLoading(false);
     })();
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -199,25 +311,40 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
   const unreadCount = notifs.filter(n => n.unread).length;
-  const markRead = async (id) => {
-    setNotifs(n => n.map(x => x.id===id ? {...x, unread:false, read:true} : x));
-    await sb.from('notifications').update({ read: true }).eq('id', id);
+  const markRead = async id => {
+    setNotifs(n => n.map(x => x.id === id ? {
+      ...x,
+      unread: false,
+      read: true
+    } : x));
+    await sb.from('notifications').update({
+      read: true
+    }).eq('id', id);
   };
   const markAllRead = async () => {
     if (!user) return;
-    setNotifs(n => n.map(x => ({...x, unread:false, read:true})));
-    await sb.from('notifications').update({ read: true }).eq('user_id', user.id);
+    setNotifs(n => n.map(x => ({
+      ...x,
+      unread: false,
+      read: true
+    })));
+    await sb.from('notifications').update({
+      read: true
+    }).eq('user_id', user.id);
   };
-  const deleteNotif = async (id) => {
-    setNotifs(n => n.filter(x => x.id!==id));
+  const deleteNotif = async id => {
+    setNotifs(n => n.filter(x => x.id !== id));
     await sb.from('notifications').delete().eq('id', id);
   };
   const clearAll = async () => {
@@ -225,148 +352,227 @@ function App() {
     setNotifs([]);
     await sb.from('notifications').delete().eq('user_id', user.id);
   };
-
-  const filtered = tab === 'non-lues' ? notifs.filter(n => n.unread)
-    : tab === 'missions' ? notifs.filter(n => n.type === 'mission')
-    : tab === 'paiements' ? notifs.filter(n => n.type === 'payment')
-    : notifs;
-
+  const filtered = tab === 'non-lues' ? notifs.filter(n => n.unread) : tab === 'missions' ? notifs.filter(n => n.type === 'mission') : tab === 'paiements' ? notifs.filter(n => n.type === 'payment') : notifs;
   const groups = [...new Set(filtered.map(n => n.group))];
-
-  const tabs = [
-    { id:'toutes', label:'Toutes', count: notifs.length },
-    { id:'non-lues', label:'Non lues', count: unreadCount },
-    { id:'missions', label:'Missions', count: notifs.filter(n=>n.type==='mission').length },
-    { id:'paiements', label:'Paiements', count: notifs.filter(n=>n.type==='payment').length },
-  ];
-
-  return (
-    <React.Fragment>
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          <div className="nav-right">
-            <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="page">
-        <div className="container">
-          <div className="page-header">
-            <div>
-              <div style={{display:'flex',alignItems:'center',gap:4}}>
-                <div className="page-title">Notifications</div>
-                {unreadCount > 0 && <span className="unread-count">{unreadCount}</span>}
-              </div>
-              <div style={{fontSize:13,color:'var(--text-3)',marginTop:4}}>Toutes vos alertes et mises à jour en un seul endroit</div>
-            </div>
-            <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>setTab(t=>t==='settings'?'toutes':'settings')}>
-              <Ic.Settings/>Préférences
-            </button>
-          </div>
-
-          {tab !== 'settings' && (
-            <>
-              <div className="tab-row">
-                {tabs.map(t => (
-                  <div key={t.id} className={`tab-btn ${tab===t.id?'active':''}`} onClick={()=>setTab(t.id)}>
-                    {t.label}{t.count>0 && tab!==t.id && <span style={{marginLeft:5,opacity:0.6,fontSize:11}}>({t.count})</span>}
-                  </div>
-                ))}
-              </div>
-
-              <div className="actions-bar fade-up">
-                <div className="actions-left">{filtered.length} notification{filtered.length!==1?'s':''}</div>
-                <div className="actions-right">
-                  {unreadCount > 0 && <button className="action-link" onClick={markAllRead}><Ic.CheckAll style={{display:'inline',verticalAlign:'middle',marginRight:4}}/>Tout lire</button>}
-                  {notifs.length > 0 && <button className="action-link danger" onClick={clearAll}><Ic.Trash style={{display:'inline',verticalAlign:'middle',marginRight:4}}/>Tout effacer</button>}
-                </div>
-              </div>
-
-              <div className="fade-up">
-                {loading ? (
-                  <div className="empty"><div className="empty-emoji">⏳</div><div className="empty-title">Chargement…</div></div>
-                ) : filtered.length === 0 ? (
-                  <div className="empty">
-                    <div className="empty-emoji">🔔</div>
-                    <div className="empty-title">Aucune notification</div>
-                    <div className="empty-sub">{tab==='non-lues' ? 'Tout est à jour !' : 'Vous n\'avez pas encore de notifications.'}</div>
-                  </div>
-                ) : (
-                  groups.map(group => (
-                    <div key={group} className="notif-group">
-                      <div className="group-label">{group}</div>
-                      {filtered.filter(n => n.group === group).map(n => (
-                        <div key={n.id} className={`notif-item ${n.unread ? 'unread' : ''}`} onClick={() => markRead(n.id)}>
-                          <div className={`notif-icon ${n.iconClass}`}>{n.icon}</div>
-                          <div className="notif-body">
-                            <div className="notif-title">{n.title}</div>
-                            <div className="notif-desc">{n.desc}</div>
-                            <div className="notif-meta">
-                              <div className="notif-time">{n.time}</div>
-                              {n.action && <a href={n.href} className="notif-action" onClick={e=>e.stopPropagation()}>{n.action} →</a>}
-                              {n.badge && <span className={`notif-badge ${n.badgeClass}`}>{n.badge}</span>}
-                            </div>
-                          </div>
-                          {n.unread && <div className="unread-dot"/>}
-                          <button style={{padding:'4px 8px',color:'var(--text-3)',flexShrink:0,fontSize:12,borderRadius:999,transition:'color 150ms'}}
-                            onMouseEnter={e=>e.currentTarget.style.color='var(--red)'}
-                            onMouseLeave={e=>e.currentTarget.style.color='var(--text-3)'}
-                            onClick={e=>{e.stopPropagation();deleteNotif(n.id);}}>
-                            <Ic.Trash/>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  ))
-                )}
-              </div>
-            </>
-          )}
-
-          {tab === 'settings' && (
-            <div className="fade-up">
-              <div style={{marginBottom:20,fontSize:14,color:'var(--text-2)'}}>Choisissez quelles notifications vous souhaitez recevoir.</div>
-              <div className="settings-card">
-                <div className="settings-title">Notifications email</div>
-                {SETTINGS_DATA.map(s => (
-                  <div key={s.key} className="setting-row">
-                    <div className="setting-info">
-                      <div className="setting-name">{s.name}</div>
-                      <div className="setting-desc">{s.desc}</div>
-                    </div>
-                    <div className={`toggle ${settings[s.key] ? 'on' : ''}`} onClick={()=>setSettings(st=>({...st,[s.key]:!st[s.key]}))}>
-                      <div className="toggle-knob"/>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="settings-card">
-                <div className="settings-title">Notifications push</div>
-                {SETTINGS_DATA.slice(0,4).map(s => (
-                  <div key={s.key+'push'} className="setting-row">
-                    <div className="setting-info">
-                      <div className="setting-name">{s.name}</div>
-                      <div className="setting-desc">{s.desc}</div>
-                    </div>
-                    <div className={`toggle ${settings[s.key+'push'] ? 'on' : ''}`} onClick={()=>setSettings(st=>({...st,[s.key+'push']:!st[s.key+'push']}))}>
-                      <div className="toggle-knob"/>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button className="btn btn-primary" style={{marginBottom:40}} onClick={()=>setTab('toutes')}>
-                <Ic.Check/>Enregistrer les préférences
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  const tabs = [{
+    id: 'toutes',
+    label: 'Toutes',
+    count: notifs.length
+  }, {
+    id: 'non-lues',
+    label: 'Non lues',
+    count: unreadCount
+  }, {
+    id: 'missions',
+    label: 'Missions',
+    count: notifs.filter(n => n.type === 'mission').length
+  }, {
+    id: 'paiements',
+    label: 'Paiements',
+    count: notifs.filter(n => n.type === 'payment').length
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Notifications"), unreadCount > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "unread-count"
+  }, unreadCount)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)',
+      marginTop: 4
+    }
+  }, "Toutes vos alertes et mises \xE0 jour en un seul endroit")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 14px',
+      fontSize: 13
+    },
+    onClick: () => setTab(t => t === 'settings' ? 'toutes' : 'settings')
+  }, /*#__PURE__*/React.createElement(Ic.Settings, null), "Pr\xE9f\xE9rences")), tab !== 'settings' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "tab-row"
+  }, tabs.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: `tab-btn ${tab === t.id ? 'active' : ''}`,
+    onClick: () => setTab(t.id)
+  }, t.label, t.count > 0 && tab !== t.id && /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 5,
+      opacity: 0.6,
+      fontSize: 11
+    }
+  }, "(", t.count, ")")))), /*#__PURE__*/React.createElement("div", {
+    className: "actions-bar fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "actions-left"
+  }, filtered.length, " notification", filtered.length !== 1 ? 's' : ''), /*#__PURE__*/React.createElement("div", {
+    className: "actions-right"
+  }, unreadCount > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "action-link",
+    onClick: markAllRead
+  }, /*#__PURE__*/React.createElement(Ic.CheckAll, {
+    style: {
+      display: 'inline',
+      verticalAlign: 'middle',
+      marginRight: 4
+    }
+  }), "Tout lire"), notifs.length > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "action-link danger",
+    onClick: clearAll
+  }, /*#__PURE__*/React.createElement(Ic.Trash, {
+    style: {
+      display: 'inline',
+      verticalAlign: 'middle',
+      marginRight: 4
+    }
+  }), "Tout effacer"))), /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, loading ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\u23F3"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Chargement\u2026")) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\uD83D\uDD14"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Aucune notification"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-sub"
+  }, tab === 'non-lues' ? 'Tout est à jour !' : 'Vous n\'avez pas encore de notifications.')) : groups.map(group => /*#__PURE__*/React.createElement("div", {
+    key: group,
+    className: "notif-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "group-label"
+  }, group), filtered.filter(n => n.group === group).map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `notif-item ${n.unread ? 'unread' : ''}`,
+    onClick: () => markRead(n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `notif-icon ${n.iconClass}`
+  }, n.icon), /*#__PURE__*/React.createElement("div", {
+    className: "notif-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-title"
+  }, n.title), /*#__PURE__*/React.createElement("div", {
+    className: "notif-desc"
+  }, n.desc), /*#__PURE__*/React.createElement("div", {
+    className: "notif-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-time"
+  }, n.time), n.action && /*#__PURE__*/React.createElement("a", {
+    href: n.href,
+    className: "notif-action",
+    onClick: e => e.stopPropagation()
+  }, n.action, " \u2192"), n.badge && /*#__PURE__*/React.createElement("span", {
+    className: `notif-badge ${n.badgeClass}`
+  }, n.badge))), n.unread && /*#__PURE__*/React.createElement("div", {
+    className: "unread-dot"
+  }), /*#__PURE__*/React.createElement("button", {
+    style: {
+      padding: '4px 8px',
+      color: 'var(--text-3)',
+      flexShrink: 0,
+      fontSize: 12,
+      borderRadius: 999,
+      transition: 'color 150ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.color = 'var(--red)',
+    onMouseLeave: e => e.currentTarget.style.color = 'var(--text-3)',
+    onClick: e => {
+      e.stopPropagation();
+      deleteNotif(n.id);
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Trash, null)))))))), tab === 'settings' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20,
+      fontSize: 14,
+      color: 'var(--text-2)'
+    }
+  }, "Choisissez quelles notifications vous souhaitez recevoir."), /*#__PURE__*/React.createElement("div", {
+    className: "settings-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "settings-title"
+  }, "Notifications email"), SETTINGS_DATA.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.key,
+    className: "setting-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "setting-desc"
+  }, s.desc)), /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${settings[s.key] ? 'on' : ''}`,
+    onClick: () => setSettings(st => ({
+      ...st,
+      [s.key]: !st[s.key]
+    }))
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "settings-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "settings-title"
+  }, "Notifications push"), SETTINGS_DATA.slice(0, 4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.key + 'push',
+    className: "setting-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "setting-desc"
+  }, s.desc)), /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${settings[s.key + 'push'] ? 'on' : ''}`,
+    onClick: () => setSettings(st => ({
+      ...st,
+      [s.key + 'push']: !st[s.key + 'push']
+    }))
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }))))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      marginBottom: 40
+    },
+    onClick: () => setTab('toutes')
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer les pr\xE9f\xE9rences")))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

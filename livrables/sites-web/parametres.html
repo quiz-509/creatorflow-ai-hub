@@ -132,46 +132,246 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  User:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  Shield:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-  CreditCard:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
-  Bell:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-  Globe:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-  Trash:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>,
-  Check:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Edit:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-  Eye:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
-  EyeOff:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
-  Plus:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  LogOut:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  User: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "7",
+    r: "4"
+  })),
+  Shield: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })),
+  CreditCard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "1",
+    y: "4",
+    width: "22",
+    height: "16",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "1",
+    y1: "10",
+    x2: "23",
+    y2: "10"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Globe: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "2",
+    y1: "12",
+    x2: "22",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+  })),
+  Trash: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "3 6 5 6 21 6"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Edit: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+  })),
+  Eye: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  })),
+  EyeOff: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "1",
+    y1: "1",
+    x2: "23",
+    y2: "23"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  LogOut: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  }))
 };
-
-const NAV_ITEMS = [
-  { id:'profil', label:'Profil', icon:<Ic.User/> },
-  { id:'securite', label:'Sécurité', icon:<Ic.Shield/> },
-  { id:'facturation', label:'Facturation', icon:<Ic.CreditCard/> },
-  { id:'notifications', label:'Notifications', icon:<Ic.Bell/> },
-  { id:'preferences', label:'Préférences', icon:<Ic.Globe/> },
-];
-
-function Toggle({ on, onChange }) {
-  return (
-    <div className={`toggle ${on ? 'on' : ''}`} onClick={onChange}>
-      <div className="toggle-knob"/>
-    </div>
-  );
+const NAV_ITEMS = [{
+  id: 'profil',
+  label: 'Profil',
+  icon: /*#__PURE__*/React.createElement(Ic.User, null)
+}, {
+  id: 'securite',
+  label: 'Sécurité',
+  icon: /*#__PURE__*/React.createElement(Ic.Shield, null)
+}, {
+  id: 'facturation',
+  label: 'Facturation',
+  icon: /*#__PURE__*/React.createElement(Ic.CreditCard, null)
+}, {
+  id: 'notifications',
+  label: 'Notifications',
+  icon: /*#__PURE__*/React.createElement(Ic.Bell, null)
+}, {
+  id: 'preferences',
+  label: 'Préférences',
+  icon: /*#__PURE__*/React.createElement(Ic.Globe, null)
+}];
+function Toggle({
+  on,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${on ? 'on' : ''}`,
+    onClick: onChange
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }));
 }
-
 function App() {
   const [section, setSection] = useState('profil');
   const [toast, setToast] = useState(false);
@@ -180,8 +380,21 @@ function App() {
   const toastTimer = useRef(null);
 
   // Profil state
-  const [profil, setProfil] = useState({ prenom:'', nom:'', email:'', phone:'', bio:'', linkedin:'', entreprise:'' });
-  const [expertData, setExpertData] = useState({ specialite:'', niveau:'', tarif:'', disponible:true });
+  const [profil, setProfil] = useState({
+    prenom: '',
+    nom: '',
+    email: '',
+    phone: '',
+    bio: '',
+    linkedin: '',
+    entreprise: ''
+  });
+  const [expertData, setExpertData] = useState({
+    specialite: '',
+    niveau: '',
+    tarif: '',
+    disponible: true
+  });
   const [initials, setInitials] = useState('??');
   const [role, setRole] = useState('client');
 
@@ -191,38 +404,74 @@ function App() {
   const [passError, setPassError] = useState('');
 
   // Notifs state
-  const [notifSettings, setNotifSettings] = useState({ propositions:true, messages:true, missions:true, payments:true, reminders:true, marketing:false });
+  const [notifSettings, setNotifSettings] = useState({
+    propositions: true,
+    messages: true,
+    missions: true,
+    payments: true,
+    reminders: true,
+    marketing: false
+  });
 
   // Prefs state
-  const [prefs, setPrefs] = useState({ lang:'fr', currency:'CAD', timezone:'America/Montreal' });
-
+  const [prefs, setPrefs] = useState({
+    lang: 'fr',
+    currency: 'CAD',
+    timezone: 'America/Montreal'
+  });
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { window.location.href = 'connexion.html'; return; }
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const u = session.user;
-      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
-      const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      const {
+        data: exp
+      } = await sb.from('experts').select('*').eq('id', u.id).single();
       if (profile) {
-        const p = profile.prenom||''; const n = profile.nom||'';
+        const p = profile.prenom || '';
+        const n = profile.nom || '';
         setRole(profile.type_utilisateur || 'client');
         setProfil(prev => ({
           ...prev,
-          prenom: p, nom: n,
+          prenom: p,
+          nom: n,
           email: profile.email || u.email || '',
           linkedin: profile.linkedin || '',
-          entreprise: profile.entreprise || '',
+          entreprise: profile.entreprise || ''
         }));
-        setInitials(((p[0]||'?')+(n[0]||'?')).toUpperCase());
+        setInitials(((p[0] || '?') + (n[0] || '?')).toUpperCase());
       }
       if (exp) {
-        setProfil(prev => ({ ...prev, bio: exp.bio || '' }));
-        setExpertData({ specialite: exp.specialite||'', niveau: exp.niveau||'', tarif: exp.tarif_heure||'', disponible: exp.disponible??true });
+        setProfil(prev => ({
+          ...prev,
+          bio: exp.bio || ''
+        }));
+        setExpertData({
+          specialite: exp.specialite || '',
+          niveau: exp.niveau || '',
+          tarif: exp.tarif_heure || '',
+          disponible: exp.disponible ?? true
+        });
       }
     })();
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -230,30 +479,36 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
   const showToast = () => {
     setToast(true);
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(false), 3000);
   };
-
   const saveProfile = async () => {
     setSaving(true);
     try {
-      const { data: { session } } = await sb.auth.getSession();
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
       if (!session) return;
       const uid = session.user.id;
       await sb.from('profiles').update({
         prenom: profil.prenom,
         nom: profil.nom,
         linkedin: profil.linkedin,
-        entreprise: profil.entreprise,
+        entreprise: profil.entreprise
       }).eq('id', uid);
       if (role === 'expert') {
         await sb.from('experts').update({
@@ -261,423 +516,844 @@ function App() {
           niveau: expertData.niveau,
           tarif_heure: parseInt(expertData.tarif) || null,
           bio: profil.bio,
-          disponible: expertData.disponible,
+          disponible: expertData.disponible
         }).eq('id', uid);
       }
-      setInitials(((profil.prenom[0]||'?')+(profil.nom[0]||'?')).toUpperCase());
+      setInitials(((profil.prenom[0] || '?') + (profil.nom[0] || '?')).toUpperCase());
       showToast();
-    } catch(e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
     setSaving(false);
   };
-
   const savePassword = async () => {
-    if (newPass.length < 8) { setPassError('Le nouveau mot de passe doit faire au moins 8 caractères'); return; }
-    if (newPass !== confirmPass) { setPassError('Les mots de passe ne correspondent pas'); return; }
+    if (newPass.length < 8) {
+      setPassError('Le nouveau mot de passe doit faire au moins 8 caractères');
+      return;
+    }
+    if (newPass !== confirmPass) {
+      setPassError('Les mots de passe ne correspondent pas');
+      return;
+    }
     setSaving(true);
     try {
-      const { error } = await sb.auth.updateUser({ password: newPass });
+      const {
+        error
+      } = await sb.auth.updateUser({
+        password: newPass
+      });
       if (error) throw error;
-      setPassError(''); setNewPass(''); setConfirmPass('');
+      setPassError('');
+      setNewPass('');
+      setConfirmPass('');
       showToast();
-    } catch(e) { setPassError(e.message || 'Erreur lors de la mise à jour'); }
+    } catch (e) {
+      setPassError(e.message || 'Erreur lors de la mise à jour');
+    }
     setSaving(false);
   };
-
   const handleLogout = async () => {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
   };
-
-  return (
-    <React.Fragment>
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          <a href="dashboard-expert.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
-        </div>
-      </nav>
-
-      <div className="page">
-        <div className="layout">
-          {/* SIDE NAV */}
-          <div className="side-nav">
-            <div style={{marginBottom:20}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,padding:'12px 12px',marginBottom:12}}>
-                <div style={{width:36,height:36,borderRadius:'50%',background:'linear-gradient(135deg,var(--v),var(--c))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:800,color:'#fff',flexShrink:0}}>{initials}</div>
-                <div>
-                  <div style={{fontSize:13,fontWeight:700}}>{profil.prenom} {profil.nom}</div>
-                  <div style={{fontSize:11,color:'var(--text-3)'}}>Plan Pro</div>
-                </div>
-              </div>
-            </div>
-            <div className="side-nav-title">Paramètres</div>
-            {NAV_ITEMS.map(item => (
-              <div key={item.id} className={`nav-item ${section===item.id?'active':''}`} onClick={()=>setSection(item.id)}>
-                <div className="nav-item-icon">{item.icon}</div>
-                {item.label}
-              </div>
-            ))}
-            <div className="nav-divider"/>
-            <div className="nav-item" style={{color:'var(--red)'}} onClick={handleLogout}>
-              <div className="nav-item-icon" style={{borderColor:'rgba(239,68,68,0.2)',background:'rgba(239,68,68,0.08)'}}><Ic.LogOut style={{color:'var(--red)'}}/></div>
-              Se déconnecter
-            </div>
-          </div>
-
-          {/* CONTENT */}
-          <div className="content fade-up">
-
-            {/* ===== PROFIL ===== */}
-            {section === 'profil' && (
-              <div>
-                <div className="section-title">Profil</div>
-                <div className="section-sub">Gérez vos informations personnelles et professionnelles.</div>
-
-                <div className="card">
-                  <div className="avatar-row">
-                    <div className="avatar-big">{initials}</div>
-                    <div className="avatar-info">
-                      <div className="avatar-name">{profil.prenom} {profil.nom}</div>
-                      <div className="avatar-email">{profil.email}</div>
-                    </div>
-                  </div>
-                  <div className="input-grid">
-                    <div className="field">
-                      <label className="label">Prénom</label>
-                      <input className="input" value={profil.prenom} onChange={e=>setProfil(p=>({...p,prenom:e.target.value}))}/>
-                    </div>
-                    <div className="field">
-                      <label className="label">Nom</label>
-                      <input className="input" value={profil.nom} onChange={e=>setProfil(p=>({...p,nom:e.target.value}))}/>
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label className="label">Adresse email</label>
-                    <input className="input" type="email" value={profil.email} disabled/>
-                    <div className="hint">L'email ne peut pas être modifié ici.</div>
-                  </div>
-                  <div className="field">
-                    <label className="label">Bio <span style={{color:'var(--text-3)',fontWeight:400}}>(visible sur votre profil)</span></label>
-                    <textarea className="input" rows={4} placeholder="Décrivez votre expertise, vos spécialités, ce qui vous différencie…" value={profil.bio} onChange={e=>setProfil(p=>({...p,bio:e.target.value}))}/>
-                  </div>
-                  <div className="save-row">
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile} disabled={saving}><Ic.Check/>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-title">Profil Expert</div>
-                  <div className="input-grid">
-                    <div className="field">
-                      <label className="label">Spécialité principale</label>
-                      <input className="input" placeholder="ex: Automatisation IA, Chatbots…" value={expertData.specialite} onChange={e=>setExpertData(p=>({...p,specialite:e.target.value}))}/>
-                    </div>
-                    <div className="field">
-                      <label className="label">Niveau</label>
-                      <select className="input" value={expertData.niveau} onChange={e=>setExpertData(p=>({...p,niveau:e.target.value}))}>
-                        <option value="">Sélectionner…</option>
-                        <option value="Junior">Junior</option>
-                        <option value="Intermédiaire">Intermédiaire</option>
-                        <option value="Senior">Senior</option>
-                        <option value="Expert">Expert</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="input-grid">
-                    <div className="field">
-                      <label className="label">Tarif horaire ($)</label>
-                      <input className="input" type="number" min="0" placeholder="ex: 80" value={expertData.tarif} onChange={e=>setExpertData(p=>({...p,tarif:e.target.value}))}/>
-                    </div>
-                    <div className="field">
-                      <label className="label">LinkedIn <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                      <input className="input" placeholder="https://linkedin.com/in/…" value={profil.linkedin} onChange={e=>setProfil(p=>({...p,linkedin:e.target.value}))}/>
-                    </div>
-                  </div>
-                  <div className="toggle-row" style={{padding:'14px 0 0'}}>
-                    <div className="toggle-info">
-                      <div className="toggle-name">Disponible pour de nouvelles missions</div>
-                      <div className="toggle-desc">Visible dans les recherches clients</div>
-                    </div>
-                    <Toggle on={expertData.disponible} onChange={()=>setExpertData(p=>({...p,disponible:!p.disponible}))}/>
-                  </div>
-                  <div className="save-row">
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile} disabled={saving}><Ic.Check/>{saving ? 'Enregistrement…' : 'Enregistrer'}</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ===== SÉCURITÉ ===== */}
-            {section === 'securite' && (
-              <div>
-                <div className="section-title">Sécurité</div>
-                <div className="section-sub">Protégez votre compte avec un mot de passe fort et la double authentification.</div>
-
-                <div className="card">
-                  <div className="card-title">Changer le mot de passe</div>
-                  <div className="input-grid">
-                    <div className="field">
-                      <label className="label">Nouveau mot de passe</label>
-                      <div style={{position:'relative'}}>
-                        <input className="input" type={showPass ? 'text' : 'password'} placeholder="••••••••" value={newPass} onChange={e=>{setNewPass(e.target.value);setPassError('');}} style={{paddingRight:44}}/>
-                        <button style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',color:'var(--text-3)'}} onClick={()=>setShowPass(v=>!v)}>
-                          {showPass ? <Ic.EyeOff/> : <Ic.Eye/>}
-                        </button>
-                      </div>
-                      <div className="hint">Minimum 8 caractères</div>
-                    </div>
-                    <div className="field">
-                      <label className="label">Confirmer le mot de passe</label>
-                      <input className={`input ${passError && newPass && newPass !== confirmPass ? 'error' : ''}`} type="password" placeholder="••••••••" value={confirmPass} onChange={e=>{setConfirmPass(e.target.value);setPassError('');}}/>
-                    </div>
-                  </div>
-                  {/* Password strength */}
-                  {newPass.length > 0 && (
-                    <div style={{marginBottom:16}}>
-                      <div style={{fontSize:12,color:'var(--text-3)',marginBottom:6}}>Force du mot de passe</div>
-                      <div style={{height:4,background:'var(--surf-2)',borderRadius:999,overflow:'hidden'}}>
-                        <div style={{height:'100%',borderRadius:999,transition:'width 300ms,background 300ms',
-                          width: newPass.length < 6 ? '25%' : newPass.length < 10 ? '55%' : '90%',
-                          background: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)'}}/>
-                      </div>
-                      <div style={{fontSize:11,color: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)',marginTop:4}}>
-                        {newPass.length < 6 ? 'Faible' : newPass.length < 10 ? 'Moyen' : 'Fort'}
-                      </div>
-                    </div>
-                  )}
-                  {passError && <div className="error-msg" style={{marginBottom:12}}>{passError}</div>}
-                  <div className="save-row" style={{borderTop:'none',paddingTop:0,marginTop:0}}>
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={savePassword} disabled={saving}><Ic.Check/>{saving ? 'Mise à jour…' : 'Mettre à jour'}</button>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-title">Double authentification (2FA)</div>
-                  <div className="toggle-row">
-                    <div className="toggle-info">
-                      <div className="toggle-name">Application d'authentification</div>
-                      <div className="toggle-desc">Google Authenticator, Authy, etc.</div>
-                    </div>
-                    <Toggle on={false} onChange={()=>{}}/>
-                  </div>
-                  <div className="toggle-row">
-                    <div className="toggle-info">
-                      <div className="toggle-name">SMS de vérification</div>
-                      <div className="toggle-desc">Code envoyé à {profil.phone}</div>
-                    </div>
-                    <Toggle on={true} onChange={()=>{}}/>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-title-row">
-                    <div className="card-title" style={{margin:0}}>Sessions actives</div>
-                    <button style={{fontSize:12,color:'var(--red)',padding:'4px 10px',border:'1px solid rgba(239,68,68,0.25)',borderRadius:999}}>Tout déconnecter</button>
-                  </div>
-                  {[
-                    { device:'Chrome sur Windows 11', location:'Paris, France', current:true, time:'Maintenant' },
-                    { device:'Safari sur iPhone 15', location:'Paris, France', current:false, time:'Il y a 2h' },
-                    { device:'Firefox sur macOS', location:'Lyon, France', current:false, time:'Il y a 3 jours' },
-                  ].map((s,i) => (
-                    <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:i<2?'1px solid var(--border)':'none'}}>
-                      <div>
-                        <div style={{fontSize:13,fontWeight:600,display:'flex',alignItems:'center',gap:8}}>
-                          {s.device}
-                          {s.current && <span style={{padding:'2px 8px',background:'rgba(16,185,129,0.12)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:999,fontSize:11,fontWeight:700,color:'var(--green)'}}>Actuelle</span>}
-                        </div>
-                        <div style={{fontSize:12,color:'var(--text-3)',marginTop:2}}>{s.location} · {s.time}</div>
-                      </div>
-                      {!s.current && <button style={{fontSize:12,color:'var(--text-3)',padding:'4px 10px',border:'1px solid var(--border-2)',borderRadius:999,transition:'color 150ms'}} onMouseEnter={e=>e.currentTarget.style.color='var(--red)'} onMouseLeave={e=>e.currentTarget.style.color='var(--text-3)'}>Révoquer</button>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ===== FACTURATION ===== */}
-            {section === 'facturation' && (
-              <div>
-                <div className="section-title">Facturation</div>
-                <div className="section-sub">Gérez votre abonnement, vos moyens de paiement et vos factures.</div>
-
-                <div className="plan-card">
-                  <span className="plan-badge">Plan Pro</span>
-                  <div className="plan-info">
-                    <div className="plan-name">CreatorFlow Market Pro</div>
-                    <div className="plan-desc">49$/mois · Renouvellement le 26 juin 2026</div>
-                  </div>
-                  <button className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Changer de plan</button>
-                </div>
-
-                <div className="card">
-                  <div className="card-title-row">
-                    <div className="card-title" style={{margin:0}}>Moyens de paiement</div>
-                    <button className="btn btn-ghost" style={{padding:'6px 12px',fontSize:12}}><Ic.Plus/>Ajouter</button>
-                  </div>
-                  {[
-                    { brand:'VISA', number:'•••• •••• •••• 4242', exp:'12/27', primary:true },
-                    { brand:'MC', number:'•••• •••• •••• 5555', exp:'08/26', primary:false },
-                  ].map((pm,i) => (
-                    <div key={i} className="pm-row">
-                      <div className="pm-icon" style={{background: pm.brand==='VISA' ? 'rgba(66,133,244,0.1)' : 'rgba(235,0,27,0.08)'}}>{pm.brand}</div>
-                      <div className="pm-info">
-                        <div className="pm-name">{pm.number}</div>
-                        <div className="pm-sub">Expire {pm.exp}</div>
-                      </div>
-                      {pm.primary && <span className="pm-badge">Principal</span>}
-                      {!pm.primary && <button style={{fontSize:12,color:'var(--text-3)',padding:'4px 10px',border:'1px solid var(--border-2)',borderRadius:999}}>Définir principal</button>}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="card">
-                  <div className="card-title">Informations de facturation</div>
-                  <div className="input-grid">
-                    <div className="field">
-                      <label className="label">Nom / Raison sociale</label>
-                      <input className="input" defaultValue="Richard Consulting"/>
-                    </div>
-                    <div className="field">
-                      <label className="label">Numéro de TVA</label>
-                      <input className="input" placeholder="FR00000000000"/>
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label className="label">Adresse de facturation</label>
-                    <input className="input" defaultValue="12 Rue de la Paix, 75001 Paris"/>
-                  </div>
-                  <div className="save-row">
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile}><Ic.Check/>Enregistrer</button>
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-title-row">
-                    <div className="card-title" style={{margin:0}}>Historique des factures</div>
-                  </div>
-                  {[
-                    { ref:'FAC-0049', date:'26 mai 2026', amount:'49$', status:'Payée' },
-                    { ref:'FAC-0041', date:'26 avr. 2026', amount:'49$', status:'Payée' },
-                    { ref:'FAC-0033', date:'26 mar. 2026', amount:'49$', status:'Payée' },
-                  ].map((f,i) => (
-                    <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0',borderBottom:i<2?'1px solid var(--border)':'none'}}>
-                      <div>
-                        <div style={{fontSize:13,fontWeight:600}}>{f.ref}</div>
-                        <div style={{fontSize:12,color:'var(--text-3)'}}>{f.date}</div>
-                      </div>
-                      <div style={{display:'flex',alignItems:'center',gap:12}}>
-                        <span style={{fontSize:13,fontWeight:700}}>{f.amount}</span>
-                        <span style={{padding:'3px 10px',background:'rgba(16,185,129,0.10)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:999,fontSize:11,fontWeight:600,color:'var(--green)'}}>{f.status}</span>
-                        <button style={{fontSize:12,color:'var(--vs)',padding:'4px 10px',border:'1px solid rgba(124,58,237,0.25)',borderRadius:999}}>Télécharger</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ===== NOTIFICATIONS ===== */}
-            {section === 'notifications' && (
-              <div>
-                <div className="section-title">Notifications</div>
-                <div className="section-sub">Choisissez comment et quand vous souhaitez être alerté.</div>
-                {['Email','Push'].map(channel => (
-                  <div key={channel} className="card">
-                    <div className="card-title">Notifications {channel}</div>
-                    {Object.entries({
-                      propositions:'Nouvelles propositions d\'experts',
-                      messages:'Nouveaux messages',
-                      missions:'Mises à jour de missions',
-                      payments:'Confirmations de paiement',
-                      reminders:'Rappels et délais',
-                      marketing:'Newsletters et promotions',
-                    }).map(([key, label]) => (
-                      <div key={key} className="toggle-row">
-                        <div className="toggle-info">
-                          <div className="toggle-name">{label}</div>
-                        </div>
-                        <Toggle on={notifSettings[key]} onChange={()=>setNotifSettings(s=>({...s,[key]:!s[key]}))}/>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-                <button className="btn btn-primary" style={{padding:'9px 20px',fontSize:13}} onClick={saveProfile}><Ic.Check/>Enregistrer les préférences</button>
-              </div>
-            )}
-
-            {/* ===== PRÉFÉRENCES ===== */}
-            {section === 'preferences' && (
-              <div>
-                <div className="section-title">Préférences</div>
-                <div className="section-sub">Personnalisez votre expérience sur la plateforme.</div>
-                <div className="card">
-                  <div className="card-title">Langue & Région</div>
-                  <div className="input-grid" style={{marginBottom:16}}>
-                    <div className="field">
-                      <label className="label">Langue</label>
-                      <select className="input" value={prefs.lang} onChange={e=>setPrefs(p=>({...p,lang:e.target.value}))}>
-                        <option value="fr">Français</option>
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                      </select>
-                    </div>
-                    <div className="field">
-                      <label className="label">Devise</label>
-                      <select className="input" value={prefs.currency} onChange={e=>setPrefs(p=>({...p,currency:e.target.value}))}>
-                        <option value="CAD">CAD ($)</option>
-                        <option value="USD">USD ($)</option>
-                        <option value="GBP">GBP (£)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label className="label">Fuseau horaire</label>
-                    <select className="input" value={prefs.timezone} onChange={e=>setPrefs(p=>({...p,timezone:e.target.value}))}>
-                      <option value="Europe/Paris">Europe/Paris (UTC+2)</option>
-                      <option value="America/New_York">America/New_York (UTC-4)</option>
-                      <option value="America/Montreal">America/Montreal (UTC-4)</option>
-                      <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
-                    </select>
-                  </div>
-                  <div className="save-row">
-                    <button className="btn btn-primary" style={{padding:'9px 18px',fontSize:13}} onClick={saveProfile}><Ic.Check/>Enregistrer</button>
-                  </div>
-                </div>
-
-                <div className="danger-card">
-                  <div className="card-title" style={{color:'var(--red)',marginBottom:16}}>Zone de danger</div>
-                  <div className="danger-row">
-                    <div>
-                      <div className="danger-label">Exporter mes données</div>
-                      <div className="danger-desc">Téléchargez une copie de toutes vos données personnelles.</div>
-                    </div>
-                    <button className="btn btn-ghost" style={{padding:'7px 14px',fontSize:12,flexShrink:0}}>Exporter</button>
-                  </div>
-                  <div className="danger-row">
-                    <div>
-                      <div className="danger-label">Supprimer mon compte</div>
-                      <div className="danger-desc">Action irréversible. Toutes vos données seront effacées.</div>
-                    </div>
-                    <button className="btn btn-danger" style={{padding:'7px 14px',fontSize:12,flexShrink:0}}><Ic.Trash/>Supprimer</button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-          </div>
-        </div>
-      </div>
-
-      {/* TOAST */}
-      {toast && (
-        <div className="toast saved-chip">
-          <Ic.Check/>Modifications enregistrées
-        </div>
-      )}
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-expert.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard"))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "side-nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: '12px 12px',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: '50%',
+      background: 'linear-gradient(135deg,var(--v),var(--c))',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 13,
+      fontWeight: 800,
+      color: '#fff',
+      flexShrink: 0
+    }
+  }, initials), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, profil.prenom, " ", profil.nom), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, "Plan Pro")))), /*#__PURE__*/React.createElement("div", {
+    className: "side-nav-title"
+  }, "Param\xE8tres"), NAV_ITEMS.map(item => /*#__PURE__*/React.createElement("div", {
+    key: item.id,
+    className: `nav-item ${section === item.id ? 'active' : ''}`,
+    onClick: () => setSection(item.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-item-icon"
+  }, item.icon), item.label)), /*#__PURE__*/React.createElement("div", {
+    className: "nav-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "nav-item",
+    style: {
+      color: 'var(--red)'
+    },
+    onClick: handleLogout
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-item-icon",
+    style: {
+      borderColor: 'rgba(239,68,68,0.2)',
+      background: 'rgba(239,68,68,0.08)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.LogOut, {
+    style: {
+      color: 'var(--red)'
+    }
+  })), "Se d\xE9connecter")), /*#__PURE__*/React.createElement("div", {
+    className: "content fade-up"
+  }, section === 'profil' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Profil"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "G\xE9rez vos informations personnelles et professionnelles."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-big"
+  }, initials), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-name"
+  }, profil.prenom, " ", profil.nom), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-email"
+  }, profil.email))), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    value: profil.prenom,
+    onChange: e => setProfil(p => ({
+      ...p,
+      prenom: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    value: profil.nom,
+    onChange: e => setProfil(p => ({
+      ...p,
+      nom: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Adresse email"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "email",
+    value: profil.email,
+    disabled: true
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "L'email ne peut pas \xEAtre modifi\xE9 ici.")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Bio ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(visible sur votre profil)")), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    rows: 4,
+    placeholder: "D\xE9crivez votre expertise, vos sp\xE9cialit\xE9s, ce qui vous diff\xE9rencie\u2026",
+    value: profil.bio,
+    onChange: e => setProfil(p => ({
+      ...p,
+      bio: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Enregistrement…' : 'Enregistrer'))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Profil Expert"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Sp\xE9cialit\xE9 principale"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "ex: Automatisation IA, Chatbots\u2026",
+    value: expertData.specialite,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      specialite: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Niveau"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: expertData.niveau,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      niveau: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "S\xE9lectionner\u2026"), /*#__PURE__*/React.createElement("option", {
+    value: "Junior"
+  }, "Junior"), /*#__PURE__*/React.createElement("option", {
+    value: "Interm\xE9diaire"
+  }, "Interm\xE9diaire"), /*#__PURE__*/React.createElement("option", {
+    value: "Senior"
+  }, "Senior"), /*#__PURE__*/React.createElement("option", {
+    value: "Expert"
+  }, "Expert")))), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Tarif horaire ($)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    min: "0",
+    placeholder: "ex: 80",
+    value: expertData.tarif,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      tarif: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "LinkedIn ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "https://linkedin.com/in/\u2026",
+    value: profil.linkedin,
+    onChange: e => setProfil(p => ({
+      ...p,
+      linkedin: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row",
+    style: {
+      padding: '14px 0 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "Disponible pour de nouvelles missions"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Visible dans les recherches clients")), /*#__PURE__*/React.createElement(Toggle, {
+    on: expertData.disponible,
+    onChange: () => setExpertData(p => ({
+      ...p,
+      disponible: !p.disponible
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Enregistrement…' : 'Enregistrer')))), section === 'securite' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "S\xE9curit\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Prot\xE9gez votre compte avec un mot de passe fort et la double authentification."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Changer le mot de passe"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nouveau mot de passe"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: showPass ? 'text' : 'password',
+    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+    value: newPass,
+    onChange: e => {
+      setNewPass(e.target.value);
+      setPassError('');
+    },
+    style: {
+      paddingRight: 44
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    style: {
+      position: 'absolute',
+      right: 12,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      color: 'var(--text-3)'
+    },
+    onClick: () => setShowPass(v => !v)
+  }, showPass ? /*#__PURE__*/React.createElement(Ic.EyeOff, null) : /*#__PURE__*/React.createElement(Ic.Eye, null))), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "Minimum 8 caract\xE8res")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Confirmer le mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: `input ${passError && newPass && newPass !== confirmPass ? 'error' : ''}`,
+    type: "password",
+    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+    value: confirmPass,
+    onChange: e => {
+      setConfirmPass(e.target.value);
+      setPassError('');
+    }
+  }))), newPass.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginBottom: 6
+    }
+  }, "Force du mot de passe"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 4,
+      background: 'var(--surf-2)',
+      borderRadius: 999,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      borderRadius: 999,
+      transition: 'width 300ms,background 300ms',
+      width: newPass.length < 6 ? '25%' : newPass.length < 10 ? '55%' : '90%',
+      background: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)',
+      marginTop: 4
+    }
+  }, newPass.length < 6 ? 'Faible' : newPass.length < 10 ? 'Moyen' : 'Fort')), passError && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginBottom: 12
+    }
+  }, passError), /*#__PURE__*/React.createElement("div", {
+    className: "save-row",
+    style: {
+      borderTop: 'none',
+      paddingTop: 0,
+      marginTop: 0
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: savePassword,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Mise à jour…' : 'Mettre à jour'))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Double authentification (2FA)"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "Application d'authentification"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Google Authenticator, Authy, etc.")), /*#__PURE__*/React.createElement(Toggle, {
+    on: false,
+    onChange: () => {}
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "SMS de v\xE9rification"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Code envoy\xE9 \xE0 ", profil.phone)), /*#__PURE__*/React.createElement(Toggle, {
+    on: true,
+    onChange: () => {}
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Sessions actives"), /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--red)',
+      padding: '4px 10px',
+      border: '1px solid rgba(239,68,68,0.25)',
+      borderRadius: 999
+    }
+  }, "Tout d\xE9connecter")), [{
+    device: 'Chrome sur Windows 11',
+    location: 'Paris, France',
+    current: true,
+    time: 'Maintenant'
+  }, {
+    device: 'Safari sur iPhone 15',
+    location: 'Paris, France',
+    current: false,
+    time: 'Il y a 2h'
+  }, {
+    device: 'Firefox sur macOS',
+    location: 'Lyon, France',
+    current: false,
+    time: 'Il y a 3 jours'
+  }].map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 0',
+      borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, s.device, s.current && /*#__PURE__*/React.createElement("span", {
+    style: {
+      padding: '2px 8px',
+      background: 'rgba(16,185,129,0.12)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 700,
+      color: 'var(--green)'
+    }
+  }, "Actuelle")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 2
+    }
+  }, s.location, " \xB7 ", s.time)), !s.current && /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      padding: '4px 10px',
+      border: '1px solid var(--border-2)',
+      borderRadius: 999,
+      transition: 'color 150ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.color = 'var(--red)',
+    onMouseLeave: e => e.currentTarget.style.color = 'var(--text-3)'
+  }, "R\xE9voquer"))))), section === 'facturation' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Facturation"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "G\xE9rez votre abonnement, vos moyens de paiement et vos factures."), /*#__PURE__*/React.createElement("div", {
+    className: "plan-card"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-badge"
+  }, "Plan Pro"), /*#__PURE__*/React.createElement("div", {
+    className: "plan-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-name"
+  }, "CreatorFlow Market Pro"), /*#__PURE__*/React.createElement("div", {
+    className: "plan-desc"
+  }, "49$/mois \xB7 Renouvellement le 26 juin 2026")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Changer de plan")), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Moyens de paiement"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '6px 12px',
+      fontSize: 12
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Plus, null), "Ajouter")), [{
+    brand: 'VISA',
+    number: '•••• •••• •••• 4242',
+    exp: '12/27',
+    primary: true
+  }, {
+    brand: 'MC',
+    number: '•••• •••• •••• 5555',
+    exp: '08/26',
+    primary: false
+  }].map((pm, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "pm-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pm-icon",
+    style: {
+      background: pm.brand === 'VISA' ? 'rgba(66,133,244,0.1)' : 'rgba(235,0,27,0.08)'
+    }
+  }, pm.brand), /*#__PURE__*/React.createElement("div", {
+    className: "pm-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pm-name"
+  }, pm.number), /*#__PURE__*/React.createElement("div", {
+    className: "pm-sub"
+  }, "Expire ", pm.exp)), pm.primary && /*#__PURE__*/React.createElement("span", {
+    className: "pm-badge"
+  }, "Principal"), !pm.primary && /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      padding: '4px 10px',
+      border: '1px solid var(--border-2)',
+      borderRadius: 999
+    }
+  }, "D\xE9finir principal")))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Informations de facturation"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom / Raison sociale"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    defaultValue: "Richard Consulting"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Num\xE9ro de TVA"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "FR00000000000"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Adresse de facturation"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    defaultValue: "12 Rue de la Paix, 75001 Paris"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer"))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Historique des factures")), [{
+    ref: 'FAC-0049',
+    date: '26 mai 2026',
+    amount: '49$',
+    status: 'Payée'
+  }, {
+    ref: 'FAC-0041',
+    date: '26 avr. 2026',
+    amount: '49$',
+    status: 'Payée'
+  }, {
+    ref: 'FAC-0033',
+    date: '26 mar. 2026',
+    amount: '49$',
+    status: 'Payée'
+  }].map((f, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 0',
+      borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, f.ref), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, f.date)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, f.amount), /*#__PURE__*/React.createElement("span", {
+    style: {
+      padding: '3px 10px',
+      background: 'rgba(16,185,129,0.10)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 600,
+      color: 'var(--green)'
+    }
+  }, f.status), /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--vs)',
+      padding: '4px 10px',
+      border: '1px solid rgba(124,58,237,0.25)',
+      borderRadius: 999
+    }
+  }, "T\xE9l\xE9charger")))))), section === 'notifications' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Notifications"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Choisissez comment et quand vous souhaitez \xEAtre alert\xE9."), ['Email', 'Push'].map(channel => /*#__PURE__*/React.createElement("div", {
+    key: channel,
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Notifications ", channel), Object.entries({
+    propositions: 'Nouvelles propositions d\'experts',
+    messages: 'Nouveaux messages',
+    missions: 'Mises à jour de missions',
+    payments: 'Confirmations de paiement',
+    reminders: 'Rappels et délais',
+    marketing: 'Newsletters et promotions'
+  }).map(([key, label]) => /*#__PURE__*/React.createElement("div", {
+    key: key,
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, label)), /*#__PURE__*/React.createElement(Toggle, {
+    on: notifSettings[key],
+    onChange: () => setNotifSettings(s => ({
+      ...s,
+      [key]: !s[key]
+    }))
+  }))))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer les pr\xE9f\xE9rences")), section === 'preferences' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Pr\xE9f\xE9rences"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Personnalisez votre exp\xE9rience sur la plateforme."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Langue & R\xE9gion"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Langue"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.lang,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      lang: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "fr"
+  }, "Fran\xE7ais"), /*#__PURE__*/React.createElement("option", {
+    value: "en"
+  }, "English"), /*#__PURE__*/React.createElement("option", {
+    value: "es"
+  }, "Espa\xF1ol"))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Devise"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.currency,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      currency: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "CAD"
+  }, "CAD ($)"), /*#__PURE__*/React.createElement("option", {
+    value: "USD"
+  }, "USD ($)"), /*#__PURE__*/React.createElement("option", {
+    value: "GBP"
+  }, "GBP (\xA3)")))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Fuseau horaire"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.timezone,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      timezone: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "Europe/Paris"
+  }, "Europe/Paris (UTC+2)"), /*#__PURE__*/React.createElement("option", {
+    value: "America/New_York"
+  }, "America/New_York (UTC-4)"), /*#__PURE__*/React.createElement("option", {
+    value: "America/Montreal"
+  }, "America/Montreal (UTC-4)"), /*#__PURE__*/React.createElement("option", {
+    value: "Asia/Tokyo"
+  }, "Asia/Tokyo (UTC+9)"))), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer"))), /*#__PURE__*/React.createElement("div", {
+    className: "danger-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      color: 'var(--red)',
+      marginBottom: 16
+    }
+  }, "Zone de danger"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "danger-label"
+  }, "Exporter mes donn\xE9es"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-desc"
+  }, "T\xE9l\xE9chargez une copie de toutes vos donn\xE9es personnelles.")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "Exporter")), /*#__PURE__*/React.createElement("div", {
+    className: "danger-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "danger-label"
+  }, "Supprimer mon compte"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-desc"
+  }, "Action irr\xE9versible. Toutes vos donn\xE9es seront effac\xE9es.")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-danger",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Trash, null), "Supprimer"))))))), toast && /*#__PURE__*/React.createElement("div", {
+    className: "toast saved-chip"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Modifications enregistr\xE9es"));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

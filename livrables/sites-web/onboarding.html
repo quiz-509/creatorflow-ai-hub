@@ -107,49 +107,220 @@ select.input{appearance:none;cursor:pointer;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Check:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  ArrowLeft:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M11 19l-7-7 7-7"/></svg>,
-  Dashboard:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>,
-  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  Plus:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  Star:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  ArrowLeft: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M11 19l-7-7 7-7"
+  })),
+  Dashboard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))
 };
 
 // --- Données ---
-const PROFILES_CLIENT = [
-  {id:'solo', emoji:'🧑‍💼', name:'Indépendant / Freelance', desc:'Gérer mes projets perso et automatiser mon activité'},
-  {id:'tpe', emoji:'🏢', name:'TPE / PME', desc:'Équipe de moins de 50 personnes'},
-  {id:'startup', emoji:'🚀', name:'Startup / Scale-up', desc:'Croissance rapide, besoins tech avancés'},
-  {id:'grand', emoji:'🏗️', name:'Grande entreprise', desc:'+500 employés, besoins d\'intégration complexes'},
-];
-const NEEDS_CLIENT = [
-  {id:'chatbot', emoji:'🤖', label:'Créer un chatbot IA', sub:'Service client, support interne, FAQ'},
-  {id:'auto', emoji:'⚡', label:'Automatiser des tâches', sub:'Workflows, CRM, email, reporting'},
-  {id:'data', emoji:'📊', label:'Analyser mes données', sub:'Dashboards, prédictions, BI'},
-  {id:'content', emoji:'✍️', label:'Générer du contenu', sub:'Textes, images, vidéos par IA'},
-  {id:'api', emoji:'🔗', label:'Connecter mes outils', sub:'API, intégrations, ERP, CRM'},
-  {id:'train', emoji:'🎓', label:'Former mon équipe', sub:'Ateliers, guides, audit IA'},
-];
-const BUDGETS = [
-  {id:'xs', label:'Moins de 500$', desc:'Micro-projet'},
-  {id:'sm', label:'500 à 2 000$', desc:'Projet standard'},
-  {id:'md', label:'2 000 à 10 000$', desc:'Projet moyen'},
-  {id:'lg', label:'Plus de 10 000$', desc:'Projet stratégique'},
-];
-const SPECIALITES = ['Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
-const NIVEAUX = [{id:'junior', label:'Junior', desc:'0-2 ans d\'expérience IA'},{id:'confirme', label:'Confirmé', desc:'2-5 ans'},{id:'senior', label:'Senior', desc:'5+ ans, références vérifiées'}];
-
+const PROFILES_CLIENT = [{
+  id: 'solo',
+  emoji: '🧑‍💼',
+  name: 'Indépendant / Freelance',
+  desc: 'Gérer mes projets perso et automatiser mon activité'
+}, {
+  id: 'tpe',
+  emoji: '🏢',
+  name: 'TPE / PME',
+  desc: 'Équipe de moins de 50 personnes'
+}, {
+  id: 'startup',
+  emoji: '🚀',
+  name: 'Startup / Scale-up',
+  desc: 'Croissance rapide, besoins tech avancés'
+}, {
+  id: 'grand',
+  emoji: '🏗️',
+  name: 'Grande entreprise',
+  desc: '+500 employés, besoins d\'intégration complexes'
+}];
+const NEEDS_CLIENT = [{
+  id: 'chatbot',
+  emoji: '🤖',
+  label: 'Créer un chatbot IA',
+  sub: 'Service client, support interne, FAQ'
+}, {
+  id: 'auto',
+  emoji: '⚡',
+  label: 'Automatiser des tâches',
+  sub: 'Workflows, CRM, email, reporting'
+}, {
+  id: 'data',
+  emoji: '📊',
+  label: 'Analyser mes données',
+  sub: 'Dashboards, prédictions, BI'
+}, {
+  id: 'content',
+  emoji: '✍️',
+  label: 'Générer du contenu',
+  sub: 'Textes, images, vidéos par IA'
+}, {
+  id: 'api',
+  emoji: '🔗',
+  label: 'Connecter mes outils',
+  sub: 'API, intégrations, ERP, CRM'
+}, {
+  id: 'train',
+  emoji: '🎓',
+  label: 'Former mon équipe',
+  sub: 'Ateliers, guides, audit IA'
+}];
+const BUDGETS = [{
+  id: 'xs',
+  label: 'Moins de 500$',
+  desc: 'Micro-projet'
+}, {
+  id: 'sm',
+  label: '500 à 2 000$',
+  desc: 'Projet standard'
+}, {
+  id: 'md',
+  label: '2 000 à 10 000$',
+  desc: 'Projet moyen'
+}, {
+  id: 'lg',
+  label: 'Plus de 10 000$',
+  desc: 'Projet stratégique'
+}];
+const SPECIALITES = ['Agents IA', 'Automatisation', 'Chatbots', 'Développement IA', 'Prompt Engineering', 'Montage vidéo IA', 'Branding IA', 'Formation IA'];
+const NIVEAUX = [{
+  id: 'junior',
+  label: 'Junior',
+  desc: '0-2 ans d\'expérience IA'
+}, {
+  id: 'confirme',
+  label: 'Confirmé',
+  desc: '2-5 ans'
+}, {
+  id: 'senior',
+  label: 'Senior',
+  desc: '5+ ans, références vérifiées'
+}];
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [role, setRole] = useState('client');
@@ -174,21 +345,33 @@ function App() {
   const [prenom, setPrenom] = useState('');
   const [nom, setNom] = useState('');
   const [entreprise, setEntreprise] = useState('');
-
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, {passive:true});
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     return () => window.removeEventListener('mousemove', move);
   }, []);
-
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { window.location.href = 'connexion.html'; return; }
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const uid = session.user.id;
       setUserId(uid);
-      const { data: profile } = await sb.from('profiles').select('*').eq('id', uid).single();
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', uid).single();
       if (profile) {
         setRole(profile.type_utilisateur || 'client');
         setPrenom(profile.prenom || '');
@@ -200,12 +383,9 @@ function App() {
       setAuthLoading(false);
     })();
   }, []);
-
   const totalSteps = role === 'expert' ? 4 : 4; // bienvenue → profil → domaine → terminé
 
-  const toggleArr = (arr, setArr, val) =>
-    setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
-
+  const toggleArr = (arr, setArr, val) => setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
   const canNext = () => {
     if (role === 'client') {
       if (step === 0) return !!profil;
@@ -219,12 +399,15 @@ function App() {
       return true;
     }
   };
-
   async function finish() {
     setSaving(true);
     try {
       // Mise à jour profil
-      const updates = { prenom, nom, entreprise };
+      const updates = {
+        prenom,
+        nom,
+        entreprise
+      };
       if (role === 'expert') {
         updates.bio = bio;
         updates.linkedin = linkedin;
@@ -238,340 +421,575 @@ function App() {
           competences: specialites,
           bio,
           tarif_heure: tarif ? parseInt(tarif) : null,
-          disponible: disponible === 'oui',
+          disponible: disponible === 'oui'
         };
-        const { data: existing } = await sb.from('experts').select('id').eq('id', userId).single();
+        const {
+          data: existing
+        } = await sb.from('experts').select('id').eq('id', userId).single();
         if (existing) {
           await sb.from('experts').update(expertData).eq('id', userId);
         } else {
-          await sb.from('experts').insert({ id: userId, ...expertData });
+          await sb.from('experts').insert({
+            id: userId,
+            ...expertData
+          });
         }
       }
-    } catch(e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
     setSaving(false);
     setStep(totalSteps);
   }
-
-  const next = () => { if (canNext()) { if (step === totalSteps - 1) finish(); else setStep(s => s+1); } };
-  const back = () => setStep(s => s-1);
-  const skip = () => { window.location.href = role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html'; };
-
-  const progress = (step / totalSteps) * 100;
-
-  if (authLoading) return (
-    <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',flexDirection:'column',gap:12,color:'var(--text-3)'}}>
-      <div className="spinner"/>
-      <span style={{fontSize:13}}>Chargement...</span>
-    </div>
-  );
+  const next = () => {
+    if (canNext()) {
+      if (step === totalSteps - 1) finish();else setStep(s => s + 1);
+    }
+  };
+  const back = () => setStep(s => s - 1);
+  const skip = () => {
+    window.location.href = role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
+  };
+  const progress = step / totalSteps * 100;
+  if (authLoading) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      flexDirection: 'column',
+      gap: 12,
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "spinner"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13
+    }
+  }, "Chargement..."));
 
   // ──────────────────────────────────────
   // ÉTAPE FINALE — Succès
   // ──────────────────────────────────────
-  if (step === totalSteps) return (
-    <div className="onboarding">
-      <div className="top-bar">
-        <div className="logo">CreatorFlow <em>Market</em></div>
-      </div>
-      <div className="prog-bar"><div className="prog-fill" style={{width:'100%'}}/></div>
-      <div className="ob-content">
-        <div className="ob-card fade-up" style={{textAlign:'center'}}>
-          <div className="success-ring">🎉</div>
-          <div className="ob-title">Bienvenue, <em>{prenom || 'cher utilisateur'}</em> !</div>
-          <div className="ob-sub">
-            {role === 'expert'
-              ? 'Votre profil expert est configuré. Vous pouvez maintenant recevoir des missions IA.'
-              : 'Votre profil est prêt. Trouvez votre expert IA parfait dès maintenant.'}
-          </div>
-
-          <div style={{background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)',padding:20,marginBottom:24,textAlign:'left'}}>
-            <div style={{fontSize:12,color:'var(--text-3)',marginBottom:12,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em'}}>Votre profil en résumé</div>
-            <div style={{display:'grid',gap:8}}>
-              {(role === 'client' ? [
-                ['Profil', PROFILES_CLIENT.find(p=>p.id===profil)?.name || ''],
-                ['Besoins', needs.map(n=>NEEDS_CLIENT.find(x=>x.id===n)?.label).filter(Boolean).join(', ')],
-                ['Budget', BUDGETS.find(b=>b.id===budget)?.label || ''],
-              ] : [
-                ['Spécialités', specialites.slice(0,3).join(', ')],
-                ['Niveau', NIVEAUX.find(n=>n.id===niveau)?.label || ''],
-                ['Tarif', tarif ? `${tarif}$/h` : 'Non renseigné'],
-              ]).map(([k,v]) => v ? (
-                <div key={k} style={{display:'flex',justifyContent:'space-between',fontSize:13,gap:8}}>
-                  <span style={{color:'var(--text-3)',flexShrink:0}}>{k}</span>
-                  <span style={{fontWeight:600,textAlign:'right'}}>{v}</span>
-                </div>
-              ) : null)}
-            </div>
-          </div>
-
-          <div style={{display:'flex',flexDirection:'column',gap:10}}>
-            {role === 'expert' ? (
-              <>
-                <a href="dashboard-expert.html" className="btn btn-primary" style={{justifyContent:'center',padding:'14px 20px',fontSize:15}}>
-                  <Ic.Dashboard/>Mon dashboard expert
-                </a>
-                <a href="profil-expert.html" className="btn btn-ghost" style={{justifyContent:'center'}}>
-                  <Ic.Star/>Voir mon profil public
-                </a>
-              </>
-            ) : (
-              <>
-                <a href="experts.html" className="btn btn-primary" style={{justifyContent:'center',padding:'14px 20px',fontSize:15}}>
-                  <Ic.Search/>Voir les experts recommandés
-                </a>
-                <a href="brief.html" className="btn btn-ghost" style={{justifyContent:'center'}}>
-                  <Ic.Plus/>Déposer un brief
-                </a>
-                <a href="dashboard-client.html" className="btn btn-ghost" style={{justifyContent:'center',color:'var(--text-3)'}}>
-                  <Ic.Dashboard/>Mon dashboard
-                </a>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  if (step === totalSteps) return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: '100%'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, "\uD83C\uDF89"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Bienvenue, ", /*#__PURE__*/React.createElement("em", null, prenom || 'cher utilisateur'), " !"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, role === 'expert' ? 'Votre profil expert est configuré. Vous pouvez maintenant recevoir des missions IA.' : 'Votre profil est prêt. Trouvez votre expert IA parfait dès maintenant.'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-lg)',
+      padding: 20,
+      marginBottom: 24,
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginBottom: 12,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: '0.06em'
+    }
+  }, "Votre profil en r\xE9sum\xE9"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gap: 8
+    }
+  }, (role === 'client' ? [['Profil', PROFILES_CLIENT.find(p => p.id === profil)?.name || ''], ['Besoins', needs.map(n => NEEDS_CLIENT.find(x => x.id === n)?.label).filter(Boolean).join(', ')], ['Budget', BUDGETS.find(b => b.id === budget)?.label || '']] : [['Spécialités', specialites.slice(0, 3).join(', ')], ['Niveau', NIVEAUX.find(n => n.id === niveau)?.label || ''], ['Tarif', tarif ? `${tarif}$/h` : 'Non renseigné']]).map(([k, v]) => v ? /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: 13,
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }, k), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 600,
+      textAlign: 'right'
+    }
+  }, v)) : null))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }
+  }, role === 'expert' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-expert.html",
+    className: "btn btn-primary",
+    style: {
+      justifyContent: 'center',
+      padding: '14px 20px',
+      fontSize: 15
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard expert"), /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Star, null), "Voir mon profil public")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-primary",
+    style: {
+      justifyContent: 'center',
+      padding: '14px 20px',
+      fontSize: 15
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Search, null), "Voir les experts recommand\xE9s"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Plus, null), "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard"))))));
 
   // ──────────────────────────────────────
   // FLOW CLIENT
   // ──────────────────────────────────────
-  if (role === 'client') return (
-    <div className="onboarding">
-      <div className="top-bar">
-        <div className="logo">CreatorFlow <em>Market</em></div>
-        <span className="skip" onClick={skip} style={{cursor:'pointer'}}>Passer →</span>
-      </div>
-      <div className="prog-bar"><div className="prog-fill" style={{width:`${progress}%`}}/></div>
-
-      <div className="ob-content">
-        <div className="ob-card fade-up" key={step}>
-          <div className="step-tag">Étape {step+1} sur {totalSteps}</div>
-
-          {step === 0 && (
-            <>
-              <div className="ob-title">Vous êtes <em>qui</em> ?</div>
-              <div className="ob-sub">Cela nous aide à personnaliser votre expérience et à recommander les bons experts.</div>
-              <div className="option-grid option-grid-2">
-                {PROFILES_CLIENT.map(p=>(
-                  <div key={p.id} className={`option-card ${profil===p.id?'selected':''}`} onClick={()=>setProfil(p.id)}>
-                    <div className="option-emoji">{p.emoji}</div>
-                    <div className="option-name">{p.name}</div>
-                    <div className="option-desc">{p.desc}</div>
-                    {profil===p.id && <div className="option-check"><Ic.Check style={{color:'#fff'}}/></div>}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {step === 1 && (
-            <>
-              <div className="ob-title">Quels sont vos <em>besoins</em> ?</div>
-              <div className="ob-sub">Sélectionnez tout ce qui vous intéresse. Vous pouvez choisir plusieurs options.</div>
-              <div className="option-grid option-grid-2">
-                {NEEDS_CLIENT.map(n=>(
-                  <div key={n.id} className={`option-card ${needs.includes(n.id)?'selected':''}`} onClick={()=>toggleArr(needs,setNeeds,n.id)}>
-                    <div className="option-emoji">{n.emoji}</div>
-                    <div className="option-name">{n.label}</div>
-                    <div className="option-desc">{n.sub}</div>
-                    {needs.includes(n.id) && <div className="option-check"><Ic.Check style={{color:'#fff'}}/></div>}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <div className="ob-title">Quel est votre <em>budget</em> ?</div>
-              <div className="ob-sub">Une estimation suffit. Cela aide les experts à vous faire des propositions adaptées.</div>
-              <div className="checklist">
-                {BUDGETS.map(b=>(
-                  <div key={b.id} className={`check-item ${budget===b.id?'selected':''}`} onClick={()=>setBudget(b.id)}>
-                    <div className="check-box">{budget===b.id && <Ic.Check style={{color:'#fff'}}/>}</div>
-                    <div>
-                      <div className="check-label">{b.label}</div>
-                      <div className="check-sub">{b.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {step === 3 && (
-            <>
-              <div className="ob-title">Vos <em>informations</em></div>
-              <div className="ob-sub">Quelques informations pour personnaliser votre espace.</div>
-              <div className="input-grid" style={{marginBottom:16}}>
-                <div className="field" style={{marginBottom:0}}>
-                  <label className="label">Prénom *</label>
-                  <input className="input" placeholder="Jean" value={prenom} onChange={e=>setPrenom(e.target.value)}/>
-                </div>
-                <div className="field" style={{marginBottom:0}}>
-                  <label className="label">Nom *</label>
-                  <input className="input" placeholder="Dupont" value={nom} onChange={e=>setNom(e.target.value)}/>
-                </div>
-              </div>
-              <div className="field">
-                <label className="label">Entreprise <span style={{color:'var(--text-3)',fontWeight:400}}>(optionnel)</span></label>
-                <input className="input" placeholder="Votre entreprise" value={entreprise} onChange={e=>setEntreprise(e.target.value)}/>
-              </div>
-              <div style={{padding:14,background:'rgba(16,185,129,0.07)',border:'1px solid rgba(16,185,129,0.2)',borderRadius:'var(--r)',fontSize:13,color:'var(--text-2)',display:'flex',gap:8}}>
-                <span style={{fontSize:16}}>🔒</span>
-                Vos informations ne sont jamais partagées sans votre accord.
-              </div>
-            </>
-          )}
-
-          <div className="ob-footer">
-            <div className="steps-dots">
-              {Array.from({length:totalSteps},(_,i)=>(
-                <div key={i} className={`dot ${i===step?'active':i<step?'done':''}`}/>
-              ))}
-            </div>
-            <div style={{display:'flex',gap:10}}>
-              {step > 0 && <button className="btn btn-ghost" style={{padding:'9px 16px',fontSize:13}} onClick={back}><Ic.ArrowLeft/>Retour</button>}
-              <button className="btn btn-primary" style={{padding:'9px 20px',fontSize:13,opacity:canNext()?1:0.5}} onClick={next} disabled={saving}>
-                {saving ? 'Sauvegarde...' : step === totalSteps-1 ? 'Terminer' : 'Continuer'} {!saving && <Ic.Arrow/>}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  if (role === 'client') return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("span", {
+    className: "skip",
+    onClick: skip,
+    style: {
+      cursor: 'pointer'
+    }
+  }, "Passer \u2192")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    key: step
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-tag"
+  }, "\xC9tape ", step + 1, " sur ", totalSteps), step === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vous \xEAtes ", /*#__PURE__*/React.createElement("em", null, "qui"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Cela nous aide \xE0 personnaliser votre exp\xE9rience et \xE0 recommander les bons experts."), /*#__PURE__*/React.createElement("div", {
+    className: "option-grid option-grid-2"
+  }, PROFILES_CLIENT.map(p => /*#__PURE__*/React.createElement("div", {
+    key: p.id,
+    className: `option-card ${profil === p.id ? 'selected' : ''}`,
+    onClick: () => setProfil(p.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "option-emoji"
+  }, p.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "option-name"
+  }, p.name), /*#__PURE__*/React.createElement("div", {
+    className: "option-desc"
+  }, p.desc), profil === p.id && /*#__PURE__*/React.createElement("div", {
+    className: "option-check"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })))))), step === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Quels sont vos ", /*#__PURE__*/React.createElement("em", null, "besoins"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "S\xE9lectionnez tout ce qui vous int\xE9resse. Vous pouvez choisir plusieurs options."), /*#__PURE__*/React.createElement("div", {
+    className: "option-grid option-grid-2"
+  }, NEEDS_CLIENT.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `option-card ${needs.includes(n.id) ? 'selected' : ''}`,
+    onClick: () => toggleArr(needs, setNeeds, n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "option-emoji"
+  }, n.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "option-name"
+  }, n.label), /*#__PURE__*/React.createElement("div", {
+    className: "option-desc"
+  }, n.sub), needs.includes(n.id) && /*#__PURE__*/React.createElement("div", {
+    className: "option-check"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })))))), step === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Quel est votre ", /*#__PURE__*/React.createElement("em", null, "budget"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Une estimation suffit. Cela aide les experts \xE0 vous faire des propositions adapt\xE9es."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist"
+  }, BUDGETS.map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.id,
+    className: `check-item ${budget === b.id ? 'selected' : ''}`,
+    onClick: () => setBudget(b.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "check-box"
+  }, budget === b.id && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, b.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, b.desc)))))), step === 3 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vos ", /*#__PURE__*/React.createElement("em", null, "informations")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Quelques informations pour personnaliser votre espace."), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Jean",
+    value: prenom,
+    onChange: e => setPrenom(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Dupont",
+    value: nom,
+    onChange: e => setNom(e.target.value)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Entreprise ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Votre entreprise",
+    value: entreprise,
+    onChange: e => setEntreprise(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 14,
+      background: 'rgba(16,185,129,0.07)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 'var(--r)',
+      fontSize: 13,
+      color: 'var(--text-2)',
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\uD83D\uDD12"), "Vos informations ne sont jamais partag\xE9es sans votre accord.")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "steps-dots"
+  }, Array.from({
+    length: totalSteps
+  }, (_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '9px 16px',
+      fontSize: 13
+    },
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13,
+      opacity: canNext() ? 1 : 0.5
+    },
+    onClick: next,
+    disabled: saving
+  }, saving ? 'Sauvegarde...' : step === totalSteps - 1 ? 'Terminer' : 'Continuer', " ", !saving && /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
 
   // ──────────────────────────────────────
   // FLOW EXPERT
   // ──────────────────────────────────────
-  return (
-    <div className="onboarding">
-      <div className="top-bar">
-        <div className="logo">CreatorFlow <em>Market</em></div>
-        <span className="skip" onClick={skip} style={{cursor:'pointer'}}>Passer →</span>
-      </div>
-      <div className="prog-bar"><div className="prog-fill" style={{width:`${progress}%`}}/></div>
-
-      <div className="ob-content">
-        <div className="ob-card fade-up" key={step}>
-          <div className="step-tag">Étape {step+1} sur {totalSteps}</div>
-
-          {step === 0 && (
-            <>
-              <div className="ob-title">Votre <em>profil</em> expert</div>
-              <div className="ob-sub">Ces informations seront visibles par les clients sur votre profil public.</div>
-              <div className="input-grid" style={{marginBottom:16}}>
-                <div className="field" style={{marginBottom:0}}>
-                  <label className="label">Prénom *</label>
-                  <input className="input" placeholder="Marie" value={prenom} onChange={e=>setPrenom(e.target.value)}/>
-                </div>
-                <div className="field" style={{marginBottom:0}}>
-                  <label className="label">Nom *</label>
-                  <input className="input" placeholder="Chen" value={nom} onChange={e=>setNom(e.target.value)}/>
-                </div>
-              </div>
-              <div className="field">
-                <label className="label">Entreprise / Freelance</label>
-                <input className="input" placeholder="Indépendant, Mon Agence..." value={entreprise} onChange={e=>setEntreprise(e.target.value)}/>
-              </div>
-              <div className="field">
-                <label className="label">LinkedIn</label>
-                <input className="input" placeholder="https://linkedin.com/in/..." value={linkedin} onChange={e=>setLinkedin(e.target.value)}/>
-              </div>
-              <div className="field">
-                <label className="label">Bio courte</label>
-                <textarea className="input" placeholder="Expert IA spécialisé dans..." value={bio} onChange={e=>setBio(e.target.value)}/>
-              </div>
-            </>
-          )}
-
-          {step === 1 && (
-            <>
-              <div className="ob-title">Vos <em>spécialités</em></div>
-              <div className="ob-sub">Sélectionnez vos domaines d'expertise IA. Vous pouvez en choisir plusieurs.</div>
-              <div className="chips">
-                {SPECIALITES.map(s=>(
-                  <div key={s} className={`chip ${specialites.includes(s)?'selected':''}`} onClick={()=>toggleArr(specialites,setSpecialites,s)}>{s}</div>
-                ))}
-              </div>
-              <div className="field">
-                <label className="label">Tarif horaire (CAD$)</label>
-                <input className="input" type="number" placeholder="ex. 120" value={tarif} onChange={e=>setTarif(e.target.value)} style={{maxWidth:200}}/>
-              </div>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <div className="ob-title">Votre <em>niveau</em></div>
-              <div className="ob-sub">Votre expérience en IA aide les clients à choisir le bon expert.</div>
-              <div className="checklist">
-                {NIVEAUX.map(n=>(
-                  <div key={n.id} className={`check-item ${niveau===n.id?'selected':''}`} onClick={()=>setNiveau(n.id)}>
-                    <div className="check-box">{niveau===n.id && <Ic.Check style={{color:'#fff'}}/>}</div>
-                    <div>
-                      <div className="check-label">{n.label}</div>
-                      <div className="check-sub">{n.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="field">
-                <label className="label">Disponibilité</label>
-                <select className="input" value={disponible} onChange={e=>setDisponible(e.target.value)} style={{maxWidth:240}}>
-                  <option value="oui">Disponible immédiatement</option>
-                  <option value="partiel">Partiellement disponible</option>
-                  <option value="non">Pas disponible actuellement</option>
-                </select>
-              </div>
-            </>
-          )}
-
-          {step === 3 && (
-            <>
-              <div className="ob-title">Prêt à <em>démarrer</em> ?</div>
-              <div className="ob-sub">Voici ce qui vous attend sur CreatorFlow Market en tant qu'expert.</div>
-              <div className="checklist" style={{marginBottom:28}}>
-                {[
-                  {emoji:'📥', label:'Recevez des briefs clients', sub:'Projets matchés à vos compétences'},
-                  {emoji:'💬', label:'Messagerie intégrée', sub:'Échangez directement avec les clients'},
-                  {emoji:'💰', label:'Paiement sécurisé', sub:'Libéré à la validation du client'},
-                  {emoji:'⭐', label:'Construisez votre réputation', sub:'Avis vérifiés, badge certifié'},
-                ].map((item,i)=>(
-                  <div key={i} className="check-item selected" style={{cursor:'default'}}>
-                    <span style={{fontSize:20}}>{item.emoji}</span>
-                    <div>
-                      <div className="check-label">{item.label}</div>
-                      <div className="check-sub">{item.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          <div className="ob-footer">
-            <div className="steps-dots">
-              {Array.from({length:totalSteps},(_,i)=>(
-                <div key={i} className={`dot ${i===step?'active':i<step?'done':''}`}/>
-              ))}
-            </div>
-            <div style={{display:'flex',gap:10}}>
-              {step > 0 && <button className="btn btn-ghost" style={{padding:'9px 16px',fontSize:13}} onClick={back}><Ic.ArrowLeft/>Retour</button>}
-              <button className="btn btn-primary" style={{padding:'9px 20px',fontSize:13,opacity:canNext()?1:0.5}} onClick={next} disabled={saving}>
-                {saving ? 'Sauvegarde...' : step === totalSteps-1 ? 'Terminer' : 'Continuer'} {!saving && <Ic.Arrow/>}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("span", {
+    className: "skip",
+    onClick: skip,
+    style: {
+      cursor: 'pointer'
+    }
+  }, "Passer \u2192")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    key: step
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-tag"
+  }, "\xC9tape ", step + 1, " sur ", totalSteps), step === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Votre ", /*#__PURE__*/React.createElement("em", null, "profil"), " expert"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Ces informations seront visibles par les clients sur votre profil public."), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Marie",
+    value: prenom,
+    onChange: e => setPrenom(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Chen",
+    value: nom,
+    onChange: e => setNom(e.target.value)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Entreprise / Freelance"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Ind\xE9pendant, Mon Agence...",
+    value: entreprise,
+    onChange: e => setEntreprise(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "LinkedIn"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "https://linkedin.com/in/...",
+    value: linkedin,
+    onChange: e => setLinkedin(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Bio courte"), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    placeholder: "Expert IA sp\xE9cialis\xE9 dans...",
+    value: bio,
+    onChange: e => setBio(e.target.value)
+  }))), step === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vos ", /*#__PURE__*/React.createElement("em", null, "sp\xE9cialit\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "S\xE9lectionnez vos domaines d'expertise IA. Vous pouvez en choisir plusieurs."), /*#__PURE__*/React.createElement("div", {
+    className: "chips"
+  }, SPECIALITES.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s,
+    className: `chip ${specialites.includes(s) ? 'selected' : ''}`,
+    onClick: () => toggleArr(specialites, setSpecialites, s)
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Tarif horaire (CAD$)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    placeholder: "ex. 120",
+    value: tarif,
+    onChange: e => setTarif(e.target.value),
+    style: {
+      maxWidth: 200
+    }
+  }))), step === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Votre ", /*#__PURE__*/React.createElement("em", null, "niveau")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Votre exp\xE9rience en IA aide les clients \xE0 choisir le bon expert."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist"
+  }, NIVEAUX.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `check-item ${niveau === n.id ? 'selected' : ''}`,
+    onClick: () => setNiveau(n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "check-box"
+  }, niveau === n.id && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, n.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, n.desc))))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: disponible,
+    onChange: e => setDisponible(e.target.value),
+    style: {
+      maxWidth: 240
+    }
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "oui"
+  }, "Disponible imm\xE9diatement"), /*#__PURE__*/React.createElement("option", {
+    value: "partiel"
+  }, "Partiellement disponible"), /*#__PURE__*/React.createElement("option", {
+    value: "non"
+  }, "Pas disponible actuellement")))), step === 3 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Pr\xEAt \xE0 ", /*#__PURE__*/React.createElement("em", null, "d\xE9marrer"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Voici ce qui vous attend sur CreatorFlow Market en tant qu'expert."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist",
+    style: {
+      marginBottom: 28
+    }
+  }, [{
+    emoji: '📥',
+    label: 'Recevez des briefs clients',
+    sub: 'Projets matchés à vos compétences'
+  }, {
+    emoji: '💬',
+    label: 'Messagerie intégrée',
+    sub: 'Échangez directement avec les clients'
+  }, {
+    emoji: '💰',
+    label: 'Paiement sécurisé',
+    sub: 'Libéré à la validation du client'
+  }, {
+    emoji: '⭐',
+    label: 'Construisez votre réputation',
+    sub: 'Avis vérifiés, badge certifié'
+  }].map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "check-item selected",
+    style: {
+      cursor: 'default'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 20
+    }
+  }, item.emoji), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, item.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, item.sub)))))), /*#__PURE__*/React.createElement("div", {
+    className: "ob-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "steps-dots"
+  }, Array.from({
+    length: totalSteps
+  }, (_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '9px 16px',
+      fontSize: 13
+    },
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13,
+      opacity: canNext() ? 1 : 0.5
+    },
+    onClick: next,
+    disabled: saving
+  }, saving ? 'Sauvegarde...' : step === totalSteps - 1 ? 'Terminer' : 'Continuer', " ", !saving && /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

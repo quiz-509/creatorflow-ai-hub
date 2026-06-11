@@ -168,22 +168,58 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useEffect } = React;
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useEffect
+} = React;
 const Ic = {
-  Check:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))
 };
-
 function App() {
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -191,200 +227,362 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
-  return (
-    <React.Fragment>
-      <nav className="nav"><div className="nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-        <div style={{display:'flex',gap:10,alignItems:'center'}}>
-          <a href="connexion.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Se connecter</a>
-          <a href="inscription.html" className="btn btn-cyan" style={{padding:'8px 18px',fontSize:13}}>Devenir expert <Ic.Arrow style={{width:13,height:13}}/></a>
-        </div>
-      </div></nav>
-
-      <div className="page">
-        {/* HERO */}
-        <div className="hero">
-          <div className="container">
-            <div className="hero-badge">Plateforme IA &amp; Automatisation — En lancement</div>
-            <div className="hero-title fade-up">Monétisez votre expertise<br/><em>IA & Automatisation</em></div>
-            <div className="hero-sub fade-up">Rejoignez la plateforme qui met en relation les meilleurs experts IA avec des entreprises prêtes à investir.</div>
-            <div className="hero-cta fade-up">
-              <a href="inscription.html" className="btn btn-cyan btn-lg">Créer mon profil expert <Ic.Arrow/></a>
-              <a href="#comment-ca-marche" className="btn btn-ghost btn-lg">Comment ça marche ?</a>
-            </div>
-            <div className="hero-proof fade-up">
-              {[
-                ['✓','Gratuit pour s\'inscrire'],
-                ['✓','Paiement sécurisé par escrow'],
-                ['✓','Accès aux briefs dès validation'],
-                ['✓','Commission transparente à 15%'],
-              ].map(([ic,txt])=>(
-                <div key={txt} className="proof-item"><span className="proof-icon">{ic}</span>{txt}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="container">
-          {/* STATS */}
-          <div className="stats-banner fade-up">
-            <div className="stat-cell"><div className="stat-val cyan">15%</div><div className="stat-lbl">Commission seulement sur missions livrées</div></div>
-            <div className="stat-cell"><div className="stat-val purple">0$</div><div className="stat-lbl">Inscription gratuite, aucun abonnement</div></div>
-            <div className="stat-cell"><div className="stat-val green">48h</div><div className="stat-lbl">Délai de vérification de profil</div></div>
-            <div className="stat-cell"><div className="stat-val orange">100%</div><div className="stat-lbl">Paiement sécurisé via Stripe</div></div>
-          </div>
-
-          {/* HOW IT WORKS */}
-          <div className="section" id="comment-ca-marche">
-            <div className="section-tag">Processus</div>
-            <div className="section-title">En 3 étapes simples</div>
-            <div className="section-sub">De votre inscription à votre première mission, voici comment ça se passe.</div>
-            <div className="hiw-grid fade-up">
-              {[
-                { num:1, title:'Créez votre profil', desc:'Renseignez vos compétences, votre expérience et vos références. Notre équipe vérifie votre profil sous 48h.' },
-                { num:2, title:'Recevez des missions', desc:'Les clients publient des briefs, vous postulez avec une proposition personnalisée. Pas de cold calling, pas de démarchage.' },
-                { num:3, title:'Livrez et soyez payé', desc:'Vous livrez votre travail, le client valide. Le paiement est libéré automatiquement et sécurisé via escrow.' },
-              ].map(s=>(
-                <div key={s.num} className="hiw-card">
-                  <div className="hiw-num">{s.num}</div>
-                  <div className="hiw-title">{s.title}</div>
-                  <div className="hiw-desc">{s.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* BENEFITS */}
-          <div className="section" style={{paddingTop:0}}>
-            <div className="section-tag">Avantages</div>
-            <div className="section-title">Pourquoi CreatorFlow Market ?</div>
-            <div className="section-sub">Nous avons conçu la plateforme pour que vous puissiez vous concentrer sur ce que vous faites de mieux.</div>
-            <div className="benefits-grid fade-up">
-              {[
-                { icon:'💼', title:'Missions qualifiées', desc:'Nos clients sont des entreprises sérieuses avec un vrai budget. Fini les briefs flous et les clients qui négocient indéfiniment.' },
-                { icon:'🛡️', title:'Paiement garanti', desc:'Votre paiement est sécurisé en escrow dès le début de la mission. Vous ne pouvez pas vous faire avoir.' },
-                { icon:'⚡', title:'Zéro démarche commerciale', desc:'On s\'occupe de l\'acquisition client. Vous, vous vous concentrez sur la technique et la livraison.' },
-                { icon:'🌟', title:'Profil mis en avant', desc:'Votre profil est référencé dans notre annuaire, promu aux clients selon vos spécialités.' },
-                { icon:'📈', title:'Montez en niveau', desc:'Chaque mission réussie améliore votre note et votre visibilité. Les meilleurs experts obtiennent le badge "Certifié".' },
-                { icon:'💬', title:'Support dédié', desc:'Une équipe réelle disponible pour vous aider en cas de litige, question technique ou blocage administratif.' },
-              ].map(b=>(
-                <div key={b.title} className="benefit-item">
-                  <div className="benefit-icon" style={{background:'rgba(6,182,212,0.10)'}}>{b.icon}</div>
-                  <div>
-                    <div className="benefit-title">{b.title}</div>
-                    <div className="benefit-desc">{b.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* EXPERTS */}
-          <div className="section" style={{paddingTop:0}}>
-            <div className="section-tag">Profils recherchés</div>
-            <div className="section-title">Les spécialités les plus demandées</div>
-            <div className="section-sub">Voici les expertises que les entreprises cherchent en ce moment sur la plateforme.</div>
-            <div className="experts-grid fade-up">
-              {[
-                { name:'Expert Agents IA', init:'AI', color:'#7C3AED', spec:'Automatisation & Workflows' },
-                { name:'Expert No-Code', init:'NC', color:'#2563EB', spec:'Make, Zapier, n8n' },
-                { name:'Expert Data & ML', init:'ML', color:'#0891B2', spec:'Data Science & Modèles IA' },
-              ].map(e=>(
-                <div key={e.name} className="expert-card">
-                  <div className="ex-avatar" style={{background:e.color}}>{e.init}</div>
-                  <div className="ex-name">{e.name}</div>
-                  <div className="ex-spec">{e.spec}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* VALUE PROPS */}
-          <div className="section" style={{paddingTop:0}}>
-            <div className="section-tag">Pourquoi nous rejoindre</div>
-            <div className="section-title">Ce que vous gagnez concrètement</div>
-            <div className="testimonials fade-up">
-              {[
-                { icon:'🛡️', title:'Paiement garanti avant démarrage', desc:'Le client bloque le paiement en escrow avant que vous commenciez. Vous livrez, vous êtes payé. Sans exception.' },
-                { icon:'📥', title:'Missions qui viennent à vous', desc:'Fini le démarchage. Les entreprises publient leurs briefs, vous postulez sur ce qui vous correspond. Zéro cold calling.' },
-                { icon:'⚙️', title:'Infrastructure déjà en place', desc:'Contrats, facturation, messagerie, paiement — tout est géré par la plateforme. Vous vous concentrez sur votre expertise.' },
-              ].map((v,i)=>(
-                <div key={i} className="testi-card">
-                  <div style={{fontSize:28,marginBottom:12}}>{v.icon}</div>
-                  <div style={{fontSize:14,fontWeight:800,marginBottom:8}}>{v.title}</div>
-                  <div className="testi-quote" style={{fontStyle:'normal'}}>{v.desc}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div className="cta-section fade-up">
-            <div style={{fontSize:40,marginBottom:16}}>🚀</div>
-            <div className="cta-title">Prêt à rejoindre l'aventure ?</div>
-            <div className="cta-sub">Créez votre profil en 5 minutes. Nos équipes examinent les candidatures chaque semaine.</div>
-            <a href="inscription.html" className="btn btn-cyan btn-lg" style={{margin:'0 auto'}}>
-              Créer mon profil expert <Ic.Arrow/>
-            </a>
-            <div className="cta-steps">
-              {['Inscription gratuite','Profil vérifié sous 48h','Accès aux missions dès validation','Paiement garanti'].map((s,i)=>(
-                <div key={i} className="cta-step">
-                  <div className="cta-step-num">{i+1}</div>{s}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* FAQ */}
-          <div>
-            <div style={{fontSize:26,fontWeight:800,letterSpacing:'-0.02em',marginBottom:8,textAlign:'center'}}>Questions fréquentes</div>
-            <div style={{fontSize:14,color:'var(--text-2)',textAlign:'center',marginBottom:0}}>Tout ce que vous voulez savoir avant de postuler.</div>
-            <div className="faq-grid fade-up">
-              {[
-                { q:'Quelle commission prend CreatorFlow Market ?', a:'15% de commission sur chaque mission complétée. Aucun abonnement mensuel, aucun frais caché.' },
-                { q:'Qui peut devenir expert ?', a:'Tout professionnel ayant une expertise réelle en IA, automatisation, data ou no-code. Nous vérifions les profils et les compétences.' },
-                { q:'Comment fonctionne le paiement ?', a:'Le client paie en acompte au lancement. Les fonds sont sécurisés en escrow. Vous êtes payé automatiquement à la validation de chaque livrable.' },
-                { q:'Puis-je proposer mes propres tarifs ?', a:'Oui, vous fixez librement votre tarif horaire ou forfaitaire. Nous vous conseillons simplement sur les prix du marché selon votre niveau.' },
-                { q:'Y a-t-il une exclusivité ?', a:'Non. Vous pouvez continuer à travailler avec vos clients directs ou via d\'autres plateformes. Aucune clause d\'exclusivité.' },
-                { q:'Comment les clients vous trouvent-ils ?', a:'Via le moteur de recherche interne, les briefs publiés sur lesquels vous pouvez postuler, et les recommandations algorithmiques basées sur votre profil.' },
-              ].map((f,i)=>(
-                <div key={i} className="faq-item">
-                  <div className="faq-q">{f.q}</div>
-                  <div className="faq-a">{f.a}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <footer className="footer">
-        <div className="footer-inner">
-          <div className="footer-top">
-            <a href="/" className="footer-logo">CreatorFlow Market</a>
-            <div className="footer-links">
-              <a href="/">Plateforme</a>
-              <a href="/experts.html">Experts</a>
-              <a href="/academie.html">Académie</a>
-              <a href="/blog">Blog</a>
-              <a href="/cgu.html">Mentions légales</a>
-              <a href="/politique-confidentialite.html">Confidentialité</a>
-            </div>
-          </div>
-          <div className="footer-bottom">© {new Date().getFullYear()} CreatorFlow Market. Tous droits réservés.</div>
-        </div>
-      </footer>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-cyan",
+    style: {
+      padding: '8px 18px',
+      fontSize: 13
+    }
+  }, "Devenir expert ", /*#__PURE__*/React.createElement(Ic.Arrow, {
+    style: {
+      width: 13,
+      height: 13
+    }
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-badge"
+  }, "Plateforme IA & Automatisation \u2014 En lancement"), /*#__PURE__*/React.createElement("div", {
+    className: "hero-title fade-up"
+  }, "Mon\xE9tisez votre expertise", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, "IA & Automatisation")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-sub fade-up"
+  }, "Rejoignez la plateforme qui met en relation les meilleurs experts IA avec des entreprises pr\xEAtes \xE0 investir."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-cta fade-up"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-cyan btn-lg"
+  }, "Cr\xE9er mon profil expert ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "#comment-ca-marche",
+    className: "btn btn-ghost btn-lg"
+  }, "Comment \xE7a marche ?")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-proof fade-up"
+  }, [['✓', 'Gratuit pour s\'inscrire'], ['✓', 'Paiement sécurisé par escrow'], ['✓', 'Accès aux briefs dès validation'], ['✓', 'Commission transparente à 15%']].map(([ic, txt]) => /*#__PURE__*/React.createElement("div", {
+    key: txt,
+    className: "proof-item"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "proof-icon"
+  }, ic), txt))))), /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-banner fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val cyan"
+  }, "15%"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Commission seulement sur missions livr\xE9es")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val purple"
+  }, "0$"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Inscription gratuite, aucun abonnement")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val green"
+  }, "48h"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "D\xE9lai de v\xE9rification de profil")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val orange"
+  }, "100%"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Paiement s\xE9curis\xE9 via Stripe"))), /*#__PURE__*/React.createElement("div", {
+    className: "section",
+    id: "comment-ca-marche"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-tag"
+  }, "Processus"), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "En 3 \xE9tapes simples"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "De votre inscription \xE0 votre premi\xE8re mission, voici comment \xE7a se passe."), /*#__PURE__*/React.createElement("div", {
+    className: "hiw-grid fade-up"
+  }, [{
+    num: 1,
+    title: 'Créez votre profil',
+    desc: 'Renseignez vos compétences, votre expérience et vos références. Notre équipe vérifie votre profil sous 48h.'
+  }, {
+    num: 2,
+    title: 'Recevez des missions',
+    desc: 'Les clients publient des briefs, vous postulez avec une proposition personnalisée. Pas de cold calling, pas de démarchage.'
+  }, {
+    num: 3,
+    title: 'Livrez et soyez payé',
+    desc: 'Vous livrez votre travail, le client valide. Le paiement est libéré automatiquement et sécurisé via escrow.'
+  }].map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.num,
+    className: "hiw-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hiw-num"
+  }, s.num), /*#__PURE__*/React.createElement("div", {
+    className: "hiw-title"
+  }, s.title), /*#__PURE__*/React.createElement("div", {
+    className: "hiw-desc"
+  }, s.desc))))), /*#__PURE__*/React.createElement("div", {
+    className: "section",
+    style: {
+      paddingTop: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-tag"
+  }, "Avantages"), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Pourquoi CreatorFlow Market ?"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Nous avons con\xE7u la plateforme pour que vous puissiez vous concentrer sur ce que vous faites de mieux."), /*#__PURE__*/React.createElement("div", {
+    className: "benefits-grid fade-up"
+  }, [{
+    icon: '💼',
+    title: 'Missions qualifiées',
+    desc: 'Nos clients sont des entreprises sérieuses avec un vrai budget. Fini les briefs flous et les clients qui négocient indéfiniment.'
+  }, {
+    icon: '🛡️',
+    title: 'Paiement garanti',
+    desc: 'Votre paiement est sécurisé en escrow dès le début de la mission. Vous ne pouvez pas vous faire avoir.'
+  }, {
+    icon: '⚡',
+    title: 'Zéro démarche commerciale',
+    desc: 'On s\'occupe de l\'acquisition client. Vous, vous vous concentrez sur la technique et la livraison.'
+  }, {
+    icon: '🌟',
+    title: 'Profil mis en avant',
+    desc: 'Votre profil est référencé dans notre annuaire, promu aux clients selon vos spécialités.'
+  }, {
+    icon: '📈',
+    title: 'Montez en niveau',
+    desc: 'Chaque mission réussie améliore votre note et votre visibilité. Les meilleurs experts obtiennent le badge "Certifié".'
+  }, {
+    icon: '💬',
+    title: 'Support dédié',
+    desc: 'Une équipe réelle disponible pour vous aider en cas de litige, question technique ou blocage administratif.'
+  }].map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.title,
+    className: "benefit-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "benefit-icon",
+    style: {
+      background: 'rgba(6,182,212,0.10)'
+    }
+  }, b.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "benefit-title"
+  }, b.title), /*#__PURE__*/React.createElement("div", {
+    className: "benefit-desc"
+  }, b.desc)))))), /*#__PURE__*/React.createElement("div", {
+    className: "section",
+    style: {
+      paddingTop: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-tag"
+  }, "Profils recherch\xE9s"), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Les sp\xE9cialit\xE9s les plus demand\xE9es"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Voici les expertises que les entreprises cherchent en ce moment sur la plateforme."), /*#__PURE__*/React.createElement("div", {
+    className: "experts-grid fade-up"
+  }, [{
+    name: 'Expert Agents IA',
+    init: 'AI',
+    color: '#7C3AED',
+    spec: 'Automatisation & Workflows'
+  }, {
+    name: 'Expert No-Code',
+    init: 'NC',
+    color: '#2563EB',
+    spec: 'Make, Zapier, n8n'
+  }, {
+    name: 'Expert Data & ML',
+    init: 'ML',
+    color: '#0891B2',
+    spec: 'Data Science & Modèles IA'
+  }].map(e => /*#__PURE__*/React.createElement("div", {
+    key: e.name,
+    className: "expert-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ex-avatar",
+    style: {
+      background: e.color
+    }
+  }, e.init), /*#__PURE__*/React.createElement("div", {
+    className: "ex-name"
+  }, e.name), /*#__PURE__*/React.createElement("div", {
+    className: "ex-spec"
+  }, e.spec))))), /*#__PURE__*/React.createElement("div", {
+    className: "section",
+    style: {
+      paddingTop: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-tag"
+  }, "Pourquoi nous rejoindre"), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Ce que vous gagnez concr\xE8tement"), /*#__PURE__*/React.createElement("div", {
+    className: "testimonials fade-up"
+  }, [{
+    icon: '🛡️',
+    title: 'Paiement garanti avant démarrage',
+    desc: 'Le client bloque le paiement en escrow avant que vous commenciez. Vous livrez, vous êtes payé. Sans exception.'
+  }, {
+    icon: '📥',
+    title: 'Missions qui viennent à vous',
+    desc: 'Fini le démarchage. Les entreprises publient leurs briefs, vous postulez sur ce qui vous correspond. Zéro cold calling.'
+  }, {
+    icon: '⚙️',
+    title: 'Infrastructure déjà en place',
+    desc: 'Contrats, facturation, messagerie, paiement — tout est géré par la plateforme. Vous vous concentrez sur votre expertise.'
+  }].map((v, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "testi-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 12
+    }
+  }, v.icon), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 800,
+      marginBottom: 8
+    }
+  }, v.title), /*#__PURE__*/React.createElement("div", {
+    className: "testi-quote",
+    style: {
+      fontStyle: 'normal'
+    }
+  }, v.desc))))), /*#__PURE__*/React.createElement("div", {
+    className: "cta-section fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-title"
+  }, "Pr\xEAt \xE0 rejoindre l'aventure ?"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-sub"
+  }, "Cr\xE9ez votre profil en 5 minutes. Nos \xE9quipes examinent les candidatures chaque semaine."), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-cyan btn-lg",
+    style: {
+      margin: '0 auto'
+    }
+  }, "Cr\xE9er mon profil expert ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("div", {
+    className: "cta-steps"
+  }, ['Inscription gratuite', 'Profil vérifié sous 48h', 'Accès aux missions dès validation', 'Paiement garanti'].map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "cta-step"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-step-num"
+  }, i + 1), s)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 26,
+      fontWeight: 800,
+      letterSpacing: '-0.02em',
+      marginBottom: 8,
+      textAlign: 'center'
+    }
+  }, "Questions fr\xE9quentes"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      textAlign: 'center',
+      marginBottom: 0
+    }
+  }, "Tout ce que vous voulez savoir avant de postuler."), /*#__PURE__*/React.createElement("div", {
+    className: "faq-grid fade-up"
+  }, [{
+    q: 'Quelle commission prend CreatorFlow Market ?',
+    a: '15% de commission sur chaque mission complétée. Aucun abonnement mensuel, aucun frais caché.'
+  }, {
+    q: 'Qui peut devenir expert ?',
+    a: 'Tout professionnel ayant une expertise réelle en IA, automatisation, data ou no-code. Nous vérifions les profils et les compétences.'
+  }, {
+    q: 'Comment fonctionne le paiement ?',
+    a: 'Le client paie en acompte au lancement. Les fonds sont sécurisés en escrow. Vous êtes payé automatiquement à la validation de chaque livrable.'
+  }, {
+    q: 'Puis-je proposer mes propres tarifs ?',
+    a: 'Oui, vous fixez librement votre tarif horaire ou forfaitaire. Nous vous conseillons simplement sur les prix du marché selon votre niveau.'
+  }, {
+    q: 'Y a-t-il une exclusivité ?',
+    a: 'Non. Vous pouvez continuer à travailler avec vos clients directs ou via d\'autres plateformes. Aucune clause d\'exclusivité.'
+  }, {
+    q: 'Comment les clients vous trouvent-ils ?',
+    a: 'Via le moteur de recherche interne, les briefs publiés sur lesquels vous pouvez postuler, et les recommandations algorithmiques basées sur votre profil.'
+  }].map((f, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "faq-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "faq-q"
+  }, f.q), /*#__PURE__*/React.createElement("div", {
+    className: "faq-a"
+  }, f.a))))))), /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-top"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "footer-logo"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Plateforme"), /*#__PURE__*/React.createElement("a", {
+    href: "/experts.html"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "/academie.html"
+  }, "Acad\xE9mie"), /*#__PURE__*/React.createElement("a", {
+    href: "/blog"
+  }, "Blog"), /*#__PURE__*/React.createElement("a", {
+    href: "/cgu.html"
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "/politique-confidentialite.html"
+  }, "Confidentialit\xE9"))), /*#__PURE__*/React.createElement("div", {
+    className: "footer-bottom"
+  }, "\xA9 ", new Date().getFullYear(), " CreatorFlow Market. Tous droits r\xE9serv\xE9s."))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

@@ -178,284 +178,331 @@ img{display:block;max-width:100%;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const IcCheck = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-);
-const IcArrow = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M5 12h14M13 5l7 7-7 7"/>
-  </svg>
-);
-const IcGrad = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-  </svg>
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const IcCheck = () => /*#__PURE__*/React.createElement("svg", {
+  width: "11",
+  height: "11",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.8",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("polyline", {
+  points: "20 6 9 17 4 12"
+}));
+const IcArrow = () => /*#__PURE__*/React.createElement("svg", {
+  width: "14",
+  height: "14",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "2.2",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M5 12h14M13 5l7 7-7 7"
+}));
+const IcGrad = () => /*#__PURE__*/React.createElement("svg", {
+  width: "14",
+  height: "14",
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: "1.8",
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M22 10v6M2 10l10-5 10 5-10 5z"
+}), /*#__PURE__*/React.createElement("path", {
+  d: "M6 12v5c3 3 9 3 12 0v-5"
+}));
 function Nav() {
   const [stuck, setStuck] = useState(false);
   const [authUser, setAuthUser] = useState(null);
   const [userType, setUserType] = useState('client');
   useEffect(() => {
     const h = () => setStuck(window.scrollY > 10);
-    window.addEventListener('scroll', h, { passive: true });
-    sb.auth.getSession().then(async ({ data }) => {
+    window.addEventListener('scroll', h, {
+      passive: true
+    });
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
       if (data.session) {
         setAuthUser(data.session.user);
-        const { data: p } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
+        const {
+          data: p
+        } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
         if (p) setUserType(p.type_utilisateur || 'client');
       }
     });
     return () => window.removeEventListener('scroll', h);
   }, []);
   const dash = userType === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
-  return (
-    <nav className={`nav ${stuck ? 'stuck' : ''}`}>
-      <div className="wrap nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-        <div className="nav-links">
-          <a href="experts.html" className="nav-link">Experts</a>
-          <a href="brief.html" className="nav-link">Déposer un brief</a>
-          <a href="pricing.html" className="nav-link active">Tarifs</a>
-          <a href="inscription.html" className="nav-link">Devenir expert</a>
-        </div>
-        <div className="nav-ctas">
-          {authUser
-            ? <a href={dash} className="btn btn-ghost btn-sm">Mon espace</a>
-            : <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
-          }
-          <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <IcArrow/></a>
-        </div>
-      </div>
-    </nav>
-  );
+  return /*#__PURE__*/React.createElement("nav", {
+    className: `nav ${stuck ? 'stuck' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "nav-link"
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "pricing.html",
+    className: "nav-link active"
+  }, "Tarifs"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "nav-link"
+  }, "Devenir expert")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-ctas"
+  }, authUser ? /*#__PURE__*/React.createElement("a", {
+    href: dash,
+    className: "btn btn-ghost btn-sm"
+  }, "Mon espace") : /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Connexion"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-sm"
+  }, "Je cherche un expert ", /*#__PURE__*/React.createElement(IcArrow, null)))));
 }
-
-const FAQS = [
-  {
-    q: "Comment fonctionne la commission de 15% ?",
-    a: "Lorsqu'une mission est complétée et payée, CreatorFlow Market prélève 15% du montant total. Par exemple, pour une mission de 1 000$, vous recevez 850$. La commission couvre l'accès à la plateforme, la mise en relation, la messagerie et le support."
-  },
-  {
-    q: "Quand est-ce que la commission est prélevée ?",
-    a: "La commission est prélevée uniquement lorsque la mission est marquée comme complétée et que le paiement est confirmé. Il n'y a aucun frais si une mission n'aboutit pas."
-  },
-  {
-    q: "Les clients paient-ils des frais supplémentaires ?",
-    a: "Non. Pour les clients et entreprises, la plateforme est entièrement gratuite. Vous ne payez que le tarif convenu avec l'expert. Aucun frais de service, aucune commission côté client."
-  },
-  {
-    q: "Est-ce que je peux m'inscrire comme expert gratuitement ?",
-    a: "Oui, l'inscription est gratuite et sans abonnement mensuel. Vous créez votre profil, soumettez des propositions sur les missions ouvertes, et ne payez la commission que lorsque vous êtes payé."
-  },
-  {
-    q: "Les cours de l'Academy sont-ils inclus ?",
-    a: "Non. Les formations de la CreatorFlow Market Academy sont vendues séparément, à prix individuel par cours. Elles ne font pas partie du modèle de commission des missions."
-  },
-];
-
-function FaqItem({ q, a }) {
+const FAQS = [{
+  q: "Comment fonctionne la commission de 15% ?",
+  a: "Lorsqu'une mission est complétée et payée, CreatorFlow Market prélève 15% du montant total. Par exemple, pour une mission de 1 000$, vous recevez 850$. La commission couvre l'accès à la plateforme, la mise en relation, la messagerie et le support."
+}, {
+  q: "Quand est-ce que la commission est prélevée ?",
+  a: "La commission est prélevée uniquement lorsque la mission est marquée comme complétée et que le paiement est confirmé. Il n'y a aucun frais si une mission n'aboutit pas."
+}, {
+  q: "Les clients paient-ils des frais supplémentaires ?",
+  a: "Non. Pour les clients et entreprises, la plateforme est entièrement gratuite. Vous ne payez que le tarif convenu avec l'expert. Aucun frais de service, aucune commission côté client."
+}, {
+  q: "Est-ce que je peux m'inscrire comme expert gratuitement ?",
+  a: "Oui, l'inscription est gratuite et sans abonnement mensuel. Vous créez votre profil, soumettez des propositions sur les missions ouvertes, et ne payez la commission que lorsque vous êtes payé."
+}, {
+  q: "Les cours de l'Academy sont-ils inclus ?",
+  a: "Non. Les formations de la CreatorFlow Market Academy sont vendues séparément, à prix individuel par cours. Elles ne font pas partie du modèle de commission des missions."
+}];
+function FaqItem({
+  q,
+  a
+}) {
   const [open, setOpen] = useState(false);
-  return (
-    <div className={`faq-item ${open ? 'open' : ''}`}>
-      <div className="faq-q" onClick={() => setOpen(o => !o)}>
-        <span>{q}</span>
-        <span className="faq-icon">+</span>
-      </div>
-      <div className="faq-a"><p>{a}</p></div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: `faq-item ${open ? 'open' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "faq-q",
+    onClick: () => setOpen(o => !o)
+  }, /*#__PURE__*/React.createElement("span", null, q), /*#__PURE__*/React.createElement("span", {
+    className: "faq-icon"
+  }, "+")), /*#__PURE__*/React.createElement("div", {
+    className: "faq-a"
+  }, /*#__PURE__*/React.createElement("p", null, a)));
 }
-
 function App() {
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
-  return (
-    <React.Fragment>
-      <Nav/>
-
-      {/* PAGE HEADER */}
-      <div className="page-header">
-        <div className="wrap">
-          <span className="eyebrow">Transparent par défaut</span>
-          <h1 className="page-title">Tarifs simples,<br/><em>aucune surprise.</em></h1>
-          <p className="page-sub">
-            Gratuit pour les clients et les experts. Une commission uniquement quand une mission est complétée et payée.
-          </p>
-        </div>
-      </div>
-
-      <div className="pricing-section">
-        <div className="wrap">
-
-          {/* PRICING CARDS */}
-          <div className="pricing-grid">
-
-            {/* CLIENTS */}
-            <div className="price-card">
-              <div className="price-badge green">Pour les clients</div>
-              <div className="price-target">Entreprises, startups, créateurs</div>
-              <div className="price-title">Entièrement gratuit</div>
-              <div className="price-tagline">Trouvez l'expert qu'il vous faut. Vous ne payez que la mission convenue avec l'expert.</div>
-              <div className="price-amount">
-                <span className="price-num free">0$</span>
-                <span className="price-unit">pour rejoindre</span>
-              </div>
-              <div className="price-note">Aucun abonnement. Aucun frais de service. Vous réglez directement le tarif de l'expert.</div>
-              <div className="price-divider"/>
-              <div className="price-features">
-                {[
-                  'Déposer des briefs illimités',
-                  'Recevoir des propositions d\'experts',
-                  'Messagerie intégrée avec les experts',
-                  'Tableau de bord de suivi des missions',
-                  'Accès aux profils et portfolios complets',
-                  'Support client inclus',
-                ].map(f => (
-                  <div className="price-feature" key={f}>
-                    <span className="price-feature-icon check"><IcCheck/></span>
-                    <span>{f}</span>
-                  </div>
-                ))}
-              </div>
-              <a href="brief.html" className="btn btn-ghost btn-lg price-cta">Déposer un brief <IcArrow/></a>
-              <p className="price-cta-note">Inscription en 2 minutes</p>
-            </div>
-
-            {/* EXPERTS */}
-            <div className="price-card featured">
-              <div className="price-badge">Pour les experts</div>
-              <div className="price-target">Freelances, consultants IA</div>
-              <div className="price-title">Gratuit + 15% par mission</div>
-              <div className="price-tagline">Inscrivez-vous sans frais. Une commission de 15% est prélevée uniquement sur chaque mission complétée et payée.</div>
-              <div className="price-amount">
-                <span className="price-num commission">15%</span>
-                <span className="price-unit">par mission complétée</span>
-              </div>
-              <div className="price-note">Inscription gratuite. Pas d'abonnement. Pas de commission sur les missions non abouties.</div>
-
-              <div className="calc-box">
-                <div className="calc-title">Exemple de calcul</div>
-                <div className="calc-row">
-                  <span>Mission à</span>
-                  <span>1 000 $</span>
-                </div>
-                <div className="calc-row">
-                  <span>Commission CreatorFlow (15%)</span>
-                  <span style={{color:'var(--red)'}}>− 150 $</span>
-                </div>
-                <div className="calc-row total">
-                  <span>Vous recevez</span>
-                  <span>850 $</span>
-                </div>
-              </div>
-
-              <div className="price-features">
-                {[
-                  ['check', 'Inscription et profil gratuits'],
-                  ['check', 'Accès aux missions ouvertes sur la plateforme'],
-                  ['check', 'Messagerie et suivi des missions intégrés'],
-                  ['check', 'Tableau de bord expert complet'],
-                  ['check', 'Notation et avis clients visibles'],
-                  ['info', 'Commission de 15% sur missions complétées uniquement'],
-                ].map(([type, f]) => (
-                  <div className="price-feature" key={f}>
-                    <span className={`price-feature-icon ${type}`}>
-                      {type === 'check' ? <IcCheck/> : <span style={{fontSize:11,fontWeight:700}}>i</span>}
-                    </span>
-                    <span>{f}</span>
-                  </div>
-                ))}
-              </div>
-
-              <a href="inscription.html" className="btn btn-primary btn-lg price-cta">Créer mon profil expert <IcArrow/></a>
-              <p className="price-cta-note">Validation du profil sous 48h</p>
-            </div>
-          </div>
-
-          {/* ACADEMY */}
-          <div className="academy-section">
-            <div className="academy-header">
-              <div className="academy-content">
-                <div className="academy-badge"><IcGrad/> Academy</div>
-                <div className="academy-title">Formations IA — Prix individuel</div>
-                <div className="academy-desc">
-                  Les cours de la CreatorFlow Market Academy sont vendus séparément de la marketplace. Chaque formation a son propre prix selon le contenu et la durée. Aucun abonnement requis.
-                </div>
-                <div className="academy-features">
-                  {[
-                    'Paiement unique par cours',
-                    'Accès à vie après achat',
-                    'Certificat CreatorFlow Market',
-                    'Support formateur inclus',
-                  ].map(f => (
-                    <div className="academy-feat" key={f}>
-                      <span style={{color:'var(--amber)'}}>✓</span>
-                      <span>{f}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="academy-price-range">
-                <div className="academy-from">Prix à partir de</div>
-                <div className="academy-range">97$</div>
-                <div className="academy-range-note">par formation</div>
-                <a href="academie.html" className="btn btn-ghost btn-sm" style={{marginTop:16}}>Voir les formations <IcArrow/></a>
-              </div>
-            </div>
-          </div>
-
-          {/* FAQ */}
-          <div className="faq-section">
-            <div className="sh">
-              <div className="sh-label">Questions fréquentes</div>
-              <h2 className="sh-title">Tout ce que vous <em>devez savoir</em></h2>
-            </div>
-            <div className="faq-list">
-              {FAQS.map(f => <FaqItem key={f.q} {...f}/>)}
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div className="cta-section">
-            <h2 className="cta-title">Prêt à rejoindre la plateforme ?</h2>
-            <p className="cta-sub">Clients et experts s'inscrivent gratuitement. Aucune carte de crédit requise pour démarrer.</p>
-            <div className="cta-btns">
-              <a href="brief.html" className="btn btn-primary btn-lg">Je cherche un expert <IcArrow/></a>
-              <a href="inscription.html" className="btn btn-ghost btn-lg">Je propose mes services</a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <footer>
-        <div className="wrap footer-mini">
-          <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-          <div className="footer-links">
-            <a href="/">Accueil</a>
-            <a href="experts.html">Experts</a>
-            <a href="academie.html">Academy</a>
-            <a href="inscription.html">Devenir expert</a>
-            <a href="cgu.html">Mentions légales</a>
-            <a href="politique-confidentialite.html">Confidentialité</a>
-          </div>
-        </div>
-      </footer>
-    </React.Fragment>
-  );
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Transparent par d\xE9faut"), /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Tarifs simples,", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, "aucune surprise.")), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, "Gratuit pour les clients et les experts. Une commission uniquement quand une mission est compl\xE9t\xE9e et pay\xE9e."))), /*#__PURE__*/React.createElement("div", {
+    className: "pricing-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pricing-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-badge green"
+  }, "Pour les clients"), /*#__PURE__*/React.createElement("div", {
+    className: "price-target"
+  }, "Entreprises, startups, cr\xE9ateurs"), /*#__PURE__*/React.createElement("div", {
+    className: "price-title"
+  }, "Enti\xE8rement gratuit"), /*#__PURE__*/React.createElement("div", {
+    className: "price-tagline"
+  }, "Trouvez l'expert qu'il vous faut. Vous ne payez que la mission convenue avec l'expert."), /*#__PURE__*/React.createElement("div", {
+    className: "price-amount"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-num free"
+  }, "0$"), /*#__PURE__*/React.createElement("span", {
+    className: "price-unit"
+  }, "pour rejoindre")), /*#__PURE__*/React.createElement("div", {
+    className: "price-note"
+  }, "Aucun abonnement. Aucun frais de service. Vous r\xE9glez directement le tarif de l'expert."), /*#__PURE__*/React.createElement("div", {
+    className: "price-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "price-features"
+  }, ['Déposer des briefs illimités', 'Recevoir des propositions d\'experts', 'Messagerie intégrée avec les experts', 'Tableau de bord de suivi des missions', 'Accès aux profils et portfolios complets', 'Support client inclus'].map(f => /*#__PURE__*/React.createElement("div", {
+    className: "price-feature",
+    key: f
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-feature-icon check"
+  }, /*#__PURE__*/React.createElement(IcCheck, null)), /*#__PURE__*/React.createElement("span", null, f)))), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-ghost btn-lg price-cta"
+  }, "D\xE9poser un brief ", /*#__PURE__*/React.createElement(IcArrow, null)), /*#__PURE__*/React.createElement("p", {
+    className: "price-cta-note"
+  }, "Inscription en 2 minutes")), /*#__PURE__*/React.createElement("div", {
+    className: "price-card featured"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-badge"
+  }, "Pour les experts"), /*#__PURE__*/React.createElement("div", {
+    className: "price-target"
+  }, "Freelances, consultants IA"), /*#__PURE__*/React.createElement("div", {
+    className: "price-title"
+  }, "Gratuit + 15% par mission"), /*#__PURE__*/React.createElement("div", {
+    className: "price-tagline"
+  }, "Inscrivez-vous sans frais. Une commission de 15% est pr\xE9lev\xE9e uniquement sur chaque mission compl\xE9t\xE9e et pay\xE9e."), /*#__PURE__*/React.createElement("div", {
+    className: "price-amount"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-num commission"
+  }, "15%"), /*#__PURE__*/React.createElement("span", {
+    className: "price-unit"
+  }, "par mission compl\xE9t\xE9e")), /*#__PURE__*/React.createElement("div", {
+    className: "price-note"
+  }, "Inscription gratuite. Pas d'abonnement. Pas de commission sur les missions non abouties."), /*#__PURE__*/React.createElement("div", {
+    className: "calc-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "calc-title"
+  }, "Exemple de calcul"), /*#__PURE__*/React.createElement("div", {
+    className: "calc-row"
+  }, /*#__PURE__*/React.createElement("span", null, "Mission \xE0"), /*#__PURE__*/React.createElement("span", null, "1 000 $")), /*#__PURE__*/React.createElement("div", {
+    className: "calc-row"
+  }, /*#__PURE__*/React.createElement("span", null, "Commission CreatorFlow (15%)"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--red)'
+    }
+  }, "\u2212 150 $")), /*#__PURE__*/React.createElement("div", {
+    className: "calc-row total"
+  }, /*#__PURE__*/React.createElement("span", null, "Vous recevez"), /*#__PURE__*/React.createElement("span", null, "850 $"))), /*#__PURE__*/React.createElement("div", {
+    className: "price-features"
+  }, [['check', 'Inscription et profil gratuits'], ['check', 'Accès aux missions ouvertes sur la plateforme'], ['check', 'Messagerie et suivi des missions intégrés'], ['check', 'Tableau de bord expert complet'], ['check', 'Notation et avis clients visibles'], ['info', 'Commission de 15% sur missions complétées uniquement']].map(([type, f]) => /*#__PURE__*/React.createElement("div", {
+    className: "price-feature",
+    key: f
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `price-feature-icon ${type}`
+  }, type === 'check' ? /*#__PURE__*/React.createElement(IcCheck, null) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      fontWeight: 700
+    }
+  }, "i")), /*#__PURE__*/React.createElement("span", null, f)))), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-primary btn-lg price-cta"
+  }, "Cr\xE9er mon profil expert ", /*#__PURE__*/React.createElement(IcArrow, null)), /*#__PURE__*/React.createElement("p", {
+    className: "price-cta-note"
+  }, "Validation du profil sous 48h"))), /*#__PURE__*/React.createElement("div", {
+    className: "academy-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-badge"
+  }, /*#__PURE__*/React.createElement(IcGrad, null), " Academy"), /*#__PURE__*/React.createElement("div", {
+    className: "academy-title"
+  }, "Formations IA \u2014 Prix individuel"), /*#__PURE__*/React.createElement("div", {
+    className: "academy-desc"
+  }, "Les cours de la CreatorFlow Market Academy sont vendus s\xE9par\xE9ment de la marketplace. Chaque formation a son propre prix selon le contenu et la dur\xE9e. Aucun abonnement requis."), /*#__PURE__*/React.createElement("div", {
+    className: "academy-features"
+  }, ['Paiement unique par cours', 'Accès à vie après achat', 'Certificat CreatorFlow Market', 'Support formateur inclus'].map(f => /*#__PURE__*/React.createElement("div", {
+    className: "academy-feat",
+    key: f
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--amber)'
+    }
+  }, "\u2713"), /*#__PURE__*/React.createElement("span", null, f))))), /*#__PURE__*/React.createElement("div", {
+    className: "academy-price-range"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-from"
+  }, "Prix \xE0 partir de"), /*#__PURE__*/React.createElement("div", {
+    className: "academy-range"
+  }, "97$"), /*#__PURE__*/React.createElement("div", {
+    className: "academy-range-note"
+  }, "par formation"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-ghost btn-sm",
+    style: {
+      marginTop: 16
+    }
+  }, "Voir les formations ", /*#__PURE__*/React.createElement(IcArrow, null))))), /*#__PURE__*/React.createElement("div", {
+    className: "faq-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sh-label"
+  }, "Questions fr\xE9quentes"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Tout ce que vous ", /*#__PURE__*/React.createElement("em", null, "devez savoir"))), /*#__PURE__*/React.createElement("div", {
+    className: "faq-list"
+  }, FAQS.map(f => /*#__PURE__*/React.createElement(FaqItem, _extends({
+    key: f.q
+  }, f))))), /*#__PURE__*/React.createElement("div", {
+    className: "cta-section"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "cta-title"
+  }, "Pr\xEAt \xE0 rejoindre la plateforme ?"), /*#__PURE__*/React.createElement("p", {
+    className: "cta-sub"
+  }, "Clients et experts s'inscrivent gratuitement. Aucune carte de cr\xE9dit requise pour d\xE9marrer."), /*#__PURE__*/React.createElement("div", {
+    className: "cta-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg"
+  }, "Je cherche un expert ", /*#__PURE__*/React.createElement(IcArrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Je propose mes services"))))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("div", {
+    className: "wrap footer-mini"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)'
+    }
+  }, "\xA9 2026 CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html"
+  }, "Academy"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html"
+  }, "Devenir expert"), /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html"
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html"
+  }, "Confidentialit\xE9")))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

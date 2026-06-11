@@ -131,63 +131,179 @@ img{display:block;max-width:100%;}
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Check:(p)=><svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Star:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
-  Bot:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="8" width="18" height="12" rx="3"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="14" r="1.2"/><path d="M12 3v5M8 3h8"/></svg>,
-  Rocket:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>,
-  Layers:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Back: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M12 19l-7-7 7-7"
+  })),
+  Bot: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "8",
+    width: "18",
+    height: "12",
+    rx: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "15",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3v5M8 3h8"
+  })),
+  Rocket: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+  })),
+  Layers: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 2 7 12 12 22 7 12 2"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 17 12 22 22 17"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 12 12 17 22 12"
+  }))
 };
-
-const PORTFOLIO = [
-  {icon:'Bot', title:'Chatbot IA personnalisé', desc:'Assistant conversationnel basé sur GPT-4 pour automatiser le support client et réduire les tickets.'},
-  {icon:'Rocket', title:'Automatisation de workflow', desc:'Pipeline no-code/low-code pour éliminer les tâches répétitives et gagner du temps chaque semaine.'},
-  {icon:'Layers', title:'Intégration LLM sur mesure', desc:'Connexion d\'un modèle de langage à vos outils existants (CRM, Notion, Slack, Make...).'},
-];
-
+const PORTFOLIO = [{
+  icon: 'Bot',
+  title: 'Chatbot IA personnalisé',
+  desc: 'Assistant conversationnel basé sur GPT-4 pour automatiser le support client et réduire les tickets.'
+}, {
+  icon: 'Rocket',
+  title: 'Automatisation de workflow',
+  desc: 'Pipeline no-code/low-code pour éliminer les tâches répétitives et gagner du temps chaque semaine.'
+}, {
+  icon: 'Layers',
+  title: 'Intégration LLM sur mesure',
+  desc: 'Connexion d\'un modèle de langage à vos outils existants (CRM, Notion, Slack, Make...).'
+}];
 function Nav() {
   const [stuck, setStuck] = useState(false);
   useEffect(() => {
     const h = () => setStuck(window.scrollY > 10);
-    window.addEventListener('scroll', h, { passive: true });
+    window.addEventListener('scroll', h, {
+      passive: true
+    });
     return () => window.removeEventListener('scroll', h);
   }, []);
-  return (
-    <nav className={`nav ${stuck ? 'stuck' : ''}`}>
-      <div className="wrap nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-        <div className="nav-links">
-          <a href="experts.html" className="nav-link">Experts</a>
-          <a href="brief.html" className="nav-link">Déposer un brief</a>
-        </div>
-        <div className="nav-ctas">
-          <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
-          <a href="brief.html" className="btn btn-primary btn-sm">Je cherche un expert <Ic.Arrow/></a>
-        </div>
-      </div>
-    </nav>
-  );
+  return /*#__PURE__*/React.createElement("nav", {
+    className: `nav ${stuck ? 'stuck' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "nav-link"
+  }, "D\xE9poser un brief")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-ctas"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Connexion"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-sm"
+  }, "Je cherche un expert ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
 }
-
 function App() {
   const [expert, setExpert] = useState(null);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -195,20 +311,30 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
   useEffect(() => {
     (async () => {
       const params = new URLSearchParams(window.location.search);
       const expertId = params.get('id');
-      if (!expertId) { setLoading(false); return; }
-      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', expertId).single();
-      const { data: exp } = await sb.from('experts').select('*').eq('id', expertId).single();
+      if (!expertId) {
+        setLoading(false);
+        return;
+      }
+      const {
+        data: profile
+      } = await sb.from('profiles').select('prenom, nom').eq('id', expertId).single();
+      const {
+        data: exp
+      } = await sb.from('experts').select('*').eq('id', expertId).single();
       if (profile || exp) {
         const prenom = profile?.prenom || '';
         const nom = profile?.nom || '';
@@ -216,132 +342,243 @@ function App() {
           id: expertId,
           name: `${prenom} ${nom}`.trim() || '—',
           prenom,
-          initials: ((prenom[0]||'?') + (nom[0]||'?')).toUpperCase(),
+          initials: ((prenom[0] || '?') + (nom[0] || '?')).toUpperCase(),
           specialite: exp?.specialite || '',
           bio: exp?.bio || '',
           tarif: exp?.tarif_heure || null,
           disponible: exp?.disponible ?? false,
           competences: exp?.competences || [],
           note: exp?.note || null,
-          nb_avis: exp?.nb_avis || 0,
+          nb_avis: exp?.nb_avis || 0
         });
         document.title = `${prenom} ${nom}`.trim() + ' — CreatorFlow Market';
       }
       setLoading(false);
     })();
   }, []);
-
   if (loading) return null;
-  if (!expert) return (
-    <React.Fragment>
-      <Nav/>
-      <div style={{paddingTop:120,textAlign:'center',color:'var(--text-3)',fontSize:15}}>Expert introuvable.</div>
-    </React.Fragment>
-  );
-
-  return (
-    <React.Fragment>
-      <Nav/>
-      <div className="profile-page">
-        <div className="wrap">
-          <a href="experts.html" className="btn btn-ghost btn-sm" style={{marginBottom:24,marginTop:8,display:'inline-flex'}}><Ic.Back/>Retour aux experts</a>
-          <div className="profile-layout">
-            <div>
-              <div className="profile-hero rv" style={{animationDelay:'80ms'}}>
-                <div className="profile-top">
-                  <div className="profile-avatar" style={{background:'linear-gradient(135deg,#7C3AED,#06B6D4)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                    <span style={{fontSize:32,fontWeight:800,color:'#fff',userSelect:'none'}}>{expert.initials}</span>
-                  </div>
-                  <div className="profile-info">
-                    <div className="cert-row">
-                      {expert.disponible
-                        ? <span className="avail-badge"><div className="avail-dot"/>Disponible</span>
-                        : <span style={{fontSize:11,color:'var(--text-3)'}}>Non disponible actuellement</span>
-                      }
-                    </div>
-                    <h1 className="profile-name">{expert.name}</h1>
-                    <p className="profile-role">{expert.specialite ? `Expert ${expert.specialite}` : 'Expert IA'}</p>
-                    <div className="profile-stats">
-                      {expert.note && (
-                        <div className="pstat">
-                          <div className="pstat-v" style={{color:'var(--amber)'}}>{expert.note}</div>
-                          <div className="stars-row">{[1,2,3,4,5].map(i=><Ic.Star key={i}/>)}</div>
-                          <div className="pstat-l">{expert.nb_avis} avis</div>
-                        </div>
-                      )}
-                      <div className="pstat"><div className="pstat-v">{expert.nb_avis}</div><div className="pstat-l">Missions</div></div>
-                    </div>
-                  </div>
-                </div>
-                {expert.competences.length > 0 && (
-                  <div className="tags" style={{marginBottom:20}}>
-                    {expert.competences.map(s=><span className="tag" key={s}>{s}</span>)}
-                  </div>
-                )}
-                <div className="section-title">À propos</div>
-                <p className="profile-bio">{expert.bio || 'Aucune présentation disponible.'}</p>
-              </div>
-
-              <div className="rv" style={{animationDelay:'180ms',background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-xl)',padding:32,marginBottom:24}}>
-                <div className="section-title">Portfolio — Projets types</div>
-                <div className="portfolio-grid">
-                  {PORTFOLIO.map((p,i) => (
-                    <div key={i} className="portfolio-card">
-                      <div className="portfolio-icon">{Ic[p.icon] ? React.createElement(Ic[p.icon]) : null}</div>
-                      <div className="portfolio-title">{p.title}</div>
-                      <div className="portfolio-desc">{p.desc}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rv" style={{animationDelay:'260ms',background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-xl)',padding:32}}>
-                <div className="section-title">Avis clients ({expert.nb_avis})</div>
-                {expert.nb_avis === 0
-                  ? <p style={{color:'var(--text-3)',fontSize:14}}>Aucun avis pour le moment.</p>
-                  : <p style={{color:'var(--text-2)',fontSize:14}}>Note moyenne : {expert.note}/5 — {expert.nb_avis} avis vérifiés</p>
-                }
-              </div>
-            </div>
-
-            <div className="profile-sidebar">
-              <div className="sidebar-card rv" style={{animationDelay:'120ms'}}>
-                <div className="sidebar-rate">{expert.tarif ? `${expert.tarif}$` : 'Sur devis'}<small>/heure</small></div>
-                <div className="sidebar-label">Tarif indicatif · Devis sur demande</div>
-                <a href="brief.html" className="btn btn-primary btn-lg sidebar-btn">Contacter {expert.prenom || expert.name.split(' ')[0]} <Ic.Arrow/></a>
-                <a href="brief.html" className="btn btn-ghost btn-sm sidebar-btn">Déposer un brief détaillé</a>
-                <div className="sidebar-info">
-                  <div className="sinfo-row">
-                    <span className="sinfo-k">Disponibilité</span>
-                    <span className="sinfo-v" style={{color: expert.disponible ? 'var(--green)' : 'var(--text-3)'}}>
-                      {expert.disponible ? 'Cette semaine' : 'Non disponible'}
-                    </span>
-                  </div>
-                  {expert.nb_avis > 0 && (
-                    <div className="sinfo-row"><span className="sinfo-k">Missions</span><span className="sinfo-v">{expert.nb_avis} livrées</span></div>
-                  )}
-                  <div className="sinfo-row"><span className="sinfo-k">Réponse</span><span className="sinfo-v">Sous 24h</span></div>
-                </div>
-              </div>
-              <div className="sidebar-card rv" style={{animationDelay:'200ms',fontSize:13,color:'var(--text-2)',lineHeight:1.6}}>
-                <div style={{fontWeight:700,color:'var(--text)',marginBottom:8,fontSize:14}}>Certification CreatorFlow Market</div>
-                Profil vérifié par notre équipe. Compétences testées, références contrôlées, entretien validé.
-                <div style={{marginTop:12,padding:'10px 14px',background:'rgba(16,185,129,0.06)',border:'1px solid rgba(16,185,129,0.15)',borderRadius:10,color:'var(--green)',fontSize:12,fontWeight:600}}>
-                  ✓ Certifié · Profil actif
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <footer><div className="wrap footer-mini">
-        <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-        <div className="footer-links"><a href="index.html">Accueil</a><a href="experts.html">Experts</a><a href="brief.html">Brief</a></div>
-      </div></footer>
-    </React.Fragment>
-  );
+  if (!expert) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 120,
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 15
+    }
+  }, "Expert introuvable."));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement("div", {
+    className: "profile-page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-ghost btn-sm",
+    style: {
+      marginBottom: 24,
+      marginTop: 8,
+      display: 'inline-flex'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Retour aux experts"), /*#__PURE__*/React.createElement("div", {
+    className: "profile-layout"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "profile-hero rv",
+    style: {
+      animationDelay: '80ms'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "profile-top"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "profile-avatar",
+    style: {
+      background: 'linear-gradient(135deg,#7C3AED,#06B6D4)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 32,
+      fontWeight: 800,
+      color: '#fff',
+      userSelect: 'none'
+    }
+  }, expert.initials)), /*#__PURE__*/React.createElement("div", {
+    className: "profile-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-row"
+  }, expert.disponible ? /*#__PURE__*/React.createElement("span", {
+    className: "avail-badge"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avail-dot"
+  }), "Disponible") : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, "Non disponible actuellement")), /*#__PURE__*/React.createElement("h1", {
+    className: "profile-name"
+  }, expert.name), /*#__PURE__*/React.createElement("p", {
+    className: "profile-role"
+  }, expert.specialite ? `Expert ${expert.specialite}` : 'Expert IA'), /*#__PURE__*/React.createElement("div", {
+    className: "profile-stats"
+  }, expert.note && /*#__PURE__*/React.createElement("div", {
+    className: "pstat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pstat-v",
+    style: {
+      color: 'var(--amber)'
+    }
+  }, expert.note), /*#__PURE__*/React.createElement("div", {
+    className: "stars-row"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(Ic.Star, {
+    key: i
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "pstat-l"
+  }, expert.nb_avis, " avis")), /*#__PURE__*/React.createElement("div", {
+    className: "pstat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pstat-v"
+  }, expert.nb_avis), /*#__PURE__*/React.createElement("div", {
+    className: "pstat-l"
+  }, "Missions"))))), expert.competences.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "tags",
+    style: {
+      marginBottom: 20
+    }
+  }, expert.competences.map(s => /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    key: s
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "\xC0 propos"), /*#__PURE__*/React.createElement("p", {
+    className: "profile-bio"
+  }, expert.bio || 'Aucune présentation disponible.')), /*#__PURE__*/React.createElement("div", {
+    className: "rv",
+    style: {
+      animationDelay: '180ms',
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-xl)',
+      padding: 32,
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Portfolio \u2014 Projets types"), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-grid"
+  }, PORTFOLIO.map((p, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "portfolio-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-icon"
+  }, Ic[p.icon] ? React.createElement(Ic[p.icon]) : null), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-title"
+  }, p.title), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-desc"
+  }, p.desc))))), /*#__PURE__*/React.createElement("div", {
+    className: "rv",
+    style: {
+      animationDelay: '260ms',
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-xl)',
+      padding: 32
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Avis clients (", expert.nb_avis, ")"), expert.nb_avis === 0 ? /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-3)',
+      fontSize: 14
+    }
+  }, "Aucun avis pour le moment.") : /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-2)',
+      fontSize: 14
+    }
+  }, "Note moyenne : ", expert.note, "/5 \u2014 ", expert.nb_avis, " avis v\xE9rifi\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "profile-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card rv",
+    style: {
+      animationDelay: '120ms'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-rate"
+  }, expert.tarif ? `${expert.tarif}$` : 'Sur devis', /*#__PURE__*/React.createElement("small", null, "/heure")), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Tarif indicatif \xB7 Devis sur demande"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg sidebar-btn"
+  }, "Contacter ", expert.prenom || expert.name.split(' ')[0], " ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-ghost btn-sm sidebar-btn"
+  }, "D\xE9poser un brief d\xE9taill\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sinfo-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-k"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-v",
+    style: {
+      color: expert.disponible ? 'var(--green)' : 'var(--text-3)'
+    }
+  }, expert.disponible ? 'Cette semaine' : 'Non disponible')), expert.nb_avis > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "sinfo-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-k"
+  }, "Missions"), /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-v"
+  }, expert.nb_avis, " livr\xE9es")), /*#__PURE__*/React.createElement("div", {
+    className: "sinfo-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-k"
+  }, "R\xE9ponse"), /*#__PURE__*/React.createElement("span", {
+    className: "sinfo-v"
+  }, "Sous 24h")))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card rv",
+    style: {
+      animationDelay: '200ms',
+      fontSize: 13,
+      color: 'var(--text-2)',
+      lineHeight: 1.6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: 'var(--text)',
+      marginBottom: 8,
+      fontSize: 14
+    }
+  }, "Certification CreatorFlow Market"), "Profil v\xE9rifi\xE9 par notre \xE9quipe. Comp\xE9tences test\xE9es, r\xE9f\xE9rences contr\xF4l\xE9es, entretien valid\xE9.", /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12,
+      padding: '10px 14px',
+      background: 'rgba(16,185,129,0.06)',
+      border: '1px solid rgba(16,185,129,0.15)',
+      borderRadius: 10,
+      color: 'var(--green)',
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, "\u2713 Certifi\xE9 \xB7 Profil actif")))))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("div", {
+    className: "wrap footer-mini"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)'
+    }
+  }, "\xA9 2026 CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "index.html"
+  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html"
+  }, "Brief")))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

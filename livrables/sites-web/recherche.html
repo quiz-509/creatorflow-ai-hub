@@ -128,59 +128,244 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect, useMemo } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useMemo
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Search:(p)=><svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Location:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-  Clock:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  Briefcase:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
-  Check:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Filter:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
-  X:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Location: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "10",
+    r: "3"
+  })),
+  Clock: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "12 6 12 12 16 14"
+  })),
+  Briefcase: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "7",
+    width: "20",
+    height: "14",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Filter: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  }))
 };
-
-const COLORS = ['#7C3AED','#2563EB','#0891B2','#059669','#D97706','#DB2777','#0284C7','#65A30D'];
-
-const EXPERTS_DEMO = [
-  { id:'d1', name:'Amélie Chen', initials:'AC', color:'#7C3AED', spec:'Experte IA & Automatisation', about:'Spécialiste en chatbots GPT et automatisation de processus métier. +60 missions réussies, taux de succès 100%.', tags:['ChatGPT','Make.com','LangChain','Python'], rating:4.9, reviews:47, missions:62, response:'< 2h', location:'Montréal', available:true, featured:true, rate:120, category:'Chatbot & IA' },
-  { id:'d2', name:'Lucas Bernard', initials:'LB', color:'#2563EB', spec:'Expert Automatisation No-Code', about:'Spécialiste Make.com et Zapier, je connecte vos outils et automatise vos workflows sans une ligne de code.', tags:['Make.com','Zapier','Airtable','Notion'], rating:4.8, reviews:31, missions:38, response:'< 4h', location:'Québec', available:true, featured:false, rate:95, category:'Automatisation' },
-  { id:'d3', name:'Sofia Martins', initials:'SM', color:'#0891B2', spec:'Data Scientist & ML Engineer', about:'Machine learning, analyse prédictive et dashboards BI. Je transforme vos données brutes en décisions stratégiques.', tags:['Python','Pandas','Power BI','Tableau'], rating:5.0, reviews:24, missions:29, response:'< 6h', location:'Toronto', available:false, featured:true, rate:130, category:'Data & Analytics' },
-];
-
-const CATS = ['Tous','Chatbot & IA','Automatisation','Data & Analytics','Contenu IA','Image & Vidéo','Intégrations'];
-
-function CheckRow({ label, count, checked, onChange }) {
-  return (
-    <div className="checkbox-row" onClick={onChange}>
-      <div className={`checkbox ${checked ? 'checked' : ''}`}>
-        {checked && <Ic.Check style={{color:'#fff'}}/>}
-      </div>
-      <span className="checkbox-label">{label}</span>
-      {count != null && <span className="checkbox-count">{count}</span>}
-    </div>
-  );
+const COLORS = ['#7C3AED', '#2563EB', '#0891B2', '#059669', '#D97706', '#DB2777', '#0284C7', '#65A30D'];
+const EXPERTS_DEMO = [{
+  id: 'd1',
+  name: 'Amélie Chen',
+  initials: 'AC',
+  color: '#7C3AED',
+  spec: 'Experte IA & Automatisation',
+  about: 'Spécialiste en chatbots GPT et automatisation de processus métier. +60 missions réussies, taux de succès 100%.',
+  tags: ['ChatGPT', 'Make.com', 'LangChain', 'Python'],
+  rating: 4.9,
+  reviews: 47,
+  missions: 62,
+  response: '< 2h',
+  location: 'Montréal',
+  available: true,
+  featured: true,
+  rate: 120,
+  category: 'Chatbot & IA'
+}, {
+  id: 'd2',
+  name: 'Lucas Bernard',
+  initials: 'LB',
+  color: '#2563EB',
+  spec: 'Expert Automatisation No-Code',
+  about: 'Spécialiste Make.com et Zapier, je connecte vos outils et automatise vos workflows sans une ligne de code.',
+  tags: ['Make.com', 'Zapier', 'Airtable', 'Notion'],
+  rating: 4.8,
+  reviews: 31,
+  missions: 38,
+  response: '< 4h',
+  location: 'Québec',
+  available: true,
+  featured: false,
+  rate: 95,
+  category: 'Automatisation'
+}, {
+  id: 'd3',
+  name: 'Sofia Martins',
+  initials: 'SM',
+  color: '#0891B2',
+  spec: 'Data Scientist & ML Engineer',
+  about: 'Machine learning, analyse prédictive et dashboards BI. Je transforme vos données brutes en décisions stratégiques.',
+  tags: ['Python', 'Pandas', 'Power BI', 'Tableau'],
+  rating: 5.0,
+  reviews: 24,
+  missions: 29,
+  response: '< 6h',
+  location: 'Toronto',
+  available: false,
+  featured: true,
+  rate: 130,
+  category: 'Data & Analytics'
+}];
+const CATS = ['Tous', 'Chatbot & IA', 'Automatisation', 'Data & Analytics', 'Contenu IA', 'Image & Vidéo', 'Intégrations'];
+function CheckRow({
+  label,
+  count,
+  checked,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "checkbox-row",
+    onClick: onChange
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `checkbox ${checked ? 'checked' : ''}`
+  }, checked && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "checkbox-label"
+  }, label), count != null && /*#__PURE__*/React.createElement("span", {
+    className: "checkbox-count"
+  }, count));
 }
-
-function Stars({ rating }) {
-  return (
-    <div style={{display:'flex',gap:2}}>
-      {[1,2,3,4,5].map(i=>(
-        <svg key={i} width="12" height="12" viewBox="0 0 24 24" fill={i<=Math.round(rating)?'var(--orange)':'var(--surf-3)'}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      ))}
-    </div>
-  );
+function Stars({
+  rating
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 2
+    }
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement("svg", {
+    key: i,
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: i <= Math.round(rating) ? 'var(--orange)' : 'var(--surf-3)'
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))));
 }
-
 function App() {
   const [query, setQuery] = useState('');
   const [cat, setCat] = useState('Tous');
@@ -192,13 +377,16 @@ function App() {
   const [allExperts, setAllExperts] = useState(EXPERTS_DEMO);
   const [loading, setLoading] = useState(true);
   const PER_PAGE = 5;
-
   useEffect(() => {
     (async () => {
-      const { data: expertsList } = await sb.from('experts').select('*');
+      const {
+        data: expertsList
+      } = await sb.from('experts').select('*');
       if (expertsList?.length) {
         const ids = expertsList.map(e => e.id);
-        const { data: profilesList } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
+        const {
+          data: profilesList
+        } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
         const pm = {};
         profilesList?.forEach(p => pm[p.id] = p);
         const mapped = expertsList.map((exp, i) => {
@@ -206,7 +394,7 @@ function App() {
           const prenom = p.prenom || '';
           const nom = p.nom || '';
           const fullName = `${prenom} ${nom}`.trim() || 'Expert';
-          const initials = ((prenom[0]||'?')+(nom[0]||'?')).toUpperCase();
+          const initials = ((prenom[0] || '?') + (nom[0] || '?')).toUpperCase();
           return {
             id: exp.id,
             name: fullName,
@@ -223,7 +411,7 @@ function App() {
             available: exp.disponible ?? true,
             featured: false,
             rate: exp.tarif_heure || 0,
-            category: exp.specialite || 'IA Généraliste',
+            category: exp.specialite || 'IA Généraliste'
           };
         });
         setAllExperts(mapped);
@@ -231,8 +419,13 @@ function App() {
       setLoading(false);
     })();
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -240,13 +433,16 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
   const filtered = useMemo(() => {
     let list = allExperts;
     if (query) {
@@ -257,167 +453,292 @@ function App() {
     if (onlyAvailable) list = list.filter(e => e.available);
     if (onlyFeatured) list = list.filter(e => e.featured);
     if (minRating) list = list.filter(e => e.rating >= minRating);
-    if (sort === 'note') list = [...list].sort((a,b) => b.rating - a.rating);
-    else if (sort === 'missions') list = [...list].sort((a,b) => b.missions - a.missions);
-    else if (sort === 'prix_asc') list = [...list].sort((a,b) => a.rate - b.rate);
-    else if (sort === 'prix_desc') list = [...list].sort((a,b) => b.rate - a.rate);
-    else list = [...list].sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    if (sort === 'note') list = [...list].sort((a, b) => b.rating - a.rating);else if (sort === 'missions') list = [...list].sort((a, b) => b.missions - a.missions);else if (sort === 'prix_asc') list = [...list].sort((a, b) => a.rate - b.rate);else if (sort === 'prix_desc') list = [...list].sort((a, b) => b.rate - a.rate);else list = [...list].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     return list;
   }, [query, cat, onlyAvailable, onlyFeatured, minRating, sort, allExperts]);
-
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
-  const paginated = filtered.slice((page-1)*PER_PAGE, page*PER_PAGE);
-
-  const resetFilters = () => { setOnlyAvailable(false); setOnlyFeatured(false); setMinRating(null); setCat('Tous'); setQuery(''); };
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const resetFilters = () => {
+    setOnlyAvailable(false);
+    setOnlyFeatured(false);
+    setMinRating(null);
+    setCat('Tous');
+    setQuery('');
+  };
   const hasFilters = onlyAvailable || onlyFeatured || minRating || cat !== 'Tous' || query;
-
-  return (
-    <React.Fragment>
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          <div className="nav-right">
-            <a href="dashboard-client.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Dashboard</a>
-            <a href="nouveau-brief.html" className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}}>Poster un brief</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="page">
-        {/* HERO SEARCH */}
-        <div className="search-hero">
-          <div className="search-hero-inner">
-            <div className="search-title">Trouvez votre expert <em>IA</em></div>
-            <div className="search-bar">
-              <Ic.Search style={{color:'var(--text-3)',flexShrink:0}}/>
-              <input className="search-input" placeholder="Chatbot, automatisation, Make.com, Python…" value={query} onChange={e=>{setQuery(e.target.value);setPage(1);}}/>
-              {query && <button style={{color:'var(--text-3)',padding:'4px 8px'}} onClick={()=>setQuery('')}><Ic.X/></button>}
-              <button className="btn btn-primary" style={{padding:'8px 18px',fontSize:13,flexShrink:0}}>
-                <Ic.Search style={{width:13,height:13}}/>Rechercher
-              </button>
-            </div>
-            <div className="cats-row">
-              {CATS.map(c => (
-                <div key={c} className={`cat-pill ${cat===c?'active':''}`} onClick={()=>{setCat(c);setPage(1);}}>{c}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="layout">
-          {/* FILTERS */}
-          <div className="filters">
-            <div className="filter-card">
-              <div className="filter-title">Filtres</div>
-              <div className="filter-group">
-                <div className="filter-label">Disponibilité</div>
-                <CheckRow label="Disponible maintenant" checked={onlyAvailable} onChange={()=>{setOnlyAvailable(v=>!v);setPage(1);}}/>
-                <CheckRow label="Expert certifié" checked={onlyFeatured} onChange={()=>{setOnlyFeatured(v=>!v);setPage(1);}}/>
-              </div>
-              <div className="filter-group">
-                <div className="filter-label">Note minimale</div>
-                {[4.5, 4.0, 3.5].map(r => (
-                  <CheckRow key={r} label={`${r}★ et plus`} checked={minRating===r} onChange={()=>{setMinRating(minRating===r?null:r);setPage(1);}}/>
-                ))}
-              </div>
-              <div className="filter-group" style={{marginBottom:0}}>
-                <div className="filter-label">Tarif journalier</div>
-                <div className="range-row">
-                  <input className="range-input" placeholder="Min" type="number"/>
-                  <span className="range-sep">–</span>
-                  <input className="range-input" placeholder="Max" type="number"/>
-                  <span style={{fontSize:12,color:'var(--text-3)'}}>$/h</span>
-                </div>
-              </div>
-            </div>
-            {hasFilters && (
-              <button className="filter-reset" onClick={resetFilters}>Réinitialiser les filtres</button>
-            )}
-          </div>
-
-          {/* RESULTS */}
-          <div className="results fade-up">
-            <div className="results-header">
-              <div className="results-count"><strong>{filtered.length}</strong> expert{filtered.length !== 1 ? 's' : ''} trouvé{filtered.length !== 1 ? 's' : ''}</div>
-              <select className="sort-select" value={sort} onChange={e=>setSort(e.target.value)}>
-                <option value="pertinence">Pertinence</option>
-                <option value="note">Meilleure note</option>
-                <option value="missions">Plus de missions</option>
-                <option value="prix_asc">Prix croissant</option>
-                <option value="prix_desc">Prix décroissant</option>
-              </select>
-            </div>
-
-            {paginated.length === 0 ? (
-              <div className="empty">
-                <div className="empty-emoji">🔍</div>
-                <div className="empty-title">Aucun expert trouvé</div>
-                <div className="empty-sub">Essayez avec d'autres mots-clés ou réinitialisez les filtres.</div>
-                <button className="btn btn-ghost" style={{margin:'16px auto 0',display:'flex'}} onClick={resetFilters}>Réinitialiser</button>
-              </div>
-            ) : (
-              <>
-                {paginated.map(e => (
-                  <div key={e.id} className={`expert-card ${e.featured ? 'featured' : ''}`}>
-                    <div className="online-wrap">
-                      <div className="expert-avatar" style={{background:e.color}}>{e.initials}</div>
-                      {e.available && <div className="online-dot"/>}
-                    </div>
-                    <div className="expert-body">
-                      <div className="expert-header">
-                        <div>
-                          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:2}}>
-                            <div className="expert-name">{e.name}</div>
-                            {e.featured && <span className="featured-badge">Expert certifié</span>}
-                            {e.available && <span className="dispo-badge">Disponible</span>}
-                          </div>
-                          <div className="expert-spec">{e.spec}</div>
-                        </div>
-                        <div className="expert-price">
-                          <div className="price-val">{e.rate}<span className="price-unit">$/h</span></div>
-                        </div>
-                      </div>
-                      <div className="expert-rating">
-                        <Stars rating={e.rating}/>
-                        <span style={{fontSize:13,fontWeight:700}}>{e.rating}</span>
-                        <span style={{fontSize:12,color:'var(--text-3)'}}>({e.reviews} avis)</span>
-                      </div>
-                      <div className="expert-about">{e.about}</div>
-                      <div className="expert-tags">
-                        {e.tags.map(t => <span key={t} className="etag">{t}</span>)}
-                      </div>
-                      <div className="expert-footer">
-                        <div className="expert-meta">
-                          <div className="emeta-item"><Ic.Location/>{e.location}</div>
-                          <div className="emeta-item"><Ic.Clock/>{e.response}</div>
-                          <div className="emeta-item"><Ic.Briefcase/>{e.missions} missions</div>
-                        </div>
-                        <div style={{display:'flex',gap:8}}>
-                          <a href="messages.html" className="btn btn-ghost" style={{padding:'7px 14px',fontSize:12}}>Contacter</a>
-                          <a href="profil-expert.html" className="btn btn-primary" style={{padding:'7px 16px',fontSize:12}}>Voir le profil <Ic.Arrow/></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {/* PAGINATION */}
-                {totalPages > 1 && (
-                  <div className="pagination">
-                    {Array.from({length:totalPages},(_,i)=>i+1).map(p => (
-                      <div key={p} className={`page-btn ${page===p?'active':''}`} onClick={()=>setPage(p)}>{p}</div>
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard"), /*#__PURE__*/React.createElement("a", {
+    href: "nouveau-brief.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Poster un brief")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-title"
+  }, "Trouvez votre expert ", /*#__PURE__*/React.createElement("em", null, "IA")), /*#__PURE__*/React.createElement("div", {
+    className: "search-bar"
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "search-input",
+    placeholder: "Chatbot, automatisation, Make.com, Python\u2026",
+    value: query,
+    onChange: e => {
+      setQuery(e.target.value);
+      setPage(1);
+    }
+  }), query && /*#__PURE__*/React.createElement("button", {
+    style: {
+      color: 'var(--text-3)',
+      padding: '4px 8px'
+    },
+    onClick: () => setQuery('')
+  }, /*#__PURE__*/React.createElement(Ic.X, null)), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '8px 18px',
+      fontSize: 13,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      width: 13,
+      height: 13
+    }
+  }), "Rechercher")), /*#__PURE__*/React.createElement("div", {
+    className: "cats-row"
+  }, CATS.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c,
+    className: `cat-pill ${cat === c ? 'active' : ''}`,
+    onClick: () => {
+      setCat(c);
+      setPage(1);
+    }
+  }, c))))), /*#__PURE__*/React.createElement("div", {
+    className: "layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filters"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-title"
+  }, "Filtres"), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement(CheckRow, {
+    label: "Disponible maintenant",
+    checked: onlyAvailable,
+    onChange: () => {
+      setOnlyAvailable(v => !v);
+      setPage(1);
+    }
+  }), /*#__PURE__*/React.createElement(CheckRow, {
+    label: "Expert certifi\xE9",
+    checked: onlyFeatured,
+    onChange: () => {
+      setOnlyFeatured(v => !v);
+      setPage(1);
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Note minimale"), [4.5, 4.0, 3.5].map(r => /*#__PURE__*/React.createElement(CheckRow, {
+    key: r,
+    label: `${r}★ et plus`,
+    checked: minRating === r,
+    onChange: () => {
+      setMinRating(minRating === r ? null : r);
+      setPage(1);
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Tarif journalier"), /*#__PURE__*/React.createElement("div", {
+    className: "range-row"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "range-input",
+    placeholder: "Min",
+    type: "number"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "range-sep"
+  }, "\u2013"), /*#__PURE__*/React.createElement("input", {
+    className: "range-input",
+    placeholder: "Max",
+    type: "number"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "$/h")))), hasFilters && /*#__PURE__*/React.createElement("button", {
+    className: "filter-reset",
+    onClick: resetFilters
+  }, "R\xE9initialiser les filtres")), /*#__PURE__*/React.createElement("div", {
+    className: "results fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-count"
+  }, /*#__PURE__*/React.createElement("strong", null, filtered.length), " expert", filtered.length !== 1 ? 's' : '', " trouv\xE9", filtered.length !== 1 ? 's' : ''), /*#__PURE__*/React.createElement("select", {
+    className: "sort-select",
+    value: sort,
+    onChange: e => setSort(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "pertinence"
+  }, "Pertinence"), /*#__PURE__*/React.createElement("option", {
+    value: "note"
+  }, "Meilleure note"), /*#__PURE__*/React.createElement("option", {
+    value: "missions"
+  }, "Plus de missions"), /*#__PURE__*/React.createElement("option", {
+    value: "prix_asc"
+  }, "Prix croissant"), /*#__PURE__*/React.createElement("option", {
+    value: "prix_desc"
+  }, "Prix d\xE9croissant"))), paginated.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Aucun expert trouv\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-sub"
+  }, "Essayez avec d'autres mots-cl\xE9s ou r\xE9initialisez les filtres."), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      margin: '16px auto 0',
+      display: 'flex'
+    },
+    onClick: resetFilters
+  }, "R\xE9initialiser")) : /*#__PURE__*/React.createElement(React.Fragment, null, paginated.map(e => /*#__PURE__*/React.createElement("div", {
+    key: e.id,
+    className: `expert-card ${e.featured ? 'featured' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "online-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-avatar",
+    style: {
+      background: e.color
+    }
+  }, e.initials), e.available && /*#__PURE__*/React.createElement("div", {
+    className: "online-dot"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "expert-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-name"
+  }, e.name), e.featured && /*#__PURE__*/React.createElement("span", {
+    className: "featured-badge"
+  }, "Expert certifi\xE9"), e.available && /*#__PURE__*/React.createElement("span", {
+    className: "dispo-badge"
+  }, "Disponible")), /*#__PURE__*/React.createElement("div", {
+    className: "expert-spec"
+  }, e.spec)), /*#__PURE__*/React.createElement("div", {
+    className: "expert-price"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-val"
+  }, e.rate, /*#__PURE__*/React.createElement("span", {
+    className: "price-unit"
+  }, "$/h")))), /*#__PURE__*/React.createElement("div", {
+    className: "expert-rating"
+  }, /*#__PURE__*/React.createElement(Stars, {
+    rating: e.rating
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, e.rating), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "(", e.reviews, " avis)")), /*#__PURE__*/React.createElement("div", {
+    className: "expert-about"
+  }, e.about), /*#__PURE__*/React.createElement("div", {
+    className: "expert-tags"
+  }, e.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "etag"
+  }, t))), /*#__PURE__*/React.createElement("div", {
+    className: "expert-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Location, null), e.location), /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Clock, null), e.response), /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Briefcase, null), e.missions, " missions")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "messages.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12
+    }
+  }, "Contacter"), /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '7px 16px',
+      fontSize: 12
+    }
+  }, "Voir le profil ", /*#__PURE__*/React.createElement(Ic.Arrow, null))))))), totalPages > 1 && /*#__PURE__*/React.createElement("div", {
+    className: "pagination"
+  }, Array.from({
+    length: totalPages
+  }, (_, i) => i + 1).map(p => /*#__PURE__*/React.createElement("div", {
+    key: p,
+    className: `page-btn ${page === p ? 'active' : ''}`,
+    onClick: () => setPage(p)
+  }, p))))))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

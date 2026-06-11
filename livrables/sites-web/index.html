@@ -689,55 +689,382 @@ a.trust-pill:hover { border-color:rgba(124,58,237,0.4); color:var(--vs); }
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
 
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const PHOTO = {
-  amelie:  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
-  julien:  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces&q=80',
-  sarah:   'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&h=240&fit=crop&crop=faces&q=80',
+  amelie: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
+  julien: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces&q=80',
+  sarah: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&h=240&fit=crop&crop=faces&q=80',
   camille: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&h=160&fit=crop&crop=faces&q=80',
-  romain:  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces&q=80',
-  nadia:   'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&h=160&fit=crop&crop=faces&q=80',
-  extra1:  'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=160&h=160&fit=crop&crop=faces&q=80',
-  extra2:  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=160&h=160&fit=crop&crop=faces&q=80',
-  extra3:  'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=160&h=160&fit=crop&crop=faces&q=80',
+  romain: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces&q=80',
+  nadia: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra1: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra2: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra3: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=160&h=160&fit=crop&crop=faces&q=80'
 };
 
 /* ── Icons ── */
 const Ic = {
-  Arrow: (p) => <svg {...p} className={(p.className||'')+' ico'} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Chevron: (p) => <svg {...p} className={(p.className||'')+' chevron'} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
-  Sparkle: (p) => <svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>,
-  Search: (p) => <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
-  Check: (p) => <svg {...p} width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Star: (p) => <svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Menu: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
-  X: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Bot: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="8" width="18" height="12" rx="3"/><circle cx="9" cy="14" r="1.2"/><circle cx="15" cy="14" r="1.2"/><path d="M12 3v5M8 3h8"/></svg>,
-  Grad: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>,
-  Compass: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>,
-  Pen: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>,
-  Chart: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="M7 16V12M12 16V8M17 16v-6"/></svg>,
-  Layers: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
-  Match: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="8" r="3"/><circle cx="18" cy="16" r="3"/><path d="M9 8h6a3 3 0 0 1 0 6h-6"/></svg>,
-  Rocket: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>,
-  User: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>,
-  Bell: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
-  TrendUp: (p) => <svg {...p} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>,
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    className: (p.className || '') + ' ico',
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Chevron: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    className: (p.className || '') + ' chevron',
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "6 9 12 15 18 9"
+  })),
+  Sparkle: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m20 20-3.5-3.5"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Menu: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "6",
+    x2: "21",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "12",
+    x2: "21",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "18",
+    x2: "21",
+    y2: "18"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  })),
+  Bot: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "8",
+    width: "18",
+    height: "12",
+    rx: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "15",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3v5M8 3h8"
+  })),
+  Grad: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M22 10 12 5 2 10l10 5 10-5z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M6 12v5c3 2 9 2 12 0v-5"
+  })),
+  Compass: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+  })),
+  Pen: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 19l7-7 3 3-7 7-3-3z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M2 2l7.586 7.586"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "2"
+  })),
+  Chart: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M3 3v18h18"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 16V12M12 16V8M17 16v-6"
+  })),
+  Layers: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 2 7 12 12 22 7 12 2"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 17 12 22 22 17"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 12 12 17 22 12"
+  })),
+  Match: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "6",
+    cy: "8",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "18",
+    cy: "16",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 8h6a3 3 0 0 1 0 6h-6"
+  })),
+  Rocket: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+  })),
+  User: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "8",
+    r: "4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 21a8 8 0 0 1 16 0"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M10.3 21a1.94 1.94 0 0 0 3.4 0"
+  })),
+  TrendUp: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "22 7 13.5 15.5 8.5 10.5 2 17"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 7 22 7 22 13"
+  }))
 };
-
 const Social = {
-  YT: () => <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5s-.2-1.6-.9-2.3c-.8-.9-1.8-.9-2.2-1C16.7 4 12 4 12 4s-4.7 0-7.9.2c-.4.1-1.3.1-2.2 1-.7.7-.9 2.3-.9 2.3S.8 9.4.8 11.3v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.2 7.6.2s4.7 0 7.9-.2c.4-.1 1.4-.1 2.2-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8v-1.8c0-1.9-.2-3.8-.2-3.8zM9.7 15.2V8.4l6.1 3.4-6.1 3.4z"/></svg>,
-  TK: () => <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 6.3c-1.6 0-3-1.4-3-3V3h-3.2v13.2c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .6.1.9.2v-3.3c-.3 0-.6-.1-.9-.1-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6V9.7c1.2.9 2.7 1.4 4.2 1.4V7.9c-.5 0-.8-.4-1.3-.4z"/></svg>,
-  IG: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.4a4 4 0 1 1-7.9 1.1A4 4 0 0 1 16 11.4z"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg>,
-  FB: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3V22c4.6-.8 8.4-4.8 8.4-9.9z"/></svg>,
+  YT: () => /*#__PURE__*/React.createElement("svg", {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M23 7.5s-.2-1.6-.9-2.3c-.8-.9-1.8-.9-2.2-1C16.7 4 12 4 12 4s-4.7 0-7.9.2c-.4.1-1.3.1-2.2 1-.7.7-.9 2.3-.9 2.3S.8 9.4.8 11.3v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.2 7.6.2s4.7 0 7.9-.2c.4-.1 1.4-.1 2.2-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8v-1.8c0-1.9-.2-3.8-.2-3.8zM9.7 15.2V8.4l6.1 3.4-6.1 3.4z"
+  })),
+  TK: () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M19.6 6.3c-1.6 0-3-1.4-3-3V3h-3.2v13.2c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .6.1.9.2v-3.3c-.3 0-.6-.1-.9-.1-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6V9.7c1.2.9 2.7 1.4 4.2 1.4V7.9c-.5 0-.8-.4-1.3-.4z"
+  })),
+  IG: () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "2",
+    width: "20",
+    height: "20",
+    rx: "5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 11.4a4 4 0 1 1-7.9 1.1A4 4 0 0 1 16 11.4z"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "17.5",
+    y1: "6.5",
+    x2: "17.5",
+    y2: "6.5"
+  })),
+  FB: () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3V22c4.6-.8 8.4-4.8 8.4-9.9z"
+  }))
 };
 
 /* ── Cursor glow ── */
@@ -745,51 +1072,85 @@ function CursorGlow() {
   const ref = useRef(null);
   useEffect(() => {
     const el = ref.current;
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive:true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     return () => window.removeEventListener('mousemove', move);
   }, []);
-  return <div ref={ref} id="cursor-glow" />;
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    id: "cursor-glow"
+  });
 }
 
 /* ── 3D tilt helpers ── */
 function onTilt(e) {
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
-  const x = e.clientX - r.left, y = e.clientY - r.top;
-  const cx = r.width/2, cy = r.height/2;
-  const rx = ((y-cy)/cy)*-6, ry = ((x-cx)/cx)*6;
-  el.style.setProperty('--mx', x+'px');
-  el.style.setProperty('--my', y+'px');
+  const x = e.clientX - r.left,
+    y = e.clientY - r.top;
+  const cx = r.width / 2,
+    cy = r.height / 2;
+  const rx = (y - cy) / cy * -6,
+    ry = (x - cx) / cx * 6;
+  el.style.setProperty('--mx', x + 'px');
+  el.style.setProperty('--my', y + 'px');
   el.style.transform = `translateY(-4px) perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
 }
-function offTilt(e) { e.currentTarget.style.transform = ''; }
+function offTilt(e) {
+  e.currentTarget.style.transform = '';
+}
 
 /* ── Reveal wrapper ── */
-function Rv({ children, delay = 0, className = '', ...rest }) {
+function Rv({
+  children,
+  delay = 0,
+  className = '',
+  ...rest
+}) {
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { setTimeout(() => setShown(true), delay); obs.unobserve(el); } });
-    }, { threshold: 0.1 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delay]);
-  return <div ref={ref} className={`rv ${shown ? 'in' : ''} ${className}`} {...rest}>{children}</div>;
-}
-
-/* ── Animated counter ── */
-function StatCount({ to, suffix }) {
-  const ref = useRef(null);
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
+    const el = ref.current;
+    if (!el) return;
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          const start = performance.now(); const dur = 1800;
+          setTimeout(() => setShown(true), delay);
+          obs.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+  return /*#__PURE__*/React.createElement("div", _extends({
+    ref: ref,
+    className: `rv ${shown ? 'in' : ''} ${className}`
+  }, rest), children);
+}
+
+/* ── Animated counter ── */
+function StatCount({
+  to,
+  suffix
+}) {
+  const ref = useRef(null);
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const start = performance.now();
+          const dur = 1800;
           const step = now => {
             const t = Math.min(1, (now - start) / dur);
             const eased = 1 - Math.pow(1 - t, 3);
@@ -800,11 +1161,15 @@ function StatCount({ to, suffix }) {
           obs.unobserve(el);
         }
       });
-    }, { threshold: 0.5 });
+    }, {
+      threshold: 0.5
+    });
     obs.observe(el);
     return () => obs.disconnect();
   }, [to]);
-  return <span ref={ref}>{val}{suffix}</span>;
+  return /*#__PURE__*/React.createElement("span", {
+    ref: ref
+  }, val, suffix);
 }
 
 /* ── Nav ── */
@@ -817,514 +1182,1178 @@ function Nav() {
     window.addEventListener('scroll', fn);
     return () => window.removeEventListener('scroll', fn);
   }, []);
-
   const menus = {
     plateforme: {
-      cols: [
-        { title: 'Pour les entreprises', items: [
-          { icon: <Ic.Search />, label: 'Trouver un expert', sub: 'Parcourez nos experts certifiés', href: 'experts.html' },
-          { icon: <Ic.Match />, label: 'Déposer un brief', sub: 'Recevez des candidatures sous 24h', href: 'brief.html' },
-          { icon: <Ic.Rocket />, label: 'Comment ça marche', sub: 'Trois étapes, aucune friction', href: '#how' },
-        ]},
-        { title: 'Pour les experts', items: [
-          { icon: <Ic.User />, label: 'Créer mon profil', sub: 'Validé par l\'académie en 48h', href: 'inscription.html' },
-          { icon: <Ic.Bell />, label: 'Voir les missions', sub: 'Opportunités ciblées par l\'IA', href: 'dashboard-expert.html' },
-          { icon: <Ic.TrendUp />, label: 'Programme Academy', sub: 'Formation certifiante CreatorFlow Market', href: 'academie.html' },
-        ]},
-      ],
-      featured: { badge: 'Nouveau', title: 'Hub 2.0 disponible', text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.', link: 'Découvrir →', href: 'inscription.html' },
+      cols: [{
+        title: 'Pour les entreprises',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Search, null),
+          label: 'Trouver un expert',
+          sub: 'Parcourez nos experts certifiés',
+          href: 'experts.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+          label: 'Déposer un brief',
+          sub: 'Recevez des candidatures sous 24h',
+          href: 'brief.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+          label: 'Comment ça marche',
+          sub: 'Trois étapes, aucune friction',
+          href: '#how'
+        }]
+      }, {
+        title: 'Pour les experts',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.User, null),
+          label: 'Créer mon profil',
+          sub: 'Validé par l\'académie en 48h',
+          href: 'inscription.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+          label: 'Voir les missions',
+          sub: 'Opportunités ciblées par l\'IA',
+          href: 'dashboard-expert.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.TrendUp, null),
+          label: 'Programme Academy',
+          sub: 'Formation certifiante CreatorFlow Market',
+          href: 'academie.html'
+        }]
+      }],
+      featured: {
+        badge: 'Nouveau',
+        title: 'Hub 2.0 disponible',
+        text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.',
+        link: 'Découvrir →',
+        href: 'inscription.html'
+      }
     },
     ressources: {
-      cols: [
-        { title: 'Apprendre', items: [
-          { icon: <Ic.Pen />, label: 'Blog', sub: 'Actualités IA et stratégie', href: 'blog.html' },
-          { icon: <Ic.Grad />, label: 'Guides pratiques', sub: 'Tutoriels et cas d\'usage', href: 'blog.html' },
-          { icon: <Ic.Layers />, label: 'Études de cas', sub: 'Résultats clients réels', href: 'blog.html' },
-        ]},
-        { title: 'Support', items: [
-          { icon: <Ic.Bell />, label: 'Centre d\'aide', sub: 'FAQ et documentation', href: '#' },
-          { icon: <Ic.Compass />, label: 'Communauté', sub: 'Forum des experts', href: '#' },
-          { icon: <Ic.Chart />, label: 'Changelog', sub: 'Nouveautés de la plateforme', href: '#' },
-        ]},
-      ],
-      featured: { badge: 'Guide', title: 'Recruter un expert IA', text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.', link: 'Lire le guide →', href: 'blog.html' },
-    },
+      cols: [{
+        title: 'Apprendre',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+          label: 'Blog',
+          sub: 'Actualités IA et stratégie',
+          href: 'blog.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+          label: 'Guides pratiques',
+          sub: 'Tutoriels et cas d\'usage',
+          href: 'blog.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Layers, null),
+          label: 'Études de cas',
+          sub: 'Résultats clients réels',
+          href: 'blog.html'
+        }]
+      }, {
+        title: 'Support',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+          label: 'Centre d\'aide',
+          sub: 'FAQ et documentation',
+          href: '#'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Compass, null),
+          label: 'Communauté',
+          sub: 'Forum des experts',
+          href: '#'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Chart, null),
+          label: 'Changelog',
+          sub: 'Nouveautés de la plateforme',
+          href: '#'
+        }]
+      }],
+      featured: {
+        badge: 'Guide',
+        title: 'Recruter un expert IA',
+        text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.',
+        link: 'Lire le guide →',
+        href: 'blog.html'
+      }
+    }
   };
-
-  return (
-    <React.Fragment>
-    <nav className={`nav ${stuck ? 'stuck' : ''}`} onClick={e => { if (e.target === e.currentTarget) setOpenMenu(null); }}>
-      <div className="wrap nav-inner">
-        <a href="/" className="brand">
-          <div className="brand-logo" style={{backgroundImage:"url('/logo.jpg')"}} />
-          <span>CreatorFlow <em>Market</em></span>
-        </a>
-        <div className="nav-menu" onMouseLeave={() => setOpenMenu(null)}>
-          {['plateforme','ressources'].map(key => (
-            <div className="nav-item" key={key} onMouseEnter={() => setOpenMenu(key)}>
-              <button className={`nav-link ${openMenu === key ? 'open' : ''}`}>
-                {key.charAt(0).toUpperCase() + key.slice(1)} <Ic.Chevron />
-              </button>
-              <div className={`mega ${openMenu === key ? 'open' : ''}`}>
-                {menus[key].cols.map((col, ci) => (
-                  <div className="mega-col" key={ci}>
-                    <div className="mega-col-title">{col.title}</div>
-                    {col.items.map((item, ii) => (
-                      <a className="mega-item" href={item.href||'#'} key={ii} onClick={()=>setOpenMenu(null)}>
-                        <div className="mega-item-icon">{item.icon}</div>
-                        <div>
-                          <div className="mega-item-text">{item.label}</div>
-                          <div className="mega-item-sub">{item.sub}</div>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                ))}
-                <div className="mega-col">
-                  <a className="mega-featured" href={menus[key].featured.href||'#'} onClick={()=>setOpenMenu(null)} style={{display:'block',textDecoration:'none',color:'inherit'}}>
-                    <span className="mega-featured-badge">{menus[key].featured.badge}</span>
-                    <div className="mega-featured-title">{menus[key].featured.title}</div>
-                    <div className="mega-featured-text">{menus[key].featured.text}</div>
-                    <div className="mega-featured-link">{menus[key].featured.link}</div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-          <a className="nav-link" href="experts.html" onClick={() => setOpenMenu(null)}>Experts</a>
-          <a className="nav-link" href="academie.html" onClick={() => setOpenMenu(null)}>Académie</a>
-        </div>
-        <div className="nav-actions">
-          <a href="connexion.html" className="btn btn-outline" style={{padding:'9px 18px',fontSize:'13px',borderRadius:'999px'}}>Se connecter</a>
-          <a href="brief.html" className="btn btn-primary" style={{padding:'9px 18px',fontSize:'13px'}}>Démarrer <Ic.Arrow /></a>
-          <button className="mobile-toggle" onClick={() => setMobileOpen(o => !o)}>{mobileOpen ? <Ic.X /> : <Ic.Menu />}</button>
-        </div>
-      </div>
-    </nav>
-    <div className={`mobile-drawer ${mobileOpen ? 'open' : ''}`}>
-      <a className="mob-link" href="experts.html" onClick={() => setMobileOpen(false)}>Experts</a>
-      <a className="mob-link" href="academie.html" onClick={() => setMobileOpen(false)}>Académie</a>
-      <a className="mob-link" href="brief.html" onClick={() => setMobileOpen(false)}>Déposer un brief</a>
-      <a className="mob-link" href="inscription.html" onClick={() => setMobileOpen(false)}>Devenir expert</a>
-      <div className="mob-divider"/>
-      <div className="mob-ctas">
-        <a href="connexion.html" className="btn btn-outline" onClick={() => setMobileOpen(false)}>Se connecter</a>
-        <a href="brief.html" className="btn btn-primary" onClick={() => setMobileOpen(false)}>Démarrer <Ic.Arrow /></a>
-      </div>
-    </div>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: `nav ${stuck ? 'stuck' : ''}`,
+    onClick: e => {
+      if (e.target === e.currentTarget) setOpenMenu(null);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      backgroundImage: "url('/logo.jpg')"
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "nav-menu",
+    onMouseLeave: () => setOpenMenu(null)
+  }, ['plateforme', 'ressources'].map(key => /*#__PURE__*/React.createElement("div", {
+    className: "nav-item",
+    key: key,
+    onMouseEnter: () => setOpenMenu(key)
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `nav-link ${openMenu === key ? 'open' : ''}`
+  }, key.charAt(0).toUpperCase() + key.slice(1), " ", /*#__PURE__*/React.createElement(Ic.Chevron, null)), /*#__PURE__*/React.createElement("div", {
+    className: `mega ${openMenu === key ? 'open' : ''}`
+  }, menus[key].cols.map((col, ci) => /*#__PURE__*/React.createElement("div", {
+    className: "mega-col",
+    key: ci
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mega-col-title"
+  }, col.title), col.items.map((item, ii) => /*#__PURE__*/React.createElement("a", {
+    className: "mega-item",
+    href: item.href || '#',
+    key: ii,
+    onClick: () => setOpenMenu(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-icon"
+  }, item.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-text"
+  }, item.label), /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-sub"
+  }, item.sub)))))), /*#__PURE__*/React.createElement("div", {
+    className: "mega-col"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "mega-featured",
+    href: menus[key].featured.href || '#',
+    onClick: () => setOpenMenu(null),
+    style: {
+      display: 'block',
+      textDecoration: 'none',
+      color: 'inherit'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mega-featured-badge"
+  }, menus[key].featured.badge), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-title"
+  }, menus[key].featured.title), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-text"
+  }, menus[key].featured.text), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-link"
+  }, menus[key].featured.link)))))), /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "experts.html",
+    onClick: () => setOpenMenu(null)
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "academie.html",
+    onClick: () => setOpenMenu(null)
+  }, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-outline",
+    style: {
+      padding: '9px 18px',
+      fontSize: '13px',
+      borderRadius: '999px'
+    }
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: '13px'
+    }
+  }, "D\xE9marrer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("button", {
+    className: "mobile-toggle",
+    onClick: () => setMobileOpen(o => !o)
+  }, mobileOpen ? /*#__PURE__*/React.createElement(Ic.X, null) : /*#__PURE__*/React.createElement(Ic.Menu, null))))), /*#__PURE__*/React.createElement("div", {
+    className: `mobile-drawer ${mobileOpen ? 'open' : ''}`
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "experts.html",
+    onClick: () => setMobileOpen(false)
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "academie.html",
+    onClick: () => setMobileOpen(false)
+  }, "Acad\xE9mie"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "brief.html",
+    onClick: () => setMobileOpen(false)
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "inscription.html",
+    onClick: () => setMobileOpen(false)
+  }, "Devenir expert"), /*#__PURE__*/React.createElement("div", {
+    className: "mob-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mob-ctas"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-outline",
+    onClick: () => setMobileOpen(false)
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary",
+    onClick: () => setMobileOpen(false)
+  }, "D\xE9marrer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
 }
 
 /* ── Hero ── */
 function Hero() {
-  const tickers = ['GPT-4 & Claude','LangChain','Automatisation','Chatbots','Agents IA','RAG','Vision par ordinateur','NLP','Fine-tuning','Vectorisation','Make & n8n','Voiceflow','Notion AI','Midjourney','Stable Diffusion'];
-  const [counts, setCounts] = useState({ experts: 0, articles: 0 });
+  const tickers = ['GPT-4 & Claude', 'LangChain', 'Automatisation', 'Chatbots', 'Agents IA', 'RAG', 'Vision par ordinateur', 'NLP', 'Fine-tuning', 'Vectorisation', 'Make & n8n', 'Voiceflow', 'Notion AI', 'Midjourney', 'Stable Diffusion'];
+  const [counts, setCounts] = useState({
+    experts: 0,
+    articles: 0
+  });
   useEffect(() => {
-    Promise.all([
-      sb.from('experts').select('*', { count: 'exact', head: true }).eq('statut', 'approved'),
-      sb.from('blog_articles').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-    ]).then(([{ count: ec }, { count: ac }]) => {
-      setCounts({ experts: ec ?? 0, articles: ac ?? 0 });
+    Promise.all([sb.from('experts').select('*', {
+      count: 'exact',
+      head: true
+    }).eq('statut', 'approved'), sb.from('blog_articles').select('*', {
+      count: 'exact',
+      head: true
+    }).eq('status', 'published')]).then(([{
+      count: ec
+    }, {
+      count: ac
+    }]) => {
+      setCounts({
+        experts: ec ?? 0,
+        articles: ac ?? 0
+      });
     }).catch(() => {});
   }, []);
-
-  const IcShield = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-  const IcClock  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>;
-  const IcLock   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
-  const IcThumb  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>;
-
-  const stats = [
-    { n:24,  s:'h',    l:'Réponse garantie',  href:null },
-    counts.articles > 0 ? { n:counts.articles, s:'+', l:'Articles publiés',  href:'blog.html' } : { n:28, s:'+', l:'Articles publiés',  href:'blog.html' },
-    { n:100, s:'%',    l:'Experts vérifiés',  href:'experts.html' },
-    { n:3,   s:' min', l:'Pour démarrer',     href:null },
-  ];
-
-  return (
-    <React.Fragment>
-    <section className="hero">
-      {/* ── FULL-BLEED BACKGROUND ── */}
-      <div className="hero-bg">
-        <div className="hero-yt-wrap">
-          <iframe
-            src={"https://www.youtube-nocookie.com/embed/aV2mzPdG3Y8?autoplay=1&mute=1&loop=1&playlist=aV2mzPdG3Y8&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1"}
-            allow="autoplay; encrypted-media"
-            allowFullScreen={true}
-          />
-        </div>
-        <div className="hero-bg-orb a" />
-        <div className="hero-bg-orb b" />
-        <div className="hero-bg-fade" />
-      </div>
-      {/* ── TEXT OVERLAID ON LEFT ── */}
-      <div className="wrap">
-        <div className="hero-content">
-          <h1 className="hero-title">
-            L'expertise IA.<br/>Au service de<br/><span className="grad">vos ambitions.</span>
-          </h1>
-          <p className="hero-sub">
-            Trouvez l'expert idéal pour transformer vos idées en résultats concrets. Matching personnalisé, paiement sécurisé.
-          </p>
-          <div className="hero-ctas">
-            <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Rocket/>Déposer mon projet<Ic.Arrow/></a>
-            <a href="#how" className="btn btn-ghost btn-lg">Voir comment ça marche</a>
-          </div>
-          <div className="hero-trust">
-            <div className="hero-trust-item"><IcClock/><span><strong>Réponse</strong> sous 24h</span></div>
-            <div className="hero-trust-item"><IcShield/><span><strong>Experts</strong> vérifiés</span></div>
-            <div className="hero-trust-item"><IcLock/><span><strong>Paiement</strong> sécurisé</span></div>
-            <div className="hero-trust-item"><IcThumb/><span><strong>Satisfait</strong> ou remboursé</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div className="marquee">
-        <div className="marquee-track">
-          {[...tickers,...tickers].map((t,i)=><div className="marquee-item" key={i}><span className="dot"/>{t}</div>)}
-        </div>
-      </div>
-    </section>
-    </React.Fragment>
-  );
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  const IcThumb = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+  }));
+  const stats = [{
+    n: 24,
+    s: 'h',
+    l: 'Réponse garantie',
+    href: null
+  }, counts.articles > 0 ? {
+    n: counts.articles,
+    s: '+',
+    l: 'Articles publiés',
+    href: 'blog.html'
+  } : {
+    n: 28,
+    s: '+',
+    l: 'Articles publiés',
+    href: 'blog.html'
+  }, {
+    n: 100,
+    s: '%',
+    l: 'Experts vérifiés',
+    href: 'experts.html'
+  }, {
+    n: 3,
+    s: ' min',
+    l: 'Pour démarrer',
+    href: null
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("section", {
+    className: "hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-yt-wrap"
+  }, /*#__PURE__*/React.createElement("iframe", {
+    src: "https://www.youtube-nocookie.com/embed/aV2mzPdG3Y8?autoplay=1&mute=1&loop=1&playlist=aV2mzPdG3Y8&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1",
+    allow: "autoplay; encrypted-media",
+    allowFullScreen: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-orb a"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-orb b"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-fade"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-content"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "hero-title"
+  }, "L'expertise IA.", /*#__PURE__*/React.createElement("br", null), "Au service de", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    className: "grad"
+  }, "vos ambitions.")), /*#__PURE__*/React.createElement("p", {
+    className: "hero-sub"
+  }, "Trouvez l'expert id\xE9al pour transformer vos id\xE9es en r\xE9sultats concrets. Matching personnalis\xE9, paiement s\xE9curis\xE9."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-ctas"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg"
+  }, /*#__PURE__*/React.createElement(Ic.Rocket, null), "D\xE9poser mon projet", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "#how",
+    className: "btn btn-ghost btn-lg"
+  }, "Voir comment \xE7a marche")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcClock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "R\xE9ponse"), " sous 24h")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcShield, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Experts"), " v\xE9rifi\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcLock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Paiement"), " s\xE9curis\xE9")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcThumb, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Satisfait"), " ou rembours\xE9"))))), /*#__PURE__*/React.createElement("div", {
+    className: "marquee"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "marquee-track"
+  }, [...tickers, ...tickers].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: "marquee-item",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "dot"
+  }), t))))));
 }
-
-
 
 /* ── Trusted By ── */
 function TrustedBy() {
-  const tools = [
-    {dot:'#10B981',name:'OpenAI / GPT-4', url:null},
-    {dot:'#7C3AED',name:'LangChain',       url:null},
-    {dot:'#06B6D4',name:'Make',             url:'https://www.make.com/en/register?pc=creatorflow'},
-    {dot:'#F59E0B',name:'n8n',              url:null},
-    {dot:'#EC4899',name:'ElevenLabs',       url:'https://try.elevenlabs.io/o65ftyg9a7x1'},
-    {dot:'#3B82F6',name:'HubSpot',          url:null},
-    {dot:'#6366F1',name:'Notion AI',        url:null},
-    {dot:'#F97316',name:'Midjourney',       url:null},
-    {dot:'#10B981',name:'Supabase',         url:null},
-    {dot:'#8B5CF6',name:'Anthropic Claude', url:null},
-  ];
-  return (
-    <div className="trust-bar">
-      <div className="wrap">
-        <div className="trust-label">Nos experts maîtrisent les meilleurs outils du marché</div>
-        <div className="trust-logos">
-          {tools.map((t,i)=> t.url
-            ? <a className="trust-pill" key={i} href={t.url} target="_blank" rel="noopener noreferrer sponsored">
-                <span className="trust-pill-dot" style={{background:t.dot}}/>
-                {t.name}
-              </a>
-            : <div className="trust-pill" key={i}>
-                <span className="trust-pill-dot" style={{background:t.dot}}/>
-                {t.name}
-              </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const tools = [{
+    dot: '#10B981',
+    name: 'OpenAI / GPT-4',
+    url: null
+  }, {
+    dot: '#7C3AED',
+    name: 'LangChain',
+    url: null
+  }, {
+    dot: '#06B6D4',
+    name: 'Make',
+    url: 'https://www.make.com/en/register?pc=creatorflow'
+  }, {
+    dot: '#F59E0B',
+    name: 'n8n',
+    url: null
+  }, {
+    dot: '#EC4899',
+    name: 'ElevenLabs',
+    url: 'https://try.elevenlabs.io/o65ftyg9a7x1'
+  }, {
+    dot: '#3B82F6',
+    name: 'HubSpot',
+    url: null
+  }, {
+    dot: '#6366F1',
+    name: 'Notion AI',
+    url: null
+  }, {
+    dot: '#F97316',
+    name: 'Midjourney',
+    url: null
+  }, {
+    dot: '#10B981',
+    name: 'Supabase',
+    url: null
+  }, {
+    dot: '#8B5CF6',
+    name: 'Anthropic Claude',
+    url: null
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "trust-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "trust-label"
+  }, "Nos experts ma\xEEtrisent les meilleurs outils du march\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "trust-logos"
+  }, tools.map((t, i) => t.url ? /*#__PURE__*/React.createElement("a", {
+    className: "trust-pill",
+    key: i,
+    href: t.url,
+    target: "_blank",
+    rel: "noopener noreferrer sponsored"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "trust-pill-dot",
+    style: {
+      background: t.dot
+    }
+  }), t.name) : /*#__PURE__*/React.createElement("div", {
+    className: "trust-pill",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "trust-pill-dot",
+    style: {
+      background: t.dot
+    }
+  }), t.name)))));
 }
 
 /* ── Guarantee Strip ── */
 function GuaranteeStrip() {
-  const IcShield = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-  const IcClock  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>;
-  const IcLock   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
-  const IcThumb  = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>;
-  return (
-    <div className="guar-strip">
-      <div className="guar-item"><IcShield/><span><strong>Experts certifiés</strong> · Validés par l'Académie</span></div>
-      <div className="guar-item"><IcClock/><span><strong>Réponse sous 24h</strong> · Garanti</span></div>
-      <div className="guar-item"><IcLock/><span><strong>Paiement sécurisé</strong> · Stripe</span></div>
-      <div className="guar-item"><IcThumb/><span><strong>Satisfait ou remboursé</strong> · Sans question</span></div>
-    </div>
-  );
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  const IcThumb = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+  }));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "guar-strip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcShield, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Experts certifi\xE9s"), " \xB7 Valid\xE9s par l'Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcClock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "R\xE9ponse sous 24h"), " \xB7 Garanti")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcLock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Paiement s\xE9curis\xE9"), " \xB7 Stripe")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcThumb, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Satisfait ou rembours\xE9"), " \xB7 Sans question")));
 }
 
 /* ── Platform Preview ── */
 function PlatformPreview() {
-  return (
-    <section className="preview">
-      <div className="preview-shell">
-        <Rv>
-          <div className="preview-frame">
-            <div className="preview-bar">
-              <div className="pbar-dots"><span/><span/><span/></div>
-              <div className="pbar-url">app.creatorflow.ai/hub/match</div>
-              <div style={{width:44}}/>
-            </div>
-            <div className="preview-body">
-              <aside className="preview-side">
-                <div className="side-section">Mon espace</div>
-                {['Tableau de bord','Trouver un expert','Mes projets','Messages'].map((t,i)=>(
-                  <div className={`side-item ${i===1?'on':''}`} key={i}><span className="d"/>{t}</div>
-                ))}
-                <div className="side-section">Outils</div>
-                {['Briefs','Contrats','Facturation'].map((t,i)=>(
-                  <div className="side-item" key={i}><span className="d"/>{t}</div>
-                ))}
-              </aside>
-              <div className="preview-main">
-                <div className="preview-head">
-                  <div className="preview-title">
-                    Résultats de matching
-                    <span className="live-badge"><span className="live-dot"/>En direct</span>
-                  </div>
-                </div>
-                <div className="preview-search">
-                  <Ic.Search style={{color:'var(--text-3)',flexShrink:0}}/>
-                  <span>Agent IA pour service client e-commerce</span>
-                  <span className="caret"/>
-                </div>
-                <div className="p-results">
-                  {[
-                    {ph:PHOTO.amelie,name:'Expert Agents IA',role:'LangChain & RAG · Certifié',match:'98%',rate:'95$'},
-                    {ph:PHOTO.julien,name:'Expert Formation IA',role:'Formateur certifié · Certifié',match:'94%',rate:'120$'},
-                    {ph:PHOTO.sarah,name:'Consultante Stratégie IA',role:'Audit & Roadmap · Certifiée',match:'91%',rate:'180$'},
-                  ].map((r,i)=>(
-                    <div className="p-result" key={i}>
-                      <div className="p-avt"><img src={r.ph} alt=""/></div>
-                      <div><div className="p-name">{r.name}</div><div className="p-role">{r.role}</div></div>
-                      <div className="p-match">{r.match} match</div>
-                      <div className="p-rate">{r.rate}<small>/h</small></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="preview-notif">
-            <div className="notif-icon"><Ic.Sparkle/></div>
-            <div>
-              <div className="notif-title">Nouveau match</div>
-              <div className="notif-text">3 experts correspondent à votre brief. Réponse moy. : 4h.</div>
-            </div>
-          </div>
-          <div className="preview-orbits">
-            <div className="o-avatar o1"><img src={PHOTO.extra1} alt=""/></div>
-            <div className="o-avatar o2"><img src={PHOTO.extra2} alt=""/></div>
-            <div className="o-avatar o3"><img src={PHOTO.extra3} alt=""/></div>
-            <div className="preview-overlay">
-              <div className="preview-overlay-badge">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                Aperçu de la plateforme · Non interactif
-              </div>
-            </div>
-          </div>
-        </Rv>
-      </div>
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    className: "preview"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-shell"
+  }, /*#__PURE__*/React.createElement(Rv, null, /*#__PURE__*/React.createElement("div", {
+    className: "preview-frame"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pbar-dots"
+  }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null)), /*#__PURE__*/React.createElement("div", {
+    className: "pbar-url"
+  }, "app.creatorflow.ai/hub/match"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 44
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "preview-body"
+  }, /*#__PURE__*/React.createElement("aside", {
+    className: "preview-side"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "side-section"
+  }, "Mon espace"), ['Tableau de bord', 'Trouver un expert', 'Mes projets', 'Messages'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: `side-item ${i === 1 ? 'on' : ''}`,
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "d"
+  }), t)), /*#__PURE__*/React.createElement("div", {
+    className: "side-section"
+  }, "Outils"), ['Briefs', 'Contrats', 'Facturation'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: "side-item",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "d"
+  }), t))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-title"
+  }, "R\xE9sultats de matching", /*#__PURE__*/React.createElement("span", {
+    className: "live-badge"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "live-dot"
+  }), "En direct"))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-search"
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "Agent IA pour service client e-commerce"), /*#__PURE__*/React.createElement("span", {
+    className: "caret"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "p-results"
+  }, [{
+    ph: PHOTO.amelie,
+    name: 'Expert Agents IA',
+    role: 'LangChain & RAG · Certifié',
+    match: '98%',
+    rate: '95$'
+  }, {
+    ph: PHOTO.julien,
+    name: 'Expert Formation IA',
+    role: 'Formateur certifié · Certifié',
+    match: '94%',
+    rate: '120$'
+  }, {
+    ph: PHOTO.sarah,
+    name: 'Consultante Stratégie IA',
+    role: 'Audit & Roadmap · Certifiée',
+    match: '91%',
+    rate: '180$'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    className: "p-result",
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-avt"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: r.ph,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "p-name"
+  }, r.name), /*#__PURE__*/React.createElement("div", {
+    className: "p-role"
+  }, r.role)), /*#__PURE__*/React.createElement("div", {
+    className: "p-match"
+  }, r.match, " match"), /*#__PURE__*/React.createElement("div", {
+    className: "p-rate"
+  }, r.rate, /*#__PURE__*/React.createElement("small", null, "/h")))))))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-notif"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Sparkle, null)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "notif-title"
+  }, "Nouveau match"), /*#__PURE__*/React.createElement("div", {
+    className: "notif-text"
+  }, "3 experts correspondent \xE0 votre brief. R\xE9ponse moy. : 4h."))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-orbits"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra1,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o2"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra2,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o3"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra3,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "preview-overlay"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-overlay-badge"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  })), "Aper\xE7u de la plateforme \xB7 Non interactif"))))));
 }
 
 /* ── How it works ── */
 function HowItWorks() {
   const [mode, setMode] = useState('entreprises');
   const steps = {
-    entreprises: [
-      {icon:<Ic.Search/>,title:'Décrivez votre besoin',text:'Briefing rapide en 3 minutes. Notre IA structure votre besoin et identifie les compétences requises.'},
-      {icon:<Ic.Match/>,title:'Recevez des profils',text:'Sous 24h, 3 à 5 experts certifiés avec portfolios, tarifs et disponibilités. Comparez sereinement.'},
-      {icon:<Ic.Rocket/>,title:'Lancez votre projet',text:'Échangez, choisissez, signez en ligne. Paiement sécurisé via la plateforme, satisfait ou remboursé.'},
-    ],
-    experts: [
-      {icon:<Ic.User/>,title:'Créez votre profil',text:'Compétences, projets, certifications CreatorFlow Market. Profil validé par notre équipe en 48h.'},
-      {icon:<Ic.Bell/>,title:'Recevez des missions',text:'Des opportunités ciblées arrivent dans votre espace. Candidatez en un clic, sans démarchage.'},
-      {icon:<Ic.TrendUp/>,title:'Développez votre activité',text:'Facturation, contrats, suivi de mission. Concentrez-vous sur la valeur — on gère l\'administratif.'},
-    ],
+    entreprises: [{
+      icon: /*#__PURE__*/React.createElement(Ic.Search, null),
+      title: 'Décrivez votre besoin',
+      text: 'Briefing rapide en 3 minutes. Notre IA structure votre besoin et identifie les compétences requises.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+      title: 'Recevez des profils',
+      text: 'Sous 24h, 3 à 5 experts certifiés avec portfolios, tarifs et disponibilités. Comparez sereinement.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+      title: 'Lancez votre projet',
+      text: 'Échangez, choisissez, signez en ligne. Paiement sécurisé via la plateforme, satisfait ou remboursé.'
+    }],
+    experts: [{
+      icon: /*#__PURE__*/React.createElement(Ic.User, null),
+      title: 'Créez votre profil',
+      text: 'Compétences, projets, certifications CreatorFlow Market. Profil validé par notre équipe en 48h.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+      title: 'Recevez des missions',
+      text: 'Des opportunités ciblées arrivent dans votre espace. Candidatez en un clic, sans démarchage.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.TrendUp, null),
+      title: 'Développez votre activité',
+      text: 'Facturation, contrats, suivi de mission. Concentrez-vous sur la valeur — on gère l\'administratif.'
+    }]
   };
-  return (
-    <section id="how" className="pad">
-      <div className="wrap">
-        <Rv className="sh c">
-          <span className="eyebrow">Comment ça marche</span>
-          <h2 className="sh-title">Trois étapes. <em>Aucune friction.</em></h2>
-          <p className="sh-sub">Que vous cherchiez un expert ou proposiez vos services, le parcours est conçu pour aller à l'essentiel.</p>
-        </Rv>
-        <Rv style={{display:'flex',justifyContent:'center'}}>
-          <div className="toggle">
-            <button className={mode==='entreprises'?'on':''} onClick={()=>setMode('entreprises')}>Pour les entreprises</button>
-            <button className={mode==='experts'?'on':''} onClick={()=>setMode('experts')}>Pour les experts</button>
-          </div>
-        </Rv>
-        <div className="steps" style={{marginTop:8}}>
-          {steps[mode].map((s,i)=>(
-            <Rv key={`${mode}-${i}`} delay={i*90} className="step" onMouseMove={e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',`${e.clientX-r.left}px`);e.currentTarget.style.setProperty('--my',`${e.clientY-r.top}px`);}}>
-              <div className="step-num">ÉTAPE {String(i+1).padStart(2,'0')}</div>
-              <div className="step-icon">{s.icon}</div>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
-            </Rv>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    id: "how",
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh c"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Comment \xE7a marche"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Trois \xE9tapes. ", /*#__PURE__*/React.createElement("em", null, "Aucune friction.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Que vous cherchiez un expert ou proposiez vos services, le parcours est con\xE7u pour aller \xE0 l'essentiel.")), /*#__PURE__*/React.createElement(Rv, {
+    style: {
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: mode === 'entreprises' ? 'on' : '',
+    onClick: () => setMode('entreprises')
+  }, "Pour les entreprises"), /*#__PURE__*/React.createElement("button", {
+    className: mode === 'experts' ? 'on' : '',
+    onClick: () => setMode('experts')
+  }, "Pour les experts"))), /*#__PURE__*/React.createElement("div", {
+    className: "steps",
+    style: {
+      marginTop: 8
+    }
+  }, steps[mode].map((s, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: `${mode}-${i}`,
+    delay: i * 90,
+    className: "step",
+    onMouseMove: e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-num"
+  }, "\xC9TAPE ", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    className: "step-icon"
+  }, s.icon), /*#__PURE__*/React.createElement("h3", null, s.title), /*#__PURE__*/React.createElement("p", null, s.text))))));
 }
 
 /* ── Categories ── */
 function Categories() {
-  const IcVideo = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>;
-  const IcCode  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>;
-  const IcBrand = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>;
-  const cats = [
-    {icon:<Ic.Bot/>,    name:'Agents IA',          a:'#7C3AED', b:'#9333EA', href:'experts.html?cat=agents-ia'},
-    {icon:<Ic.Rocket/>, name:'Automatisation',      a:'#06B6D4', b:'#0891B2', href:'experts.html?cat=automatisation'},
-    {icon:<Ic.Match/>,  name:'Chatbots',            a:'#10B981', b:'#059669', href:'experts.html?cat=chatbots'},
-    {icon:<IcCode/>,    name:'Développement IA',    a:'#9333EA', b:'#7C3AED', href:'experts.html?cat=developpement-ia'},
-    {icon:<Ic.Pen/>,    name:'Prompt Engineering',  a:'#F59E0B', b:'#D97706', href:'experts.html?cat=prompt-engineering'},
-    {icon:<IcVideo/>,   name:'Montage vidéo IA',    a:'#EC4899', b:'#DB2777', href:'experts.html?cat=montage-video'},
-    {icon:<IcBrand/>,   name:'Branding IA',         a:'#F97316', b:'#EA580C', href:'experts.html?cat=branding-ia'},
-    {icon:<Ic.Grad/>,   name:'Formation IA',        a:'#3B82F6', b:'#2563EB', href:'academie.html'},
-  ];
-  return (
-    <section className="pad-sm">
-      <div className="wrap">
-        <Rv className="sh">
-          <span className="eyebrow">Explorer les catégories</span>
-          <h2 className="sh-title">Trouvez l'expertise <em>qu'il vous faut.</em></h2>
-          <p className="sh-sub">8 domaines d'expertise IA. Choisissez votre catégorie et matchez en quelques minutes.</p>
-        </Rv>
-        <div className="cat-grid">
-          {cats.map((c,i) => (
-            <Rv key={i} delay={i*50} className="cat-card"
-              style={{'--cat-a':c.a,'--cat-b':c.b}}
-              onMouseMove={onTilt} onMouseLeave={offTilt}
-              onClick={() => window.location.href = c.href}
-              role="link" tabIndex={0}
-              onKeyDown={e => e.key==='Enter' && (window.location.href = c.href)}>
-              <div className="cat-ico">{c.icon}</div>
-              <div className="cat-name">{c.name}</div>
-              <div className="cat-arr"><Ic.Arrow/></div>
-            </Rv>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const IcVideo = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "23 7 16 12 23 17 23 7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "1",
+    y: "5",
+    width: "15",
+    height: "14",
+    rx: "2"
+  }));
+  const IcCode = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("polyline", {
+    points: "16 18 22 12 16 6"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "8 6 2 12 8 18"
+  }));
+  const IcBrand = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8 12h8M12 8v8"
+  }));
+  const cats = [{
+    icon: /*#__PURE__*/React.createElement(Ic.Bot, null),
+    name: 'Agents IA',
+    a: '#7C3AED',
+    b: '#9333EA',
+    href: 'experts.html?cat=agents-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+    name: 'Automatisation',
+    a: '#06B6D4',
+    b: '#0891B2',
+    href: 'experts.html?cat=automatisation'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+    name: 'Chatbots',
+    a: '#10B981',
+    b: '#059669',
+    href: 'experts.html?cat=chatbots'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcCode, null),
+    name: 'Développement IA',
+    a: '#9333EA',
+    b: '#7C3AED',
+    href: 'experts.html?cat=developpement-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+    name: 'Prompt Engineering',
+    a: '#F59E0B',
+    b: '#D97706',
+    href: 'experts.html?cat=prompt-engineering'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcVideo, null),
+    name: 'Montage vidéo IA',
+    a: '#EC4899',
+    b: '#DB2777',
+    href: 'experts.html?cat=montage-video'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcBrand, null),
+    name: 'Branding IA',
+    a: '#F97316',
+    b: '#EA580C',
+    href: 'experts.html?cat=branding-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+    name: 'Formation IA',
+    a: '#3B82F6',
+    b: '#2563EB',
+    href: 'academie.html'
+  }];
+  return /*#__PURE__*/React.createElement("section", {
+    className: "pad-sm"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Explorer les cat\xE9gories"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Trouvez l'expertise ", /*#__PURE__*/React.createElement("em", null, "qu'il vous faut.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "8 domaines d'expertise IA. Choisissez votre cat\xE9gorie et matchez en quelques minutes.")), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, cats.map((c, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: i,
+    delay: i * 50,
+    className: "cat-card",
+    style: {
+      '--cat-a': c.a,
+      '--cat-b': c.b
+    },
+    onMouseMove: onTilt,
+    onMouseLeave: offTilt,
+    onClick: () => window.location.href = c.href,
+    role: "link",
+    tabIndex: 0,
+    onKeyDown: e => e.key === 'Enter' && (window.location.href = c.href)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-ico"
+  }, c.icon), /*#__PURE__*/React.createElement("div", {
+    className: "cat-name"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "cat-arr"
+  }, /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
 }
 
 /* ── Expertise ── */
 function Expertise() {
   const TAG_LINKS = {
-    'Make':       {href:'https://www.make.com/en/register?pc=creatorflow',  ext:true,  affil:true},
-    'n8n':        {href:'https://n8n.io/?ref=creatorflow',                  ext:true,  affil:true},
-    'LangChain':  {href:'https://python.langchain.com/docs/introduction/',   ext:true,  affil:false},
-    'Workshops':  {href:'academie.html',                                     ext:false, affil:false},
-    'Coaching':   {href:'inscription.html',                                  ext:false, affil:false},
-    'Audit':      {href:'brief.html',                                        ext:false, affil:false},
-    'Roadmap':    {href:'brief.html',                                        ext:false, affil:false},
-    'Copy':       {href:'https://www.jasper.ai/?fpr=creatorflow',            ext:true,  affil:true},
-    'Visuel':     {href:'https://www.canva.com/?ref=creatorflow',            ext:true,  affil:true},
-    'Vidéo':      {href:'https://www.descript.com/?ref=creatorflow',         ext:true,  affil:true},
-    'ML':         {href:'brief.html',                                        ext:false, affil:false},
-    'Predictive': {href:'brief.html',                                        ext:false, affil:false},
-    'Santé':      {href:'experts.html?secteur=sante',                        ext:false, affil:false},
-    'Finance':    {href:'experts.html?secteur=finance',                      ext:false, affil:false},
-    'E-com':      {href:'experts.html?secteur=ecommerce',                    ext:false, affil:false},
-    '+27':        {href:'experts.html',                                      ext:false, affil:false},
+    'Make': {
+      href: 'https://www.make.com/en/register?pc=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'n8n': {
+      href: 'https://n8n.io/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'LangChain': {
+      href: 'https://python.langchain.com/docs/introduction/',
+      ext: true,
+      affil: false
+    },
+    'Workshops': {
+      href: 'academie.html',
+      ext: false,
+      affil: false
+    },
+    'Coaching': {
+      href: 'inscription.html',
+      ext: false,
+      affil: false
+    },
+    'Audit': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Roadmap': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Copy': {
+      href: 'https://www.jasper.ai/?fpr=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'Visuel': {
+      href: 'https://www.canva.com/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'Vidéo': {
+      href: 'https://www.descript.com/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'ML': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Predictive': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Santé': {
+      href: 'experts.html?secteur=sante',
+      ext: false,
+      affil: false
+    },
+    'Finance': {
+      href: 'experts.html?secteur=finance',
+      ext: false,
+      affil: false
+    },
+    'E-com': {
+      href: 'experts.html?secteur=ecommerce',
+      ext: false,
+      affil: false
+    },
+    '+27': {
+      href: 'experts.html',
+      ext: false,
+      affil: false
+    }
   };
-  const cards = [
-    {icon:<Ic.Bot/>,    title:"Implémentation d'outils IA", text:'Automatisation de workflows, chatbots conversationnels, agents autonomes intégrés à vos systèmes.', tags:['Make','n8n','LangChain'], href:'brief.html?domaine=implementation', feat:true},
-    {icon:<Ic.Grad/>,   title:'Formation des équipes',      text:'Programmes sur mesure pour faire monter vos collaborateurs en compétence sur les outils IA.',        tags:['Workshops','Coaching'],     href:'brief.html?domaine=formation'},
-    {icon:<Ic.Compass/>,title:'Stratégie & conseil',        text:'Roadmap de transformation IA, audit des cas d\'usage, accompagnement au changement.',                 tags:['Audit','Roadmap'],          href:'brief.html?domaine=strategie'},
-    {icon:<Ic.Pen/>,    title:'Création de contenu IA',     text:'Production à l\'échelle : copywriting, visuel, vidéo. Workflows IA pour équipes marketing.',          tags:['Copy','Visuel','Vidéo'],    href:'brief.html?domaine=contenu'},
-    {icon:<Ic.Chart/>,  title:'Analyse de données & IA',    text:'Modèles prédictifs, scoring, dashboards augmentés. Tirez parti de vos données avec l\'IA.',          tags:['ML','Predictive'],          href:'brief.html?domaine=data'},
-    {icon:<Ic.Layers/>, title:'IA par secteur',              text:'Solutions verticales pour santé, finance, e-commerce, RH, éducation et bien plus encore.',           tags:['Santé','Finance','E-com','+27'], href:'brief.html?domaine=secteur'},
-  ];
-  return (
-    <section id="domaines" className="pad">
-      <div className="wrap">
-        <Rv className="sh">
-          <span className="eyebrow">Nos domaines d'expertise</span>
-          <h2 className="sh-title">Couverture complète, <em>de la stratégie à l'exécution.</em></h2>
-          <p className="sh-sub">Six grands domaines, 30+ verticales. Nos experts couvrent l'ensemble du cycle de transformation IA.</p>
-        </Rv>
-        <div className="exp-grid">
-          {cards.map((c,i)=>(
-            <Rv key={i} delay={i*55} className={`exp-card ${c.feat?'feat':''}`}
-              onClick={() => window.location.href = c.href}
-              onMouseMove={e=>{const r=e.currentTarget.getBoundingClientRect();e.currentTarget.style.setProperty('--mx',`${e.clientX-r.left}px`);e.currentTarget.style.setProperty('--my',`${e.clientY-r.top}px`);}}>
-              <div>
-                <div className="exp-icon">{c.icon}</div>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-              </div>
-              <div className="tags">
-                {c.tags.map(t => {
-                  const info = TAG_LINKS[t];
-                  if (!info) return <span className="tag" key={t}>{t}</span>;
-                  return (
-                    <a key={t} href={info.href} className="tag"
-                      target={info.ext ? '_blank' : '_self'}
-                      rel={info.affil ? 'noopener sponsored' : info.ext ? 'noopener noreferrer' : undefined}
-                      onClick={e => e.stopPropagation()}>
-                      {t}
-                    </a>
-                  );
-                })}
-              </div>
-            </Rv>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const cards = [{
+    icon: /*#__PURE__*/React.createElement(Ic.Bot, null),
+    title: "Implémentation d'outils IA",
+    text: 'Automatisation de workflows, chatbots conversationnels, agents autonomes intégrés à vos systèmes.',
+    tags: ['Make', 'n8n', 'LangChain'],
+    href: 'brief.html?domaine=implementation',
+    feat: true
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+    title: 'Formation des équipes',
+    text: 'Programmes sur mesure pour faire monter vos collaborateurs en compétence sur les outils IA.',
+    tags: ['Workshops', 'Coaching'],
+    href: 'brief.html?domaine=formation'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Compass, null),
+    title: 'Stratégie & conseil',
+    text: 'Roadmap de transformation IA, audit des cas d\'usage, accompagnement au changement.',
+    tags: ['Audit', 'Roadmap'],
+    href: 'brief.html?domaine=strategie'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+    title: 'Création de contenu IA',
+    text: 'Production à l\'échelle : copywriting, visuel, vidéo. Workflows IA pour équipes marketing.',
+    tags: ['Copy', 'Visuel', 'Vidéo'],
+    href: 'brief.html?domaine=contenu'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Chart, null),
+    title: 'Analyse de données & IA',
+    text: 'Modèles prédictifs, scoring, dashboards augmentés. Tirez parti de vos données avec l\'IA.',
+    tags: ['ML', 'Predictive'],
+    href: 'brief.html?domaine=data'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Layers, null),
+    title: 'IA par secteur',
+    text: 'Solutions verticales pour santé, finance, e-commerce, RH, éducation et bien plus encore.',
+    tags: ['Santé', 'Finance', 'E-com', '+27'],
+    href: 'brief.html?domaine=secteur'
+  }];
+  return /*#__PURE__*/React.createElement("section", {
+    id: "domaines",
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Nos domaines d'expertise"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Couverture compl\xE8te, ", /*#__PURE__*/React.createElement("em", null, "de la strat\xE9gie \xE0 l'ex\xE9cution.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Six grands domaines, 30+ verticales. Nos experts couvrent l'ensemble du cycle de transformation IA.")), /*#__PURE__*/React.createElement("div", {
+    className: "exp-grid"
+  }, cards.map((c, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: i,
+    delay: i * 55,
+    className: `exp-card ${c.feat ? 'feat' : ''}`,
+    onClick: () => window.location.href = c.href,
+    onMouseMove: e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "exp-icon"
+  }, c.icon), /*#__PURE__*/React.createElement("h3", null, c.title), /*#__PURE__*/React.createElement("p", null, c.text)), /*#__PURE__*/React.createElement("div", {
+    className: "tags"
+  }, c.tags.map(t => {
+    const info = TAG_LINKS[t];
+    if (!info) return /*#__PURE__*/React.createElement("span", {
+      className: "tag",
+      key: t
+    }, t);
+    return /*#__PURE__*/React.createElement("a", {
+      key: t,
+      href: info.href,
+      className: "tag",
+      target: info.ext ? '_blank' : '_self',
+      rel: info.affil ? 'noopener sponsored' : info.ext ? 'noopener noreferrer' : undefined,
+      onClick: e => e.stopPropagation()
+    }, t);
+  })))))));
 }
 
 /* ── Experts ── */
 function Experts() {
-  const FALLBACK = [
-    {ph:PHOTO.amelie,name:'Expert Agents IA',role:'Spécialiste LangChain & RAG',bio:'Conçoit des agents autonomes et pipelines RAG pour PME. Disponible pour missions courtes et longues.',skills:['LangChain','OpenAI','Pinecone','Python'],rate:'95$',rating:null,rev:null},
-    {ph:PHOTO.julien,name:'Expert Formation IA',role:'Formateur IA pour équipes',bio:'Accompagne les équipes marketing et opérations dans leur montée en compétences IA.',skills:['ChatGPT','Notion AI','Make','Pédagogie'],rate:'120$',rating:null,rev:null},
-    {ph:PHOTO.sarah,name:'Consultante Stratégie IA',role:'Audit & Roadmap IA',bio:'Audit, roadmap et conduite du changement IA. Certifiée CreatorFlow Market Advanced.',skills:['Audit','Roadmap','Change mgmt'],rate:'180$',rating:null,rev:null},
-  ];
+  const FALLBACK = [{
+    ph: PHOTO.amelie,
+    name: 'Expert Agents IA',
+    role: 'Spécialiste LangChain & RAG',
+    bio: 'Conçoit des agents autonomes et pipelines RAG pour PME. Disponible pour missions courtes et longues.',
+    skills: ['LangChain', 'OpenAI', 'Pinecone', 'Python'],
+    rate: '95$',
+    rating: null,
+    rev: null
+  }, {
+    ph: PHOTO.julien,
+    name: 'Expert Formation IA',
+    role: 'Formateur IA pour équipes',
+    bio: 'Accompagne les équipes marketing et opérations dans leur montée en compétences IA.',
+    skills: ['ChatGPT', 'Notion AI', 'Make', 'Pédagogie'],
+    rate: '120$',
+    rating: null,
+    rev: null
+  }, {
+    ph: PHOTO.sarah,
+    name: 'Consultante Stratégie IA',
+    role: 'Audit & Roadmap IA',
+    bio: 'Audit, roadmap et conduite du changement IA. Certifiée CreatorFlow Market Advanced.',
+    skills: ['Audit', 'Roadmap', 'Change mgmt'],
+    rate: '180$',
+    rating: null,
+    rev: null
+  }];
   const [list, setList] = useState(FALLBACK);
   useEffect(() => {
-    Promise.all([
-      sb.from('experts').select('id,specialite,bio,competences,tarif_horaire,photo_url,note_moyenne,nb_avis').eq('statut','approved').limit(3),
-      sb.from('profiles').select('id,prenom,nom,photo_url'),
-    ]).then(([{data:exps},{data:profs}]) => {
+    Promise.all([sb.from('experts').select('id,specialite,bio,competences,tarif_horaire,photo_url,note_moyenne,nb_avis').eq('statut', 'approved').limit(3), sb.from('profiles').select('id,prenom,nom,photo_url')]).then(([{
+      data: exps
+    }, {
+      data: profs
+    }]) => {
       if (!exps || exps.length === 0) return;
-      const pm = {}; (profs||[]).forEach(p => { pm[p.id] = p; });
+      const pm = {};
+      (profs || []).forEach(p => {
+        pm[p.id] = p;
+      });
       setList(exps.map(e => {
         const p = pm[e.id] || {};
-        const n = ((p.prenom||'')+' '+(p.nom||'')).trim();
-        return {ph:e.photo_url||p.photo_url||PHOTO.extra1,name:n||'Expert IA',role:e.specialite||'Expert IA',bio:(e.bio||'').slice(0,140),skills:(e.competences||[]).slice(0,4),rate:e.tarif_horaire?e.tarif_horaire+'$':'Sur devis',rating:e.note_moyenne?e.note_moyenne.toFixed(1):null,rev:e.nb_avis||null};
+        const n = ((p.prenom || '') + ' ' + (p.nom || '')).trim();
+        return {
+          ph: e.photo_url || p.photo_url || PHOTO.extra1,
+          name: n || 'Expert IA',
+          role: e.specialite || 'Expert IA',
+          bio: (e.bio || '').slice(0, 140),
+          skills: (e.competences || []).slice(0, 4),
+          rate: e.tarif_horaire ? e.tarif_horaire + '$' : 'Sur devis',
+          rating: e.note_moyenne ? e.note_moyenne.toFixed(1) : null,
+          rev: e.nb_avis || null
+        };
       }));
-    }).catch(()=>{});
+    }).catch(() => {});
   }, []);
-  return (
-    <section id="experts" className="pad" style={{paddingTop:80}}>
-      <div className="wrap">
-        <Rv className="sh">
-          <span className="eyebrow">Profils experts</span>
-          <h2 className="sh-title">Des profils vérifiés, <em>prêts à démarrer.</em></h2>
-          <p className="sh-sub">Chaque expert est validé par l'académie. Compétences certifiées, références vérifiées, disponibilités à jour.</p>
-        </Rv>
-        <div className="experts-grid">
-          {list.map((e,i)=>(
-            <Rv delay={i*100} className="expert-card" key={i} onMouseMove={onTilt} onMouseLeave={offTilt}>
-              <div className="cert-badge"><Ic.Check/>Certifié</div>
-              <div className="exp-head">
-                <div className="exp-avt"><img src={e.ph} alt={e.name}/></div>
-                <div><div className="exp-name">{e.name}</div><div className="exp-role">{e.role}</div></div>
-              </div>
-              <p className="exp-bio">{e.bio}</p>
-              <div className="tags" style={{marginBottom:18}}>{e.skills.map(s=><span className="tag" key={s}>{s}</span>)}</div>
-              <div className="exp-foot">
-                <div className="exp-rate">{e.rate}<small>/heure</small></div>
-                {e.rating && <div className="exp-stars"><span className="s"><Ic.Star/></span>{e.rating}{e.rev && <span className="cnt">({e.rev})</span>}</div>}
-              </div>
-            </Rv>
-          ))}
-        </div>
-        <Rv className="experts-cta">
-          <a href="experts.html" className="btn btn-ghost btn-lg">Voir tous les experts<Ic.Arrow/></a>
-        </Rv>
-      </div>
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    id: "experts",
+    className: "pad",
+    style: {
+      paddingTop: 80
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Profils experts"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Des profils v\xE9rifi\xE9s, ", /*#__PURE__*/React.createElement("em", null, "pr\xEAts \xE0 d\xE9marrer.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Chaque expert est valid\xE9 par l'acad\xE9mie. Comp\xE9tences certifi\xE9es, r\xE9f\xE9rences v\xE9rifi\xE9es, disponibilit\xE9s \xE0 jour.")), /*#__PURE__*/React.createElement("div", {
+    className: "experts-grid"
+  }, list.map((e, i) => /*#__PURE__*/React.createElement(Rv, {
+    delay: i * 100,
+    className: "expert-card",
+    key: i,
+    onMouseMove: onTilt,
+    onMouseLeave: offTilt
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-badge"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Certifi\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "exp-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-avt"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: e.ph,
+    alt: e.name
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "exp-name"
+  }, e.name), /*#__PURE__*/React.createElement("div", {
+    className: "exp-role"
+  }, e.role))), /*#__PURE__*/React.createElement("p", {
+    className: "exp-bio"
+  }, e.bio), /*#__PURE__*/React.createElement("div", {
+    className: "tags",
+    style: {
+      marginBottom: 18
+    }
+  }, e.skills.map(s => /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    key: s
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "exp-foot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-rate"
+  }, e.rate, /*#__PURE__*/React.createElement("small", null, "/heure")), e.rating && /*#__PURE__*/React.createElement("div", {
+    className: "exp-stars"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "s"
+  }, /*#__PURE__*/React.createElement(Ic.Star, null)), e.rating, e.rev && /*#__PURE__*/React.createElement("span", {
+    className: "cnt"
+  }, "(", e.rev, ")")))))), /*#__PURE__*/React.createElement(Rv, {
+    className: "experts-cta"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Voir tous les experts", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
 }
 
 /* ── Testimonials ── */
@@ -1332,152 +2361,343 @@ function Testimonials() {
   const onM = e => {
     const c = e.currentTarget;
     const b = c.getBoundingClientRect();
-    c.style.setProperty('--mx', (e.clientX-b.left)+'px');
-    c.style.setProperty('--my', (e.clientY-b.top)+'px');
+    c.style.setProperty('--mx', e.clientX - b.left + 'px');
+    c.style.setProperty('--my', e.clientY - b.top + 'px');
   };
-  return (
-    <section className="pad">
-      <div className="wrap">
-        <Rv className="sh c">
-          <span className="eyebrow">Résultats mesurables</span>
-          <h2 className="sh-title">Ce que nos clients <em>obtiennent vraiment.</em></h2>
-          <p className="sh-sub">Chaque mission est suivie d'indicateurs clés. Voici ce que les équipes qui ont travaillé avec nos experts ont mesuré.</p>
-        </Rv>
-        <div className="results-grid">
-          <Rv className="result-card feat" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
-            <div className="result-metric accent">×4</div>
-            <div className="result-title">Gain de productivité support</div>
-            <div className="result-desc">Temps de traitement des tickets divisé par 4 en 6 semaines. Setup complet, équipe formée, documentation livrée.</div>
-            <span className="result-tag">E-commerce · Support client IA</span>
-            <div className="result-quote">L'expert a tout setup, formé l'équipe et documenté chaque étape. Résultat immédiat et durable.</div>
-          </Rv>
-          <Rv delay={100} className="result-card" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
-            <div className="result-metric">5j</div>
-            <div className="result-title">Du brief à l'expert sélectionné</div>
-            <div className="result-desc">Briefing le mardi, expert sélectionné le jeudi, kick-off le lundi. Zéro friction dans le processus.</div>
-            <span className="result-tag">Startup tech · Canada</span>
-            <div className="result-quote">Imbattable sur le délai de mise en relation.</div>
-          </Rv>
-          <Rv delay={200} className="result-card" onMouseMove={onM} onMouseLeave={e=>e.currentTarget.style.cssText=''}>
-            <div className="result-metric">Top 3%</div>
-            <div className="result-title">Qualité des profils proposés</div>
-            <div className="result-desc">Seuls les experts ayant passé la certification avancée et validé 3+ missions réelles accèdent au Hub.</div>
-            <span className="result-tag">Scale-up Santé · Québec</span>
-            <div className="result-quote">La qualité est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la différence.</div>
-          </Rv>
-        </div>
-      </div>
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh c"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "R\xE9sultats mesurables"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Ce que nos clients ", /*#__PURE__*/React.createElement("em", null, "obtiennent vraiment.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Chaque mission est suivie d'indicateurs cl\xE9s. Voici ce que les \xE9quipes qui ont travaill\xE9 avec nos experts ont mesur\xE9.")), /*#__PURE__*/React.createElement("div", {
+    className: "results-grid"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "result-card feat",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric accent"
+  }, "\xD74"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Gain de productivit\xE9 support"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Temps de traitement des tickets divis\xE9 par 4 en 6 semaines. Setup complet, \xE9quipe form\xE9e, documentation livr\xE9e."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "E-commerce \xB7 Support client IA"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "L'expert a tout setup, form\xE9 l'\xE9quipe et document\xE9 chaque \xE9tape. R\xE9sultat imm\xE9diat et durable.")), /*#__PURE__*/React.createElement(Rv, {
+    delay: 100,
+    className: "result-card",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric"
+  }, "5j"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Du brief \xE0 l'expert s\xE9lectionn\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Briefing le mardi, expert s\xE9lectionn\xE9 le jeudi, kick-off le lundi. Z\xE9ro friction dans le processus."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "Startup tech \xB7 Canada"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "Imbattable sur le d\xE9lai de mise en relation.")), /*#__PURE__*/React.createElement(Rv, {
+    delay: 200,
+    className: "result-card",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric"
+  }, "Top 3%"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Qualit\xE9 des profils propos\xE9s"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Seuls les experts ayant pass\xE9 la certification avanc\xE9e et valid\xE9 3+ missions r\xE9elles acc\xE8dent au Hub."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "Scale-up Sant\xE9 \xB7 Qu\xE9bec"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "La qualit\xE9 est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la diff\xE9rence.")))));
 }
-
 
 /* ── Academy ── */
 function Academy() {
-  return (
-    <section id="academy" className="pad-sm">
-      <div className="wrap">
-        <Rv className="academy-wrap">
-          <div className="academy-grid-bg"/>
-          <div className="academy-inner">
-            <div>
-              <span className="eyebrow">CreatorFlow Market AI Academy</span>
-              <h2>Devenez expert certifié.<br/>Rejoignez le Hub.</h2>
-              <p>L'académie CreatorFlow Market forme les futurs experts IA depuis 2023. À la sortie : accès direct au Hub, mentoring et premières missions garanties pour les diplômés du programme Advanced.</p>
-              <div className="academy-btns">
-                <a href="academie.html" className="btn btn-primary btn-lg">Découvrir l'académie<Ic.Arrow/></a>
-                <a href="pricing.html" className="btn btn-ghost btn-lg">Programme &amp; tarifs</a>
-              </div>
-            </div>
-            <div className="academy-vis">
-              <div className="cert-card">
-                <div className="cert-seal"><div className="cert-seal-inner"><Ic.Sparkle/></div></div>
-                <div className="cert-lbl">Certificat délivré</div>
-                <div className="cert-name">AI Practitioner<br/>Advanced</div>
-                <div className="cert-meta"><span>CFA-2026-0247</span><span>Mars 2026</span></div>
-                <div className="cert-stamp">Verified<br/>by Hub</div>
-              </div>
-            </div>
-          </div>
-        </Rv>
-      </div>
-    </section>
-  );
+  return /*#__PURE__*/React.createElement("section", {
+    id: "academy",
+    className: "pad-sm"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "academy-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-grid-bg"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "academy-inner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "CreatorFlow Market AI Academy"), /*#__PURE__*/React.createElement("h2", null, "Devenez expert certifi\xE9.", /*#__PURE__*/React.createElement("br", null), "Rejoignez le Hub."), /*#__PURE__*/React.createElement("p", null, "L'acad\xE9mie CreatorFlow Market forme les futurs experts IA depuis 2023. \xC0 la sortie : acc\xE8s direct au Hub, mentoring et premi\xE8res missions garanties pour les dipl\xF4m\xE9s du programme Advanced."), /*#__PURE__*/React.createElement("div", {
+    className: "academy-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-primary btn-lg"
+  }, "D\xE9couvrir l'acad\xE9mie", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "pricing.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Programme & tarifs"))), /*#__PURE__*/React.createElement("div", {
+    className: "academy-vis"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-seal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-seal-inner"
+  }, /*#__PURE__*/React.createElement(Ic.Sparkle, null))), /*#__PURE__*/React.createElement("div", {
+    className: "cert-lbl"
+  }, "Certificat d\xE9livr\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "cert-name"
+  }, "AI Practitioner", /*#__PURE__*/React.createElement("br", null), "Advanced"), /*#__PURE__*/React.createElement("div", {
+    className: "cert-meta"
+  }, /*#__PURE__*/React.createElement("span", null, "CFA-2026-0247"), /*#__PURE__*/React.createElement("span", null, "Mars 2026")), /*#__PURE__*/React.createElement("div", {
+    className: "cert-stamp"
+  }, "Verified", /*#__PURE__*/React.createElement("br", null), "by Hub")))))));
 }
 
 /* ── CTA Banner ── */
 function CtaBanner() {
-  const IcShield = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
-  const IcClock  = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>;
-  const IcLock   = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
-  return (
-    <section className="cta-banner">
-      <div className="cta-banner-grid"/>
-      <div className="wrap">
-        <Rv className="cta-banner-inner">
-          <span className="eyebrow" style={{justifyContent:'center',marginBottom:24}}>Passez à l'action</span>
-          <h2>Prêt à accélérer avec<br/><em>l'intelligence artificielle&nbsp;?</em></h2>
-          <p className="cta-banner-sub">Déposez votre brief en 3 minutes. Recevez des profils d'experts certifiés sous 24h. Aucun engagement avant de démarrer.</p>
-          <div className="cta-banner-btns">
-            <a href="brief.html" className="btn btn-primary btn-lg"><Ic.Rocket/>Déposer un brief gratuit<Ic.Arrow/></a>
-            <a href="inscription.html" className="btn btn-ghost btn-lg">Je suis expert, rejoindre</a>
-          </div>
-          <div className="cta-guarantees">
-            <div className="cta-guar"><IcShield/>Expert certifié garanti</div>
-            <div className="cta-guar"><IcClock/>Réponse sous 24h</div>
-            <div className="cta-guar"><IcLock/>Paiement 100% sécurisé</div>
-          </div>
-        </Rv>
-      </div>
-    </section>
-  );
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  return /*#__PURE__*/React.createElement("section", {
+    className: "cta-banner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-banner-grid"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "cta-banner-inner"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow",
+    style: {
+      justifyContent: 'center',
+      marginBottom: 24
+    }
+  }, "Passez \xE0 l'action"), /*#__PURE__*/React.createElement("h2", null, "Pr\xEAt \xE0 acc\xE9l\xE9rer avec", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, "l'intelligence artificielle\xA0?")), /*#__PURE__*/React.createElement("p", {
+    className: "cta-banner-sub"
+  }, "D\xE9posez votre brief en 3 minutes. Recevez des profils d'experts certifi\xE9s sous 24h. Aucun engagement avant de d\xE9marrer."), /*#__PURE__*/React.createElement("div", {
+    className: "cta-banner-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg"
+  }, /*#__PURE__*/React.createElement(Ic.Rocket, null), "D\xE9poser un brief gratuit", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Je suis expert, rejoindre")), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guarantees"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcShield, null), "Expert certifi\xE9 garanti"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcClock, null), "R\xE9ponse sous 24h"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcLock, null), "Paiement 100% s\xE9curis\xE9")))));
 }
 
 /* ── Footer ── */
 function Footer() {
-  return (
-    <footer className="footer">
-      <div className="wrap">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <a href="/" className="brand">
-              <div className="brand-logo" style={{backgroundImage:"url('/logo.jpg')"}}/>
-              <span>CreatorFlow <em style={{fontStyle:'normal',color:'var(--vs)'}}>Market</em></span>
-            </a>
-            <p>La marketplace qui connecte les entreprises aux meilleurs experts IA certifiés par CreatorFlow Market Academy.</p>
-            <div className="socials">
-              <a className="social-btn" href="https://youtube.com/@creatorflowmarket" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><Social.YT/></a>
-              <a className="social-btn" href="https://tiktok.com/@creatorflowmarket" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><Social.TK/></a>
-              <a className="social-btn" href="https://instagram.com/creatorflowmarket" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Social.IG/></a>
-              <a className="social-btn" href="https://facebook.com/creatorflowmarket" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Social.FB/></a>
-            </div>
-          </div>
-          {[
-            {h:'Plateforme',links:[{l:'Comment ça marche',h:'index.html#how'},{l:'Pour les experts',h:'inscription.html'},{l:'Pour les entreprises',h:'brief.html'},{l:'Tarifs',h:'pricing.html'}]},
-            {h:'Ressources',links:[{l:'Blog IA',h:'blog.html'},{l:'Guides pratiques',h:'blog.html'},{l:'Études de cas',h:'blog.html'},{l:'Académie IA',h:'academie.html'}]},
-            {h:'Contact',links:[{l:'Nous contacter',h:'mailto:contact@creatorflowmarket.com'},{l:'Devenir partenaire',h:'programme-parrainage.html'},{l:'Support',h:'mailto:support@creatorflowmarket.com'},{l:'Experts certifiés',h:'experts.html'}]},
-          ].map((col,i)=>(
-            <div className="footer-col" key={i}>
-              <h4>{col.h}</h4>
-              <ul>{col.links.map(l=>{const label=typeof l==='string'?l:l.l; const href=typeof l==='string'?'#':l.h; return <li key={label}><a href={href}>{label}</a></li>;})}</ul>
-            </div>
-          ))}
-        </div>
-        <div className="footer-bottom">
-          <div>© 2026 CreatorFlow Market · <a href="cgu.html" style={{color:'inherit'}}>CGU</a> · <a href="politique-confidentialite.html" style={{color:'inherit'}}>Vie privée</a></div>
-          <div className="footer-powered">
-            Propulsé par <div className="brand-logo" style={{width:18,height:18,backgroundImage:"url('/logo.jpg')"}}/> <strong style={{color:'var(--text)',fontWeight:600}}>CreatorFlow AI Academy</strong>
-          </div>
-          <div style={{display:'flex',gap:18}}>
-            <a href="cgu.html" style={{color:'var(--text-3)'}}>Mentions légales</a>
-            <a href="politique-confidentialite.html" style={{color:'var(--text-3)'}}>Confidentialité</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+  return /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-brand"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      backgroundImage: "url('/logo.jpg')"
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", {
+    style: {
+      fontStyle: 'normal',
+      color: 'var(--vs)'
+    }
+  }, "Market"))), /*#__PURE__*/React.createElement("p", null, "La marketplace qui connecte les entreprises aux meilleurs experts IA certifi\xE9s par CreatorFlow Market Academy."), /*#__PURE__*/React.createElement("div", {
+    className: "socials"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://youtube.com/@creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "YouTube"
+  }, /*#__PURE__*/React.createElement(Social.YT, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://tiktok.com/@creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "TikTok"
+  }, /*#__PURE__*/React.createElement(Social.TK, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://instagram.com/creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "Instagram"
+  }, /*#__PURE__*/React.createElement(Social.IG, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://facebook.com/creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "Facebook"
+  }, /*#__PURE__*/React.createElement(Social.FB, null)))), [{
+    h: 'Plateforme',
+    links: [{
+      l: 'Comment ça marche',
+      h: 'index.html#how'
+    }, {
+      l: 'Pour les experts',
+      h: 'inscription.html'
+    }, {
+      l: 'Pour les entreprises',
+      h: 'brief.html'
+    }, {
+      l: 'Tarifs',
+      h: 'pricing.html'
+    }]
+  }, {
+    h: 'Ressources',
+    links: [{
+      l: 'Blog IA',
+      h: 'blog.html'
+    }, {
+      l: 'Guides pratiques',
+      h: 'blog.html'
+    }, {
+      l: 'Études de cas',
+      h: 'blog.html'
+    }, {
+      l: 'Académie IA',
+      h: 'academie.html'
+    }]
+  }, {
+    h: 'Contact',
+    links: [{
+      l: 'Nous contacter',
+      h: 'mailto:contact@creatorflowmarket.com'
+    }, {
+      l: 'Devenir partenaire',
+      h: 'programme-parrainage.html'
+    }, {
+      l: 'Support',
+      h: 'mailto:support@creatorflowmarket.com'
+    }, {
+      l: 'Experts certifiés',
+      h: 'experts.html'
+    }]
+  }].map((col, i) => /*#__PURE__*/React.createElement("div", {
+    className: "footer-col",
+    key: i
+  }, /*#__PURE__*/React.createElement("h4", null, col.h), /*#__PURE__*/React.createElement("ul", null, col.links.map(l => {
+    const label = typeof l === 'string' ? l : l.l;
+    const href = typeof l === 'string' ? '#' : l.h;
+    return /*#__PURE__*/React.createElement("li", {
+      key: label
+    }, /*#__PURE__*/React.createElement("a", {
+      href: href
+    }, label));
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "footer-bottom"
+  }, /*#__PURE__*/React.createElement("div", null, "\xA9 2026 CreatorFlow Market \xB7 ", /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    style: {
+      color: 'inherit'
+    }
+  }, "CGU"), " \xB7 ", /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    style: {
+      color: 'inherit'
+    }
+  }, "Vie priv\xE9e")), /*#__PURE__*/React.createElement("div", {
+    className: "footer-powered"
+  }, "Propuls\xE9 par ", /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      width: 18,
+      height: 18,
+      backgroundImage: "url('/logo.jpg')"
+    }
+  }), " ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: 'var(--text)',
+      fontWeight: 600
+    }
+  }, "CreatorFlow AI Academy")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 18
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Confidentialit\xE9")))));
 }
-
 function App() {
   useEffect(() => {
     const loader = document.getElementById('cfm-loader');
@@ -1491,22 +2711,16 @@ function App() {
       const size = Math.max(r.width, r.height);
       const el = document.createElement('span');
       el.className = 'btn-ripple-el';
-      el.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
+      el.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
       btn.appendChild(el);
       setTimeout(() => el.remove(), 680);
     };
     document.addEventListener('click', handler);
     return () => document.removeEventListener('click', handler);
   }, []);
-  return (
-    <React.Fragment>
-      <CursorGlow/>
-      <Nav/><Hero/><TrustedBy/><GuaranteeStrip/><PlatformPreview/><HowItWorks/><Categories/><Expertise/><Experts/><Testimonials/><Academy/><CtaBanner/><Footer/>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(CursorGlow, null), /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(TrustedBy, null), /*#__PURE__*/React.createElement(GuaranteeStrip, null), /*#__PURE__*/React.createElement(PlatformPreview, null), /*#__PURE__*/React.createElement(HowItWorks, null), /*#__PURE__*/React.createElement(Categories, null), /*#__PURE__*/React.createElement(Expertise, null), /*#__PURE__*/React.createElement(Experts, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Academy, null), /*#__PURE__*/React.createElement(CtaBanner, null), /*#__PURE__*/React.createElement(Footer, null));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

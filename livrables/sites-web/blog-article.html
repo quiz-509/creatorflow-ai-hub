@@ -473,7 +473,6 @@
 
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <script>
@@ -487,99 +486,159 @@
   });
 </script>
 
-<script type="text/babel">
-const { useState, useEffect, useRef, useCallback } = React;
-const sb = supabase.createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+const {
+  useState,
+  useEffect,
+  useRef,
+  useCallback
+} = React;
+const sb = supabase.createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const CAT_COLORS = {
-  'Actualités IA':'#F59E0B','Outils IA':'#06B6D4','Automatisation IA':'#10B981',
-  'Marketing IA':'#7C3AED','Création de Contenu IA':'#EF4444','Vente IA':'#8B5CF6',
-  'Support Client IA':'#EC4899','Tutoriels IA':'#3B82F6','Comparatifs IA':'#F97316',
-  'Guides IA':'#84CC16',
+  'Actualités IA': '#F59E0B',
+  'Outils IA': '#06B6D4',
+  'Automatisation IA': '#10B981',
+  'Marketing IA': '#7C3AED',
+  'Création de Contenu IA': '#EF4444',
+  'Vente IA': '#8B5CF6',
+  'Support Client IA': '#EC4899',
+  'Tutoriels IA': '#3B82F6',
+  'Comparatifs IA': '#F97316',
+  'Guides IA': '#84CC16'
 };
 const CAT_ICONS = {
-  'Actualités IA':'🔥','Outils IA':'🛠','Automatisation IA':'⚡','Marketing IA':'📈',
-  'Création de Contenu IA':'🎬','Vente IA':'💰','Support Client IA':'🤝',
-  'Tutoriels IA':'📚','Comparatifs IA':'⚖️','Guides IA':'🗺️',
+  'Actualités IA': '🔥',
+  'Outils IA': '🛠',
+  'Automatisation IA': '⚡',
+  'Marketing IA': '📈',
+  'Création de Contenu IA': '🎬',
+  'Vente IA': '💰',
+  'Support Client IA': '🤝',
+  'Tutoriels IA': '📚',
+  'Comparatifs IA': '⚖️',
+  'Guides IA': '🗺️'
 };
 const CAT_GRAD = c => {
   const map = {
-    'Actualités IA':'rgba(245,158,11,0.18)','Outils IA':'rgba(6,182,212,0.18)',
-    'Automatisation IA':'rgba(16,185,129,0.18)','Marketing IA':'rgba(124,58,237,0.18)',
-    'Création de Contenu IA':'rgba(239,68,68,0.18)','Vente IA':'rgba(139,92,246,0.18)',
-    'Support Client IA':'rgba(236,72,153,0.18)','Tutoriels IA':'rgba(59,130,246,0.18)',
-    'Comparatifs IA':'rgba(249,115,22,0.18)','Guides IA':'rgba(132,204,22,0.18)',
+    'Actualités IA': 'rgba(245,158,11,0.18)',
+    'Outils IA': 'rgba(6,182,212,0.18)',
+    'Automatisation IA': 'rgba(16,185,129,0.18)',
+    'Marketing IA': 'rgba(124,58,237,0.18)',
+    'Création de Contenu IA': 'rgba(239,68,68,0.18)',
+    'Vente IA': 'rgba(139,92,246,0.18)',
+    'Support Client IA': 'rgba(236,72,153,0.18)',
+    'Tutoriels IA': 'rgba(59,130,246,0.18)',
+    'Comparatifs IA': 'rgba(249,115,22,0.18)',
+    'Guides IA': 'rgba(132,204,22,0.18)'
   };
-  return `linear-gradient(135deg,${map[c]||'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
+  return `linear-gradient(135deg,${map[c] || 'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
 };
 
 // CTA fin d'article — spécifique à chaque catégorie
 const ARTICLE_CTA = {
   'Actualités IA': {
-    icon:'⚡', headline:'Prenez de l\'avance sur vos concurrents',
-    body:'Nos experts IA implémentent ces innovations dans votre business avant que vos concurrents les découvrent.',
-    btn:'Réserver un expert IA →', sub:'Voir l\'Academy IA', subHref:'/academie',
+    icon: '⚡',
+    headline: 'Prenez de l\'avance sur vos concurrents',
+    body: 'Nos experts IA implémentent ces innovations dans votre business avant que vos concurrents les découvrent.',
+    btn: 'Réserver un expert IA →',
+    sub: 'Voir l\'Academy IA',
+    subHref: '/academie'
   },
   'Outils IA': {
-    icon:'🛠', headline:'Configurez votre stack IA avec un expert',
-    body:'Un expert CreatorFlow Market sélectionne et configure vos outils IA de A à Z — vous n\'avez plus qu\'à utiliser.',
-    btn:'Trouver mon expert outils →', sub:'Formations outils IA', subHref:'/academie',
+    icon: '🛠',
+    headline: 'Configurez votre stack IA avec un expert',
+    body: 'Un expert CreatorFlow Market sélectionne et configure vos outils IA de A à Z — vous n\'avez plus qu\'à utiliser.',
+    btn: 'Trouver mon expert outils →',
+    sub: 'Formations outils IA',
+    subHref: '/academie'
   },
   'Automatisation IA': {
-    icon:'⚡', headline:'Automatisez votre business en 48h',
-    body:'Nos experts n8n / Make construisent vos workflows IA sur mesure. Résultats concrets garantis.',
-    btn:'Automatiser avec un expert →', sub:'Academy Automatisation', subHref:'/academie',
+    icon: '⚡',
+    headline: 'Automatisez votre business en 48h',
+    body: 'Nos experts n8n / Make construisent vos workflows IA sur mesure. Résultats concrets garantis.',
+    btn: 'Automatiser avec un expert →',
+    sub: 'Academy Automatisation',
+    subHref: '/academie'
   },
   'Marketing IA': {
-    icon:'📈', headline:'Multipliez vos résultats marketing avec l\'IA',
-    body:'Nos experts IA construisent votre système marketing automatisé : contenu, leads, conversions.',
-    btn:'Booster mon marketing IA →', sub:'Formations Marketing IA', subHref:'/academie',
+    icon: '📈',
+    headline: 'Multipliez vos résultats marketing avec l\'IA',
+    body: 'Nos experts IA construisent votre système marketing automatisé : contenu, leads, conversions.',
+    btn: 'Booster mon marketing IA →',
+    sub: 'Formations Marketing IA',
+    subHref: '/academie'
   },
   'Création de Contenu IA': {
-    icon:'🎬', headline:'Créez 10x plus de contenu en moins de temps',
-    body:'Un expert CreatorFlow Market met en place votre pipeline de contenu IA clé en main.',
-    btn:'Scaler mon contenu IA →', sub:'Academy Création de Contenu', subHref:'/academie',
+    icon: '🎬',
+    headline: 'Créez 10x plus de contenu en moins de temps',
+    body: 'Un expert CreatorFlow Market met en place votre pipeline de contenu IA clé en main.',
+    btn: 'Scaler mon contenu IA →',
+    sub: 'Academy Création de Contenu',
+    subHref: '/academie'
   },
   'Vente IA': {
-    icon:'💰', headline:'Augmentez vos ventes avec un système IA automatisé',
-    body:'Nos experts construisent votre funnel de vente automatisé : prospection, nurturing, closing.',
-    btn:'Construire mon système de vente →', sub:'Formations Vente IA', subHref:'/academie',
+    icon: '💰',
+    headline: 'Augmentez vos ventes avec un système IA automatisé',
+    body: 'Nos experts construisent votre funnel de vente automatisé : prospection, nurturing, closing.',
+    btn: 'Construire mon système de vente →',
+    sub: 'Formations Vente IA',
+    subHref: '/academie'
   },
   'Support Client IA': {
-    icon:'🤝', headline:'Automatisez votre support client 24h/24',
-    body:'Un expert déploie votre agent IA de support en 48h. Satisfaction client garantie.',
-    btn:'Déployer mon IA support →', sub:'Voir les solutions support', subHref:'/academie',
+    icon: '🤝',
+    headline: 'Automatisez votre support client 24h/24',
+    body: 'Un expert déploie votre agent IA de support en 48h. Satisfaction client garantie.',
+    btn: 'Déployer mon IA support →',
+    sub: 'Voir les solutions support',
+    subHref: '/academie'
   },
   'Tutoriels IA': {
-    icon:'📚', headline:'Vous voulez qu\'un expert l\'implémente pour vous ?',
-    body:'Gagnez du temps : nos experts certifiés implémentent ce tutoriel dans votre business en 48h.',
-    btn:'Déléguer l\'implémentation →', sub:'Continuer à apprendre', subHref:'/academie',
+    icon: '📚',
+    headline: 'Vous voulez qu\'un expert l\'implémente pour vous ?',
+    body: 'Gagnez du temps : nos experts certifiés implémentent ce tutoriel dans votre business en 48h.',
+    btn: 'Déléguer l\'implémentation →',
+    sub: 'Continuer à apprendre',
+    subHref: '/academie'
   },
   'Comparatifs IA': {
-    icon:'⚖️', headline:'Vous ne savez toujours pas quel outil choisir ?',
-    body:'Un expert analyse votre situation et configure l\'outil parfait pour vous — en 30 minutes.',
-    btn:'Parler à un expert →', sub:'Voir tous les comparatifs', subHref:'/blog',
+    icon: '⚖️',
+    headline: 'Vous ne savez toujours pas quel outil choisir ?',
+    body: 'Un expert analyse votre situation et configure l\'outil parfait pour vous — en 30 minutes.',
+    btn: 'Parler à un expert →',
+    sub: 'Voir tous les comparatifs',
+    subHref: '/blog'
   },
   'Guides IA': {
-    icon:'🗺️', headline:'Passez de la théorie à l\'action dès demain',
-    body:'Ce guide vous montre quoi faire. Nos experts le font pour vous — résultats concrets en 48h.',
-    btn:'Passer à l\'action →', sub:'Continuer avec l\'Academy', subHref:'/academie',
-  },
+    icon: '🗺️',
+    headline: 'Passez de la théorie à l\'action dès demain',
+    body: 'Ce guide vous montre quoi faire. Nos experts le font pour vous — résultats concrets en 48h.',
+    btn: 'Passer à l\'action →',
+    sub: 'Continuer avec l\'Academy',
+    subHref: '/academie'
+  }
 };
 const DEFAULT_CTA = {
-  icon:'🚀', headline:'Passez à l\'action avec un expert IA',
-  body:'Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.',
-  btn:'Explorer les experts IA →', sub:'Voir l\'Academy', subHref:'/academie',
+  icon: '🚀',
+  headline: 'Passez à l\'action avec un expert IA',
+  body: 'Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.',
+  btn: 'Explorer les experts IA →',
+  sub: 'Voir l\'Academy',
+  subHref: '/academie'
 };
-
 const splitContent = html => {
-  if (!html) return { intro: '', main: '' };
+  if (!html) return {
+    intro: '',
+    main: ''
+  };
   const idx = html.indexOf('<h2');
-  if (idx <= 0) return { intro: '', main: html };
-  return { intro: html.slice(0, idx), main: html.slice(idx) };
+  if (idx <= 0) return {
+    intro: '',
+    main: html
+  };
+  return {
+    intro: html.slice(0, idx),
+    main: html.slice(idx)
+  };
 };
 
 // Reads slug from injected window var, /blog/SLUG path, or ?slug= query param
@@ -591,17 +650,23 @@ const getSlug = () => {
   if (p.startsWith('/blog/') && p.length > 6) return p.slice(6).replace(/\/$/, '');
   return null;
 };
-
-function CatBadge({ cat }) {
+function CatBadge({
+  cat
+}) {
   const col = CAT_COLORS[cat] || '#7C3AED';
-  return (
-    <span className="cat-badge" style={{background:`${col}20`,color:col,border:`1px solid ${col}40`}}>
-      {CAT_ICONS[cat]||'🤖'} {cat}
-    </span>
-  );
+  return /*#__PURE__*/React.createElement("span", {
+    className: "cat-badge",
+    style: {
+      background: `${col}20`,
+      color: col,
+      border: `1px solid ${col}40`
+    }
+  }, CAT_ICONS[cat] || '🤖', " ", cat);
 }
-
-function KeyTakeaways({ content, takeaways }) {
+function KeyTakeaways({
+  content,
+  takeaways
+}) {
   const [open, setOpen] = useState(false);
   const items = (() => {
     if (takeaways && takeaways.length > 0) return takeaways;
@@ -615,36 +680,42 @@ function KeyTakeaways({ content, takeaways }) {
         }
         return h.textContent;
       }).filter(Boolean);
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   })();
   if (!items.length) return null;
-  return (
-    <div className="key-takeaways">
-      <button className="kt-title kt-toggle-btn" onClick={() => setOpen(!open)}>
-        <span>⚡ Ce qu'il faut retenir</span>
-        <span className="kt-chevron" style={{transform:open?'rotate(180deg)':'none'}}>▼</span>
-      </button>
-      <ul className={`kt-list${open?' kt-open':''}`}>
-        {items.map((item, i) => (
-          <li key={i} className="kt-item">
-            <span className="kt-dot">✓</span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "key-takeaways"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "kt-title kt-toggle-btn",
+    onClick: () => setOpen(!open)
+  }, /*#__PURE__*/React.createElement("span", null, "\u26A1 Ce qu'il faut retenir"), /*#__PURE__*/React.createElement("span", {
+    className: "kt-chevron",
+    style: {
+      transform: open ? 'rotate(180deg)' : 'none'
+    }
+  }, "\u25BC")), /*#__PURE__*/React.createElement("ul", {
+    className: `kt-list${open ? ' kt-open' : ''}`
+  }, items.map((item, i) => /*#__PURE__*/React.createElement("li", {
+    key: i,
+    className: "kt-item"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "kt-dot"
+  }, "\u2713"), /*#__PURE__*/React.createElement("span", null, item)))));
 }
-
-function HeroImage({ article }) {
+function HeroImage({
+  article
+}) {
   if (!article || !article.featured_image) return null;
-  return (
-    <div className="article-hero-img">
-      <img src={article.featured_image} alt={article.title} loading="lazy" />
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "article-hero-img"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: article.featured_image,
+    alt: article.title,
+    loading: "lazy"
+  }));
 }
-
 function InlineNewsletter() {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
@@ -652,10 +723,12 @@ function InlineNewsletter() {
   const [err, setErr] = useState('');
   const ref = useRef(null);
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setVisible(true); },
-      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
-    );
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) setVisible(true);
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -5% 0px'
+    });
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
@@ -663,373 +736,692 @@ function InlineNewsletter() {
     e.preventDefault();
     if (!email) return;
     setErr('');
-    const { error } = await sb.from('blog_subscribers').insert({ email, source: 'article' });
-    if (!error) { setDone(true); }
-    else if (error.code === '23505') { setErr('Cet email est déjà inscrit.'); }
-    else { setErr('Une erreur est survenue. Réessayez.'); }
+    const {
+      error
+    } = await sb.from('blog_subscribers').insert({
+      email,
+      source: 'article'
+    });
+    if (!error) {
+      setDone(true);
+    } else if (error.code === '23505') {
+      setErr('Cet email est déjà inscrit.');
+    } else {
+      setErr('Une erreur est survenue. Réessayez.');
+    }
   };
-  return (
-    <div ref={ref} className="inline-nl" style={{
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    className: "inline-nl",
+    style: {
       opacity: visible ? 1 : 0,
       transform: visible ? 'translateY(0)' : 'translateY(24px)',
-      transition: 'opacity 700ms ease, transform 700ms ease',
-    }}>
-      <div className="inline-nl-icon">📨</div>
-      <div className="inline-nl-headline">Cet article vous plaît ?</div>
-      <div className="inline-nl-sub">Recevez les meilleurs articles IA chaque semaine, sans spam.</div>
-      {done ? (
-        <p style={{color:'var(--green)',fontWeight:600,fontSize:14}}>✅ Inscription confirmée !</p>
-      ) : (
-        <>
-          <form className="inline-nl-row" onSubmit={submit}>
-            <input type="email" placeholder="votre@email.com" value={email} onChange={e=>{setEmail(e.target.value);setErr('');}} required />
-            <button type="submit" className="inline-nl-btn">S'abonner →</button>
-          </form>
-          {err && <p style={{color:'#F59E0B',fontWeight:600,fontSize:13,marginTop:8}}>{err}</p>}
-        </>
-      )}
-      <p style={{fontSize:11,color:'var(--text-3)',marginTop:10}}>Sans spam. Désabonnement en 1 clic.</p>
-    </div>
-  );
+      transition: 'opacity 700ms ease, transform 700ms ease'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-icon"
+  }, "\uD83D\uDCE8"), /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-headline"
+  }, "Cet article vous pla\xEEt ?"), /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-sub"
+  }, "Recevez les meilleurs articles IA chaque semaine, sans spam."), done ? /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--green)',
+      fontWeight: 600,
+      fontSize: 14
+    }
+  }, "\u2705 Inscription confirm\xE9e !") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
+    className: "inline-nl-row",
+    onSubmit: submit
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "email",
+    placeholder: "votre@email.com",
+    value: email,
+    onChange: e => {
+      setEmail(e.target.value);
+      setErr('');
+    },
+    required: true
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "inline-nl-btn"
+  }, "S'abonner \u2192")), err && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: '#F59E0B',
+      fontWeight: 600,
+      fontSize: 13,
+      marginTop: 8
+    }
+  }, err)), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginTop: 10
+    }
+  }, "Sans spam. D\xE9sabonnement en 1 clic."));
 }
-
-function TOC({ headings, activeId }) {
-  if (!headings.length) return (
-    <aside className="toc-sidebar">
-      <div className="toc-title">Dans cet article</div>
-      {[65,50,78,44,60].map((w,i)=>(
-        <div key={i} className="sk" style={{height:10,width:`${w}%`,marginBottom:10,borderRadius:4}}/>
-      ))}
-    </aside>
-  );
-  return (
-    <aside className="toc-sidebar">
-      <div className="toc-title">Dans cet article</div>
-      <ul className="toc-list">
-        {headings.map(h => (
-          <li key={h.id}>
-            <span
-              className={`toc-item ${h.level === 3 ? 'h3' : ''} ${activeId === h.id ? 'active' : ''}`}
-              onClick={() => {
-                const el = document.getElementById(h.id);
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-            >{h.text}</span>
-          </li>
-        ))}
-      </ul>
-    </aside>
-  );
+function TOC({
+  headings,
+  activeId
+}) {
+  if (!headings.length) return /*#__PURE__*/React.createElement("aside", {
+    className: "toc-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toc-title"
+  }, "Dans cet article"), [65, 50, 78, 44, 60].map((w, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "sk",
+    style: {
+      height: 10,
+      width: `${w}%`,
+      marginBottom: 10,
+      borderRadius: 4
+    }
+  })));
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "toc-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toc-title"
+  }, "Dans cet article"), /*#__PURE__*/React.createElement("ul", {
+    className: "toc-list"
+  }, headings.map(h => /*#__PURE__*/React.createElement("li", {
+    key: h.id
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `toc-item ${h.level === 3 ? 'h3' : ''} ${activeId === h.id ? 'active' : ''}`,
+    onClick: () => {
+      const el = document.getElementById(h.id);
+      if (el) el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, h.text)))));
 }
-
-function MobileTOCBar({ headings, activeId }) {
+function MobileTOCBar({
+  headings,
+  activeId
+}) {
   const h2s = headings.filter(h => h.level === 2);
   if (!h2s.length) return null;
-  return (
-    <div className="mobile-toc-bar">
-      <div className="mobile-toc-scroll">
-        <span className="mobile-toc-label">Chapitres</span>
-        {h2s.map(h => (
-          <button key={h.id}
-            className={`mobile-toc-pill${activeId === h.id ? ' active' : ''}`}
-            onClick={() => { const el = document.getElementById(h.id); if (el) el.scrollIntoView({behavior:'smooth',block:'start'}); }}
-          >{h.text}</button>
-        ))}
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "mobile-toc-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mobile-toc-scroll"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mobile-toc-label"
+  }, "Chapitres"), h2s.map(h => /*#__PURE__*/React.createElement("button", {
+    key: h.id,
+    className: `mobile-toc-pill${activeId === h.id ? ' active' : ''}`,
+    onClick: () => {
+      const el = document.getElementById(h.id);
+      if (el) el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, h.text))));
 }
-
-function FAQSection({ faq }) {
+function FAQSection({
+  faq
+}) {
   const [open, setOpen] = useState(null);
   if (!faq || !faq.length) return null;
-  return (
-    <div className="faq-section">
-      <h2 className="faq-title">❓ Questions fréquentes</h2>
-      {faq.map((item, i) => (
-        <div key={i} className={`faq-item ${open === i ? 'open' : ''}`}>
-          <button className="faq-q" onClick={() => setOpen(open === i ? null : i)}>
-            {item.question || item.q}
-            <span className="faq-icon">+</span>
-          </button>
-          <div className="faq-a">
-            <p>{item.answer || item.a}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "faq-section"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "faq-title"
+  }, "\u2753 Questions fr\xE9quentes"), faq.map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `faq-item ${open === i ? 'open' : ''}`
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "faq-q",
+    onClick: () => setOpen(open === i ? null : i)
+  }, item.question || item.q, /*#__PURE__*/React.createElement("span", {
+    className: "faq-icon"
+  }, "+")), /*#__PURE__*/React.createElement("div", {
+    className: "faq-a"
+  }, /*#__PURE__*/React.createElement("p", null, item.answer || item.a)))));
 }
-
-function PAASection({ questions }) {
+function PAASection({
+  questions
+}) {
   if (!questions || !questions.length) return null;
-  return (
-    <div className="paa-section">
-      <div className="paa-header">🔍 Les gens demandent aussi</div>
-      {questions.map((q, i) => (
-        <a
-          key={i}
-          href={`https://www.google.com/search?q=${encodeURIComponent(q)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="paa-item"
-        >
-          <span>{q}</span>
-          <span className="paa-icon">↗</span>
-        </a>
-      ))}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "paa-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "paa-header"
+  }, "\uD83D\uDD0D Les gens demandent aussi"), questions.map((q, i) => /*#__PURE__*/React.createElement("a", {
+    key: i,
+    href: `https://www.google.com/search?q=${encodeURIComponent(q)}`,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    className: "paa-item"
+  }, /*#__PURE__*/React.createElement("span", null, q), /*#__PURE__*/React.createElement("span", {
+    className: "paa-icon"
+  }, "\u2197"))));
 }
-
-function SEOIntelCard({ article }) {
-  const sec  = article?.secondary_keywords || [];
-  const lt   = article?.longtail_keywords  || [];
-  const opps = article?.seo_opportunities  || [];
-  const cluster = article?.topic_cluster   || '';
+function SEOIntelCard({
+  article
+}) {
+  const sec = article?.secondary_keywords || [];
+  const lt = article?.longtail_keywords || [];
+  const opps = article?.seo_opportunities || [];
+  const cluster = article?.topic_cluster || '';
   if (!sec.length && !lt.length && !opps.length) return null;
-  return (
-    <div className="sidebar-card seo-intel-block">
-      <div className="sidebar-title">🎯 SEO Intelligence</div>
-      {cluster && <div className="seo-cluster">🗂 {cluster}</div>}
-      {sec.length > 0 && (
-        <div style={{marginBottom:12}}>
-          <div className="seo-intel-label">Mots-clés secondaires</div>
-          <div className="seo-chips">
-            {sec.map((kw, i) => <span key={i} className="seo-chip seo-chip-sec">{kw}</span>)}
-          </div>
-        </div>
-      )}
-      {lt.length > 0 && (
-        <div style={{marginBottom:12}}>
-          <div className="seo-intel-label">Longue traîne</div>
-          <div className="seo-chips">
-            {lt.slice(0,6).map((kw, i) => <span key={i} className="seo-chip seo-chip-lt">{kw}</span>)}
-          </div>
-        </div>
-      )}
-      {opps.length > 0 && (
-        <div>
-          <div className="seo-intel-label">Opportunités</div>
-          {opps.map((o, i) => <div key={i} className="seo-opp">💡 {o}</div>)}
-        </div>
-      )}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card seo-intel-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-title"
+  }, "\uD83C\uDFAF SEO Intelligence"), cluster && /*#__PURE__*/React.createElement("div", {
+    className: "seo-cluster"
+  }, "\uD83D\uDDC2 ", cluster), sec.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Mots-cl\xE9s secondaires"), /*#__PURE__*/React.createElement("div", {
+    className: "seo-chips"
+  }, sec.map((kw, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "seo-chip seo-chip-sec"
+  }, kw)))), lt.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Longue tra\xEEne"), /*#__PURE__*/React.createElement("div", {
+    className: "seo-chips"
+  }, lt.slice(0, 6).map((kw, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "seo-chip seo-chip-lt"
+  }, kw)))), opps.length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Opportunit\xE9s"), opps.map((o, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "seo-opp"
+  }, "\uD83D\uDCA1 ", o))));
 }
-
-function RelatedCard({ article }) {
-  return (
-    <div className="related-card" onClick={() => window.location.href = `/blog/${article.slug}`}>
-      <div className="related-thumb" style={{ background: CAT_GRAD(article.category) }}>
-        <span>{CAT_ICONS[article.category] || '🤖'}</span>
-      </div>
-      <div className="related-body">
-        <CatBadge cat={article.category} />
-        <h4>{article.title}</h4>
-        <p>{article.excerpt}</p>
-      </div>
-    </div>
-  );
+function RelatedCard({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "related-card",
+    onClick: () => window.location.href = `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "related-thumb",
+    style: {
+      background: CAT_GRAD(article.category)
+    }
+  }, /*#__PURE__*/React.createElement("span", null, CAT_ICONS[article.category] || '🤖')), /*#__PURE__*/React.createElement("div", {
+    className: "related-body"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h4", null, article.title), /*#__PURE__*/React.createElement("p", null, article.excerpt)));
 }
-
 const AFFIL_TOOLS = {
-  'Automatisation IA': [
-    { icon:'⚡', name:'Make', desc:'Automatise tes workflows sans code', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
-    { icon:'🔁', name:'n8n', desc:'Automatisation open-source puissante', url:'https://n8n.io/?ref=creatorflow', bg:'rgba(234,88,12,0.15)' },
-    { icon:'🤖', name:'Zapier', desc:'Connecte 6 000+ apps en quelques clics', url:'https://zapier.com/?utm_source=creatorflow', bg:'rgba(255,74,0,0.15)' },
-  ],
-  'Marketing IA': [
-    { icon:'📈', name:'Surfer SEO', desc:'Optimise ton contenu pour Google', url:'https://surferseo.com/?fpr=creatorflow', bg:'rgba(16,185,129,0.15)' },
-    { icon:'🎯', name:'Semrush', desc:'Analyse SEO et concurrence complète', url:'https://www.semrush.com/analytics/overview/?ref=creatorflow', bg:'rgba(255,122,0,0.15)' },
-    { icon:'✍️', name:'Jasper', desc:'Rédaction IA pour le marketing', url:'https://www.jasper.ai/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
-  ],
-  'Outils IA': [
-    { icon:'📝', name:'Notion AI', desc:'Workspace IA tout-en-un', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
-    { icon:'🎙️', name:'ElevenLabs', desc:'Voix IA ultra-réalistes en français', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
-    { icon:'🖼️', name:'Leonardo AI', desc:'Génération d\'images IA pro', url:'https://leonardo.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
-  ],
-  'Création de Contenu IA': [
-    { icon:'🎙️', name:'ElevenLabs', desc:'Voix-off IA en français parfait', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
-    { icon:'🎨', name:'Canva Pro', desc:'Designs pro avec IA intégrée', url:'https://www.canva.com/affiliates/creatorflow', bg:'rgba(0,196,204,0.15)' },
-    { icon:'🎬', name:'Runway', desc:'Vidéo IA de niveau cinématographique', url:'https://runwayml.com/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
-  ],
-  'Vente IA': [
-    { icon:'💼', name:'HubSpot', desc:'CRM avec IA pour les ventes', url:'https://hubspot.com/?ref=creatorflow', bg:'rgba(255,122,0,0.15)' },
-    { icon:'📧', name:'Instantly', desc:'Prospection email IA à grande échelle', url:'https://instantly.ai/?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
-    { icon:'🤝', name:'Clay', desc:'Enrichissement de leads par IA', url:'https://clay.com/?ref=creatorflow', bg:'rgba(99,102,241,0.15)' },
-  ],
-  'Support Client IA': [
-    { icon:'💬', name:'Crisp', desc:'Chat IA pour le support client', url:'https://crisp.chat/?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
-    { icon:'🤖', name:'Tidio', desc:'Chatbot IA pour e-commerce', url:'https://www.tidio.com/?ref=creatorflow', bg:'rgba(99,102,241,0.15)' },
-    { icon:'📞', name:'Intercom', desc:'Support client IA enterprise', url:'https://www.intercom.com/?ref=creatorflow', bg:'rgba(6,182,212,0.15)' },
-  ],
-  'Tutoriels IA': [
-    { icon:'🎓', name:'Coursera', desc:'Certifications IA reconnues', url:'https://www.coursera.org/?ref=creatorflow', bg:'rgba(0,86,210,0.15)' },
-    { icon:'📚', name:'Udemy', desc:'Cours IA pratiques à prix réduit', url:'https://www.udemy.com/?ref=creatorflow', bg:'rgba(164,69,190,0.15)' },
-    { icon:'🧠', name:'DeepLearning.AI', desc:'Formation IA par Andrew Ng', url:'https://www.deeplearning.ai/?ref=creatorflow', bg:'rgba(6,182,212,0.15)' },
-  ],
-  'Comparatifs IA': [
-    { icon:'🤖', name:'Claude', desc:'L\'IA la plus capable en 2026', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
-    { icon:'💡', name:'ChatGPT Plus', desc:'GPT-4o pour les pros', url:'https://openai.com/chatgpt?ref=creatorflow', bg:'rgba(16,185,129,0.15)' },
-    { icon:'🔮', name:'Gemini Advanced', desc:'IA Google multimodale', url:'https://gemini.google.com/?ref=creatorflow', bg:'rgba(66,133,244,0.15)' },
-  ],
-  'Guides IA': [
-    { icon:'⚡', name:'Make', desc:'Guide : automatise en 30 min', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
-    { icon:'📝', name:'Notion AI', desc:'Organise ton business avec l\'IA', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
-    { icon:'🎙️', name:'ElevenLabs', desc:'Crée ta voix IA personnalisée', url:'https://elevenlabs.io/?from=creatorflow', bg:'rgba(99,102,241,0.15)' },
-  ],
-  'Actualités IA': [
-    { icon:'🤖', name:'Claude', desc:'Teste les dernières capacités IA', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
-    { icon:'📰', name:'The Rundown AI', desc:'Newsletter IA #1 en anglais', url:'https://www.therundown.ai/?ref=creatorflow', bg:'rgba(124,58,237,0.15)' },
-    { icon:'⚡', name:'Make', desc:'Automatise ta veille IA', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
-  ],
+  'Automatisation IA': [{
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Automatise tes workflows sans code',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🔁',
+    name: 'n8n',
+    desc: 'Automatisation open-source puissante',
+    url: 'https://n8n.io/?ref=creatorflow',
+    bg: 'rgba(234,88,12,0.15)'
+  }, {
+    icon: '🤖',
+    name: 'Zapier',
+    desc: 'Connecte 6 000+ apps en quelques clics',
+    url: 'https://zapier.com/?utm_source=creatorflow',
+    bg: 'rgba(255,74,0,0.15)'
+  }],
+  'Marketing IA': [{
+    icon: '📈',
+    name: 'Surfer SEO',
+    desc: 'Optimise ton contenu pour Google',
+    url: 'https://surferseo.com/?fpr=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🎯',
+    name: 'Semrush',
+    desc: 'Analyse SEO et concurrence complète',
+    url: 'https://www.semrush.com/analytics/overview/?ref=creatorflow',
+    bg: 'rgba(255,122,0,0.15)'
+  }, {
+    icon: '✍️',
+    name: 'Jasper',
+    desc: 'Rédaction IA pour le marketing',
+    url: 'https://www.jasper.ai/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }],
+  'Outils IA': [{
+    icon: '📝',
+    name: 'Notion AI',
+    desc: 'Workspace IA tout-en-un',
+    url: 'https://affiliate.notion.so/creatorflow',
+    bg: 'rgba(255,255,255,0.08)'
+  }, {
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Voix IA ultra-réalistes en français',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🖼️',
+    name: 'Leonardo AI',
+    desc: 'Génération d\'images IA pro',
+    url: 'https://leonardo.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }],
+  'Création de Contenu IA': [{
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Voix-off IA en français parfait',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🎨',
+    name: 'Canva Pro',
+    desc: 'Designs pro avec IA intégrée',
+    url: 'https://www.canva.com/affiliates/creatorflow',
+    bg: 'rgba(0,196,204,0.15)'
+  }, {
+    icon: '🎬',
+    name: 'Runway',
+    desc: 'Vidéo IA de niveau cinématographique',
+    url: 'https://runwayml.com/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }],
+  'Vente IA': [{
+    icon: '💼',
+    name: 'HubSpot',
+    desc: 'CRM avec IA pour les ventes',
+    url: 'https://hubspot.com/?ref=creatorflow',
+    bg: 'rgba(255,122,0,0.15)'
+  }, {
+    icon: '📧',
+    name: 'Instantly',
+    desc: 'Prospection email IA à grande échelle',
+    url: 'https://instantly.ai/?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🤝',
+    name: 'Clay',
+    desc: 'Enrichissement de leads par IA',
+    url: 'https://clay.com/?ref=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }],
+  'Support Client IA': [{
+    icon: '💬',
+    name: 'Crisp',
+    desc: 'Chat IA pour le support client',
+    url: 'https://crisp.chat/?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🤖',
+    name: 'Tidio',
+    desc: 'Chatbot IA pour e-commerce',
+    url: 'https://www.tidio.com/?ref=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '📞',
+    name: 'Intercom',
+    desc: 'Support client IA enterprise',
+    url: 'https://www.intercom.com/?ref=creatorflow',
+    bg: 'rgba(6,182,212,0.15)'
+  }],
+  'Tutoriels IA': [{
+    icon: '🎓',
+    name: 'Coursera',
+    desc: 'Certifications IA reconnues',
+    url: 'https://www.coursera.org/?ref=creatorflow',
+    bg: 'rgba(0,86,210,0.15)'
+  }, {
+    icon: '📚',
+    name: 'Udemy',
+    desc: 'Cours IA pratiques à prix réduit',
+    url: 'https://www.udemy.com/?ref=creatorflow',
+    bg: 'rgba(164,69,190,0.15)'
+  }, {
+    icon: '🧠',
+    name: 'DeepLearning.AI',
+    desc: 'Formation IA par Andrew Ng',
+    url: 'https://www.deeplearning.ai/?ref=creatorflow',
+    bg: 'rgba(6,182,212,0.15)'
+  }],
+  'Comparatifs IA': [{
+    icon: '🤖',
+    name: 'Claude',
+    desc: 'L\'IA la plus capable en 2026',
+    url: 'https://claude.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }, {
+    icon: '💡',
+    name: 'ChatGPT Plus',
+    desc: 'GPT-4o pour les pros',
+    url: 'https://openai.com/chatgpt?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🔮',
+    name: 'Gemini Advanced',
+    desc: 'IA Google multimodale',
+    url: 'https://gemini.google.com/?ref=creatorflow',
+    bg: 'rgba(66,133,244,0.15)'
+  }],
+  'Guides IA': [{
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Guide : automatise en 30 min',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '📝',
+    name: 'Notion AI',
+    desc: 'Organise ton business avec l\'IA',
+    url: 'https://affiliate.notion.so/creatorflow',
+    bg: 'rgba(255,255,255,0.08)'
+  }, {
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Crée ta voix IA personnalisée',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }],
+  'Actualités IA': [{
+    icon: '🤖',
+    name: 'Claude',
+    desc: 'Teste les dernières capacités IA',
+    url: 'https://claude.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }, {
+    icon: '📰',
+    name: 'The Rundown AI',
+    desc: 'Newsletter IA #1 en anglais',
+    url: 'https://www.therundown.ai/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }, {
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Automatise ta veille IA',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }]
 };
-const DEFAULT_AFFIL = [
-  { icon:'🤖', name:'Claude', desc:'L\'assistant IA le plus puissant', url:'https://claude.ai/?ref=creatorflow', bg:'rgba(245,158,11,0.15)' },
-  { icon:'⚡', name:'Make', desc:'Automatise tes tâches répétitives', url:'https://www.make.com/en/register?pc=creatorflow', bg:'rgba(99,102,241,0.15)' },
-  { icon:'📝', name:'Notion AI', desc:'Workspace IA tout-en-un', url:'https://affiliate.notion.so/creatorflow', bg:'rgba(255,255,255,0.08)' },
-];
-
-function AffiliateToolsCard({ category }) {
+const DEFAULT_AFFIL = [{
+  icon: '🤖',
+  name: 'Claude',
+  desc: 'L\'assistant IA le plus puissant',
+  url: 'https://claude.ai/?ref=creatorflow',
+  bg: 'rgba(245,158,11,0.15)'
+}, {
+  icon: '⚡',
+  name: 'Make',
+  desc: 'Automatise tes tâches répétitives',
+  url: 'https://www.make.com/en/register?pc=creatorflow',
+  bg: 'rgba(99,102,241,0.15)'
+}, {
+  icon: '📝',
+  name: 'Notion AI',
+  desc: 'Workspace IA tout-en-un',
+  url: 'https://affiliate.notion.so/creatorflow',
+  bg: 'rgba(255,255,255,0.08)'
+}];
+function AffiliateToolsCard({
+  category
+}) {
   const tools = AFFIL_TOOLS[category] || DEFAULT_AFFIL;
-  return (
-    <div className="affil-card">
-      <div className="affil-card-head">
-        <span className="affil-card-title">Outils recommandés</span>
-        <span className="affil-card-badge">Sponsorisé</span>
-      </div>
-      {tools.map((t, i) => (
-        <a key={i} href={t.url} target="_blank" rel="noopener sponsored" className="affil-tool">
-          <div className="affil-tool-icon" style={{background:t.bg}}>{t.icon}</div>
-          <div className="affil-tool-info">
-            <div className="affil-tool-name">{t.name}</div>
-            <div className="affil-tool-desc">{t.desc}</div>
-          </div>
-          <span className="affil-tool-btn">Essayer →</span>
-        </a>
-      ))}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "affil-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-card-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "affil-card-title"
+  }, "Outils recommand\xE9s"), /*#__PURE__*/React.createElement("span", {
+    className: "affil-card-badge"
+  }, "Sponsoris\xE9")), tools.map((t, i) => /*#__PURE__*/React.createElement("a", {
+    key: i,
+    href: t.url,
+    target: "_blank",
+    rel: "noopener sponsored",
+    className: "affil-tool"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-icon",
+    style: {
+      background: t.bg
+    }
+  }, t.icon), /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-name"
+  }, t.name), /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-desc"
+  }, t.desc)), /*#__PURE__*/React.createElement("span", {
+    className: "affil-tool-btn"
+  }, "Essayer \u2192"))));
 }
-
 function RightSidebar() {
-  return (
-    <aside className="right-sidebar">
-      <div className="expert-cta-mini">
-        <div style={{fontSize:28,marginBottom:8}}>🚀</div>
-        <h4>Besoin d'un expert IA ?</h4>
-        <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
-        <a href="/experts">Voir les experts →</a>
-      </div>
-    </aside>
-  );
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "right-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-cta-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("h4", null, "Besoin d'un expert IA ?"), /*#__PURE__*/React.createElement("p", null, "Nos experts certifi\xE9s peuvent impl\xE9menter ces strat\xE9gies pour vous."), /*#__PURE__*/React.createElement("a", {
+    href: "/experts"
+  }, "Voir les experts \u2192")));
 }
-
 const DASHBOARD_METRICS = {
-  'Automatisation IA':      { m:[['+340%','Leads'],['11h','Économies'],['3.8x','ROI']],     bars:[72,85,91,78,94] },
-  'Marketing IA':           { m:[['+280%','Trafic'],['5x','Engage.'],['68%','Conv.']],       bars:[68,79,88,82,91] },
-  'Outils IA':              { m:[['1,200','Outils'],['4.2★','Score'],['Free','Trial']],      bars:[80,72,86,90,77] },
-  'Création de Contenu IA': { m:[['10x','Rapide'],['90%','Qualité'],['24/7','Actif']],       bars:[88,76,92,85,79] },
-  'Vente IA':               { m:[['+190%','Ventes'],['3.2x','Pipeline'],['48h','Setup']],    bars:[75,84,79,93,88] },
-  'Actualités IA':          { m:[['Daily','Updates'],['500+','Sources'],['Live','Réel']],    bars:[91,88,85,90,87] },
-  'Support Client IA':      { m:[['24/7','Dispo'],['<2min','Réponse'],['94%','Satisf.']],    bars:[89,92,87,95,91] },
-  'Tutoriels IA':           { m:[['100+','Guides'],['4.8★','Note'],['FR','Langue']],         bars:[77,83,88,74,91] },
-  'Comparatifs IA':         { m:[['50+','Outils'],['2026','Data'],['Expert','Analyse']],     bars:[82,78,90,85,88] },
-  'Guides IA':              { m:[['A→Z','Complet'],['Pratique','Guide'],['2026','Actuel']],  bars:[85,79,88,82,91] },
+  'Automatisation IA': {
+    m: [['+340%', 'Leads'], ['11h', 'Économies'], ['3.8x', 'ROI']],
+    bars: [72, 85, 91, 78, 94]
+  },
+  'Marketing IA': {
+    m: [['+280%', 'Trafic'], ['5x', 'Engage.'], ['68%', 'Conv.']],
+    bars: [68, 79, 88, 82, 91]
+  },
+  'Outils IA': {
+    m: [['1,200', 'Outils'], ['4.2★', 'Score'], ['Free', 'Trial']],
+    bars: [80, 72, 86, 90, 77]
+  },
+  'Création de Contenu IA': {
+    m: [['10x', 'Rapide'], ['90%', 'Qualité'], ['24/7', 'Actif']],
+    bars: [88, 76, 92, 85, 79]
+  },
+  'Vente IA': {
+    m: [['+190%', 'Ventes'], ['3.2x', 'Pipeline'], ['48h', 'Setup']],
+    bars: [75, 84, 79, 93, 88]
+  },
+  'Actualités IA': {
+    m: [['Daily', 'Updates'], ['500+', 'Sources'], ['Live', 'Réel']],
+    bars: [91, 88, 85, 90, 87]
+  },
+  'Support Client IA': {
+    m: [['24/7', 'Dispo'], ['<2min', 'Réponse'], ['94%', 'Satisf.']],
+    bars: [89, 92, 87, 95, 91]
+  },
+  'Tutoriels IA': {
+    m: [['100+', 'Guides'], ['4.8★', 'Note'], ['FR', 'Langue']],
+    bars: [77, 83, 88, 74, 91]
+  },
+  'Comparatifs IA': {
+    m: [['50+', 'Outils'], ['2026', 'Data'], ['Expert', 'Analyse']],
+    bars: [82, 78, 90, 85, 88]
+  },
+  'Guides IA': {
+    m: [['A→Z', 'Complet'], ['Pratique', 'Guide'], ['2026', 'Actuel']],
+    bars: [85, 79, 88, 82, 91]
+  }
 };
-const DEFAULT_DASH = { m:[['+73%','Performance'],['3.8x','ROI'],['48h','Délai']], bars:[78,85,91,82,88] };
-
-function HeroDashboard({ article }) {
+const DEFAULT_DASH = {
+  m: [['+73%', 'Performance'], ['3.8x', 'ROI'], ['48h', 'Délai']],
+  bars: [78, 85, 91, 82, 88]
+};
+function HeroDashboard({
+  article
+}) {
   const catColor = CAT_COLORS[article.category] || '#7C3AED';
   const d = DASHBOARD_METRICS[article.category] || DEFAULT_DASH;
   const maxB = Math.max(...d.bars);
-  const days = ['L','M','M','J','V'];
-  return (
-    <div className="hero-dashboard" style={{
-      boxShadow:`0 0 60px ${catColor}25,0 24px 64px rgba(0,0,0,0.28)`,
-      border:`1px solid ${catColor}22`,
-    }}>
-      <div className="hd-header">
-        <div className="hd-dots">
-          <span className="hd-dot" style={{background:'#FF5F57'}}/>
-          <span className="hd-dot" style={{background:'#FFBD2E'}}/>
-          <span className="hd-dot" style={{background:'#28C840'}}/>
-        </div>
-        <span className="hd-ttl">IA Analytics</span>
-      </div>
-      <div className="hd-metrics">
-        {d.m.map(([val,lbl],i)=>(
-          <div key={i} className="hd-m">
-            <span className="hd-m-val" style={{color:catColor}}>{val}</span>
-            <span className="hd-m-lbl">{lbl}</span>
-          </div>
-        ))}
-      </div>
-      <div className="hd-chart">
-        {d.bars.map((h,i)=>(
-          <div key={i} className="hd-bar-col">
-            <div className="hd-bar" style={{
-              height:`${(h/maxB)*100}%`,
-              background: h===maxB ? catColor : `${catColor}55`,
-            }}/>
-            <span className="hd-bar-day">{days[i]}</span>
-          </div>
-        ))}
-      </div>
-      <div className="hd-footer">
-        <span className="hd-dot-live"/>
-        <span>Live · {new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'short'})}</span>
-      </div>
-    </div>
-  );
+  const days = ['L', 'M', 'M', 'J', 'V'];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "hero-dashboard",
+    style: {
+      boxShadow: `0 0 60px ${catColor}25,0 24px 64px rgba(0,0,0,0.28)`,
+      border: `1px solid ${catColor}22`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-dots"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#FF5F57'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#FFBD2E'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#28C840'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "hd-ttl"
+  }, "IA Analytics")), /*#__PURE__*/React.createElement("div", {
+    className: "hd-metrics"
+  }, d.m.map(([val, lbl], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "hd-m"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-m-val",
+    style: {
+      color: catColor
+    }
+  }, val), /*#__PURE__*/React.createElement("span", {
+    className: "hd-m-lbl"
+  }, lbl)))), /*#__PURE__*/React.createElement("div", {
+    className: "hd-chart"
+  }, d.bars.map((h, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "hd-bar-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-bar",
+    style: {
+      height: `${h / maxB * 100}%`,
+      background: h === maxB ? catColor : `${catColor}55`
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-bar-day"
+  }, days[i])))), /*#__PURE__*/React.createElement("div", {
+    className: "hd-footer"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot-live"
+  }), /*#__PURE__*/React.createElement("span", null, "Live \xB7 ", new Date().toLocaleDateString('fr-CA', {
+    day: 'numeric',
+    month: 'short'
+  }))));
 }
-
 function Skeleton() {
-  return (
-    <div style={{ paddingTop: 'var(--nav)' }}>
-      <div className="article-hero">
-        <div className="hero-inner">
-          <div className="sk" style={{height:12,width:'30%',marginBottom:20}}/>
-          <div className="sk" style={{height:14,width:'15%',borderRadius:999,marginBottom:18}}/>
-          <div className="sk" style={{height:42,width:'85%',marginBottom:12}}/>
-          <div className="sk" style={{height:42,width:'70%',marginBottom:14}}/>
-          <div className="sk" style={{height:20,width:'60%',marginBottom:28}}/>
-          <div className="sk" style={{height:14,width:'50%'}}/>
-        </div>
-      </div>
-      <div className="article-layout">
-        <div/>
-        <div>
-          {[1,2,3,4,5,6,7,8].map(i=>(
-            <div key={i} className="sk" style={{height:14,marginBottom:12,width:i%3===0?'75%':'100%'}}/>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 'var(--nav)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 12,
+      width: '30%',
+      marginBottom: 20
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 14,
+      width: '15%',
+      borderRadius: 999,
+      marginBottom: 18
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 42,
+      width: '85%',
+      marginBottom: 12
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 42,
+      width: '70%',
+      marginBottom: 14
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 20,
+      width: '60%',
+      marginBottom: 28
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 14,
+      width: '50%'
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "article-layout"
+  }, /*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("div", null, [1, 2, 3, 4, 5, 6, 7, 8].map(i => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "sk",
+    style: {
+      height: 14,
+      marginBottom: 12,
+      width: i % 3 === 0 ? '75%' : '100%'
+    }
+  })))));
 }
-
 function ArticlePage() {
-  const [article,  setArticle]  = useState(null);
-  const [related,  setRelated]  = useState([]);
-  const [loading,  setLoading]  = useState(true);
+  const [article, setArticle] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [headings, setHeadings] = useState([]);
   const [activeId, setActiveId] = useState('');
-  const [copied,   setCopied]   = useState(false);
+  const [copied, setCopied] = useState(false);
   const contentRef = useRef(null);
-
   const slug = getSlug();
-
   useEffect(() => {
-    if (!slug) { setNotFound(true); setLoading(false); return; }
+    if (!slug) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
     (async () => {
       try {
-        const { data, error } = await sb
-          .from('blog_articles').select('*')
-          .eq('slug', slug).eq('status','published').single();
-        if (error || !data) { setNotFound(true); setLoading(false); return; }
+        const {
+          data,
+          error
+        } = await sb.from('blog_articles').select('*').eq('slug', slug).eq('status', 'published').single();
+        if (error || !data) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
         setArticle(data);
 
         // Canonical URL (clean /blog/SLUG format)
@@ -1051,77 +1443,115 @@ function ArticlePage() {
 
         // Schema.org injection
         const orgSchema = {
-          '@context':'https://schema.org','@type':'Organization',
-          name:'CreatorFlow Market',url:'https://creatorflowmarket.com',
-          logo:{'@type':'ImageObject',url:'https://creatorflowmarket.com/og-image.jpg'},
-          sameAs:['https://twitter.com/creatorflowmkt'],
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'CreatorFlow Market',
+          url: 'https://creatorflowmarket.com',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://creatorflowmarket.com/og-image.jpg'
+          },
+          sameAs: ['https://twitter.com/creatorflowmkt']
         };
         const articleSchema = {
-          '@context':'https://schema.org','@type':'Article',
-          headline:data.title, description:data.meta_description||data.excerpt,
-          author:{'@type':'Organization',name:'CreatorFlow Market'},
-          publisher:{
-            '@type':'Organization',name:'CreatorFlow Market',
-            logo:{'@type':'ImageObject',url:'https://creatorflowmarket.com/og-image.jpg'},
-            url:'https://creatorflowmarket.com',
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: data.title,
+          description: data.meta_description || data.excerpt,
+          author: {
+            '@type': 'Organization',
+            name: 'CreatorFlow Market'
           },
-          datePublished:data.published_at, dateModified:data.updated_at||data.published_at,
-          image:data.og_image||data.featured_image||'https://creatorflowmarket.com/og-image.jpg',
-          url:canonUrl,
-          mainEntityOfPage:{'@type':'WebPage','@id':canonUrl},
-          keywords:(data.tags||[]).join(', '),
-          articleSection:data.category,
-          inLanguage:'fr',
+          publisher: {
+            '@type': 'Organization',
+            name: 'CreatorFlow Market',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://creatorflowmarket.com/og-image.jpg'
+            },
+            url: 'https://creatorflowmarket.com'
+          },
+          datePublished: data.published_at,
+          dateModified: data.updated_at || data.published_at,
+          image: data.og_image || data.featured_image || 'https://creatorflowmarket.com/og-image.jpg',
+          url: canonUrl,
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': canonUrl
+          },
+          keywords: (data.tags || []).join(', '),
+          articleSection: data.category,
+          inLanguage: 'fr'
         };
         const faqSchemaData = data.faq && data.faq.length ? {
-          '@context':'https://schema.org','@type':'FAQPage',
-          mainEntity: (Array.isArray(data.faq) ? data.faq : JSON.parse(data.faq||'[]')).map(f => ({
-            '@type':'Question', name:f.question||f.q,
-            acceptedAnswer:{'@type':'Answer',text:f.answer||f.a}
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: (Array.isArray(data.faq) ? data.faq : JSON.parse(data.faq || '[]')).map(f => ({
+            '@type': 'Question',
+            name: f.question || f.q,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: f.answer || f.a
+            }
           }))
         } : null;
         const breadcrumbSchema = {
-          '@context':'https://schema.org','@type':'BreadcrumbList',
-          itemListElement:[
-            {'@type':'ListItem',position:1,name:'Accueil',item:'https://creatorflowmarket.com'},
-            {'@type':'ListItem',position:2,name:'Blog IA',item:'https://creatorflowmarket.com/blog'},
-            {'@type':'ListItem',position:3,name:data.category,item:`https://creatorflowmarket.com/blog?cat=${encodeURIComponent(data.category)}`},
-            {'@type':'ListItem',position:4,name:data.title,item:canonUrl},
-          ],
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [{
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Accueil',
+            item: 'https://creatorflowmarket.com'
+          }, {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blog IA',
+            item: 'https://creatorflowmarket.com/blog'
+          }, {
+            '@type': 'ListItem',
+            position: 3,
+            name: data.category,
+            item: `https://creatorflowmarket.com/blog?cat=${encodeURIComponent(data.category)}`
+          }, {
+            '@type': 'ListItem',
+            position: 4,
+            name: data.title,
+            item: canonUrl
+          }]
         };
-
         [orgSchema, articleSchema, faqSchemaData, breadcrumbSchema].filter(Boolean).forEach(s => {
           const sc = document.createElement('script');
-          sc.type = 'application/ld+json'; sc.text = JSON.stringify(s);
+          sc.type = 'application/ld+json';
+          sc.text = JSON.stringify(s);
           document.head.appendChild(sc);
         });
 
         // Views
-        sb.rpc('increment_blog_views',{article_slug:slug}).then(null, ()=>{});
+        sb.rpc('increment_blog_views', {
+          article_slug: slug
+        }).then(null, () => {});
 
         // Related articles: tags-based first, fallback to category
         let relData = null;
         if (data.tags?.length) {
-          const { data: byTags } = await sb.from('blog_articles')
-            .select('id,slug,title,excerpt,category')
-            .eq('status','published')
-            .neq('slug', slug)
-            .overlaps('tags', data.tags)
-            .limit(3);
+          const {
+            data: byTags
+          } = await sb.from('blog_articles').select('id,slug,title,excerpt,category').eq('status', 'published').neq('slug', slug).overlaps('tags', data.tags).limit(3);
           relData = byTags;
         }
         if (!relData?.length) {
-          const { data: byCat } = await sb.from('blog_articles')
-            .select('id,slug,title,excerpt,category')
-            .eq('status','published')
-            .eq('category', data.category)
-            .neq('slug', slug)
-            .limit(3);
+          const {
+            data: byCat
+          } = await sb.from('blog_articles').select('id,slug,title,excerpt,category').eq('status', 'published').eq('category', data.category).neq('slug', slug).limit(3);
           relData = byCat;
         }
         setRelated(relData || []);
-      } catch { setNotFound(true); }
-      finally { setLoading(false); }
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [slug]);
 
@@ -1134,174 +1564,227 @@ function ArticlePage() {
       const id = `heading-${i}`;
       el.id = id;
       el.style.scrollMarginTop = '80px';
-      items.push({ id, level: parseInt(el.tagName[1]), text: el.textContent });
+      items.push({
+        id,
+        level: parseInt(el.tagName[1]),
+        text: el.textContent
+      });
     });
     setHeadings(items);
-
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) setActiveId(e.target.id); });
-    }, { rootMargin: '-64px 0px -70% 0px', threshold: 0 });
+      entries.forEach(e => {
+        if (e.isIntersecting) setActiveId(e.target.id);
+      });
+    }, {
+      rootMargin: '-64px 0px -70% 0px',
+      threshold: 0
+    });
     els.forEach(el => obs.observe(el));
     return () => obs.disconnect();
   }, [article]);
-
   const copyLink = () => {
     const url = `https://creatorflowmarket.com/blog/${article.slug}`;
-    navigator.clipboard?.writeText(url).catch(()=>{});
+    navigator.clipboard?.writeText(url).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  if (loading) return <Skeleton />;
-  if (notFound) return (
-    <div className="not-found">
-      <div style={{fontSize:56,marginBottom:20}}>📭</div>
-      <h2>Article introuvable</h2>
-      <p style={{color:'var(--text-2)',marginBottom:28}}>Cet article n'existe pas ou a été supprimé.</p>
-      <a href="/blog" className="btn btn-primary">← Retour au Blog</a>
-    </div>
-  );
-
+  if (loading) return /*#__PURE__*/React.createElement(Skeleton, null);
+  if (notFound) return /*#__PURE__*/React.createElement("div", {
+    className: "not-found"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 56,
+      marginBottom: 20
+    }
+  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("h2", null, "Article introuvable"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-2)',
+      marginBottom: 28
+    }
+  }, "Cet article n'existe pas ou a \xE9t\xE9 supprim\xE9."), /*#__PURE__*/React.createElement("a", {
+    href: "/blog",
+    className: "btn btn-primary"
+  }, "\u2190 Retour au Blog"));
   const url = `https://creatorflowmarket.com/blog/${article.slug}`;
   const catColor = CAT_COLORS[article.category] || '#7C3AED';
-  const pubDate = article.published_at
-    ? new Date(article.published_at).toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})
-    : '';
+  const pubDate = article.published_at ? new Date(article.published_at).toLocaleDateString('fr-CA', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }) : '';
   const faqData = (() => {
-    try { return Array.isArray(article.faq) ? article.faq : (article.faq ? JSON.parse(article.faq) : []); }
-    catch { return []; }
+    try {
+      return Array.isArray(article.faq) ? article.faq : article.faq ? JSON.parse(article.faq) : [];
+    } catch {
+      return [];
+    }
   })();
   const paaData = Array.isArray(article.paa_questions) ? article.paa_questions : [];
-  const { intro, main: mainContent } = splitContent(article.content || '');
+  const {
+    intro,
+    main: mainContent
+  } = splitContent(article.content || '');
   const cta = ARTICLE_CTA[article.category] || DEFAULT_CTA;
-
-  return (
-    <div style={{ paddingTop: 'var(--nav)' }}>
-      {/* HERO — titre + meta */}
-      <div className="article-hero" style={{background:`linear-gradient(150deg,${catColor}1A 0%,${catColor}07 55%,transparent 100%)`}}>
-        <div className="hero-inner">
-          <div className="hero-main-col">
-            <div className="breadcrumb">
-              <a href="/">Accueil</a>
-              <span className="bc-sep">›</span>
-              <a href="/blog">Blog IA</a>
-              <span className="bc-sep">›</span>
-              <a href={`/blog?cat=${encodeURIComponent(article.category)}`}>{article.category}</a>
-            </div>
-            <CatBadge cat={article.category} />
-            <h1 className="article-title">{article.title}</h1>
-            {article.subtitle && <p className="article-subtitle">{article.subtitle}</p>}
-            <div className="hero-meta">
-              <div className="author-mini">
-                <div className="author-mini-avatar">{CAT_ICONS[article.category]||'🤖'}</div>
-                <div className="author-mini-info">
-                  <span className="author-mini-name">{article.author||'CreatorFlow AI'}</span>
-                  <span className="author-mini-role">Expert IA · CreatorFlow Market</span>
-                </div>
-              </div>
-              {article.reading_time > 0 && <span className="hero-meta-chip">📖 {article.reading_time} min de lecture</span>}
-              {article.views > 0 && <span className="hero-meta-chip">👁 {article.views.toLocaleString('fr')} vues</span>}
-              {pubDate && <span className="hero-meta-chip">📅 {pubDate}</span>}
-              {article.seo_score > 0 && (
-                <span className={`seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`}>
-                  SEO {article.seo_score}/100
-                </span>
-              )}
-            </div>
-          </div>
-          <HeroDashboard article={article} />
-        </div>
-      </div>
-
-      <HeroImage article={article} />
-
-      {/* INTRO — pleine largeur, visible immédiatement */}
-      {intro && (
-        <div className="article-intro">
-          <div className="article-content" dangerouslySetInnerHTML={{ __html: intro }} />
-        </div>
-      )}
-
-      {/* TOC MOBILE — strip horizontal sticky */}
-      <MobileTOCBar headings={headings} activeId={activeId} />
-
-      {/* ARTICLE LAYOUT */}
-      <div className="article-layout">
-        <div className="article-content-wrap">
-          <KeyTakeaways content={article.content || ''} takeaways={article.key_takeaways} />
-
-          <div className="article-content" ref={contentRef} dangerouslySetInnerHTML={{ __html: mainContent || article.content || '' }} />
-
-          {/* NEWSLETTER — apparaît après ~55% de lecture */}
-          <InlineNewsletter />
-
-          <FAQSection faq={faqData} />
-
-          {paaData.length > 0 && <PAASection questions={paaData} />}
-
-          {/* CTA EXPERT — contextuel par catégorie */}
-          <div className="article-cta">
-            <div className="cta-label">CreatorFlow Market</div>
-            <div className="cta-icon-large">{cta.icon}</div>
-            <h3>{cta.headline}</h3>
-            <p>{cta.body}</p>
-            <div className="cta-proof-row">
-              <span className="cta-proof-item">Audit gratuit</span>
-              <span className="cta-proof-item">Experts certifiés</span>
-              <span className="cta-proof-item">Résultats en 48h</span>
-            </div>
-            <div className="cta-btns">
-              <a href="/experts" className="cta-btn-primary">{cta.btn}</a>
-              <a href={cta.subHref} className="cta-btn-ghost">{cta.sub}</a>
-            </div>
-          </div>
-
-          {/* TAGS */}
-          {article.tags?.length > 0 && (
-            <div className="tags-row">
-              {article.tags.map(tag => (
-                <a key={tag} href={`/blog?q=${encodeURIComponent(tag)}`} className="tag-pill">#{tag}</a>
-              ))}
-            </div>
-          )}
-
-          {/* SHARE */}
-          <div className="share-row">
-            <span className="share-label">Partager :</span>
-            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">𝕏 Twitter</a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">LinkedIn</a>
-            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`} target="_blank" rel="noopener" className="share-btn">Facebook</a>
-            <button className="share-btn" onClick={copyLink}>{copied ? '✅ Copié !' : '🔗 Copier le lien'}</button>
-          </div>
-
-          {/* ARTICLES CONNEXES */}
-          {related.length > 0 && (
-            <div className="related-section">
-              <h2 className="related-title">Articles connexes</h2>
-              <div className="related-grid">
-                {related.map(a => <RelatedCard key={a.id} article={a} />)}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* RIGHT SIDEBAR — TOC + Expert CTA + Outils affiliés */}
-        <aside className="right-sidebar">
-          <TOC headings={headings} activeId={activeId} />
-          <div className="expert-cta-mini">
-            <div style={{fontSize:28,marginBottom:8}}>🚀</div>
-            <h4>Besoin d'un expert IA ?</h4>
-            <p>Nos experts certifiés peuvent implémenter ces stratégies pour vous.</p>
-            <a href="/experts">Voir les experts →</a>
-          </div>
-          <AffiliateToolsCard category={article.category} />
-        </aside>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 'var(--nav)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-hero",
+    style: {
+      background: `linear-gradient(150deg,${catColor}1A 0%,${catColor}07 55%,transparent 100%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-main-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "\u203A"), /*#__PURE__*/React.createElement("a", {
+    href: "/blog"
+  }, "Blog IA"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "\u203A"), /*#__PURE__*/React.createElement("a", {
+    href: `/blog?cat=${encodeURIComponent(article.category)}`
+  }, article.category)), /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h1", {
+    className: "article-title"
+  }, article.title), article.subtitle && /*#__PURE__*/React.createElement("p", {
+    className: "article-subtitle"
+  }, article.subtitle), /*#__PURE__*/React.createElement("div", {
+    className: "hero-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "author-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "author-mini-avatar"
+  }, CAT_ICONS[article.category] || '🤖'), /*#__PURE__*/React.createElement("div", {
+    className: "author-mini-info"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "author-mini-name"
+  }, article.author || 'CreatorFlow AI'), /*#__PURE__*/React.createElement("span", {
+    className: "author-mini-role"
+  }, "Expert IA \xB7 CreatorFlow Market"))), article.reading_time > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDCD6 ", article.reading_time, " min de lecture"), article.views > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDC41 ", article.views.toLocaleString('fr'), " vues"), pubDate && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDCC5 ", pubDate), article.seo_score > 0 && /*#__PURE__*/React.createElement("span", {
+    className: `seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`
+  }, "SEO ", article.seo_score, "/100"))), /*#__PURE__*/React.createElement(HeroDashboard, {
+    article: article
+  }))), /*#__PURE__*/React.createElement(HeroImage, {
+    article: article
+  }), intro && /*#__PURE__*/React.createElement("div", {
+    className: "article-intro"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-content",
+    dangerouslySetInnerHTML: {
+      __html: intro
+    }
+  })), /*#__PURE__*/React.createElement(MobileTOCBar, {
+    headings: headings,
+    activeId: activeId
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-content-wrap"
+  }, /*#__PURE__*/React.createElement(KeyTakeaways, {
+    content: article.content || '',
+    takeaways: article.key_takeaways
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-content",
+    ref: contentRef,
+    dangerouslySetInnerHTML: {
+      __html: mainContent || article.content || ''
+    }
+  }), /*#__PURE__*/React.createElement(InlineNewsletter, null), /*#__PURE__*/React.createElement(FAQSection, {
+    faq: faqData
+  }), paaData.length > 0 && /*#__PURE__*/React.createElement(PAASection, {
+    questions: paaData
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-cta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-label"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-icon-large"
+  }, cta.icon), /*#__PURE__*/React.createElement("h3", null, cta.headline), /*#__PURE__*/React.createElement("p", null, cta.body), /*#__PURE__*/React.createElement("div", {
+    className: "cta-proof-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Audit gratuit"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Experts certifi\xE9s"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "R\xE9sultats en 48h")), /*#__PURE__*/React.createElement("div", {
+    className: "cta-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "cta-btn-primary"
+  }, cta.btn), /*#__PURE__*/React.createElement("a", {
+    href: cta.subHref,
+    className: "cta-btn-ghost"
+  }, cta.sub))), article.tags?.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "tags-row"
+  }, article.tags.map(tag => /*#__PURE__*/React.createElement("a", {
+    key: tag,
+    href: `/blog?q=${encodeURIComponent(tag)}`,
+    className: "tag-pill"
+  }, "#", tag))), /*#__PURE__*/React.createElement("div", {
+    className: "share-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "share-label"
+  }, "Partager :"), /*#__PURE__*/React.createElement("a", {
+    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "\uD835\uDD4F Twitter"), /*#__PURE__*/React.createElement("a", {
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "LinkedIn"), /*#__PURE__*/React.createElement("a", {
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "Facebook"), /*#__PURE__*/React.createElement("button", {
+    className: "share-btn",
+    onClick: copyLink
+  }, copied ? '✅ Copié !' : '🔗 Copier le lien')), related.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "related-section"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "related-title"
+  }, "Articles connexes"), /*#__PURE__*/React.createElement("div", {
+    className: "related-grid"
+  }, related.map(a => /*#__PURE__*/React.createElement(RelatedCard, {
+    key: a.id,
+    article: a
+  }))))), /*#__PURE__*/React.createElement("aside", {
+    className: "right-sidebar"
+  }, /*#__PURE__*/React.createElement(TOC, {
+    headings: headings,
+    activeId: activeId
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "expert-cta-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("h4", null, "Besoin d'un expert IA ?"), /*#__PURE__*/React.createElement("p", null, "Nos experts certifi\xE9s peuvent impl\xE9menter ces strat\xE9gies pour vous."), /*#__PURE__*/React.createElement("a", {
+    href: "/experts"
+  }, "Voir les experts \u2192")), /*#__PURE__*/React.createElement(AffiliateToolsCard, {
+    category: article.category
+  }))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<ArticlePage />);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(ArticlePage, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

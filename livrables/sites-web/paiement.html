@@ -170,78 +170,205 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const EDGE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/create-checkout-session';
 const ANON_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
 const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
 const FORMATEURS_IMG = {
-  rose:`${SB_STORAGE}/Rose.jpg`, phelix:`${SB_STORAGE}/Phelix.jpg`,
-  'rémy':`${SB_STORAGE}/Remy.jpg`, jay:`${SB_STORAGE}/Jay.jpg`, louvie:`${SB_STORAGE}/Louvie.jpg`
+  rose: `${SB_STORAGE}/Rose.jpg`,
+  phelix: `${SB_STORAGE}/Phelix.jpg`,
+  'rémy': `${SB_STORAGE}/Remy.jpg`,
+  jay: `${SB_STORAGE}/Jay.jpg`,
+  louvie: `${SB_STORAGE}/Louvie.jpg`
 };
-
 const Ic = {
-  Shield:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-  Lock:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
-  Check:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Arrow:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
-  Star:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Info:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
-  Stripe:(p)=><svg {...p} width="40" height="17" viewBox="0 0 468 222" fill="none"><path d="M414 114c0-37-18-66-52-66-34 0-55 29-55 66 0 44 25 66 60 66 17 0 30-4 40-10v-29c-10 5-21 8-35 8-14 0-26-5-28-22h70c0-2 0-11 0-13zm-71-14c0-16 10-23 19-23s18 7 18 23h-37zM224 48c-14 0-23 7-28 11l-2-9h-31v168l36-8 1-41c5 4 13 9 25 9 25 0 48-20 48-66 0-42-23-64-49-64zm-9 98c-8 0-13-3-17-7l-1-56c4-4 9-7 18-7 14 0 23 16 23 35 0 20-9 35-23 35zM113 39l-36 8v146h36V39zM75 14C63 14 55 22 55 34s8 20 20 20 20-8 20-20S87 14 75 14zM468 87c0-36-18-39-44-39-14 0-28 4-37 8l5 26c8-3 19-6 30-6 12 0 15 3 15 12v2h-8c-28 0-56 10-56 43 0 27 17 40 40 40 17 0 28-7 35-15l2 13h32l-14-84zm-31 54c-4 4-10 7-17 7-9 0-14-5-14-13 0-13 10-18 27-18h4v24zM0 127c0 21 9 40 34 40 14 0 22-3 29-6l-5-27c-5 2-11 4-17 4-10 0-14-6-14-21V75h30V48H27V18L0 26v101z" fill="#635BFF"/></svg>,
+  Shield: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })),
+  Lock: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Back: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M12 19l-7-7 7-7"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Info: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "8",
+    x2: "12",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "16",
+    x2: "12.01",
+    y2: "16"
+  })),
+  Stripe: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "40",
+    height: "17",
+    viewBox: "0 0 468 222",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M414 114c0-37-18-66-52-66-34 0-55 29-55 66 0 44 25 66 60 66 17 0 30-4 40-10v-29c-10 5-21 8-35 8-14 0-26-5-28-22h70c0-2 0-11 0-13zm-71-14c0-16 10-23 19-23s18 7 18 23h-37zM224 48c-14 0-23 7-28 11l-2-9h-31v168l36-8 1-41c5 4 13 9 25 9 25 0 48-20 48-66 0-42-23-64-49-64zm-9 98c-8 0-13-3-17-7l-1-56c4-4 9-7 18-7 14 0 23 16 23 35 0 20-9 35-23 35zM113 39l-36 8v146h36V39zM75 14C63 14 55 22 55 34s8 20 20 20 20-8 20-20S87 14 75 14zM468 87c0-36-18-39-44-39-14 0-28 4-37 8l5 26c8-3 19-6 30-6 12 0 15 3 15 12v2h-8c-28 0-56 10-56 43 0 27 17 40 40 40 17 0 28-7 35-15l2 13h32l-14-84zm-31 54c-4 4-10 7-17 7-9 0-14-5-14-13 0-13 10-18 27-18h4v24zM0 127c0 21 9 40 34 40 14 0 22-3 29-6l-5-27c-5 2-11 4-17 4-10 0-14-6-14-21V75h30V48H27V18L0 26v101z",
+    fill: "#635BFF"
+  }))
 };
-
-function Stars({ n }) {
+function Stars({
+  n
+}) {
   const r = Math.round(parseFloat(n) || 0);
-  return (
-    <div className="stars">
-      {[1,2,3,4,5].map(i=><Ic.Star key={i} style={{color: i<=r ? 'var(--amber)' : 'var(--surf-3)'}}/>)}
-      <span style={{fontSize:11,color:'var(--text-2)',marginLeft:4}}>{n || '—'}</span>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "stars"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(Ic.Star, {
+    key: i,
+    style: {
+      color: i <= r ? 'var(--amber)' : 'var(--surf-3)'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-2)',
+      marginLeft: 4
+    }
+  }, n || '—'));
 }
-
-function PayBtn({ paying, prixStr }) {
-  return (
-    <button type="submit" className="btn btn-green btn-lg" disabled={paying} style={{position:'relative',overflow:'hidden'}}>
-      {paying ? (
-        <React.Fragment>
-          <span style={{display:'inline-block',width:16,height:16,border:'2px solid rgba(255,255,255,0.3)',borderTopColor:'#fff',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
-          Redirection vers Stripe...
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Ic.Lock/>Payer {prixStr} via Stripe<Ic.Arrow/>
-        </React.Fragment>
-      )}
-    </button>
-  );
+function PayBtn({
+  paying,
+  prixStr
+}) {
+  return /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-green btn-lg",
+    disabled: paying,
+    style: {
+      position: 'relative',
+      overflow: 'hidden'
+    }
+  }, paying ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-block',
+      width: 16,
+      height: 16,
+      border: '2px solid rgba(255,255,255,0.3)',
+      borderTopColor: '#fff',
+      borderRadius: '50%',
+      animation: 'spin 0.7s linear infinite'
+    }
+  }), "Redirection vers Stripe...") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Ic.Lock, null), "Payer ", prixStr, " via Stripe", /*#__PURE__*/React.createElement(Ic.Arrow, null)));
 }
-
 function SecurityRow() {
-  return (
-    <div className="security-row">
-      <div className="sec-badge"><Ic.Shield style={{color:'var(--green)'}}/> SSL 256-bit</div>
-      <div className="sec-badge"><Ic.Lock style={{color:'var(--green)'}}/> PCI DSS</div>
-      <div className="sec-badge">🔒 3D Secure</div>
-      <div className="sec-badge">⚡ Stripe</div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "security-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sec-badge"
+  }, /*#__PURE__*/React.createElement(Ic.Shield, {
+    style: {
+      color: 'var(--green)'
+    }
+  }), " SSL 256-bit"), /*#__PURE__*/React.createElement("div", {
+    className: "sec-badge"
+  }, /*#__PURE__*/React.createElement(Ic.Lock, {
+    style: {
+      color: 'var(--green)'
+    }
+  }), " PCI DSS"), /*#__PURE__*/React.createElement("div", {
+    className: "sec-badge"
+  }, "\uD83D\uDD12 3D Secure"), /*#__PURE__*/React.createElement("div", {
+    className: "sec-badge"
+  }, "\u26A1 Stripe"));
 }
-
 function App() {
   const params = new URLSearchParams(window.location.search);
   const missionId = params.get('mission_id');
   const courseId = params.get('course_id');
   const isSuccess = params.get('payment') === 'success';
   const mode = courseId ? 'course' : 'mission';
-
   const [user, setUser] = useState(null);
   const [mission, setMission] = useState(null);
   const [expert, setExpert] = useState(null);
@@ -250,71 +377,120 @@ function App() {
   const [paying, setPaying] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState('');
-
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const u = data.session.user;
-      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
-      setUser({ ...u, prenom: profile?.prenom || '', nom: profile?.nom || '' });
-
+      const {
+        data: profile
+      } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+      setUser({
+        ...u,
+        prenom: profile?.prenom || '',
+        nom: profile?.nom || ''
+      });
       if (missionId) {
-        const { data: m } = await sb.from('missions').select('*').eq('id', missionId).single();
+        const {
+          data: m
+        } = await sb.from('missions').select('*').eq('id', missionId).single();
         if (m) {
           setMission(m);
           if (m.expert_id) {
-            const [{ data: ep }, { data: pp }] = await Promise.all([
-              sb.from('experts').select('specialite, note_moyenne, nb_avis').eq('id', m.expert_id).single(),
-              sb.from('profiles').select('prenom, nom').eq('id', m.expert_id).single(),
-            ]);
-            setExpert({ ...(ep||{}), ...(pp||{}) });
+            const [{
+              data: ep
+            }, {
+              data: pp
+            }] = await Promise.all([sb.from('experts').select('specialite, note_moyenne, nb_avis').eq('id', m.expert_id).single(), sb.from('profiles').select('prenom, nom').eq('id', m.expert_id).single()]);
+            setExpert({
+              ...(ep || {}),
+              ...(pp || {})
+            });
           }
           if (isSuccess) {
-            await sb.from('missions').update({ statut: 'en_cours' }).eq('id', missionId);
-            const { data: { session: authSess } } = await sb.auth.getSession();
-            const [{ data: cp }, { data: ep }] = await Promise.all([
-              sb.from('profiles').select('email, prenom, nom').eq('id', m.client_id).single(),
-              sb.from('profiles').select('email, prenom, nom').eq('id', m.expert_id).single(),
-            ]);
+            await sb.from('missions').update({
+              statut: 'en_cours'
+            }).eq('id', missionId);
+            const {
+              data: {
+                session: authSess
+              }
+            } = await sb.auth.getSession();
+            const [{
+              data: cp
+            }, {
+              data: ep
+            }] = await Promise.all([sb.from('profiles').select('email, prenom, nom').eq('id', m.client_id).single(), sb.from('profiles').select('email, prenom, nom').eq('id', m.expert_id).single()]);
             const recipients = [cp?.email, ep?.email].filter(Boolean);
             if (recipients.length && authSess) {
               fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'apikey': ANON_KEY, 'Authorization': `Bearer ${authSess.access_token}` },
-                body: JSON.stringify({ type: 'paiement_confirme', to: recipients, data: { mission_titre: m.titre||'Mission', montant: m.prix||0, client_name: cp ? `${cp.prenom||''} ${cp.nom||''}`.trim()||'Client' : 'Client', expert_name: ep ? `${ep.prenom||''} ${ep.nom||''}`.trim()||'Expert' : 'Expert' } }),
+                headers: {
+                  'Content-Type': 'application/json',
+                  'apikey': ANON_KEY,
+                  'Authorization': `Bearer ${authSess.access_token}`
+                },
+                body: JSON.stringify({
+                  type: 'paiement_confirme',
+                  to: recipients,
+                  data: {
+                    mission_titre: m.titre || 'Mission',
+                    montant: m.prix || 0,
+                    client_name: cp ? `${cp.prenom || ''} ${cp.nom || ''}`.trim() || 'Client' : 'Client',
+                    expert_name: ep ? `${ep.prenom || ''} ${ep.nom || ''}`.trim() || 'Expert' : 'Expert'
+                  }
+                })
               }).catch(() => {});
             }
           }
         }
       }
-
       if (courseId) {
-        const { data: c } = await sb.from('academy_courses')
-          .select('id,slug,title,subtitle,instructor,prix,thumbnail_url,level,duration_minutes,total_lessons')
-          .eq('id', courseId).single();
+        const {
+          data: c
+        } = await sb.from('academy_courses').select('id,slug,title,subtitle,instructor,prix,thumbnail_url,level,duration_minutes,total_lessons').eq('id', courseId).single();
         if (c) {
           setCourse(c);
           if (isSuccess) {
-            try { await sb.from('academy_enrollments').insert({ user_id: u.id, course_id: courseId }); } catch(e) {}
+            try {
+              await sb.from('academy_enrollments').insert({
+                user_id: u.id,
+                course_id: courseId
+              });
+            } catch (e) {}
           }
         }
       }
-
       setLoading(false);
     });
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     return () => window.removeEventListener('mousemove', move);
   }, []);
-
   async function handlePay(e) {
     e.preventDefault();
-    if (!agreed) { setError('Vous devez accepter les conditions pour continuer.'); return; }
+    if (!agreed) {
+      setError('Vous devez accepter les conditions pour continuer.');
+      return;
+    }
     setPaying(true);
     setError('');
     try {
-      const { data: { session: auth } } = await sb.auth.getSession();
+      const {
+        data: {
+          session: auth
+        }
+      } = await sb.auth.getSession();
       const base = window.location.origin + window.location.pathname;
       let body;
       if (mode === 'course' && course) {
@@ -322,7 +498,7 @@ function App() {
           amount_cents: Math.round((course.prix || 0) * 100),
           mission_titre: `Formation : ${course.title}`,
           success_url: `${base}?course_id=${courseId}&payment=success`,
-          cancel_url: `${window.location.origin}/cours.html?id=${courseId}`,
+          cancel_url: `${window.location.origin}/cours.html?id=${courseId}`
         };
       } else {
         if (!missionId || !mission) return;
@@ -331,334 +507,723 @@ function App() {
           amount_cents: Math.round((mission.prix || 0) * 100),
           mission_titre: mission.titre || 'Mission CreatorFlow Market',
           success_url: `${base}?mission_id=${missionId}&payment=success`,
-          cancel_url: `${base}?mission_id=${missionId}`,
+          cancel_url: `${base}?mission_id=${missionId}`
         };
       }
       const resp = await fetch(EDGE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${auth.access_token}`, 'apikey': ANON_KEY },
-        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.access_token}`,
+          'apikey': ANON_KEY
+        },
+        body: JSON.stringify(body)
       });
       const json = await resp.json();
-      if (json.url) { window.location.href = json.url; }
-      else { setError(json.error || 'Erreur lors de la création de la session de paiement.'); setPaying(false); }
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        setError(json.error || 'Erreur lors de la création de la session de paiement.');
+        setPaying(false);
+      }
     } catch (err) {
       setError('Erreur de connexion. Veuillez réessayer.');
       setPaying(false);
     }
   }
-
-  const expertName = expert ? `${expert.prenom||''} ${expert.nom||''}`.trim() || 'Expert' : '…';
-  const expertInitials = expertName.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || 'EX';
-  const prix = mode === 'course' ? (course?.prix || 0) : (mission?.prix || 0);
+  const expertName = expert ? `${expert.prenom || ''} ${expert.nom || ''}`.trim() || 'Expert' : '…';
+  const expertInitials = expertName.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'EX';
+  const prix = mode === 'course' ? course?.prix || 0 : mission?.prix || 0;
   const prixStr = prix > 0 ? `${prix.toLocaleString('fr-CA')}$` : '—';
-  const instrImg = course ? FORMATEURS_IMG[(course.instructor||'').toLowerCase()] : null;
+  const instrImg = course ? FORMATEURS_IMG[(course.instructor || '').toLowerCase()] : null;
   const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-
-  if (loading) return (
-    <div style={{minHeight:'100vh',display:'grid',placeItems:'center'}}>
-      <div style={{width:32,height:32,border:'3px solid var(--surf-3)',borderTopColor:'var(--v)',borderRadius:'50%',animation:'spin 0.7s linear infinite'}}/>
-      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
-    </div>
-  );
-
-  const stripeInfoBlock = (
-    <div style={{background:'rgba(99,91,255,0.06)',border:'1px solid rgba(99,91,255,0.2)',borderRadius:12,padding:'20px',marginBottom:24,display:'flex',gap:16,alignItems:'center'}}>
-      <Ic.Stripe style={{flexShrink:0}}/>
-      <div>
-        <div style={{fontSize:13,fontWeight:600,marginBottom:3}}>Stripe Checkout</div>
-        <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.5}}>En cliquant sur "Payer", vous serez redirigé vers la page de paiement sécurisée de Stripe pour saisir vos informations de carte.</div>
-      </div>
-    </div>
-  );
-
-  return (
-    <React.Fragment>
-      <nav className="nav"><div className="wrap nav-inner">
-        <a href={mode === 'course' ? '/academie.html' : '/'} className="brand">
-          <div className="brand-logo"></div><span>CreatorFlow {mode === 'course' ? 'Academy' : 'Market'}</span>
-        </a>
-        <div className="nav-secure"><Ic.Lock/>Paiement sécurisé SSL</div>
-        <div className="user-chip">
-          <div className="av">{user ? ((user.prenom||'?')[0]+(user.nom||'?')[0]).toUpperCase() : '…'}</div>
-          <span style={{fontSize:13,fontWeight:600}}>{user ? `${user.prenom} ${user.nom}`.trim() || user.email : '…'}</span>
-        </div>
-      </div></nav>
-
-      <div className="page-wrap"><div className="wrap">
-
-        {/* SUCCESS — COURS */}
-        {isSuccess && mode === 'course' && (
-          <div style={{maxWidth:520,margin:'0 auto'}}>
-            <div className="card">
-              <div className="success-wrap">
-                <div className="success-ring">✓</div>
-                <h1 className="success-title">Accès accordé !</h1>
-                <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été reçu. Vous avez maintenant accès à <strong>"{course?.title}"</strong>.</p>
-                <div className="success-details">
-                  {[
-                    {label:'Formation', val: course?.title || '—'},
-                    {label:'Instructeur', val: cap(course?.instructor) || '—'},
-                    {label:'Montant payé', val: prixStr},
-                    {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
-                    {label:'Statut', val:'✅ Accès activé'},
-                  ].map((r,i) => (
-                    <div key={i} className="suc-row">
-                      <span className="suc-label">{r.label}</span>
-                      <span className="suc-val">{r.val}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
-                  <a href={`lecteur.html?id=${courseId}`} className="btn btn-green" style={{borderRadius:12,padding:'12px 24px',fontSize:14,fontWeight:700}}>▶ Commencer le cours</a>
-                  <a href="academie.html" className="btn btn-ghost"><Ic.Back/>Académie</a>
-                </div>
-                <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
-                  Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SUCCESS — MISSION */}
-        {isSuccess && mode === 'mission' && (
-          <div style={{maxWidth:520,margin:'0 auto'}}>
-            <div className="card">
-              <div className="success-wrap">
-                <div className="success-ring">✓</div>
-                <h1 className="success-title">Paiement confirmé !</h1>
-                <p className="success-sub">Votre paiement de <strong>{prixStr}</strong> a bien été enregistré. {expertName} a été notifié et la mission est maintenant active.</p>
-                <div className="success-details">
-                  {[
-                    {label:'Mission', val: mission?.titre || '—'},
-                    {label:'Expert', val: expertName},
-                    {label:'Montant payé', val: prixStr},
-                    {label:'Date', val: new Date().toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})},
-                    {label:'Statut', val:'✅ Confirmé'},
-                  ].map((r,i) => (
-                    <div key={i} className="suc-row">
-                      <span className="suc-label">{r.label}</span>
-                      <span className="suc-val">{r.val}</span>
-                    </div>
-                  ))}
-                </div>
-                <div style={{display:'flex',gap:10,flexWrap:'wrap',justifyContent:'center'}}>
-                  <a href={`mission.html?id=${missionId}`} className="btn btn-primary">Voir la mission <Ic.Arrow/></a>
-                  <a href="dashboard-client.html" className="btn btn-ghost"><Ic.Back/>Dashboard</a>
-                </div>
-                <div style={{marginTop:20,fontSize:12,color:'var(--text-3)'}}>
-                  Un reçu Stripe a été envoyé à <span style={{color:'var(--vs)'}}>{user?.email}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* NOT FOUND */}
-        {!isSuccess && !missionId && !courseId && (
-          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
-            <div style={{fontSize:40,marginBottom:16}}>🔍</div>
-            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Page introuvable</h2>
-            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission ou formation associée à ce lien.</p>
-            <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
-          </div>
-        )}
-
-        {/* MISSION NOT FOUND */}
-        {!isSuccess && missionId && !mission && (
-          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
-            <div style={{fontSize:40,marginBottom:16}}>🔍</div>
-            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Mission introuvable</h2>
-            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Aucune mission associée à ce lien. Vérifiez l'URL ou revenez au dashboard.</p>
-            <a href="dashboard-client.html" className="btn btn-primary"><Ic.Back/>Retour au dashboard</a>
-          </div>
-        )}
-
-        {/* COURSE NOT FOUND */}
-        {!isSuccess && courseId && !course && (
-          <div style={{maxWidth:480,margin:'80px auto',textAlign:'center'}}>
-            <div style={{fontSize:40,marginBottom:16}}>🎓</div>
-            <h2 style={{fontSize:20,fontWeight:700,marginBottom:8}}>Formation introuvable</h2>
-            <p style={{fontSize:14,color:'var(--text-2)',marginBottom:24}}>Impossible de charger cette formation. Retournez à l'Académie.</p>
-            <a href="academie.html" className="btn btn-primary"><Ic.Back/>Académie</a>
-          </div>
-        )}
-
-        {/* FORMULAIRE — MISSION */}
-        {!isSuccess && missionId && mission && (
-          <React.Fragment>
-            <div className="breadcrumb">
-              <a href="dashboard-client.html">Dashboard</a>
-              <span className="bc-sep">/</span>
-              <a href={`mission.html?id=${missionId}`}>{mission.titre || 'Mission'}</a>
-              <span className="bc-sep">/</span>
-              <span style={{color:'var(--text-2)'}}>Paiement</span>
-            </div>
-            <h1 className="page-title">Valider le paiement</h1>
-            <p className="page-sub">Mission · Paiement sécurisé via Stripe</p>
-            <div className="pay-layout">
-              <form onSubmit={handlePay}>
-                <div className="card" style={{marginBottom:0}}>
-                  <div className="card-head">
-                    <div className="card-title">Paiement sécurisé</div>
-                    <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
-                  </div>
-                  <div className="card-body">
-                    {stripeInfoBlock}
-                    <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
-                      {[
-                        {label:'Mission', val: mission.titre || '—'},
-                        {label:'Montant', val: prixStr, bold:true},
-                        {label:'Devise', val:'CAD (dollar canadien)'},
-                      ].map((r,i)=>(
-                        <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<2 ? '1px solid var(--border)' : 'none',fontSize:13}}>
-                          <span style={{color:'var(--text-2)'}}>{r.label}</span>
-                          <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="checkbox-row" style={{marginBottom:16}}>
-                      <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
-                      <label htmlFor="agree">J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Market.</label>
-                    </div>
-                    {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
-                    <PayBtn paying={paying} prixStr={prixStr}/>
-                    <SecurityRow/>
-                  </div>
-                </div>
-              </form>
-              <div style={{display:'flex',flexDirection:'column',gap:16}}>
-                <div className="card">
-                  <div className="summary-mission">
-                    <div className="sm-icon">💼</div>
-                    <div>
-                      <div className="sm-title">{mission.titre || 'Mission'}</div>
-                      <div className="sm-meta">{mission.categorie || ''}{mission.deadline ? ` · Livraison ${new Date(mission.deadline).toLocaleDateString('fr-CA')}` : ''}</div>
-                      <div style={{marginTop:5}}><span className="badge badge-amber">Paiement en attente</span></div>
-                    </div>
-                  </div>
-                  {expert && (
-                    <div className="expert-row">
-                      <div className="ex-av">{expertInitials}</div>
-                      <div><div className="ex-name">{expertName}</div><div className="ex-spec">{expert.specialite || 'Expert IA'}</div></div>
-                      <div style={{marginLeft:'auto'}}><Stars n={expert.note_moyenne}/></div>
-                    </div>
-                  )}
-                  <div className="pricing-block">
-                    <div className="price-row"><span className="price-label">Montant total de la mission</span><span className="price-val">{prixStr}</span></div>
-                    <div className="price-row"><span className="price-label">Commission plateforme</span><span className="price-val" style={{color:'var(--text-3)'}}>0$ <span className="discount-tag">Incluse</span></span></div>
-                    <div className="price-total-row"><span className="price-total-label">Total à payer</span><span className="price-total-val">{prixStr}</span></div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
-                    <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}><Ic.Shield style={{color:'var(--green)'}}/>Paiement protégé</div>
-                  </div>
-                  <div className="protection-items">
-                    {['Fonds sécurisés jusqu\'à validation de la livraison','Remboursement intégral si le livrable n\'est pas conforme','Médiation CreatorFlow Market en cas de litige','Reçu Stripe envoyé automatiquement'].map((t,i) => (
-                      <div key={i} className="prot-item"><div className="prot-dot"/><span className="prot-text">{t}</span></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        )}
-
-        {/* FORMULAIRE — COURS */}
-        {!isSuccess && courseId && course && (
-          <React.Fragment>
-            <div className="breadcrumb">
-              <a href="academie.html">Académie</a>
-              <span className="bc-sep">/</span>
-              <a href={`cours.html?id=${courseId}`}>{course.title}</a>
-              <span className="bc-sep">/</span>
-              <span style={{color:'var(--text-2)'}}>Paiement</span>
-            </div>
-            <h1 className="page-title">Accéder à la formation</h1>
-            <p className="page-sub">Formation Academy · Paiement sécurisé via Stripe</p>
-            <div className="pay-layout">
-              <form onSubmit={handlePay}>
-                <div className="card" style={{marginBottom:0}}>
-                  <div className="card-head">
-                    <div className="card-title">Paiement sécurisé</div>
-                    <div className="card-sub">Traité par Stripe — vos données ne transitent pas par notre serveur</div>
-                  </div>
-                  <div className="card-body">
-                    {stripeInfoBlock}
-                    <div style={{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:12,padding:'16px 18px',marginBottom:24}}>
-                      {[
-                        {label:'Formation', val: course.title || '—'},
-                        {label:'Instructeur', val: cap(course.instructor) || '—'},
-                        {label:'Montant', val: prixStr, bold:true},
-                        {label:'Devise', val:'CAD (dollar canadien)'},
-                      ].map((r,i)=>(
-                        <div key={i} style={{display:'flex',justifyContent:'space-between',padding:'7px 0',borderBottom: i<3 ? '1px solid var(--border)' : 'none',fontSize:13}}>
-                          <span style={{color:'var(--text-2)'}}>{r.label}</span>
-                          <span style={{fontWeight: r.bold ? 700 : 600, color: r.bold ? 'var(--vs)' : 'var(--text)'}}>{r.val}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="checkbox-row" style={{marginBottom:16}}>
-                      <input type="checkbox" id="agree" checked={agreed} onChange={e=>setAgreed(e.target.checked)}/>
-                      <label htmlFor="agree">J'accepte les <a href="#">conditions générales</a> et la <a href="#">politique de remboursement</a> de CreatorFlow Academy.</label>
-                    </div>
-                    {error && <div style={{fontSize:12,color:'var(--red)',marginBottom:12,padding:'8px 12px',background:'rgba(239,68,68,0.06)',borderRadius:8,border:'1px solid rgba(239,68,68,0.15)'}}>{error}</div>}
-                    <PayBtn paying={paying} prixStr={prixStr}/>
-                    <SecurityRow/>
-                  </div>
-                </div>
-              </form>
-              <div style={{display:'flex',flexDirection:'column',gap:16}}>
-                <div className="card">
-                  {course.thumbnail_url && (
-                    <img src={course.thumbnail_url} alt={course.title} style={{width:'100%',aspectRatio:'16/9',objectFit:'cover',display:'block'}}/>
-                  )}
-                  <div className="summary-mission">
-                    {instrImg
-                      ? <img src={instrImg} alt={course.instructor} style={{width:48,height:48,borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
-                      : <div className="sm-icon">🎓</div>
-                    }
-                    <div>
-                      <div className="sm-title">{course.title}</div>
-                      <div className="sm-meta">{cap(course.instructor)} · {course.level || 'Débutant'}</div>
-                      <div style={{marginTop:5}}>
-                        <span className="badge" style={{background:'rgba(16,185,129,0.1)',color:'var(--green)',border:'1px solid rgba(16,185,129,0.2)'}}>Accès à vie</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="pricing-block">
-                    <div className="price-row"><span className="price-label">Prix de la formation</span><span className="price-val">{prixStr}</span></div>
-                    <div className="price-row"><span className="price-label">Garantie remboursement</span><span className="price-val" style={{color:'var(--green)'}}>30 jours</span></div>
-                    {course.total_lessons > 0 && (
-                      <div className="price-row"><span className="price-label">Contenu</span><span className="price-val" style={{color:'var(--text-2)'}}>{course.total_lessons} leçons · {Math.floor((course.duration_minutes||0)/60)}h</span></div>
-                    )}
-                    <div className="price-total-row"><span className="price-total-label">Total à payer</span><span className="price-total-val">{prixStr}</span></div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
-                    <div style={{fontSize:13,fontWeight:700,display:'flex',alignItems:'center',gap:7,color:'var(--green)'}}><Ic.Shield style={{color:'var(--green)'}}/>Ce qui est inclus</div>
-                  </div>
-                  <div className="protection-items">
-                    {['Accès à vie à toutes les leçons et mises à jour','Certificat de complétion CreatorFlow Academy','Templates et ressources téléchargeables','Accès à la communauté Discord privée','Garantie satisfait ou remboursé 30 jours'].map((t,i) => (
-                      <div key={i} className="prot-item"><div className="prot-dot"/><span className="prot-text">{t}</span></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        )}
-
-      </div></div>
-      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
-    </React.Fragment>
-  );
+  if (loading) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: '100vh',
+      display: 'grid',
+      placeItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 32,
+      height: 32,
+      border: '3px solid var(--surf-3)',
+      borderTopColor: 'var(--v)',
+      borderRadius: '50%',
+      animation: 'spin 0.7s linear infinite'
+    }
+  }), /*#__PURE__*/React.createElement("style", null, `@keyframes spin{to{transform:rotate(360deg);}}`));
+  const stripeInfoBlock = /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(99,91,255,0.06)',
+      border: '1px solid rgba(99,91,255,0.2)',
+      borderRadius: 12,
+      padding: '20px',
+      marginBottom: 24,
+      display: 'flex',
+      gap: 16,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Stripe, {
+    style: {
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      marginBottom: 3
+    }
+  }, "Stripe Checkout"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-2)',
+      lineHeight: 1.5
+    }
+  }, "En cliquant sur \"Payer\", vous serez redirig\xE9 vers la page de paiement s\xE9curis\xE9e de Stripe pour saisir vos informations de carte.")));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: mode === 'course' ? '/academie.html' : '/',
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", mode === 'course' ? 'Academy' : 'Market')), /*#__PURE__*/React.createElement("div", {
+    className: "nav-secure"
+  }, /*#__PURE__*/React.createElement(Ic.Lock, null), "Paiement s\xE9curis\xE9 SSL"), /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "av"
+  }, user ? ((user.prenom || '?')[0] + (user.nom || '?')[0]).toUpperCase() : '…'), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, user ? `${user.prenom} ${user.nom}`.trim() || user.email : '…')))), /*#__PURE__*/React.createElement("div", {
+    className: "page-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, isSuccess && mode === 'course' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 520,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, "\u2713"), /*#__PURE__*/React.createElement("h1", {
+    className: "success-title"
+  }, "Acc\xE8s accord\xE9 !"), /*#__PURE__*/React.createElement("p", {
+    className: "success-sub"
+  }, "Votre paiement de ", /*#__PURE__*/React.createElement("strong", null, prixStr), " a bien \xE9t\xE9 re\xE7u. Vous avez maintenant acc\xE8s \xE0 ", /*#__PURE__*/React.createElement("strong", null, "\"", course?.title, "\""), "."), /*#__PURE__*/React.createElement("div", {
+    className: "success-details"
+  }, [{
+    label: 'Formation',
+    val: course?.title || '—'
+  }, {
+    label: 'Instructeur',
+    val: cap(course?.instructor) || '—'
+  }, {
+    label: 'Montant payé',
+    val: prixStr
+  }, {
+    label: 'Date',
+    val: new Date().toLocaleDateString('fr-CA', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })
+  }, {
+    label: 'Statut',
+    val: '✅ Accès activé'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "suc-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "suc-label"
+  }, r.label), /*#__PURE__*/React.createElement("span", {
+    className: "suc-val"
+  }, r.val)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: `lecteur.html?id=${courseId}`,
+    className: "btn btn-green",
+    style: {
+      borderRadius: 12,
+      padding: '12px 24px',
+      fontSize: 14,
+      fontWeight: 700
+    }
+  }, "\u25B6 Commencer le cours"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-ghost"
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "Un re\xE7u Stripe a \xE9t\xE9 envoy\xE9 \xE0 ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--vs)'
+    }
+  }, user?.email))))), isSuccess && mode === 'mission' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 520,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, "\u2713"), /*#__PURE__*/React.createElement("h1", {
+    className: "success-title"
+  }, "Paiement confirm\xE9 !"), /*#__PURE__*/React.createElement("p", {
+    className: "success-sub"
+  }, "Votre paiement de ", /*#__PURE__*/React.createElement("strong", null, prixStr), " a bien \xE9t\xE9 enregistr\xE9. ", expertName, " a \xE9t\xE9 notifi\xE9 et la mission est maintenant active."), /*#__PURE__*/React.createElement("div", {
+    className: "success-details"
+  }, [{
+    label: 'Mission',
+    val: mission?.titre || '—'
+  }, {
+    label: 'Expert',
+    val: expertName
+  }, {
+    label: 'Montant payé',
+    val: prixStr
+  }, {
+    label: 'Date',
+    val: new Date().toLocaleDateString('fr-CA', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })
+  }, {
+    label: 'Statut',
+    val: '✅ Confirmé'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "suc-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "suc-label"
+  }, r.label), /*#__PURE__*/React.createElement("span", {
+    className: "suc-val"
+  }, r.val)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: `mission.html?id=${missionId}`,
+    className: "btn btn-primary"
+  }, "Voir la mission ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost"
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Dashboard")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "Un re\xE7u Stripe a \xE9t\xE9 envoy\xE9 \xE0 ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--vs)'
+    }
+  }, user?.email))))), !isSuccess && !missionId && !courseId && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 480,
+      margin: '80px auto',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontSize: 20,
+      fontWeight: 700,
+      marginBottom: 8
+    }
+  }, "Page introuvable"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginBottom: 24
+    }
+  }, "Aucune mission ou formation associ\xE9e \xE0 ce lien."), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Retour au dashboard")), !isSuccess && missionId && !mission && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 480,
+      margin: '80px auto',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontSize: 20,
+      fontWeight: 700,
+      marginBottom: 8
+    }
+  }, "Mission introuvable"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginBottom: 24
+    }
+  }, "Aucune mission associ\xE9e \xE0 ce lien. V\xE9rifiez l'URL ou revenez au dashboard."), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Retour au dashboard")), !isSuccess && courseId && !course && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 480,
+      margin: '80px auto',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "\uD83C\uDF93"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontSize: 20,
+      fontWeight: 700,
+      marginBottom: 8
+    }
+  }, "Formation introuvable"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginBottom: 24
+    }
+  }, "Impossible de charger cette formation. Retournez \xE0 l'Acad\xE9mie."), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Acad\xE9mie")), !isSuccess && missionId && mission && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html"
+  }, "Dashboard"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "/"), /*#__PURE__*/React.createElement("a", {
+    href: `mission.html?id=${missionId}`
+  }, mission.titre || 'Mission'), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, "Paiement")), /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Valider le paiement"), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, "Mission \xB7 Paiement s\xE9curis\xE9 via Stripe"), /*#__PURE__*/React.createElement("div", {
+    className: "pay-layout"
+  }, /*#__PURE__*/React.createElement("form", {
+    onSubmit: handlePay
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Paiement s\xE9curis\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Trait\xE9 par Stripe \u2014 vos donn\xE9es ne transitent pas par notre serveur")), /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, stripeInfoBlock, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surf-2)',
+      border: '1px solid var(--border-2)',
+      borderRadius: 12,
+      padding: '16px 18px',
+      marginBottom: 24
+    }
+  }, [{
+    label: 'Mission',
+    val: mission.titre || '—'
+  }, {
+    label: 'Montant',
+    val: prixStr,
+    bold: true
+  }, {
+    label: 'Devise',
+    val: 'CAD (dollar canadien)'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '7px 0',
+      borderBottom: i < 2 ? '1px solid var(--border)' : 'none',
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, r.label), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: r.bold ? 700 : 600,
+      color: r.bold ? 'var(--vs)' : 'var(--text)'
+    }
+  }, r.val)))), /*#__PURE__*/React.createElement("div", {
+    className: "checkbox-row",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    id: "agree",
+    checked: agreed,
+    onChange: e => setAgreed(e.target.checked)
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "agree"
+  }, "J'accepte les ", /*#__PURE__*/React.createElement("a", {
+    href: "#"
+  }, "conditions g\xE9n\xE9rales"), " et la ", /*#__PURE__*/React.createElement("a", {
+    href: "#"
+  }, "politique de remboursement"), " de CreatorFlow Market.")), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--red)',
+      marginBottom: 12,
+      padding: '8px 12px',
+      background: 'rgba(239,68,68,0.06)',
+      borderRadius: 8,
+      border: '1px solid rgba(239,68,68,0.15)'
+    }
+  }, error), /*#__PURE__*/React.createElement(PayBtn, {
+    paying: paying,
+    prixStr: prixStr
+  }), /*#__PURE__*/React.createElement(SecurityRow, null)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sm-icon"
+  }, "\uD83D\uDCBC"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "sm-title"
+  }, mission.titre || 'Mission'), /*#__PURE__*/React.createElement("div", {
+    className: "sm-meta"
+  }, mission.categorie || '', mission.deadline ? ` · Livraison ${new Date(mission.deadline).toLocaleDateString('fr-CA')}` : ''), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 5
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "badge badge-amber"
+  }, "Paiement en attente")))), expert && /*#__PURE__*/React.createElement("div", {
+    className: "expert-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ex-av"
+  }, expertInitials), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ex-name"
+  }, expertName), /*#__PURE__*/React.createElement("div", {
+    className: "ex-spec"
+  }, expert.specialite || 'Expert IA')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginLeft: 'auto'
+    }
+  }, /*#__PURE__*/React.createElement(Stars, {
+    n: expert.note_moyenne
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "pricing-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-label"
+  }, "Montant total de la mission"), /*#__PURE__*/React.createElement("span", {
+    className: "price-val"
+  }, prixStr)), /*#__PURE__*/React.createElement("div", {
+    className: "price-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-label"
+  }, "Commission plateforme"), /*#__PURE__*/React.createElement("span", {
+    className: "price-val",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "0$ ", /*#__PURE__*/React.createElement("span", {
+    className: "discount-tag"
+  }, "Incluse"))), /*#__PURE__*/React.createElement("div", {
+    className: "price-total-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-total-label"
+  }, "Total \xE0 payer"), /*#__PURE__*/React.createElement("span", {
+    className: "price-total-val"
+  }, prixStr)))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '16px 20px',
+      borderBottom: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 7,
+      color: 'var(--green)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Shield, {
+    style: {
+      color: 'var(--green)'
+    }
+  }), "Paiement prot\xE9g\xE9")), /*#__PURE__*/React.createElement("div", {
+    className: "protection-items"
+  }, ['Fonds sécurisés jusqu\'à validation de la livraison', 'Remboursement intégral si le livrable n\'est pas conforme', 'Médiation CreatorFlow Market en cas de litige', 'Reçu Stripe envoyé automatiquement'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "prot-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prot-dot"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "prot-text"
+  }, t)))))))), !isSuccess && courseId && course && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html"
+  }, "Acad\xE9mie"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "/"), /*#__PURE__*/React.createElement("a", {
+    href: `cours.html?id=${courseId}`
+  }, course.title), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, "Paiement")), /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Acc\xE9der \xE0 la formation"), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, "Formation Academy \xB7 Paiement s\xE9curis\xE9 via Stripe"), /*#__PURE__*/React.createElement("div", {
+    className: "pay-layout"
+  }, /*#__PURE__*/React.createElement("form", {
+    onSubmit: handlePay
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Paiement s\xE9curis\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Trait\xE9 par Stripe \u2014 vos donn\xE9es ne transitent pas par notre serveur")), /*#__PURE__*/React.createElement("div", {
+    className: "card-body"
+  }, stripeInfoBlock, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surf-2)',
+      border: '1px solid var(--border-2)',
+      borderRadius: 12,
+      padding: '16px 18px',
+      marginBottom: 24
+    }
+  }, [{
+    label: 'Formation',
+    val: course.title || '—'
+  }, {
+    label: 'Instructeur',
+    val: cap(course.instructor) || '—'
+  }, {
+    label: 'Montant',
+    val: prixStr,
+    bold: true
+  }, {
+    label: 'Devise',
+    val: 'CAD (dollar canadien)'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '7px 0',
+      borderBottom: i < 3 ? '1px solid var(--border)' : 'none',
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, r.label), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: r.bold ? 700 : 600,
+      color: r.bold ? 'var(--vs)' : 'var(--text)'
+    }
+  }, r.val)))), /*#__PURE__*/React.createElement("div", {
+    className: "checkbox-row",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    id: "agree",
+    checked: agreed,
+    onChange: e => setAgreed(e.target.checked)
+  }), /*#__PURE__*/React.createElement("label", {
+    htmlFor: "agree"
+  }, "J'accepte les ", /*#__PURE__*/React.createElement("a", {
+    href: "#"
+  }, "conditions g\xE9n\xE9rales"), " et la ", /*#__PURE__*/React.createElement("a", {
+    href: "#"
+  }, "politique de remboursement"), " de CreatorFlow Academy.")), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--red)',
+      marginBottom: 12,
+      padding: '8px 12px',
+      background: 'rgba(239,68,68,0.06)',
+      borderRadius: 8,
+      border: '1px solid rgba(239,68,68,0.15)'
+    }
+  }, error), /*#__PURE__*/React.createElement(PayBtn, {
+    paying: paying,
+    prixStr: prixStr
+  }), /*#__PURE__*/React.createElement(SecurityRow, null)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, course.thumbnail_url && /*#__PURE__*/React.createElement("img", {
+    src: course.thumbnail_url,
+    alt: course.title,
+    style: {
+      width: '100%',
+      aspectRatio: '16/9',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "summary-mission"
+  }, instrImg ? /*#__PURE__*/React.createElement("img", {
+    src: instrImg,
+    alt: course.instructor,
+    style: {
+      width: 48,
+      height: 48,
+      borderRadius: '50%',
+      objectFit: 'cover',
+      flexShrink: 0
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "sm-icon"
+  }, "\uD83C\uDF93"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "sm-title"
+  }, course.title), /*#__PURE__*/React.createElement("div", {
+    className: "sm-meta"
+  }, cap(course.instructor), " \xB7 ", course.level || 'Débutant'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 5
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "badge",
+    style: {
+      background: 'rgba(16,185,129,0.1)',
+      color: 'var(--green)',
+      border: '1px solid rgba(16,185,129,0.2)'
+    }
+  }, "Acc\xE8s \xE0 vie")))), /*#__PURE__*/React.createElement("div", {
+    className: "pricing-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-label"
+  }, "Prix de la formation"), /*#__PURE__*/React.createElement("span", {
+    className: "price-val"
+  }, prixStr)), /*#__PURE__*/React.createElement("div", {
+    className: "price-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-label"
+  }, "Garantie remboursement"), /*#__PURE__*/React.createElement("span", {
+    className: "price-val",
+    style: {
+      color: 'var(--green)'
+    }
+  }, "30 jours")), course.total_lessons > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "price-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-label"
+  }, "Contenu"), /*#__PURE__*/React.createElement("span", {
+    className: "price-val",
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, course.total_lessons, " le\xE7ons \xB7 ", Math.floor((course.duration_minutes || 0) / 60), "h")), /*#__PURE__*/React.createElement("div", {
+    className: "price-total-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "price-total-label"
+  }, "Total \xE0 payer"), /*#__PURE__*/React.createElement("span", {
+    className: "price-total-val"
+  }, prixStr)))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '16px 20px',
+      borderBottom: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 7,
+      color: 'var(--green)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Shield, {
+    style: {
+      color: 'var(--green)'
+    }
+  }), "Ce qui est inclus")), /*#__PURE__*/React.createElement("div", {
+    className: "protection-items"
+  }, ['Accès à vie à toutes les leçons et mises à jour', 'Certificat de complétion CreatorFlow Academy', 'Templates et ressources téléchargeables', 'Accès à la communauté Discord privée', 'Garantie satisfait ou remboursé 30 jours'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "prot-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prot-dot"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "prot-text"
+  }, t)))))))))), /*#__PURE__*/React.createElement("style", null, `@keyframes spin{to{transform:rotate(360deg);}}`));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

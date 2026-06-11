@@ -187,43 +187,291 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Grid:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
-  Briefcase:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>,
-  Search:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  Msg:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  DollarSign:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>,
-  User:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  Calendar:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
-  Settings:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-  Bell:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-  Arrow:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Check:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Star:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Logout:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
-  TrendUp:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+  Grid: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Briefcase: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "7",
+    width: "20",
+    height: "14",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Msg: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+  })),
+  DollarSign: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "1",
+    x2: "12",
+    y2: "23"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+  })),
+  User: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "7",
+    r: "4"
+  })),
+  Calendar: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "4",
+    width: "18",
+    height: "18",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "16",
+    y1: "2",
+    x2: "16",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "8",
+    y1: "2",
+    x2: "8",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "10",
+    x2: "21",
+    y2: "10"
+  })),
+  Settings: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Logout: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  })),
+  TrendUp: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "23 6 13.5 15.5 8.5 10.5 1 18"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "17 6 23 6 23 12"
+  }))
 };
-
-
-const NAV_ITEMS = [
-  {id:'overview', label:'Vue d\'ensemble', icon:<Ic.Grid/>},
-  {id:'missions', label:'Mes missions', icon:<Ic.Briefcase/>, badge:3},
-  {id:'opps', label:'Opportunités', icon:<Ic.Search/>, badge:5, badgeClass:'nav-badge-amber'},
-  {id:'messages', label:'Messages', icon:<Ic.Msg/>, badge:2, href:'messages.html'},
-  {id:'revenus', label:'Mes revenus', icon:<Ic.DollarSign/>},
-  {id:'agenda', label:'Agenda', icon:<Ic.Calendar/>},
-  {id:'profil', label:'Mon profil', icon:<Ic.User/>, hrefFn:(u)=>`profil-expert.html?id=${u?.id||''}`},
-];
-
+const NAV_ITEMS = [{
+  id: 'overview',
+  label: 'Vue d\'ensemble',
+  icon: /*#__PURE__*/React.createElement(Ic.Grid, null)
+}, {
+  id: 'missions',
+  label: 'Mes missions',
+  icon: /*#__PURE__*/React.createElement(Ic.Briefcase, null),
+  badge: 3
+}, {
+  id: 'opps',
+  label: 'Opportunités',
+  icon: /*#__PURE__*/React.createElement(Ic.Search, null),
+  badge: 5,
+  badgeClass: 'nav-badge-amber'
+}, {
+  id: 'messages',
+  label: 'Messages',
+  icon: /*#__PURE__*/React.createElement(Ic.Msg, null),
+  badge: 2,
+  href: 'messages.html'
+}, {
+  id: 'revenus',
+  label: 'Mes revenus',
+  icon: /*#__PURE__*/React.createElement(Ic.DollarSign, null)
+}, {
+  id: 'agenda',
+  label: 'Agenda',
+  icon: /*#__PURE__*/React.createElement(Ic.Calendar, null)
+}, {
+  id: 'profil',
+  label: 'Mon profil',
+  icon: /*#__PURE__*/React.createElement(Ic.User, null),
+  hrefFn: u => `profil-expert.html?id=${u?.id || ''}`
+}];
 function App() {
   const [active, setActive] = useState('overview');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -241,54 +489,97 @@ function App() {
   const [delaiForm, setDelaiForm] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [postuleDone, setPostuleDone] = useState(false);
-
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
-      if (!data.session) { window.location.href = 'connexion.html'; return; }
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const u = data.session.user;
       setUser(u);
-      const { data: profile } = await sb.from('profiles').select('*').eq('id', u.id).single();
-      const { data: exp } = await sb.from('experts').select('*').eq('id', u.id).single();
-      if (profile) setUser({ ...u, ...profile });
-      if (exp) { setExpert(exp); setDispo(exp.disponible !== false); }
-      const { data: o } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').neq('user_id', u.id).order('created_at', {ascending: false}).limit(5);
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      const {
+        data: exp
+      } = await sb.from('experts').select('*').eq('id', u.id).single();
+      if (profile) setUser({
+        ...u,
+        ...profile
+      });
+      if (exp) {
+        setExpert(exp);
+        setDispo(exp.disponible !== false);
+      }
+      const {
+        data: o
+      } = await sb.from('briefs').select('id,categorie,budget,delai,description,created_at,user_id').eq('statut', 'ouvert').neq('user_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(5);
       setOpps(o || []);
-      const { data: c } = await sb.from('conversations').select('id,created_at,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(3);
+      const {
+        data: c
+      } = await sb.from('conversations').select('id,created_at,client_id').eq('expert_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(3);
       const clientIds = (c || []).map(cv => cv.client_id).filter(Boolean);
       let clientProfileMap = {};
       if (clientIds.length > 0) {
-        const { data: cp } = await sb.from('profiles').select('id,prenom,nom').in('id', clientIds);
-        (cp || []).forEach(p => { clientProfileMap[p.id] = p; });
+        const {
+          data: cp
+        } = await sb.from('profiles').select('id,prenom,nom').in('id', clientIds);
+        (cp || []).forEach(p => {
+          clientProfileMap[p.id] = p;
+        });
       }
       setConvs((c || []).map(cv => {
         const p = clientProfileMap[cv.client_id] || {};
-        const name = `${p.prenom||''} ${p.nom||''}`.trim() || 'Client';
-        const ini = name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'CL';
-        return { ...cv, clientName: name, clientInitials: ini };
+        const name = `${p.prenom || ''} ${p.nom || ''}`.trim() || 'Client';
+        const ini = name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'CL';
+        return {
+          ...cv,
+          clientName: name,
+          clientInitials: ini
+        };
       }));
-      const { data: m } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,client_id').eq('expert_id', u.id).order('created_at', {ascending: false}).limit(4);
+      const {
+        data: m
+      } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,client_id').eq('expert_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(4);
       setMissions(m || []);
-      const { count: totalM } = await sb.from('missions').select('id', { count: 'exact', head: true }).eq('expert_id', u.id);
+      const {
+        count: totalM
+      } = await sb.from('missions').select('id', {
+        count: 'exact',
+        head: true
+      }).eq('expert_id', u.id);
       setMissionCount(totalM || 0);
     });
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     return () => window.removeEventListener('mousemove', move);
   }, []);
-
   const handleLogout = async () => {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
   };
-
   const handleDispo = async () => {
     const newVal = !dispo;
     setDispo(newVal);
-    if (user?.id) await sb.from('experts').update({ disponible: newVal }).eq('id', user.id);
+    if (user?.id) await sb.from('experts').update({
+      disponible: newVal
+    }).eq('id', user.id);
   };
-
-  const openModal = (brief) => {
+  const openModal = brief => {
     setSelectedBrief(brief);
     setMontantForm('');
     setMessageForm('');
@@ -296,346 +587,699 @@ function App() {
     setPostuleDone(false);
     setShowModal(true);
   };
-
-  const handlePostuler = async (e) => {
+  const handlePostuler = async e => {
     e.preventDefault();
     if (!montantForm || !messageForm) return;
     setSubmitting(true);
-    const { data: { session } } = await sb.auth.getSession();
-    const { error } = await sb.from('propositions').insert({
+    const {
+      data: {
+        session
+      }
+    } = await sb.auth.getSession();
+    const {
+      error
+    } = await sb.from('propositions').insert({
       brief_id: selectedBrief.id,
       expert_id: session.user.id,
       client_id: selectedBrief.user_id,
       montant: parseInt(montantForm, 10),
       message: messageForm,
       delai: delaiForm || null,
-      nom_expert: `${user?.prenom || ''} ${user?.nom || ''}`.trim() || 'Expert',
+      nom_expert: `${user?.prenom || ''} ${user?.nom || ''}`.trim() || 'Expert'
     });
     if (!error) {
       setPostuleDone(true);
-      const { data: clientProfile } = await sb.from('profiles').select('email').eq('id', selectedBrief.user_id).single();
+      const {
+        data: clientProfile
+      } = await sb.from('profiles').select('email').eq('id', selectedBrief.user_id).single();
       if (clientProfile?.email) {
         fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei', 'Authorization': `Bearer ${session.access_token}` },
-          body: JSON.stringify({ type: 'nouvelle_proposition', to: clientProfile.email, data: { expert_name: `${user?.prenom||''} ${user?.nom||''}`.trim()||'Expert', montant: montantForm, categorie: selectedBrief.categorie||'Projet', message: messageForm, delai: delaiForm } }),
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            type: 'nouvelle_proposition',
+            to: clientProfile.email,
+            data: {
+              expert_name: `${user?.prenom || ''} ${user?.nom || ''}`.trim() || 'Expert',
+              montant: montantForm,
+              categorie: selectedBrief.categorie || 'Projet',
+              message: messageForm,
+              delai: delaiForm
+            }
+          })
         }).catch(() => {});
       }
     }
     setSubmitting(false);
   };
-
-  const initials = user ? ((user.prenom||'?')[0] + (user.nom||'?')[0]).toUpperCase() : '??';
+  const initials = user ? ((user.prenom || '?')[0] + (user.nom || '?')[0]).toUpperCase() : '??';
   const fullName = user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : 'Chargement…';
   const prenom = user?.prenom || 'Expert';
-  const todayStr = (() => { const s = new Date().toLocaleDateString('fr-FR', {weekday:'long',day:'numeric',month:'long',year:'numeric'}); return s.charAt(0).toUpperCase()+s.slice(1); })();
-
-  return (
-    <React.Fragment>
-      <div className={`sidebar-backdrop${sidebarOpen?' open':''}`} onClick={()=>setSidebarOpen(false)}/>
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <div className="nav-brand">
-            <button className="hamburger" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Menu">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-            </button>
-            <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          </div>
-          <div className="nav-right">
-            <button className="notif-btn"><Ic.Bell/><span className="notif-dot"/></button>
-            <div className="expert-chip">
-              <div className="avatar">{initials}</div>
-              <span style={{fontSize:13,fontWeight:600}}>{fullName}</span>
-              <span className="badge-expert">Expert</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* SIDEBAR */}
-      <aside className={`sidebar${sidebarOpen?' open':''}`}>
-        <div className="sidebar-section">
-          <div className="sidebar-label">Menu</div>
-          {NAV_ITEMS.map(item => {
-            const href = item.href || (item.hrefFn ? item.hrefFn(user) : null);
-            const badge = item.badge ? <span className={`nav-badge ${item.badgeClass || ''}`}>{item.id==='missions' ? missionCount : item.id==='opps' ? opps.length : item.badge}</span> : null;
-            const cls = `nav-item ${active === item.id ? 'active' : ''}`;
-            return href ? (
-              <a key={item.id} href={href} className={cls} style={{textDecoration:'none',color:'inherit'}}>
-                {item.icon}{item.label}{badge}
-              </a>
-            ) : (
-              <div key={item.id} className={cls} onClick={() => { setActive(item.id); setSidebarOpen(false); }}>
-                {item.icon}{item.label}{badge}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* DISPONIBILITÉ */}
-        <div className="dispo-row" onClick={handleDispo} style={!dispo ? {background:'rgba(239,68,68,0.06)',borderColor:'rgba(239,68,68,0.2)'} : {}}>
-          <div>
-            <div className="dispo-label" style={!dispo ? {color:'var(--red)'} : {}}>{dispo ? 'Disponible' : 'Indisponible'}</div>
-            <div className="dispo-sub">{dispo ? 'Visible dans les recherches' : 'Masqué des résultats'}</div>
-          </div>
-          <div className="toggle" style={!dispo ? {background:'var(--red)'} : {}}>
-            <div className="toggle-knob" style={!dispo ? {transform:'translateX(0)'} : {}}/>
-          </div>
-        </div>
-
-        <div className="sidebar-section">
-          <div className="sidebar-label">Compte</div>
-          <div className="nav-item"><Ic.Settings/>Paramètres</div>
-        </div>
-        <div className="sidebar-bottom">
-          <button onClick={handleLogout} className="nav-item" style={{color:'var(--text-3)',width:'100%',textAlign:'left'}}><Ic.Logout/>Déconnexion</button>
-        </div>
-      </aside>
-
-      {/* MAIN */}
-      <main className="main">
-        <div className="main-inner">
-
-          {/* HEADER */}
-          <div className="page-header">
-            <div>
-              <h1 className="page-title">Bonjour, {prenom} ✨</h1>
-              <p className="page-sub">{todayStr} · {missionCount} mission{missionCount !== 1 ? 's' : ''} active{missionCount !== 1 ? 's' : ''} · {opps.length} opportunité{opps.length !== 1 ? 's' : ''}</p>
-            </div>
-            <a href="profil-expert.html" className="btn btn-primary">Voir mon profil <Ic.Arrow/></a>
-          </div>
-
-          {/* STATS */}
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
-              <div className="stat-val">{missions.length}</div>
-              <div className="stat-label">Missions actives</div>
-              <div className="stat-trend trend-cyan"><Ic.TrendUp/>{missions.length > 0 ? 'En cours' : 'Aucune'}</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(16,185,129,0.10)',color:'var(--green)'}}>💶</div>
-              <div className="stat-val">—</div>
-              <div className="stat-label">Revenus ce mois</div>
-              <div className="stat-trend" style={{background:'transparent',color:'var(--text-3)',padding:0}}>Bientôt disponible</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(245,158,11,0.10)',color:'var(--amber)'}}>📨</div>
-              <div className="stat-val">{opps.length}</div>
-              <div className="stat-label">Nouvelles opportunités</div>
-              <div className="stat-trend" style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)'}}>{opps.length > 0 ? 'À postuler' : 'Aucune'}</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)',color:'var(--vs)'}}>⭐</div>
-              <div className="stat-val">{expert?.note != null ? expert.note : '—'}</div>
-              <div className="stat-label">Note moyenne</div>
-              <div className="stat-trend trend-up"><Ic.Check/>{expert?.nb_avis || 0} avis</div>
-            </div>
-          </div>
-
-          {/* 2 COL */}
-          <div className="two-col">
-
-            {/* COL GAUCHE */}
-            <div style={{display:'flex',flexDirection:'column',gap:20}}>
-
-              {/* MISSIONS */}
-              <div className="section-card">
-                <div className="section-head">
-                  <span className="section-title">Mes missions en cours</span>
-                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('missions');}}>Tout voir →</a>
-                </div>
-                {missions.length === 0 ? (
-                  <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
-                    <div style={{fontSize:32,marginBottom:8}}>🚀</div>
-                    <div style={{fontSize:13}}>Aucune mission en cours</div>
-                  </div>
-                ) : missions.map(m => {
-                  const statusMap = {nouveau:'badge-green',en_cours:'badge-green',en_revision:'badge-amber',termine:'badge-green',annule:'badge-red'};
-                  const labelMap = {nouveau:'Nouveau',en_cours:'En cours',en_revision:'En révision',termine:'Terminé',annule:'Annulé'};
-                  return (
-                    <a key={m.id} className="mission-item" href={`mission.html?id=${m.id}`} style={{cursor:'pointer',textDecoration:'none',color:'inherit'}}>
-                      <div className="mission-icon" style={{background:'rgba(6,182,212,0.10)',color:'var(--c)'}}>🚀</div>
-                      <div className="mission-info">
-                        <div className="mission-name">{m.titre}</div>
-                        <div className="mission-meta">{m.categorie}</div>
-                        {m.progression != null && <div className="prog-bar" style={{width:130}}><div className="prog-fill" style={{width:m.progression+'%'}}/></div>}
-                      </div>
-                      <div className="mission-right">
-                        <span className={`badge ${statusMap[m.statut] || 'badge-green'}`}>{labelMap[m.statut] || m.statut}</span>
-                        <span className="mission-price">{m.prix ? m.prix+'$' : ''}</span>
-                        <span style={{fontSize:10,color:'var(--text-3)'}}>{m.deadline ? 'Livraison ' + new Date(m.deadline).toLocaleDateString('fr-CA') : ''}</span>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-
-              {/* OPPORTUNITÉS */}
-              <div className="section-card">
-                <div className="section-head">
-                  <span className="section-title">Nouvelles opportunités</span>
-                  {opps.length > 0 && <span style={{background:'rgba(245,158,11,0.1)',color:'var(--amber)',fontSize:11,fontWeight:700,padding:'3px 9px',borderRadius:99}}>{opps.length} briefs</span>}
-                </div>
-                {opps.length === 0 ? (
-                  <div style={{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}}>
-                    <div style={{fontSize:32,marginBottom:8}}>📭</div>
-                    <div style={{fontSize:13}}>Aucune opportunité disponible pour le moment</div>
-                  </div>
-                ) : opps.map(o => (
-                  <div key={o.id} className="opp-item">
-                    <div className="opp-top">
-                      <div>
-                        <div className="opp-title">{o.categorie || 'Projet IA'}</div>
-                        <div className="opp-meta">Anonyme · {o.delai}</div>
-                      </div>
-                      <div className="opp-budget">{o.budget}</div>
-                    </div>
-                    <p className="opp-desc">{(o.description||'').slice(0,120)}{(o.description||'').length > 120 ? '…' : ''}</p>
-                    <div className="opp-footer">
-                      <button className="btn btn-purple btn-sm" onClick={() => openModal(o)}>Postuler <Ic.Arrow/></button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            {/* COL DROITE */}
-            <div style={{display:'flex',flexDirection:'column',gap:20}}>
-
-              {/* PROFIL CARD */}
-              <div className="profil-card">
-                <div className="profil-avatar-lg">{initials}</div>
-                <div className="profil-name">{fullName}</div>
-                <div className="profil-spec">{expert?.specialite || 'Expert IA'} · {expert?.niveau || ''}</div>
-                <div className="stars">
-                  {[1,2,3,4,5].map(i => <Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
-                  <span style={{fontSize:12,color:'var(--text-2)',marginLeft:4}}>{expert?.note != null ? expert.note : '—'} ({expert?.nb_avis || 0} avis)</span>
-                </div>
-                <div className="profil-stats">
-                  <div className="p-stat"><div className="p-stat-val">{missionCount}</div><div className="p-stat-label">Missions</div></div>
-                  <div className="p-stat"><div className="p-stat-val">{expert?.note != null ? expert.note : '—'}</div><div className="p-stat-label">Note moy.</div></div>
-                  <div className="p-stat"><div className="p-stat-val">24h</div><div className="p-stat-label">Réponse</div></div>
-                </div>
-                <a href="parametres.html" className="btn btn-ghost btn-sm" style={{width:'100%',justifyContent:'center'}}>Modifier le profil</a>
-              </div>
-
-              {/* REVENUS MINI CHART */}
-              <div className="section-card">
-                <div style={{padding:'18px 20px 16px'}}>
-                  <div style={{fontSize:14,fontWeight:700,marginBottom:4}}>Revenus 2026</div>
-                  <div className="rev-total">
-                    <span className="rev-amount">—</span>
-                    <span className="rev-period">données non disponibles</span>
-                  </div>
-                  <div style={{fontSize:11,color:'var(--text-3)',marginTop:10}}>Le suivi des revenus sera disponible prochainement.</div>
-                </div>
-              </div>
-
-              {/* MESSAGES */}
-              <div className="section-card">
-                <div className="section-head">
-                  <span className="section-title">Messages récents</span>
-                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('messages');}}>Tout voir →</a>
-                </div>
-                {convs.length === 0 ? (
-                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
-                    <div style={{fontSize:28,marginBottom:8}}>💬</div>
-                    <div style={{fontSize:13}}>Aucune conversation active</div>
-                  </div>
-                ) : convs.map(c => (
-                  <a key={c.id} className="msg-item" href={`messages.html?conv=${c.id}`} style={{textDecoration:'none',color:'inherit'}}>
-                    <div className="msg-avatar" style={{background:'linear-gradient(135deg,#0891B2,#06B6D4)'}}>{c.clientInitials}</div>
-                    <div className="msg-body">
-                      <div className="msg-name">{c.clientName}</div>
-                      <div className="msg-preview">Conversation en cours</div>
-                    </div>
-                    <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:6}}>
-                      <span className="msg-time">{new Date(c.created_at).toLocaleDateString('fr-CA')}</span>
-                    </div>
-                  </a>
-                ))}
-              </div>
-
-              {/* AGENDA */}
-              <div className="section-card">
-                <div className="section-head">
-                  <span className="section-title">Agenda</span>
-                  <a href="#" className="section-link" onClick={e=>{e.preventDefault();setActive('agenda');}}>Tout voir →</a>
-                </div>
-                {missions.filter(m => m.deadline).length === 0 ? (
-                  <div style={{padding:'24px 20px',textAlign:'center',color:'var(--text-3)'}}>
-                    <div style={{fontSize:28,marginBottom:8}}>📅</div>
-                    <div style={{fontSize:13}}>Aucun événement prévu</div>
-                  </div>
-                ) : missions.filter(m => m.deadline).map(m => {
-                  const d = new Date(m.deadline);
-                  return (
-                    <a key={m.id} href={`mission.html?id=${m.id}`} className="agenda-item" style={{textDecoration:'none',color:'inherit'}}>
-                      <div className="agenda-date">
-                        <div className="agenda-day" style={{color:'var(--c)'}}>{d.getDate().toString().padStart(2,'0')}</div>
-                        <div className="agenda-month">{d.toLocaleDateString('fr-FR',{month:'short'}).replace('.','')}</div>
-                      </div>
-                      <div className="agenda-info">
-                        <div className="agenda-title">Livraison : {m.titre}</div>
-                        <div className="agenda-client">{m.categorie || ''}</div>
-                      </div>
-                      <div className="agenda-dot" style={{background:'var(--c)'}}/>
-                    </a>
-                  );
-                })}
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </main>
-      {/* MODAL POSTULER */}
-      {showModal && (
-        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}>
-          <div className="modal-box">
-            <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
-            {postuleDone ? (
-              <div style={{textAlign:'center',padding:'20px 0'}}>
-                <div style={{fontSize:40,marginBottom:12}}>🎉</div>
-                <div className="modal-title" style={{marginBottom:8}}>Proposition envoyée !</div>
-                <div style={{fontSize:13,color:'var(--text-2)',marginBottom:24}}>Le client recevra ta candidature et pourra l'accepter ou la refuser.</div>
-                <button className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}>Fermer</button>
-              </div>
-            ) : (
-              <form onSubmit={handlePostuler}>
-                <div className="modal-title">Postuler sur ce brief</div>
-                <div className="modal-sub">{selectedBrief?.categorie || 'Projet IA'} · {selectedBrief?.budget}</div>
-                <div className="modal-field">
-                  <label className="modal-label">Ton tarif (CAD $) *</label>
-                  <input className="modal-input" type="number" min="1" placeholder="ex: 1200" value={montantForm} onChange={e => setMontantForm(e.target.value)} required/>
-                </div>
-                <div className="modal-field">
-                  <label className="modal-label">Délai proposé</label>
-                  <input className="modal-input" type="text" placeholder="ex: 2 semaines" value={delaiForm} onChange={e => setDelaiForm(e.target.value)}/>
-                </div>
-                <div className="modal-field">
-                  <label className="modal-label">Message au client *</label>
-                  <textarea className="modal-input modal-textarea" placeholder="Présente ton approche, ton expérience, pourquoi tu es le bon expert…" value={messageForm} onChange={e => setMessageForm(e.target.value)} required/>
-                </div>
-                <div className="modal-actions">
-                  <button type="button" className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}>Annuler</button>
-                  <button type="submit" className="btn btn-primary btn-sm" disabled={submitting} style={{flex:1,justifyContent:'center'}}>
-                    {submitting ? 'Envoi…' : 'Envoyer ma proposition'}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </React.Fragment>
-  );
+  const todayStr = (() => {
+    const s = new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  })();
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: `sidebar-backdrop${sidebarOpen ? ' open' : ''}`,
+    onClick: () => setSidebarOpen(false)
+  }), /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-brand"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "hamburger",
+    onClick: () => setSidebarOpen(o => !o),
+    "aria-label": "Menu"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "6",
+    x2: "21",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "12",
+    x2: "21",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "18",
+    x2: "21",
+    y2: "18"
+  }))), /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "notif-btn"
+  }, /*#__PURE__*/React.createElement(Ic.Bell, null), /*#__PURE__*/React.createElement("span", {
+    className: "notif-dot"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "expert-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar"
+  }, initials), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, fullName), /*#__PURE__*/React.createElement("span", {
+    className: "badge-expert"
+  }, "Expert"))))), /*#__PURE__*/React.createElement("aside", {
+    className: `sidebar${sidebarOpen ? ' open' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Menu"), NAV_ITEMS.map(item => {
+    const href = item.href || (item.hrefFn ? item.hrefFn(user) : null);
+    const badge = item.badge ? /*#__PURE__*/React.createElement("span", {
+      className: `nav-badge ${item.badgeClass || ''}`
+    }, item.id === 'missions' ? missionCount : item.id === 'opps' ? opps.length : item.badge) : null;
+    const cls = `nav-item ${active === item.id ? 'active' : ''}`;
+    return href ? /*#__PURE__*/React.createElement("a", {
+      key: item.id,
+      href: href,
+      className: cls,
+      style: {
+        textDecoration: 'none',
+        color: 'inherit'
+      }
+    }, item.icon, item.label, badge) : /*#__PURE__*/React.createElement("div", {
+      key: item.id,
+      className: cls,
+      onClick: () => {
+        setActive(item.id);
+        setSidebarOpen(false);
+      }
+    }, item.icon, item.label, badge);
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "dispo-row",
+    onClick: handleDispo,
+    style: !dispo ? {
+      background: 'rgba(239,68,68,0.06)',
+      borderColor: 'rgba(239,68,68,0.2)'
+    } : {}
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "dispo-label",
+    style: !dispo ? {
+      color: 'var(--red)'
+    } : {}
+  }, dispo ? 'Disponible' : 'Indisponible'), /*#__PURE__*/React.createElement("div", {
+    className: "dispo-sub"
+  }, dispo ? 'Visible dans les recherches' : 'Masqué des résultats')), /*#__PURE__*/React.createElement("div", {
+    className: "toggle",
+    style: !dispo ? {
+      background: 'var(--red)'
+    } : {}
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob",
+    style: !dispo ? {
+      transform: 'translateX(0)'
+    } : {}
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Compte"), /*#__PURE__*/React.createElement("div", {
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement(Ic.Settings, null), "Param\xE8tres")), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-bottom"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: handleLogout,
+    className: "nav-item",
+    style: {
+      color: 'var(--text-3)',
+      width: '100%',
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Logout, null), "D\xE9connexion"))), /*#__PURE__*/React.createElement("main", {
+    className: "main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "main-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Bonjour, ", prenom, " \u2728"), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, todayStr, " \xB7 ", missionCount, " mission", missionCount !== 1 ? 's' : '', " active", missionCount !== 1 ? 's' : '', " \xB7 ", opps.length, " opportunit\xE9", opps.length !== 1 ? 's' : '')), /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-primary"
+  }, "Voir mon profil ", /*#__PURE__*/React.createElement(Ic.Arrow, null))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.10)',
+      color: 'var(--c)'
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missions.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Missions actives"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-cyan"
+  }, /*#__PURE__*/React.createElement(Ic.TrendUp, null), missions.length > 0 ? 'En cours' : 'Aucune')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.10)',
+      color: 'var(--green)'
+    }
+  }, "\uD83D\uDCB6"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, "\u2014"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Revenus ce mois"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend",
+    style: {
+      background: 'transparent',
+      color: 'var(--text-3)',
+      padding: 0
+    }
+  }, "Bient\xF4t disponible")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(245,158,11,0.10)',
+      color: 'var(--amber)'
+    }
+  }, "\uD83D\uDCE8"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, opps.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Nouvelles opportunit\xE9s"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend",
+    style: {
+      background: 'rgba(245,158,11,0.1)',
+      color: 'var(--amber)'
+    }
+  }, opps.length > 0 ? 'À postuler' : 'Aucune')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)',
+      color: 'var(--vs)'
+    }
+  }, "\u2B50"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, expert?.note != null ? expert.note : '—'), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Note moyenne"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-up"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), expert?.nb_avis || 0, " avis"))), /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Mes missions en cours"), /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    className: "section-link",
+    onClick: e => {
+      e.preventDefault();
+      setActive('missions');
+    }
+  }, "Tout voir \u2192")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune mission en cours")) : missions.map(m => {
+    const statusMap = {
+      nouveau: 'badge-green',
+      en_cours: 'badge-green',
+      en_revision: 'badge-amber',
+      termine: 'badge-green',
+      annule: 'badge-red'
+    };
+    const labelMap = {
+      nouveau: 'Nouveau',
+      en_cours: 'En cours',
+      en_revision: 'En révision',
+      termine: 'Terminé',
+      annule: 'Annulé'
+    };
+    return /*#__PURE__*/React.createElement("a", {
+      key: m.id,
+      className: "mission-item",
+      href: `mission.html?id=${m.id}`,
+      style: {
+        cursor: 'pointer',
+        textDecoration: 'none',
+        color: 'inherit'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mission-icon",
+      style: {
+        background: 'rgba(6,182,212,0.10)',
+        color: 'var(--c)'
+      }
+    }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+      className: "mission-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mission-name"
+    }, m.titre), /*#__PURE__*/React.createElement("div", {
+      className: "mission-meta"
+    }, m.categorie), m.progression != null && /*#__PURE__*/React.createElement("div", {
+      className: "prog-bar",
+      style: {
+        width: 130
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "prog-fill",
+      style: {
+        width: m.progression + '%'
+      }
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: "mission-right"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `badge ${statusMap[m.statut] || 'badge-green'}`
+    }, labelMap[m.statut] || m.statut), /*#__PURE__*/React.createElement("span", {
+      className: "mission-price"
+    }, m.prix ? m.prix + '$' : ''), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        color: 'var(--text-3)'
+      }
+    }, m.deadline ? 'Livraison ' + new Date(m.deadline).toLocaleDateString('fr-CA') : '')));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Nouvelles opportunit\xE9s"), opps.length > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'rgba(245,158,11,0.1)',
+      color: 'var(--amber)',
+      fontSize: 11,
+      fontWeight: 700,
+      padding: '3px 9px',
+      borderRadius: 99
+    }
+  }, opps.length, " briefs")), opps.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune opportunit\xE9 disponible pour le moment")) : opps.map(o => /*#__PURE__*/React.createElement("div", {
+    key: o.id,
+    className: "opp-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "opp-top"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "opp-title"
+  }, o.categorie || 'Projet IA'), /*#__PURE__*/React.createElement("div", {
+    className: "opp-meta"
+  }, "Anonyme \xB7 ", o.delai)), /*#__PURE__*/React.createElement("div", {
+    className: "opp-budget"
+  }, o.budget)), /*#__PURE__*/React.createElement("p", {
+    className: "opp-desc"
+  }, (o.description || '').slice(0, 120), (o.description || '').length > 120 ? '…' : ''), /*#__PURE__*/React.createElement("div", {
+    className: "opp-footer"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-purple btn-sm",
+    onClick: () => openModal(o)
+  }, "Postuler ", /*#__PURE__*/React.createElement(Ic.Arrow, null))))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "profil-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "profil-avatar-lg"
+  }, initials), /*#__PURE__*/React.createElement("div", {
+    className: "profil-name"
+  }, fullName), /*#__PURE__*/React.createElement("div", {
+    className: "profil-spec"
+  }, expert?.specialite || 'Expert IA', " \xB7 ", expert?.niveau || ''), /*#__PURE__*/React.createElement("div", {
+    className: "stars"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(Ic.Star, {
+    key: i,
+    style: {
+      color: 'var(--amber)'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-2)',
+      marginLeft: 4
+    }
+  }, expert?.note != null ? expert.note : '—', " (", expert?.nb_avis || 0, " avis)")), /*#__PURE__*/React.createElement("div", {
+    className: "profil-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-val"
+  }, missionCount), /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-label"
+  }, "Missions")), /*#__PURE__*/React.createElement("div", {
+    className: "p-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-val"
+  }, expert?.note != null ? expert.note : '—'), /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-label"
+  }, "Note moy.")), /*#__PURE__*/React.createElement("div", {
+    className: "p-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-val"
+  }, "24h"), /*#__PURE__*/React.createElement("div", {
+    className: "p-stat-label"
+  }, "R\xE9ponse"))), /*#__PURE__*/React.createElement("a", {
+    href: "parametres.html",
+    className: "btn btn-ghost btn-sm",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  }, "Modifier le profil")), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '18px 20px 16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      marginBottom: 4
+    }
+  }, "Revenus 2026"), /*#__PURE__*/React.createElement("div", {
+    className: "rev-total"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "rev-amount"
+  }, "\u2014"), /*#__PURE__*/React.createElement("span", {
+    className: "rev-period"
+  }, "donn\xE9es non disponibles")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginTop: 10
+    }
+  }, "Le suivi des revenus sera disponible prochainement."))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Messages r\xE9cents"), /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    className: "section-link",
+    onClick: e => {
+      e.preventDefault();
+      setActive('messages');
+    }
+  }, "Tout voir \u2192")), convs.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune conversation active")) : convs.map(c => /*#__PURE__*/React.createElement("a", {
+    key: c.id,
+    className: "msg-item",
+    href: `messages.html?conv=${c.id}`,
+    style: {
+      textDecoration: 'none',
+      color: 'inherit'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "msg-avatar",
+    style: {
+      background: 'linear-gradient(135deg,#0891B2,#06B6D4)'
+    }
+  }, c.clientInitials), /*#__PURE__*/React.createElement("div", {
+    className: "msg-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "msg-name"
+  }, c.clientName), /*#__PURE__*/React.createElement("div", {
+    className: "msg-preview"
+  }, "Conversation en cours")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "msg-time"
+  }, new Date(c.created_at).toLocaleDateString('fr-CA')))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Agenda"), /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    className: "section-link",
+    onClick: e => {
+      e.preventDefault();
+      setActive('agenda');
+    }
+  }, "Tout voir \u2192")), missions.filter(m => m.deadline).length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCC5"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucun \xE9v\xE9nement pr\xE9vu")) : missions.filter(m => m.deadline).map(m => {
+    const d = new Date(m.deadline);
+    return /*#__PURE__*/React.createElement("a", {
+      key: m.id,
+      href: `mission.html?id=${m.id}`,
+      className: "agenda-item",
+      style: {
+        textDecoration: 'none',
+        color: 'inherit'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "agenda-date"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "agenda-day",
+      style: {
+        color: 'var(--c)'
+      }
+    }, d.getDate().toString().padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+      className: "agenda-month"
+    }, d.toLocaleDateString('fr-FR', {
+      month: 'short'
+    }).replace('.', ''))), /*#__PURE__*/React.createElement("div", {
+      className: "agenda-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "agenda-title"
+    }, "Livraison : ", m.titre), /*#__PURE__*/React.createElement("div", {
+      className: "agenda-client"
+    }, m.categorie || '')), /*#__PURE__*/React.createElement("div", {
+      className: "agenda-dot",
+      style: {
+        background: 'var(--c)'
+      }
+    }));
+  })))))), showModal && /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: e => {
+      if (e.target === e.currentTarget) setShowModal(false);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-box"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "modal-close",
+    onClick: () => setShowModal(false)
+  }, "\u2715"), postuleDone ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '20px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 12
+    }
+  }, "\uD83C\uDF89"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-title",
+    style: {
+      marginBottom: 8
+    }
+  }, "Proposition envoy\xE9e !"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      marginBottom: 24
+    }
+  }, "Le client recevra ta candidature et pourra l'accepter ou la refuser."), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost btn-sm",
+    onClick: () => setShowModal(false)
+  }, "Fermer")) : /*#__PURE__*/React.createElement("form", {
+    onSubmit: handlePostuler
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-title"
+  }, "Postuler sur ce brief"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-sub"
+  }, selectedBrief?.categorie || 'Projet IA', " \xB7 ", selectedBrief?.budget), /*#__PURE__*/React.createElement("div", {
+    className: "modal-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "modal-label"
+  }, "Ton tarif (CAD $) *"), /*#__PURE__*/React.createElement("input", {
+    className: "modal-input",
+    type: "number",
+    min: "1",
+    placeholder: "ex: 1200",
+    value: montantForm,
+    onChange: e => setMontantForm(e.target.value),
+    required: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "modal-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "modal-label"
+  }, "D\xE9lai propos\xE9"), /*#__PURE__*/React.createElement("input", {
+    className: "modal-input",
+    type: "text",
+    placeholder: "ex: 2 semaines",
+    value: delaiForm,
+    onChange: e => setDelaiForm(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "modal-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "modal-label"
+  }, "Message au client *"), /*#__PURE__*/React.createElement("textarea", {
+    className: "modal-input modal-textarea",
+    placeholder: "Pr\xE9sente ton approche, ton exp\xE9rience, pourquoi tu es le bon expert\u2026",
+    value: messageForm,
+    onChange: e => setMessageForm(e.target.value),
+    required: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "modal-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-ghost btn-sm",
+    onClick: () => setShowModal(false)
+  }, "Annuler"), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary btn-sm",
+    disabled: submitting,
+    style: {
+      flex: 1,
+      justifyContent: 'center'
+    }
+  }, submitting ? 'Envoi…' : 'Envoyer ma proposition'))))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

@@ -333,131 +333,276 @@ img{display:block;max-width:100%;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script type="text/babel">
-
-const { useState, useEffect, useMemo } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const CATEGORIES = ['Tous','Agents IA','Prompt Engineering','Data & Analytics','Automatisation','Marketing IA','Développement','Design IA','Autre'];
-const NIVEAUX = ['Tous niveaux','Débutant','Intermédiaire','Avancé'];
+<script>
+const {
+  useState,
+  useEffect,
+  useMemo
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const CATEGORIES = ['Tous', 'Agents IA', 'Prompt Engineering', 'Data & Analytics', 'Automatisation', 'Marketing IA', 'Développement', 'Design IA', 'Autre'];
+const NIVEAUX = ['Tous niveaux', 'Débutant', 'Intermédiaire', 'Avancé'];
 const THUMB = {
-  'Agents IA':          'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
+  'Agents IA': 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=640&q=80',
   'Prompt Engineering': 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=640&q=80',
-  'Data & Analytics':   'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
-  'Automatisation':     'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
-  'Marketing IA':       'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
-  'Développement':      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
-  'Design IA':          'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80',
+  'Data & Analytics': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&q=80',
+  'Automatisation': 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=640&q=80',
+  'Marketing IA': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&q=80',
+  'Développement': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=640&q=80',
+  'Design IA': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=640&q=80'
 };
 const DEFAULT_THUMB = 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&q=80';
-
 const SB_STORAGE = 'https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets';
-const FORMATEURS = [
-  { nom:'Rose',   domaine:'Marketing IA',      bio:'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',       couleur:'#10B981', img:`${SB_STORAGE}/Rose.jpg`,   video:`${SB_STORAGE}/Rose.mp4`,   slug:'marketing-ia-avec-rose', dispo:true  },
-  { nom:'Phelix', domaine:'Agents IA',         bio:'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',        couleur:'#7C3AED', img:`${SB_STORAGE}/Phelix.jpg`, video:`${SB_STORAGE}/Phelix.mp4`, slug:'agents-ia-avec-phelix',            dispo:true  },
-  { nom:'Rémy',   domaine:'Automatisation',    bio:'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',      couleur:'#F59E0B', img:`${SB_STORAGE}/Remy.jpg`,   video:`${SB_STORAGE}/Remy.mp4`,   slug:'automatisation-ia-avec-remy',      dispo:true  },
-  { nom:'Jay',    domaine:'Développement IA',  bio:'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',      couleur:'#06B6D4', img:`${SB_STORAGE}/Jay.jpg`,    video:`${SB_STORAGE}/Jay.mp4`,    slug:'developpement-ia-avec-jay',        dispo:true  },
-  { nom:'Louvie', domaine:'Business & Prompts',bio:'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',         couleur:'#EC4899', img:`${SB_STORAGE}/Louvie.jpg`, video:`${SB_STORAGE}/Louvie.mp4`, slug:'business-prompts-avec-louvie',     dispo:true  },
-];
-
-const PARCOURS = [
-  { icon:'🚀', titre:'Démarrer', couleur:'#F59E0B', certClr:'#CD7F32', sous:'"Je découvre l\'IA"', desc:'Les bases fondamentales pour intégrer l\'IA dans votre quotidien professionnel dès aujourd\'hui.', items:['Introduction aux outils IA','Prompt engineering de base','Premiers automatisations'], cours:2, semaines:4, cert:'Bronze' },
-  { icon:'⚡', titre:'Accélérer', couleur:'#06B6D4', certClr:'#94A3B8', sous:'"J\'utilise l\'IA, mais pas assez"', desc:'Passez à la vitesse supérieure. Intégrez l\'IA comme système dans votre business, pas juste comme outil.', items:['Marketing IA avec Rose','Stratégie de contenu IA','Systèmes et workflows','Funnel de conversion'], cours:3, semaines:8, cert:'Silver' },
-  { icon:'🏆', titre:'Dominer', couleur:'#7C3AED', certClr:'#F59E0B', sous:'"Je construis avec l\'IA"', desc:'Le parcours complet. Maîtrisez agents, automatisations et développement pour créer vos propres outils IA.', items:['Agents IA autonomes','Automatisation avancée','Développement IA','Business & Prompts Pro'], cours:5, semaines:12, cert:'Gold' },
-];
-
-const TRANSFORMATIONS = [
-  { avant:'3h/jour sur la création de contenu, toujours en retard sur les publications.', apres:'Moins de temps sur les tâches répétitives grâce au prompt engineering et aux outils IA.', metric:'Gain de temps réel', nom:'Objectif Productivité', role:'Formation : Marketing IA avec Rose', cours:'Ce que vous pouvez viser', seed:'Productivite' },
-  { avant:'Présence en ligne limitée, difficile de trouver de nouveaux clients.', apres:'Stratégie de contenu IA active, pipeline de prospects automatisé.', metric:'Croissance organique', nom:'Objectif Acquisition', role:'Formation : Stratégie de Contenu IA', cours:'Ce que vous pouvez viser', seed:'Acquisition' },
-  { avant:'Tâches opérationnelles répétitives qui freinent la croissance du business.', apres:'Workflows automatisés avec Make & n8n, focus sur les tâches à haute valeur.', metric:'Moins d\'opérationnel', nom:'Objectif Automatisation', role:'Formation : Automatisation IA', cours:'Ce que vous pouvez viser', seed:'Automation' },
-];
-
+const FORMATEURS = [{
+  nom: 'Rose',
+  domaine: 'Marketing IA',
+  bio: 'Stratège en marketing digital augmenté par l\'IA. Aide les entrepreneurs à multiplier leur audience.',
+  couleur: '#10B981',
+  img: `${SB_STORAGE}/Rose.jpg`,
+  video: `${SB_STORAGE}/Rose.mp4`,
+  slug: 'marketing-ia-avec-rose',
+  dispo: true
+}, {
+  nom: 'Phelix',
+  domaine: 'Agents IA',
+  bio: 'Expert en création d\'agents IA autonomes. Automatise les tâches complexes sans une ligne de code.',
+  couleur: '#7C3AED',
+  img: `${SB_STORAGE}/Phelix.jpg`,
+  video: `${SB_STORAGE}/Phelix.mp4`,
+  slug: 'agents-ia-avec-phelix',
+  dispo: true
+}, {
+  nom: 'Rémy',
+  domaine: 'Automatisation',
+  bio: 'Ingénieur spécialiste des workflows IA. Construit des systèmes qui tournent 24h/24 sans intervention.',
+  couleur: '#F59E0B',
+  img: `${SB_STORAGE}/Remy.jpg`,
+  video: `${SB_STORAGE}/Remy.mp4`,
+  slug: 'automatisation-ia-avec-remy',
+  dispo: true
+}, {
+  nom: 'Jay',
+  domaine: 'Développement IA',
+  bio: 'Développeur full-stack IA. Crée des outils et applications propulsés par des LLMs en quelques heures.',
+  couleur: '#06B6D4',
+  img: `${SB_STORAGE}/Jay.jpg`,
+  video: `${SB_STORAGE}/Jay.mp4`,
+  slug: 'developpement-ia-avec-jay',
+  dispo: true
+}, {
+  nom: 'Louvie',
+  domaine: 'Business & Prompts',
+  bio: 'Experte en prompt engineering avancé. Maîtrise les LLMs pour optimiser chaque aspect du business.',
+  couleur: '#EC4899',
+  img: `${SB_STORAGE}/Louvie.jpg`,
+  video: `${SB_STORAGE}/Louvie.mp4`,
+  slug: 'business-prompts-avec-louvie',
+  dispo: true
+}];
+const PARCOURS = [{
+  icon: '🚀',
+  titre: 'Démarrer',
+  couleur: '#F59E0B',
+  certClr: '#CD7F32',
+  sous: '"Je découvre l\'IA"',
+  desc: 'Les bases fondamentales pour intégrer l\'IA dans votre quotidien professionnel dès aujourd\'hui.',
+  items: ['Introduction aux outils IA', 'Prompt engineering de base', 'Premiers automatisations'],
+  cours: 2,
+  semaines: 4,
+  cert: 'Bronze'
+}, {
+  icon: '⚡',
+  titre: 'Accélérer',
+  couleur: '#06B6D4',
+  certClr: '#94A3B8',
+  sous: '"J\'utilise l\'IA, mais pas assez"',
+  desc: 'Passez à la vitesse supérieure. Intégrez l\'IA comme système dans votre business, pas juste comme outil.',
+  items: ['Marketing IA avec Rose', 'Stratégie de contenu IA', 'Systèmes et workflows', 'Funnel de conversion'],
+  cours: 3,
+  semaines: 8,
+  cert: 'Silver'
+}, {
+  icon: '🏆',
+  titre: 'Dominer',
+  couleur: '#7C3AED',
+  certClr: '#F59E0B',
+  sous: '"Je construis avec l\'IA"',
+  desc: 'Le parcours complet. Maîtrisez agents, automatisations et développement pour créer vos propres outils IA.',
+  items: ['Agents IA autonomes', 'Automatisation avancée', 'Développement IA', 'Business & Prompts Pro'],
+  cours: 5,
+  semaines: 12,
+  cert: 'Gold'
+}];
+const TRANSFORMATIONS = [{
+  avant: '3h/jour sur la création de contenu, toujours en retard sur les publications.',
+  apres: 'Moins de temps sur les tâches répétitives grâce au prompt engineering et aux outils IA.',
+  metric: 'Gain de temps réel',
+  nom: 'Objectif Productivité',
+  role: 'Formation : Marketing IA avec Rose',
+  cours: 'Ce que vous pouvez viser',
+  seed: 'Productivite'
+}, {
+  avant: 'Présence en ligne limitée, difficile de trouver de nouveaux clients.',
+  apres: 'Stratégie de contenu IA active, pipeline de prospects automatisé.',
+  metric: 'Croissance organique',
+  nom: 'Objectif Acquisition',
+  role: 'Formation : Stratégie de Contenu IA',
+  cours: 'Ce que vous pouvez viser',
+  seed: 'Acquisition'
+}, {
+  avant: 'Tâches opérationnelles répétitives qui freinent la croissance du business.',
+  apres: 'Workflows automatisés avec Make & n8n, focus sur les tâches à haute valeur.',
+  metric: 'Moins d\'opérationnel',
+  nom: 'Objectif Automatisation',
+  role: 'Formation : Automatisation IA',
+  cours: 'Ce que vous pouvez viser',
+  seed: 'Automation'
+}];
 function getCat(slug, title) {
-  const s = ((slug||'')+(title||'')).toLowerCase();
+  const s = ((slug || '') + (title || '')).toLowerCase();
   if (s.includes('marketing')) return 'Marketing IA';
   if (s.includes('agent')) return 'Agents IA';
   if (s.includes('automatisation')) return 'Automatisation';
-  if (s.includes('développement')||s.includes('developpement')) return 'Développement';
+  if (s.includes('développement') || s.includes('developpement')) return 'Développement';
   if (s.includes('prompt')) return 'Prompt Engineering';
   if (s.includes('design')) return 'Design IA';
-  if (s.includes('data')||s.includes('analytics')) return 'Data & Analytics';
+  if (s.includes('data') || s.includes('analytics')) return 'Data & Analytics';
   return 'Autre';
 }
-
-const StarIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>;
-const PlayIcon = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
-const PlayIconLg = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
-
-function VideoModal({ formateur, onClose }) {
+const StarIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "11",
+  height: "11",
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("path", {
+  d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+}));
+const PlayIcon = () => /*#__PURE__*/React.createElement("svg", {
+  width: "11",
+  height: "11",
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "5 3 19 12 5 21 5 3"
+}));
+const PlayIconLg = () => /*#__PURE__*/React.createElement("svg", {
+  width: "18",
+  height: "18",
+  viewBox: "0 0 24 24",
+  fill: "currentColor"
+}, /*#__PURE__*/React.createElement("polygon", {
+  points: "5 3 19 12 5 21 5 3"
+}));
+function VideoModal({
+  formateur,
+  onClose
+}) {
   if (!formateur) return null;
   React.useEffect(() => {
-    const onKey = e => { if (e.key==='Escape') onClose(); };
+    const onKey = e => {
+      if (e.key === 'Escape') onClose();
+    };
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
   }, []);
-  return (
-    <div className="vmodal-bg" onClick={onClose}>
-      <div className="vmodal-inner" onClick={e=>e.stopPropagation()}>
-        <button className="vmodal-close" onClick={onClose}>✕</button>
-        <div className="vmodal-video">
-          <video autoPlay controls playsInline src={formateur.video}/>
-        </div>
-        <div className="vmodal-info">
-          <div className="vmodal-ava"><img src={formateur.img} alt={formateur.nom}/></div>
-          <div>
-            <div className="vmodal-nom">{formateur.nom}</div>
-            <div className="vmodal-dom">{formateur.domaine}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-bg",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-inner",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "vmodal-close",
+    onClick: onClose
+  }, "\u2715"), /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-video"
+  }, /*#__PURE__*/React.createElement("video", {
+    autoPlay: true,
+    controls: true,
+    playsInline: true,
+    src: formateur.video
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-ava"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: formateur.img,
+    alt: formateur.nom
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-nom"
+  }, formateur.nom), /*#__PURE__*/React.createElement("div", {
+    className: "vmodal-dom"
+  }, formateur.domaine)))));
 }
-
-function CourseCard({ course, enrolled, onEnroll }) {
-  const prix = course.prix===0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $`;
+function CourseCard({
+  course,
+  enrolled,
+  onEnroll
+}) {
+  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $`;
   const thumb = course.image_url || THUMB[course.categorie] || DEFAULT_THUMB;
-  const instrAva = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(course.nom_instructeur||'Expert')}`;
-  return (
-    <div className="course-card" onClick={() => window.location.href=`cours.html?id=${course.id}`}>
-      <div className="course-thumb">
-        <img src={thumb} alt={course.titre}/>
-        <span className={`course-badge${course.prix===0?' free':''}`}>{course.prix===0?'Gratuit':'Premium'}</span>
-      </div>
-      <div className="course-body">
-        <div className="course-cat">{course.categorie||'Formation IA'}</div>
-        <div className="course-title">{course.titre}</div>
-        <div className="course-instructor">
-          <img src={instrAva} alt="" style={{width:20,height:20,borderRadius:'50%',background:'var(--surf-3)',flexShrink:0}}/>
-          <span>Par {course.nom_instructeur||'Expert certifié'}</span>
-        </div>
-        <div className="course-meta">
-          <div className="course-rating"><StarIcon/>{course.note_moyenne>0?course.note_moyenne.toFixed(1):'—'}<span>({course.nb_avis||0})</span></div>
-          <span className="course-tag">{course.niveau||'Débutant'}</span>
-          {course.duree_totale>0&&<span className="course-tag">{Math.floor(course.duree_totale/60)}h</span>}
-        </div>
-        <div className="course-footer">
-          <div>
-            <div className={`course-price${course.prix===0?' free':''}`}>{prix}</div>
-            {course.nb_inscrits>0&&<div className="course-price-sub">{course.nb_inscrits} inscrits</div>}
-          </div>
-          <button className="enroll-btn" onClick={e=>{e.stopPropagation();onEnroll(course);}}>
-            <PlayIcon/> {enrolled?'Continuer':course.prix===0?'Accéder':'S\'inscrire'}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  const instrAva = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(course.nom_instructeur || 'Expert')}`;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "course-card",
+    onClick: () => window.location.href = `cours.html?id=${course.id}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-thumb"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: thumb,
+    alt: course.titre
+  }), /*#__PURE__*/React.createElement("span", {
+    className: `course-badge${course.prix === 0 ? ' free' : ''}`
+  }, course.prix === 0 ? 'Gratuit' : 'Premium')), /*#__PURE__*/React.createElement("div", {
+    className: "course-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-cat"
+  }, course.categorie || 'Formation IA'), /*#__PURE__*/React.createElement("div", {
+    className: "course-title"
+  }, course.titre), /*#__PURE__*/React.createElement("div", {
+    className: "course-instructor"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: instrAva,
+    alt: "",
+    style: {
+      width: 20,
+      height: 20,
+      borderRadius: '50%',
+      background: 'var(--surf-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "Par ", course.nom_instructeur || 'Expert certifié')), /*#__PURE__*/React.createElement("div", {
+    className: "course-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-rating"
+  }, /*#__PURE__*/React.createElement(StarIcon, null), course.note_moyenne > 0 ? course.note_moyenne.toFixed(1) : '—', /*#__PURE__*/React.createElement("span", null, "(", course.nb_avis || 0, ")")), /*#__PURE__*/React.createElement("span", {
+    className: "course-tag"
+  }, course.niveau || 'Débutant'), course.duree_totale > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "course-tag"
+  }, Math.floor(course.duree_totale / 60), "h")), /*#__PURE__*/React.createElement("div", {
+    className: "course-footer"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: `course-price${course.prix === 0 ? ' free' : ''}`
+  }, prix), course.nb_inscrits > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "course-price-sub"
+  }, course.nb_inscrits, " inscrits")), /*#__PURE__*/React.createElement("button", {
+    className: "enroll-btn",
+    onClick: e => {
+      e.stopPropagation();
+      onEnroll(course);
+    }
+  }, /*#__PURE__*/React.createElement(PlayIcon, null), " ", enrolled ? 'Continuer' : course.prix === 0 ? 'Accéder' : 'S\'inscrire'))));
 }
-
 function App() {
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
   const [user, setUser] = useState(null);
   const [initials, setInitials] = useState('??');
   const [courses, setCourses] = useState([]);
@@ -468,428 +613,714 @@ function App() {
   const [activeSort, setActiveSort] = useState('recent');
   const [enrolledIds, setEnrolledIds] = useState(new Set());
   const [activeVideo, setActiveVideo] = useState(null);
-
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
       if (data.session) {
         const u = data.session.user;
-        const { data: p } = await sb.from('profiles').select('prenom,nom').eq('id',u.id).single();
-        if (p) { setInitials(((p.prenom||'?')[0]+(p.nom||'?')[0]).toUpperCase()); setUser({...u,...p}); }
-        else setUser(u);
-        const { data: enrolls } = await sb.from('academy_enrollments').select('course_id').eq('user_id',u.id);
-        setEnrolledIds(new Set((enrolls||[]).map(e=>e.course_id)));
+        const {
+          data: p
+        } = await sb.from('profiles').select('prenom,nom').eq('id', u.id).single();
+        if (p) {
+          setInitials(((p.prenom || '?')[0] + (p.nom || '?')[0]).toUpperCase());
+          setUser({
+            ...u,
+            ...p
+          });
+        } else setUser(u);
+        const {
+          data: enrolls
+        } = await sb.from('academy_enrollments').select('course_id').eq('user_id', u.id);
+        setEnrolledIds(new Set((enrolls || []).map(e => e.course_id)));
       }
     });
     loadCourses();
   }, []);
-
   const loadCourses = async () => {
     setLoading(true);
-    const { data } = await sb.from('academy_courses')
-      .select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,created_at')
-      .eq('is_published', true)
-      .order('created_at', {ascending:false});
-    setCourses((data||[]).map(c => ({
+    const {
+      data
+    } = await sb.from('academy_courses').select('id,slug,title,subtitle,instructor,level,duration_minutes,total_lessons,thumbnail_url,prix,created_at').eq('is_published', true).order('created_at', {
+      ascending: false
+    });
+    setCourses((data || []).map(c => ({
       ...c,
       titre: c.title,
       categorie: getCat(c.slug, c.title),
-      niveau: c.level||'Débutant',
-      prix: c.prix||0,
-      image_url: c.thumbnail_url||THUMB[getCat(c.slug,c.title)]||DEFAULT_THUMB,
-      note_moyenne: 0, nb_avis: 0, nb_inscrits: 0,
-      duree_totale: c.duration_minutes||0,
-      nom_instructeur: c.instructor||'Expert certifié',
+      niveau: c.level || 'Débutant',
+      prix: c.prix || 0,
+      image_url: c.thumbnail_url || THUMB[getCat(c.slug, c.title)] || DEFAULT_THUMB,
+      note_moyenne: 0,
+      nb_avis: 0,
+      nb_inscrits: 0,
+      duree_totale: c.duration_minutes || 0,
+      nom_instructeur: c.instructor || 'Expert certifié'
     })));
     setLoading(false);
   };
-
-  const handleEnroll = async (course) => {
-    if (!user) { window.location.href='connexion.html'; return; }
-    if (enrolledIds.has(course.id)) { window.location.href=`lecteur.html?id=${course.id}`; return; }
-    if (course.prix===0) {
-      const { error } = await sb.from('academy_enrollments').insert({user_id:user.id, course_id:course.id});
-      if (!error) { setEnrolledIds(prev=>new Set([...prev,course.id])); window.location.href=`lecteur.html?id=${course.id}`; }
+  const handleEnroll = async course => {
+    if (!user) {
+      window.location.href = 'connexion.html';
+      return;
+    }
+    if (enrolledIds.has(course.id)) {
+      window.location.href = `lecteur.html?id=${course.id}`;
+      return;
+    }
+    if (course.prix === 0) {
+      const {
+        error
+      } = await sb.from('academy_enrollments').insert({
+        user_id: user.id,
+        course_id: course.id
+      });
+      if (!error) {
+        setEnrolledIds(prev => new Set([...prev, course.id]));
+        window.location.href = `lecteur.html?id=${course.id}`;
+      }
     } else {
-      window.location.href=`cours.html?id=${course.id}`;
+      window.location.href = `cours.html?id=${course.id}`;
     }
   };
-
   const filtered = useMemo(() => {
-    let list=[...courses];
-    if (activeCat!=='Tous') list=list.filter(c=>c.categorie===activeCat);
-    if (activeNiveau!=='Tous niveaux') list=list.filter(c=>(c.niveau||'Débutant').toLowerCase()===activeNiveau.toLowerCase());
-    if (search.trim()) { const q=search.toLowerCase(); list=list.filter(c=>c.titre.toLowerCase().includes(q)||(c.categorie||'').toLowerCase().includes(q)); }
-    if (activeSort==='recent')    list.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-    if (activeSort==='populaire') list.sort((a,b)=>(b.nb_inscrits||0)-(a.nb_inscrits||0));
-    if (activeSort==='note')      list.sort((a,b)=>(b.note_moyenne||0)-(a.note_moyenne||0));
-    if (activeSort==='prix-asc')  list.sort((a,b)=>a.prix-b.prix);
+    let list = [...courses];
+    if (activeCat !== 'Tous') list = list.filter(c => c.categorie === activeCat);
+    if (activeNiveau !== 'Tous niveaux') list = list.filter(c => (c.niveau || 'Débutant').toLowerCase() === activeNiveau.toLowerCase());
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(c => c.titre.toLowerCase().includes(q) || (c.categorie || '').toLowerCase().includes(q));
+    }
+    if (activeSort === 'recent') list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    if (activeSort === 'populaire') list.sort((a, b) => (b.nb_inscrits || 0) - (a.nb_inscrits || 0));
+    if (activeSort === 'note') list.sort((a, b) => (b.note_moyenne || 0) - (a.note_moyenne || 0));
+    if (activeSort === 'prix-asc') list.sort((a, b) => a.prix - b.prix);
     return list;
-  }, [courses,activeCat,activeNiveau,search,activeSort]);
-
-  const featured = courses[0]||null;
-
-  return (
-    <React.Fragment>
-
-      {activeVideo && <VideoModal formateur={activeVideo} onClose={()=>setActiveVideo(null)}/>}
-
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-          <div className="nav-links">
-            <a href="/" className="nav-link">Plateforme</a>
-            <a href="experts.html" className="nav-link">Experts</a>
-            <a href="academie.html" className="nav-link active">Académie</a>
-          </div>
-          <div className="nav-right">
-            {user ? (
-              <React.Fragment>
-                <a href="dashboard-client.html" className="btn btn-ghost btn-sm">Mon espace</a>
-                <div className="user-chip"><div className="avatar">{initials}</div></div>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <a href="connexion.html" className="btn btn-ghost btn-sm">Se connecter</a>
-                <a href="inscription.html" className="btn btn-primary btn-sm">Démarrer</a>
-              </React.Fragment>
-            )}
-          </div>
-        </div>
-      </nav>
-
-      {/* ── HERO ── */}
-      <section className="hero-v2">
-        <div className="hero-grid-bg"/>
-        <div className="hero-v2-inner">
-          <div>
-            <div className="hero-label"><span className="badge-dot"/>🎓 Academy — Lancement Beta</div>
-            <h1 className="hero-v2-title">
-              L'IA va transformer<br/>votre business.<br/>
-              <span className="hero-accent">Vous serez devant.</span>
-            </h1>
-            <p className="hero-v2-sub">Des formateurs entrepreneurs qui partagent ce qui génère de vrais résultats. Pas de théorie. Des livrables à chaque leçon.</p>
-            <div className="hero-v2-cta">
-              <a href="#parcours" className="btn btn-primary btn-lg">Trouver mon parcours →</a>
-              <a href="#catalogue" className="btn btn-ghost btn-lg">Voir les cours</a>
-            </div>
-            <div className="hero-stats">
-              <div className="h-stat"><div className="h-stat-n">5</div><div className="h-stat-l">Formateurs experts</div></div>
-              <div className="h-stat"><div className="h-stat-n">22+</div><div className="h-stat-l">Leçons disponibles</div></div>
-              <div className="h-stat"><div className="h-stat-n">3</div><div className="h-stat-l">Certifications</div></div>
-            </div>
-          </div>
-          <div>
-            <div className="hero-img-wrap">
-              <img className="hero-img" src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose — Marketing IA"/>
-              <div className="hero-img-mask"/>
-              <div className="hero-img-card">
-                <div className="hero-card-ava">
-                  <img src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose"/>
-                </div>
-                <div className="hero-card-text">
-                  <strong>Rose — Marketing IA</strong>
-                  <span>22 leçons · Accès gratuit pendant le beta</span>
-                </div>
-                <div className="hero-card-play" onClick={()=>setActiveVideo(FORMATEURS[0])} style={{cursor:'pointer'}}><PlayIcon/></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FORMATEURS ── */}
-      <div className="ps">
-        <div className="ps-head">
-          <div className="ps-label">Les formateurs</div>
-          <h2 className="ps-title">Apprenez de ceux qui l'ont construit</h2>
-          <p className="ps-sub">5 experts sélectionnés sur leurs résultats concrets, pas leurs diplômes.</p>
-        </div>
-        <div className="fmt-grid">
-          {FORMATEURS.map(f => (
-            <div key={f.nom} className="fmt-card" onClick={() => setActiveVideo(f)}>
-              <div className="fmt-img-wrap">
-                <img className="fmt-img" src={f.img} alt={f.nom}/>
-                <div className="fmt-overlay"/>
-                <span className={`fmt-badge ${f.dispo?'fmt-dispo':'fmt-soon'}`}>{f.dispo?'✓ Disponible':'Bientôt'}</span>
-              </div>
-              <div className="fmt-info">
-                <div className="fmt-domain" style={{color:f.couleur}}>{f.domaine}</div>
-                <div className="fmt-nom">{f.nom}</div>
-                <div className="fmt-bio">{f.bio}</div>
-              </div>
-              <div className="fmt-play-btn"><PlayIconLg/></div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── PARCOURS ── */}
-      <div className="ps" id="parcours">
-        <div className="ps-head">
-          <div className="ps-label">Parcours d'apprentissage</div>
-          <h2 className="ps-title">Quel est votre objectif ?</h2>
-          <p className="ps-sub">Trois chemins guidés selon votre niveau actuel. Chacun mène à une certification reconnue.</p>
-        </div>
-        <div className="parcours-grid">
-          {PARCOURS.map(p => (
-            <div key={p.titre} className="p-card" style={{'--pc':p.couleur}}>
-              <div className="p-icon" style={{borderColor:`${p.couleur}22`,background:`${p.couleur}10`}}><span style={{fontSize:28}}>{p.icon}</span></div>
-              <div className="p-titre">{p.titre}</div>
-              <div className="p-sous" style={{color:p.couleur}}>{p.sous}</div>
-              <div className="p-desc">{p.desc}</div>
-              <div className="p-list">
-                {p.items.map(item => (
-                  <div key={item} className="p-item">
-                    <div className="p-check" style={{background:`${p.couleur}18`,color:p.couleur}}>✓</div>
-                    {item}
-                  </div>
-                ))}
-              </div>
-              <div className="p-meta">
-                <div className="p-meta-txt">
-                  <strong>{p.cours} cours · {p.semaines} semaines</strong>
-                  Formation guidée
-                </div>
-                <div className="p-cert" style={{background:`${p.certClr}20`,color:p.certClr,border:`1px solid ${p.certClr}40`}}>Cert. {p.cert}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── FEATURED COURSE ── */}
-      {featured && (
-        <div className="featured-wrap">
-          <div className="featured-inner">
-            <div className="f-bg"><img src={featured.image_url||DEFAULT_THUMB} alt={featured.titre}/></div>
-            <div className="f-overlay"/>
-            <div className="f-content">
-              <div className="f-eyebrow">
-                <span className="f-badge">⭐ Cours phare</span>
-                <div className="f-stars">{[1,2,3,4,5].map(i=><StarIcon key={i}/>)}</div>
-              </div>
-              <h2 className="f-title">{featured.titre}</h2>
-              <p className="f-desc">{featured.subtitle||'Maîtrisez le marketing augmenté par l\'IA. De la stratégie à l\'exécution, chaque leçon produit un livrable concret.'}</p>
-              <div className="f-tags">
-                <span className="f-tag">{featured.niveau||'Débutant'}</span>
-                <span className="f-tag">{featured.total_lessons||22} leçons</span>
-                <span className="f-tag">{Math.floor((featured.duree_totale||240)/60)}h de contenu</span>
-                <span className="f-tag">Certificat inclus</span>
-              </div>
-              <div className="f-actions">
-                <button className="btn btn-primary btn-lg" onClick={()=>handleEnroll(featured)}>
-                  <PlayIcon/> {enrolledIds.has(featured.id)?'Continuer le cours':'Commencer gratuitement'}
-                </button>
-                <a href={`cours.html?id=${featured.id}`} className="btn btn-ghost btn-lg">Voir le programme</a>
-              </div>
-            </div>
-            <div className="f-instructor">
-              <div className="f-instr-photo"><img src="https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg" alt="Rose"/></div>
-              <div><div className="f-instr-name">Rose</div><div className="f-instr-role">Experte Marketing IA</div></div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── TRANSFORMATIONS ── */}
-      <div className="ps">
-        <div className="ps-head">
-          <div className="ps-label">Objectifs concrets</div>
-          <h2 className="ps-title">Ce que vous pouvez accomplir</h2>
-          <p className="ps-sub">Exemples de transformations réalistes grâce aux formations de l'Académie IA.</p>
-        </div>
-        <div className="tr-grid">
-          {TRANSFORMATIONS.map((t,i) => (
-            <div key={i} className="tr-card">
-              <div className="tr-before">
-                <div className="tr-lbl-b">Avant</div>
-                <div className="tr-txt">{t.avant}</div>
-              </div>
-              <div className="tr-arrow">↓</div>
-              <div className="tr-after">
-                <div className="tr-lbl-a">Après</div>
-                <div className="tr-txt-a">{t.apres}</div>
-              </div>
-              <div className="tr-metric">{t.metric}</div>
-              <div className="tr-author">
-                <div className="tr-ava"><img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${t.seed}`} alt={t.nom}/></div>
-                <div>
-                  <div className="tr-name">{t.nom}</div>
-                  <div className="tr-role">{t.role}</div>
-                  <div className="tr-course">{t.cours}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── CERTIFICATIONS ── */}
-      <div className="ps">
-        <div className="ps-head">
-          <div className="ps-label">Certifications</div>
-          <h2 className="ps-title">Prouvez votre maîtrise de l'IA</h2>
-          <p className="ps-sub">Trois niveaux de certification. Chacun valide des compétences concrètes, pas des heures de visionnage.</p>
-        </div>
-        <div className="cert-grid">
-          {[
-            { cls:'cert-bronze', medal:'🥉', nom:'Certification Bronze', clr:'#CD7F32', desc:'Fondations validées', req:'Compléter 2 modules', items:['Attestation numérique','Badge LinkedIn','Accès ressources basiques'] },
-            { cls:'cert-silver', medal:'🥈', nom:'Certification Silver', clr:'#94A3B8', desc:'Praticien confirmé',  req:'4 modules + projet',  items:['Certificat officiel CreatorFlow','Badge LinkedIn Premium','Communauté avancée','Feedback formateur'] },
-            { cls:'cert-gold',   medal:'🥇', nom:'Certification Gold',   clr:'#F59E0B', desc:'Expert reconnu',    req:'Parcours complet + Playbook', items:['Certificat Expert IA signé','Profil Expert marketplace','Session coaching 1:1','Accès bêta nouvelles formations'] },
-          ].map(c => (
-            <div key={c.cls} className={`cert-card ${c.cls}`}>
-              <span className="cert-medal">{c.medal}</span>
-              <div className="cert-name" style={{color:c.clr}}>{c.nom}</div>
-              <div className="cert-desc">{c.desc}</div>
-              <div className="cert-items">
-                {c.items.map((item,i) => (
-                  <div key={i} className="cert-item"><span className="cert-check">✓</span>{item}</div>
-                ))}
-              </div>
-              <div className="cert-req">Requis : {c.req}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── COMMUNITY ── */}
-      <div className="ps">
-        <div className="comm-inner">
-          <div>
-            <div className="ps-label">Communauté</div>
-            <h2 className="ps-title" style={{marginBottom:14}}>Vous n'apprenez pas seul</h2>
-            <p className="ps-sub" style={{marginBottom:32}}>Rejoignez la communauté d'entrepreneurs IA francophones. Sessions live, feedback sur vos projets, accès direct aux formateurs.</p>
-            <div className="comm-feat">
-              {[
-                { icon:'💬', t:'Discord privé CreatorFlow', d:'Canal dédié par formation, support en temps réel' },
-                { icon:'🎙️', t:'Sessions live mensuelles', d:'Q&A avec les formateurs, revues de projets' },
-                { icon:'🤝', t:'Réseau d\'entrepreneurs IA', d:'Connexions, collaborations, opportunités business' },
-              ].map((f,i) => (
-                <div key={i} className="comm-feat-item">
-                  <div className="comm-feat-icon">{f.icon}</div>
-                  <div><div className="comm-feat-title">{f.t}</div><div className="comm-feat-sub">{f.d}</div></div>
-                </div>
-              ))}
-            </div>
-            <div className="comm-stats">
-              {[{n:'Discord',l:'Communauté privée'},{n:'1/mois',l:'Session live Q&A'},{n:'24h',l:'Temps de réponse'},{n:'Gratuit',l:'Accès communauté inclus'}].map((s,i) => (
-                <div key={i} className="comm-stat"><div className="comm-stat-n">{s.n}</div><div className="comm-stat-l">{s.l}</div></div>
-              ))}
-            </div>
-          </div>
-          <div className="mockup">
-            <div className="mkp-bar">
-              <div className="mkp-dot" style={{background:'#FF5F56'}}/><div className="mkp-dot" style={{background:'#FFBD2E'}}/><div className="mkp-dot" style={{background:'#27C93F'}}/>
-              <span style={{fontSize:12,color:'var(--text-3)',marginLeft:8,fontWeight:600}}>Discord · CreatorFlow Academy</span>
-            </div>
-            <div className="mkp-chan">
-              <div className="mkp-chan-dot"/>
-              <span className="mkp-chan-name">#general-marketing-ia</span>
-              <span style={{fontSize:11,color:'var(--text-3)',marginLeft:'auto'}}>24 en ligne</span>
-            </div>
-            <div className="mkp-msgs">
-              {[
-                { name:'Marie L.',   msg:'J\'ai appliqué le module 3 hier soir. Engagement Instagram +340% en 48h. Merci Rose 🔥', seed:'MarieLavallee', time:'il y a 2h' },
-                { name:'Karim B.',   msg:'Quelqu\'un a terminé le module "Funnel email" ? Je cherche des retours sur la séquence de bienvenue.', seed:'KarimBenali', time:'il y a 45min' },
-                { name:'Rose 🎓',    msg:'@Karim je viens de publier un bonus sur les séquences. Check le canal #ressources !', seed:'Rose', time:'il y a 20min' },
-              ].map((m,i) => (
-                <div key={i} className="mkp-msg">
-                  <div className="mkp-msg-ava"><img src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${m.seed}`} alt={m.name}/></div>
-                  <div>
-                    <div className="mkp-msg-name">{m.name}<span className="mkp-msg-time">{m.time}</span></div>
-                    <div className="mkp-msg-txt">{m.msg}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mkp-event">
-              <div className="mkp-event-lbl">🔴 Prochain live</div>
-              <div className="mkp-event-title">Optimiser son funnel avec l'IA — avec Rose</div>
-              <div className="mkp-event-time">Mercredi 11 juin · 19h00 EST · Gratuit pour les membres</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── CATALOGUE ── */}
-      <div className="catalog-wrap" id="catalogue">
-        <div style={{maxWidth:1280,margin:'0 auto',padding:'0 24px',marginBottom:24}}>
-          <div className="ps-label">Catalogue complet</div>
-          <h2 className="ps-title">Tous les cours disponibles</h2>
-        </div>
-        <div className="filters-bar">
-          {CATEGORIES.map(cat=>(
-            <button key={cat} className={`filter-pill${activeCat===cat?' active':''}`} onClick={()=>setActiveCat(cat)}>{cat}</button>
-          ))}
-          <div className="filters-sep"/>
-          <select className="sel-filter" value={activeNiveau} onChange={e=>setActiveNiveau(e.target.value)}>
-            {NIVEAUX.map(n=><option key={n}>{n}</option>)}
-          </select>
-          <select className="sel-filter" value={activeSort} onChange={e=>setActiveSort(e.target.value)}>
-            <option value="recent">Plus récents</option>
-            <option value="populaire">Plus populaires</option>
-            <option value="note">Mieux notés</option>
-            <option value="prix-asc">Prix croissant</option>
-          </select>
-        </div>
-        <div style={{maxWidth:1280,margin:'0 auto',padding:'0 24px'}}>
-          <div className="sec-hdr">
-            <div className="sec-title">{activeCat==='Tous'?'Tous les cours':activeCat}</div>
-            <div className="sec-count">{filtered.length} cours disponibles</div>
-          </div>
-          {loading ? (
-            <div className="empty-state"><div className="empty-icon">⏳</div><div className="empty-title">Chargement…</div></div>
-          ) : filtered.length===0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">🚀</div>
-              <div className="empty-title">{courses.length===0?'Bientôt disponible':'Aucun cours dans cette catégorie'}</div>
-              <div className="empty-sub">{courses.length===0?'Les prochains cours arrivent très bientôt.':'Essayez une autre catégorie.'}</div>
-            </div>
-          ) : (
-            <div className="courses-grid">
-              {filtered.map(c=><CourseCard key={c.id} course={c} enrolled={enrolledIds.has(c.id)} onEnroll={handleEnroll}/>)}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── FINAL CTA ── */}
-      <div className="final-cta">
-        <div className="final-cta-inner">
-          <h2 className="final-title">
-            Commencez aujourd'hui.<br/>
-            <span style={{background:'linear-gradient(135deg,var(--vs),var(--c))',WebkitBackgroundClip:'text',backgroundClip:'text',color:'transparent'}}>Résultats en 30 jours.</span>
-          </h2>
-          <p className="final-sub">Le premier cours est entièrement gratuit. Aucune carte bancaire requise. Commencez dès maintenant.</p>
-          <div className="final-actions">
-            <a href="inscription.html" className="btn btn-primary btn-lg">Créer mon compte gratuitement →</a>
-            <a href="#catalogue" className="btn btn-ghost btn-lg">Explorer les cours</a>
-          </div>
-          <div className="final-guarantee">🔒 Satisfaction garantie · Accès à vie · Certificat inclus</div>
-        </div>
-      </div>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="footer-inner">
-          <a href="/" className="footer-logo">CreatorFlow <em>Market</em></a>
-          <div className="footer-links">
-            <a href="/" className="footer-link">Plateforme</a>
-            <a href="experts.html" className="footer-link">Experts</a>
-            <a href="academie.html" className="footer-link">Académie</a>
-            <a href="cgu.html" className="footer-link">Mentions légales</a>
-            <a href="politique-confidentialite.html" className="footer-link">Confidentialité</a>
-          </div>
-          <div className="footer-copy">© 2026 CreatorFlow Market · Tous droits réservés</div>
-        </div>
-      </footer>
-
-    </React.Fragment>
-  );
+  }, [courses, activeCat, activeNiveau, search, activeSort]);
+  const featured = courses[0] || null;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, activeVideo && /*#__PURE__*/React.createElement(VideoModal, {
+    formateur: activeVideo,
+    onClose: () => setActiveVideo(null)
+  }), /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "nav-link"
+  }, "Plateforme"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "nav-link active"
+  }, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, user ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Mon espace"), /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar"
+  }, initials))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-primary btn-sm"
+  }, "D\xE9marrer"))))), /*#__PURE__*/React.createElement("section", {
+    className: "hero-v2"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-grid-bg"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-v2-inner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "hero-label"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "badge-dot"
+  }), "\uD83C\uDF93 Academy \u2014 Lancement Beta"), /*#__PURE__*/React.createElement("h1", {
+    className: "hero-v2-title"
+  }, "L'IA va transformer", /*#__PURE__*/React.createElement("br", null), "votre business.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    className: "hero-accent"
+  }, "Vous serez devant.")), /*#__PURE__*/React.createElement("p", {
+    className: "hero-v2-sub"
+  }, "Des formateurs entrepreneurs qui partagent ce qui g\xE9n\xE8re de vrais r\xE9sultats. Pas de th\xE9orie. Des livrables \xE0 chaque le\xE7on."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-v2-cta"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "#parcours",
+    className: "btn btn-primary btn-lg"
+  }, "Trouver mon parcours \u2192"), /*#__PURE__*/React.createElement("a", {
+    href: "#catalogue",
+    className: "btn btn-ghost btn-lg"
+  }, "Voir les cours")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-n"
+  }, "5"), /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-l"
+  }, "Formateurs experts")), /*#__PURE__*/React.createElement("div", {
+    className: "h-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-n"
+  }, "22+"), /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-l"
+  }, "Le\xE7ons disponibles")), /*#__PURE__*/React.createElement("div", {
+    className: "h-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-n"
+  }, "3"), /*#__PURE__*/React.createElement("div", {
+    className: "h-stat-l"
+  }, "Certifications")))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "hero-img-wrap"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "hero-img",
+    src: "https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg",
+    alt: "Rose \u2014 Marketing IA"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-img-mask"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-img-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-card-ava"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg",
+    alt: "Rose"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "hero-card-text"
+  }, /*#__PURE__*/React.createElement("strong", null, "Rose \u2014 Marketing IA"), /*#__PURE__*/React.createElement("span", null, "22 le\xE7ons \xB7 Acc\xE8s gratuit pendant le beta")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-card-play",
+    onClick: () => setActiveVideo(FORMATEURS[0]),
+    style: {
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement(PlayIcon, null))))))), /*#__PURE__*/React.createElement("div", {
+    className: "ps"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Les formateurs"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title"
+  }, "Apprenez de ceux qui l'ont construit"), /*#__PURE__*/React.createElement("p", {
+    className: "ps-sub"
+  }, "5 experts s\xE9lectionn\xE9s sur leurs r\xE9sultats concrets, pas leurs dipl\xF4mes.")), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-grid"
+  }, FORMATEURS.map(f => /*#__PURE__*/React.createElement("div", {
+    key: f.nom,
+    className: "fmt-card",
+    onClick: () => setActiveVideo(f)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fmt-img-wrap"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "fmt-img",
+    src: f.img,
+    alt: f.nom
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-overlay"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: `fmt-badge ${f.dispo ? 'fmt-dispo' : 'fmt-soon'}`
+  }, f.dispo ? '✓ Disponible' : 'Bientôt')), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fmt-domain",
+    style: {
+      color: f.couleur
+    }
+  }, f.domaine), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-nom"
+  }, f.nom), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-bio"
+  }, f.bio)), /*#__PURE__*/React.createElement("div", {
+    className: "fmt-play-btn"
+  }, /*#__PURE__*/React.createElement(PlayIconLg, null)))))), /*#__PURE__*/React.createElement("div", {
+    className: "ps",
+    id: "parcours"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Parcours d'apprentissage"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title"
+  }, "Quel est votre objectif ?"), /*#__PURE__*/React.createElement("p", {
+    className: "ps-sub"
+  }, "Trois chemins guid\xE9s selon votre niveau actuel. Chacun m\xE8ne \xE0 une certification reconnue.")), /*#__PURE__*/React.createElement("div", {
+    className: "parcours-grid"
+  }, PARCOURS.map(p => /*#__PURE__*/React.createElement("div", {
+    key: p.titre,
+    className: "p-card",
+    style: {
+      '--pc': p.couleur
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-icon",
+    style: {
+      borderColor: `${p.couleur}22`,
+      background: `${p.couleur}10`
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 28
+    }
+  }, p.icon)), /*#__PURE__*/React.createElement("div", {
+    className: "p-titre"
+  }, p.titre), /*#__PURE__*/React.createElement("div", {
+    className: "p-sous",
+    style: {
+      color: p.couleur
+    }
+  }, p.sous), /*#__PURE__*/React.createElement("div", {
+    className: "p-desc"
+  }, p.desc), /*#__PURE__*/React.createElement("div", {
+    className: "p-list"
+  }, p.items.map(item => /*#__PURE__*/React.createElement("div", {
+    key: item,
+    className: "p-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-check",
+    style: {
+      background: `${p.couleur}18`,
+      color: p.couleur
+    }
+  }, "\u2713"), item))), /*#__PURE__*/React.createElement("div", {
+    className: "p-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-meta-txt"
+  }, /*#__PURE__*/React.createElement("strong", null, p.cours, " cours \xB7 ", p.semaines, " semaines"), "Formation guid\xE9e"), /*#__PURE__*/React.createElement("div", {
+    className: "p-cert",
+    style: {
+      background: `${p.certClr}20`,
+      color: p.certClr,
+      border: `1px solid ${p.certClr}40`
+    }
+  }, "Cert. ", p.cert)))))), featured && /*#__PURE__*/React.createElement("div", {
+    className: "featured-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "featured-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "f-bg"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: featured.image_url || DEFAULT_THUMB,
+    alt: featured.titre
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "f-overlay"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "f-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "f-eyebrow"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "f-badge"
+  }, "\u2B50 Cours phare"), /*#__PURE__*/React.createElement("div", {
+    className: "f-stars"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(StarIcon, {
+    key: i
+  })))), /*#__PURE__*/React.createElement("h2", {
+    className: "f-title"
+  }, featured.titre), /*#__PURE__*/React.createElement("p", {
+    className: "f-desc"
+  }, featured.subtitle || 'Maîtrisez le marketing augmenté par l\'IA. De la stratégie à l\'exécution, chaque leçon produit un livrable concret.'), /*#__PURE__*/React.createElement("div", {
+    className: "f-tags"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "f-tag"
+  }, featured.niveau || 'Débutant'), /*#__PURE__*/React.createElement("span", {
+    className: "f-tag"
+  }, featured.total_lessons || 22, " le\xE7ons"), /*#__PURE__*/React.createElement("span", {
+    className: "f-tag"
+  }, Math.floor((featured.duree_totale || 240) / 60), "h de contenu"), /*#__PURE__*/React.createElement("span", {
+    className: "f-tag"
+  }, "Certificat inclus")), /*#__PURE__*/React.createElement("div", {
+    className: "f-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary btn-lg",
+    onClick: () => handleEnroll(featured)
+  }, /*#__PURE__*/React.createElement(PlayIcon, null), " ", enrolledIds.has(featured.id) ? 'Continuer le cours' : 'Commencer gratuitement'), /*#__PURE__*/React.createElement("a", {
+    href: `cours.html?id=${featured.id}`,
+    className: "btn btn-ghost btn-lg"
+  }, "Voir le programme"))), /*#__PURE__*/React.createElement("div", {
+    className: "f-instructor"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "f-instr-photo"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "https://cjtglfutckaogsmwhfsv.supabase.co/storage/v1/object/public/academy-assets/Rose.jpg",
+    alt: "Rose"
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "f-instr-name"
+  }, "Rose"), /*#__PURE__*/React.createElement("div", {
+    className: "f-instr-role"
+  }, "Experte Marketing IA"))))), /*#__PURE__*/React.createElement("div", {
+    className: "ps"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Objectifs concrets"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title"
+  }, "Ce que vous pouvez accomplir"), /*#__PURE__*/React.createElement("p", {
+    className: "ps-sub"
+  }, "Exemples de transformations r\xE9alistes gr\xE2ce aux formations de l'Acad\xE9mie IA.")), /*#__PURE__*/React.createElement("div", {
+    className: "tr-grid"
+  }, TRANSFORMATIONS.map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "tr-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tr-before"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tr-lbl-b"
+  }, "Avant"), /*#__PURE__*/React.createElement("div", {
+    className: "tr-txt"
+  }, t.avant)), /*#__PURE__*/React.createElement("div", {
+    className: "tr-arrow"
+  }, "\u2193"), /*#__PURE__*/React.createElement("div", {
+    className: "tr-after"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tr-lbl-a"
+  }, "Apr\xE8s"), /*#__PURE__*/React.createElement("div", {
+    className: "tr-txt-a"
+  }, t.apres)), /*#__PURE__*/React.createElement("div", {
+    className: "tr-metric"
+  }, t.metric), /*#__PURE__*/React.createElement("div", {
+    className: "tr-author"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tr-ava"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: `https://api.dicebear.com/9.x/avataaars/svg?seed=${t.seed}`,
+    alt: t.nom
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "tr-name"
+  }, t.nom), /*#__PURE__*/React.createElement("div", {
+    className: "tr-role"
+  }, t.role), /*#__PURE__*/React.createElement("div", {
+    className: "tr-course"
+  }, t.cours))))))), /*#__PURE__*/React.createElement("div", {
+    className: "ps"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Certifications"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title"
+  }, "Prouvez votre ma\xEEtrise de l'IA"), /*#__PURE__*/React.createElement("p", {
+    className: "ps-sub"
+  }, "Trois niveaux de certification. Chacun valide des comp\xE9tences concr\xE8tes, pas des heures de visionnage.")), /*#__PURE__*/React.createElement("div", {
+    className: "cert-grid"
+  }, [{
+    cls: 'cert-bronze',
+    medal: '🥉',
+    nom: 'Certification Bronze',
+    clr: '#CD7F32',
+    desc: 'Fondations validées',
+    req: 'Compléter 2 modules',
+    items: ['Attestation numérique', 'Badge LinkedIn', 'Accès ressources basiques']
+  }, {
+    cls: 'cert-silver',
+    medal: '🥈',
+    nom: 'Certification Silver',
+    clr: '#94A3B8',
+    desc: 'Praticien confirmé',
+    req: '4 modules + projet',
+    items: ['Certificat officiel CreatorFlow', 'Badge LinkedIn Premium', 'Communauté avancée', 'Feedback formateur']
+  }, {
+    cls: 'cert-gold',
+    medal: '🥇',
+    nom: 'Certification Gold',
+    clr: '#F59E0B',
+    desc: 'Expert reconnu',
+    req: 'Parcours complet + Playbook',
+    items: ['Certificat Expert IA signé', 'Profil Expert marketplace', 'Session coaching 1:1', 'Accès bêta nouvelles formations']
+  }].map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.cls,
+    className: `cert-card ${c.cls}`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cert-medal"
+  }, c.medal), /*#__PURE__*/React.createElement("div", {
+    className: "cert-name",
+    style: {
+      color: c.clr
+    }
+  }, c.nom), /*#__PURE__*/React.createElement("div", {
+    className: "cert-desc"
+  }, c.desc), /*#__PURE__*/React.createElement("div", {
+    className: "cert-items"
+  }, c.items.map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "cert-item"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cert-check"
+  }, "\u2713"), item))), /*#__PURE__*/React.createElement("div", {
+    className: "cert-req"
+  }, "Requis : ", c.req))))), /*#__PURE__*/React.createElement("div", {
+    className: "ps"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "comm-inner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Communaut\xE9"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title",
+    style: {
+      marginBottom: 14
+    }
+  }, "Vous n'apprenez pas seul"), /*#__PURE__*/React.createElement("p", {
+    className: "ps-sub",
+    style: {
+      marginBottom: 32
+    }
+  }, "Rejoignez la communaut\xE9 d'entrepreneurs IA francophones. Sessions live, feedback sur vos projets, acc\xE8s direct aux formateurs."), /*#__PURE__*/React.createElement("div", {
+    className: "comm-feat"
+  }, [{
+    icon: '💬',
+    t: 'Discord privé CreatorFlow',
+    d: 'Canal dédié par formation, support en temps réel'
+  }, {
+    icon: '🎙️',
+    t: 'Sessions live mensuelles',
+    d: 'Q&A avec les formateurs, revues de projets'
+  }, {
+    icon: '🤝',
+    t: 'Réseau d\'entrepreneurs IA',
+    d: 'Connexions, collaborations, opportunités business'
+  }].map((f, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "comm-feat-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "comm-feat-icon"
+  }, f.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "comm-feat-title"
+  }, f.t), /*#__PURE__*/React.createElement("div", {
+    className: "comm-feat-sub"
+  }, f.d))))), /*#__PURE__*/React.createElement("div", {
+    className: "comm-stats"
+  }, [{
+    n: 'Discord',
+    l: 'Communauté privée'
+  }, {
+    n: '1/mois',
+    l: 'Session live Q&A'
+  }, {
+    n: '24h',
+    l: 'Temps de réponse'
+  }, {
+    n: 'Gratuit',
+    l: 'Accès communauté inclus'
+  }].map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "comm-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "comm-stat-n"
+  }, s.n), /*#__PURE__*/React.createElement("div", {
+    className: "comm-stat-l"
+  }, s.l))))), /*#__PURE__*/React.createElement("div", {
+    className: "mockup"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-dot",
+    style: {
+      background: '#FF5F56'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-dot",
+    style: {
+      background: '#FFBD2E'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-dot",
+    style: {
+      background: '#27C93F'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginLeft: 8,
+      fontWeight: 600
+    }
+  }, "Discord \xB7 CreatorFlow Academy")), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-chan"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-chan-dot"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "mkp-chan-name"
+  }, "#general-marketing-ia"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginLeft: 'auto'
+    }
+  }, "24 en ligne")), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-msgs"
+  }, [{
+    name: 'Marie L.',
+    msg: 'J\'ai appliqué le module 3 hier soir. Engagement Instagram +340% en 48h. Merci Rose 🔥',
+    seed: 'MarieLavallee',
+    time: 'il y a 2h'
+  }, {
+    name: 'Karim B.',
+    msg: 'Quelqu\'un a terminé le module "Funnel email" ? Je cherche des retours sur la séquence de bienvenue.',
+    seed: 'KarimBenali',
+    time: 'il y a 45min'
+  }, {
+    name: 'Rose 🎓',
+    msg: '@Karim je viens de publier un bonus sur les séquences. Check le canal #ressources !',
+    seed: 'Rose',
+    time: 'il y a 20min'
+  }].map((m, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "mkp-msg"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-msg-ava"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: `https://api.dicebear.com/9.x/avataaars/svg?seed=${m.seed}`,
+    alt: m.name
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-msg-name"
+  }, m.name, /*#__PURE__*/React.createElement("span", {
+    className: "mkp-msg-time"
+  }, m.time)), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-msg-txt"
+  }, m.msg))))), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-event"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mkp-event-lbl"
+  }, "\uD83D\uDD34 Prochain live"), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-event-title"
+  }, "Optimiser son funnel avec l'IA \u2014 avec Rose"), /*#__PURE__*/React.createElement("div", {
+    className: "mkp-event-time"
+  }, "Mercredi 11 juin \xB7 19h00 EST \xB7 Gratuit pour les membres"))))), /*#__PURE__*/React.createElement("div", {
+    className: "catalog-wrap",
+    id: "catalogue"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1280,
+      margin: '0 auto',
+      padding: '0 24px',
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ps-label"
+  }, "Catalogue complet"), /*#__PURE__*/React.createElement("h2", {
+    className: "ps-title"
+  }, "Tous les cours disponibles")), /*#__PURE__*/React.createElement("div", {
+    className: "filters-bar"
+  }, CATEGORIES.map(cat => /*#__PURE__*/React.createElement("button", {
+    key: cat,
+    className: `filter-pill${activeCat === cat ? ' active' : ''}`,
+    onClick: () => setActiveCat(cat)
+  }, cat)), /*#__PURE__*/React.createElement("div", {
+    className: "filters-sep"
+  }), /*#__PURE__*/React.createElement("select", {
+    className: "sel-filter",
+    value: activeNiveau,
+    onChange: e => setActiveNiveau(e.target.value)
+  }, NIVEAUX.map(n => /*#__PURE__*/React.createElement("option", {
+    key: n
+  }, n))), /*#__PURE__*/React.createElement("select", {
+    className: "sel-filter",
+    value: activeSort,
+    onChange: e => setActiveSort(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "recent"
+  }, "Plus r\xE9cents"), /*#__PURE__*/React.createElement("option", {
+    value: "populaire"
+  }, "Plus populaires"), /*#__PURE__*/React.createElement("option", {
+    value: "note"
+  }, "Mieux not\xE9s"), /*#__PURE__*/React.createElement("option", {
+    value: "prix-asc"
+  }, "Prix croissant"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1280,
+      margin: '0 auto',
+      padding: '0 24px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sec-hdr"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sec-title"
+  }, activeCat === 'Tous' ? 'Tous les cours' : activeCat), /*#__PURE__*/React.createElement("div", {
+    className: "sec-count"
+  }, filtered.length, " cours disponibles")), loading ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\u23F3"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Chargement\u2026")) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, courses.length === 0 ? 'Bientôt disponible' : 'Aucun cours dans cette catégorie'), /*#__PURE__*/React.createElement("div", {
+    className: "empty-sub"
+  }, courses.length === 0 ? 'Les prochains cours arrivent très bientôt.' : 'Essayez une autre catégorie.')) : /*#__PURE__*/React.createElement("div", {
+    className: "courses-grid"
+  }, filtered.map(c => /*#__PURE__*/React.createElement(CourseCard, {
+    key: c.id,
+    course: c,
+    enrolled: enrolledIds.has(c.id),
+    onEnroll: handleEnroll
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "final-cta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "final-cta-inner"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "final-title"
+  }, "Commencez aujourd'hui.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'linear-gradient(135deg,var(--vs),var(--c))',
+      WebkitBackgroundClip: 'text',
+      backgroundClip: 'text',
+      color: 'transparent'
+    }
+  }, "R\xE9sultats en 30 jours.")), /*#__PURE__*/React.createElement("p", {
+    className: "final-sub"
+  }, "Le premier cours est enti\xE8rement gratuit. Aucune carte bancaire requise. Commencez d\xE8s maintenant."), /*#__PURE__*/React.createElement("div", {
+    className: "final-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-primary btn-lg"
+  }, "Cr\xE9er mon compte gratuitement \u2192"), /*#__PURE__*/React.createElement("a", {
+    href: "#catalogue",
+    className: "btn btn-ghost btn-lg"
+  }, "Explorer les cours")), /*#__PURE__*/React.createElement("div", {
+    className: "final-guarantee"
+  }, "\uD83D\uDD12 Satisfaction garantie \xB7 Acc\xE8s \xE0 vie \xB7 Certificat inclus"))), /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "footer-logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "footer-link"
+  }, "Plateforme"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "footer-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "footer-link"
+  }, "Acad\xE9mie"), /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    className: "footer-link"
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    className: "footer-link"
+  }, "Confidentialit\xE9")), /*#__PURE__*/React.createElement("div", {
+    className: "footer-copy"
+  }, "\xA9 2026 CreatorFlow Market \xB7 Tous droits r\xE9serv\xE9s"))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 <script src="/analytics.js"></script>
 <script src="/cookie-banner.js"></script>

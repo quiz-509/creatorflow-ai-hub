@@ -160,30 +160,203 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Location:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-  Clock:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  Globe:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
-  Shield:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-  Check:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Message:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  Briefcase:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>,
-  Star:(p)=><svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Share:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
-  Heart:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>,
-  Link:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
+  Location: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "10",
+    r: "3"
+  })),
+  Clock: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "12 6 12 12 16 14"
+  })),
+  Globe: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "2",
+    y1: "12",
+    x2: "22",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+  })),
+  Shield: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Message: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+  })),
+  Briefcase: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "7",
+    width: "20",
+    height: "14",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Share: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "18",
+    cy: "5",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "6",
+    cy: "12",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "18",
+    cy: "19",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "8.59",
+    y1: "13.51",
+    x2: "15.42",
+    y2: "17.49"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "15.41",
+    y1: "6.51",
+    x2: "8.59",
+    y2: "10.49"
+  })),
+  Heart: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+  })),
+  Link: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+  }))
 };
-
 const expertDefaut = {
   name: 'Chargement…',
   initials: '??',
@@ -197,107 +370,113 @@ const expertDefaut = {
   available: true,
   tags: [],
   tarif_heure: 0,
-  stats: { missions: 0, success: '—', response: '—', satisfaction: '—' },
+  stats: {
+    missions: 0,
+    success: '—',
+    response: '—',
+    satisfaction: '—'
+  },
   about: '',
   skills: [],
   portfolio: [],
   reviews: [],
-  similar: [],
+  similar: []
 };
-
-function Stars({ rating, size=13 }) {
-  return (
-    <div className="stars">
-      {[1,2,3,4,5].map(i => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= Math.round(rating) ? 'var(--orange)' : 'var(--surf-3)'}>
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      ))}
-    </div>
-  );
+function Stars({
+  rating,
+  size = 13
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "stars"
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement("svg", {
+    key: i,
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: i <= Math.round(rating) ? 'var(--orange)' : 'var(--surf-3)'
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))));
 }
-
 function App() {
   const [tab, setTab] = useState('apropos');
   const [saved, setSaved] = useState(false);
   const [expert, setExpert] = useState(expertDefaut);
-
   useEffect(() => {
     (async () => {
       const params = new URLSearchParams(window.location.search);
       const expertId = params.get('id');
       const targetId = expertId || (await sb.auth.getSession()).data?.session?.user?.id;
       if (!targetId) return;
-
-      const [
-        { data: profile },
-        { data: exp },
-        { data: reviewsList },
-        { count: missionsTotal },
-      ] = await Promise.all([
-        sb.from('profiles').select('*').eq('id', targetId).single(),
-        sb.from('experts').select('*').eq('id', targetId).single(),
-        sb.from('reviews')
-          .select('note, commentaire, client_prenom, client_nom, created_at')
-          .eq('expert_id', targetId)
-          .order('created_at', { ascending: false })
-          .limit(20),
-        sb.from('missions')
-          .select('id', { count: 'exact', head: true })
-          .eq('expert_id', targetId)
-          .eq('statut', 'termine'),
-      ]);
-
+      const [{
+        data: profile
+      }, {
+        data: exp
+      }, {
+        data: reviewsList
+      }, {
+        count: missionsTotal
+      }] = await Promise.all([sb.from('profiles').select('*').eq('id', targetId).single(), sb.from('experts').select('*').eq('id', targetId).single(), sb.from('reviews').select('note, commentaire, client_prenom, client_nom, created_at').eq('expert_id', targetId).order('created_at', {
+        ascending: false
+      }).limit(20), sb.from('missions').select('id', {
+        count: 'exact',
+        head: true
+      }).eq('expert_id', targetId).eq('statut', 'termine')]);
       const prenom = profile?.prenom || '';
       const nom = profile?.nom || '';
       const fullName = `${prenom} ${nom}`.trim();
-      const initials = ((prenom[0]||'?') + (nom[0]||'?')).toUpperCase();
-
-      const CHIP_COLORS = ['#7C3AED','#0891B2','#059669','#9333EA','#DC2626','#D97706'];
+      const initials = ((prenom[0] || '?') + (nom[0] || '?')).toUpperCase();
+      const CHIP_COLORS = ['#7C3AED', '#0891B2', '#059669', '#9333EA', '#DC2626', '#D97706'];
       const mappedReviews = (reviewsList || []).map((r, i) => {
         const clientPrenom = r.client_prenom || '';
         const clientNom = r.client_nom || '';
         const clientName = `${clientPrenom} ${clientNom}`.trim() || 'Client';
-        const clientInitials = clientName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'CL';
+        const clientInitials = clientName.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'CL';
         return {
           name: clientName,
           initials: clientInitials,
           color: CHIP_COLORS[i % CHIP_COLORS.length],
-          date: new Date(r.created_at).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+          date: new Date(r.created_at).toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }),
           rating: r.note,
           body: r.commentaire || '',
-          mission: '',
+          mission: ''
         };
       });
-
-      const CHIP_COLORS_SIM = ['linear-gradient(135deg,#7C3AED,#A78BFA)','linear-gradient(135deg,#0891B2,#06B6D4)','linear-gradient(135deg,#059669,#10B981)'];
-      const { data: simExperts } = await sb.from('experts')
-        .select('id, specialite, tarif_heure')
-        .neq('id', targetId)
-        .eq('disponible', true)
-        .limit(3);
+      const CHIP_COLORS_SIM = ['linear-gradient(135deg,#7C3AED,#A78BFA)', 'linear-gradient(135deg,#0891B2,#06B6D4)', 'linear-gradient(135deg,#059669,#10B981)'];
+      const {
+        data: simExperts
+      } = await sb.from('experts').select('id, specialite, tarif_heure').neq('id', targetId).eq('disponible', true).limit(3);
       const simIds = (simExperts || []).map(s => s.id);
-      const simProfiles = simIds.length > 0
-        ? (await sb.from('profiles').select('id,prenom,nom').in('id', simIds)).data || []
-        : [];
+      const simProfiles = simIds.length > 0 ? (await sb.from('profiles').select('id,prenom,nom').in('id', simIds)).data || [] : [];
       const simPM = {};
-      simProfiles.forEach(p => { simPM[p.id] = p; });
+      simProfiles.forEach(p => {
+        simPM[p.id] = p;
+      });
       const similar = (simExperts || []).map((s, i) => {
         const sp = simPM[s.id] || {};
-        const sName = `${sp.prenom||''} ${sp.nom||''}`.trim() || 'Expert IA';
-        const sInitials = sName.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase() || 'EX';
-        return { id: s.id, name: sName, initials: sInitials, spec: s.specialite || 'Expert IA', rate: s.tarif_heure > 0 ? s.tarif_heure+'$/h' : 'Sur devis', color: CHIP_COLORS_SIM[i % CHIP_COLORS_SIM.length] };
+        const sName = `${sp.prenom || ''} ${sp.nom || ''}`.trim() || 'Expert IA';
+        const sInitials = sName.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'EX';
+        return {
+          id: s.id,
+          name: sName,
+          initials: sInitials,
+          spec: s.specialite || 'Expert IA',
+          rate: s.tarif_heure > 0 ? s.tarif_heure + '$/h' : 'Sur devis',
+          color: CHIP_COLORS_SIM[i % CHIP_COLORS_SIM.length]
+        };
       });
-
       const competences = Array.isArray(exp?.competences) ? exp.competences : [];
-      const realSkills = competences.length > 0
-        ? competences.map((s, i) => ({ name: s, pct: Math.max(75, 98 - i * 4) }))
-        : [];
-
+      const realSkills = competences.length > 0 ? competences.map((s, i) => ({
+        name: s,
+        pct: Math.max(75, 98 - i * 4)
+      })) : [];
       const avgNote = parseFloat(exp?.note_moyenne) || 0;
       const reviewCount = exp?.nb_avis || 0;
       const mCount = missionsTotal || 0;
-
       setExpert(prev => ({
         ...prev,
         name: fullName || prev.name,
@@ -316,13 +495,18 @@ function App() {
           missions: mCount,
           success: mCount > 0 ? '100%' : '—',
           response: '< 2h',
-          satisfaction: avgNote > 0 ? avgNote.toFixed(1) + '/5' : '—',
-        },
+          satisfaction: avgNote > 0 ? avgNote.toFixed(1) + '/5' : '—'
+        }
       }));
     })();
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -330,334 +514,578 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
-  const tabs = [
-    { id: 'apropos', label: 'À propos' },
-    { id: 'competences', label: 'Compétences' },
-    { id: 'portfolio', label: 'Portfolio' },
-    { id: 'avis', label: `Avis (${expert.reviewCount})` },
-  ];
-
-  return (
-    <React.Fragment>
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          <div className="nav-right">
-            <a href="recherche.html" className="btn btn-ghost" style={{padding:'8px 16px',fontSize:13}}>Retour aux experts</a>
-            <a href="dashboard-client.html" className="btn btn-primary" style={{padding:'8px 16px',fontSize:13}}>Mon dashboard</a>
-          </div>
-        </div>
-      </nav>
-
-      <div className="page">
-        {/* HERO */}
-        <div className="hero">
-          <div className="container">
-            {/* Breadcrumb */}
-            <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--text-3)',marginBottom:24,marginTop:20}}>
-              <a href="index.html" style={{color:'var(--text-3)'}}>Accueil</a>
-              <span>/</span>
-              <a href="recherche.html" style={{color:'var(--text-3)'}}>Experts</a>
-              <span>/</span>
-              <span style={{color:'var(--text-2)'}}>{expert.name}</span>
-            </div>
-
-            <div className="hero-inner">
-              <div className="hero-avatar-wrap">
-                <div className="hero-avatar">{expert.initials}</div>
-                {expert.available && <div className="hero-badge"/>}
-              </div>
-              <div className="hero-info">
-                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
-                  <div>
-                    <div className="hero-name">{expert.name}</div>
-                    <div className="hero-title">{expert.title}</div>
-                  </div>
-                  <div style={{display:'flex',gap:8}}>
-                    <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}} onClick={()=>setSaved(s=>!s)}>
-                      <Ic.Heart style={{stroke: saved ? 'var(--v)' : 'currentColor', fill: saved ? 'var(--v)' : 'none'}}/>
-                      {saved ? 'Sauvegardé' : 'Sauvegarder'}
-                    </button>
-                    <button className="btn btn-ghost" style={{padding:'8px 14px',fontSize:13}}>
-                      <Ic.Share/>Partager
-                    </button>
-                  </div>
-                </div>
-                <div className="hero-rating">
-                  <Stars rating={expert.rating}/>
-                  <span className="rating-val">{expert.rating}</span>
-                  <span className="rating-count">({expert.reviewCount} avis)</span>
-                  {expert.available && <div className="dispo-chip" style={{marginLeft:8}}><div className="dispo-dot"/>Disponible maintenant</div>}
-                </div>
-                <div className="hero-tags">
-                  {expert.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                </div>
-                <div className="hero-meta">
-                  <div className="meta-item"><Ic.Location/>{expert.location}</div>
-                  <div className="meta-item"><Ic.Clock/>{expert.timezone}</div>
-                  <div className="meta-item"><Ic.Globe/>{expert.languages}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Tabs */}
-            <div className="hero-tabs">
-              {tabs.map(t => (
-                <div key={t.id} className={`htab ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>{t.label}</div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* BODY */}
-        <div className="container">
-          {/* Stats */}
-          <div className="stats-row" style={{marginTop:32}}>
-            <div className="stat-cell">
-              <div className="stat-val purple">{expert.stats.missions}</div>
-              <div className="stat-lbl">Missions réalisées</div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-val green">{expert.stats.success}</div>
-              <div className="stat-lbl">Taux de succès</div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-val cyan">{expert.stats.response}</div>
-              <div className="stat-lbl">Temps de réponse</div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-val orange">{expert.stats.satisfaction}</div>
-              <div className="stat-lbl">Note satisfaction</div>
-            </div>
-          </div>
-
-          <div className="body-grid">
-            {/* MAIN */}
-            <div>
-              {tab === 'apropos' && (
-                <div className="fade-up">
-                  <div className="section">
-                    <div className="section-title">À propos</div>
-                    <div className="card">
-                      {expert.about
-                        ? expert.about.split('\n\n').map((p,i) => (
-                            <p key={i} className="about-text" style={{marginBottom: i < expert.about.split('\n\n').length - 1 ? 14 : 0}}>{p}</p>
-                          ))
-                        : <p className="about-text" style={{color:'var(--text-3)'}}>Ce profil est en cours de configuration.</p>
-                      }
-                    </div>
-                  </div>
-                  <div className="section">
-                    <div className="section-title">Derniers avis <span>{expert.reviewCount} au total</span></div>
-                    {expert.reviews.length === 0
-                      ? <div style={{padding:'24px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r)'}}>Aucun avis pour le moment.</div>
-                      : expert.reviews.slice(0,2).map((r,i) => (
-                          <div key={i} className="review-card">
-                            <div className="review-header">
-                              <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
-                              <div className="review-meta">
-                                <div className="review-name">{r.name}</div>
-                                <div className="review-date">{r.date}</div>
-                              </div>
-                              <Stars rating={r.rating} size={12}/>
-                            </div>
-                            <div className="review-body">{r.body}</div>
-                            {r.mission && <div className="review-mission">Mission : {r.mission}</div>}
-                          </div>
-                        ))
-                    }
-                    {expert.reviews.length > 0 && (
-                      <button className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:4}} onClick={()=>setTab('avis')}>
-                        Voir tous les avis <Ic.Arrow/>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {tab === 'competences' && (
-                <div className="fade-up">
-                  {expert.skills.length === 0
-                    ? <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)'}}>Compétences non renseignées.</div>
-                    : <React.Fragment>
-                        <div className="section">
-                          <div className="section-title">Niveaux de compétence</div>
-                          <div className="card">
-                            <div className="skill-bar-wrap">
-                              {expert.skills.map((s,i) => (
-                                <div key={i} className="skill-row">
-                                  <div className="skill-name">{s.name}</div>
-                                  <div className="skill-bar">
-                                    <div className="skill-fill" style={{width:`${s.pct}%`}}/>
-                                  </div>
-                                  <div className="skill-pct">{s.pct}%</div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="section">
-                          <div className="section-title">Technologies déclarées</div>
-                          <div className="card">
-                            <div className="skills-grid">
-                              {expert.skills.map((s,i) => (
-                                <div key={i} className="skill-chip">
-                                  <Ic.Check style={{color:'var(--green)',width:12,height:12}}/>{s.name}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </React.Fragment>
-                  }
-                </div>
-              )}
-
-              {tab === 'portfolio' && (
-                <div className="fade-up">
-                  <div className="section">
-                    <div className="section-title">Réalisations <span>{expert.portfolio.length} projets</span></div>
-                    {expert.portfolio.length === 0
-                      ? <div style={{padding:'32px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)'}}>Aucun projet ajouté pour le moment.</div>
-                      : <div className="portfolio-grid">
-                          {expert.portfolio.map((p,i) => (
-                            <div key={i} className="portfolio-card">
-                              <div className="portfolio-thumb">{p.emoji}</div>
-                              <div className="portfolio-body">
-                                <div className="portfolio-name">{p.name}</div>
-                                <div className="portfolio-desc">{p.desc}</div>
-                                <div className="portfolio-tags">
-                                  {p.tags.map(t => <span key={t} className="ptag">{t}</span>)}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    }
-                  </div>
-                </div>
-              )}
-
-              {tab === 'avis' && (
-                <div className="fade-up">
-                  <div className="section">
-                    <div className="section-title">Tous les avis <span>{expert.reviewCount} avis</span></div>
-                    {/* Rating summary */}
-                    <div className="card" style={{marginBottom:16,display:'flex',alignItems:'center',gap:32}}>
-                      <div style={{textAlign:'center'}}>
-                        <div style={{fontSize:48,fontWeight:800,letterSpacing:'-0.04em',lineHeight:1}}>{expert.rating}</div>
-                        <Stars rating={expert.rating} size={16}/>
-                        <div style={{fontSize:12,color:'var(--text-3)',marginTop:4}}>{expert.reviewCount} avis</div>
-                      </div>
-                      <div style={{flex:1}}>
-                        {[5,4,3,2,1].map(n => (
-                          <div key={n} style={{display:'flex',alignItems:'center',gap:8,marginBottom:6}}>
-                            <span style={{fontSize:12,color:'var(--text-3)',width:8}}>{n}</span>
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="var(--orange)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                            <div style={{flex:1,height:5,background:'var(--surf-2)',borderRadius:999,overflow:'hidden'}}>
-                              <div style={{height:'100%',background:'linear-gradient(90deg,var(--orange),#EF4444)',borderRadius:999,width: n===5?'92%':n===4?'6%':'1%'}}/>
-                            </div>
-                            <span style={{fontSize:12,color:'var(--text-3)',width:28}}>{n===5?'92%':n===4?'6%':'1%'}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {expert.reviews.length === 0
-                      ? <div style={{padding:'24px',textAlign:'center',color:'var(--text-3)',fontSize:13,background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'var(--r)'}}>Cet expert n'a pas encore d'avis.</div>
-                      : expert.reviews.map((r,i) => (
-                          <div key={i} className="review-card">
-                            <div className="review-header">
-                              <div className="review-avatar" style={{background:r.color}}>{r.initials}</div>
-                              <div className="review-meta">
-                                <div className="review-name">{r.name}</div>
-                                <div className="review-date">{r.date}</div>
-                              </div>
-                              <Stars rating={r.rating} size={12}/>
-                            </div>
-                            <div className="review-body">{r.body}</div>
-                            {r.mission && <div className="review-mission">Mission : {r.mission}</div>}
-                          </div>
-                        ))
-                    }
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* SIDEBAR */}
-            <div>
-              <div className="sidebar-card">
-                <div style={{textAlign:'center',marginBottom:20}}>
-                  <div style={{fontSize:13,color:'var(--text-3)',marginBottom:4}}>Tarif horaire</div>
-                  <div style={{fontSize:32,fontWeight:800,letterSpacing:'-0.03em'}}>
-                    {expert.tarif_heure > 0 ? expert.tarif_heure : '—'}
-                    <span style={{fontSize:16,color:'var(--text-3)'}}>$/h</span>
-                  </div>
-                  <div style={{fontSize:12,color:'var(--text-3)'}}>ou sur devis pour les projets forfait</div>
-                </div>
-                <a href={`nouveau-brief.html?expert_id=${new URLSearchParams(window.location.search).get('id')||''}`} className="btn btn-primary" style={{width:'100%',justifyContent:'center',marginBottom:10}}>
-                  <Ic.Briefcase/>Poster un brief
-                </a>
-                <a href="messages.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center'}}>
-                  <Ic.Message/>Envoyer un message
-                </a>
-              </div>
-
-              <div className="sidebar-card">
-                <div className="sidebar-title">Informations</div>
-                <div className="resp-row">
-                  <div className="resp-icon"><Ic.Clock style={{color:'var(--vs)'}}/></div>
-                  <div className="resp-text"><strong>Réponse rapide</strong><span>Répond en moins de 2h en moyenne</span></div>
-                </div>
-                <div className="resp-row">
-                  <div className="resp-icon"><Ic.Shield style={{color:'var(--green)'}}/></div>
-                  <div className="resp-text"><strong>Profil vérifié</strong><span>Identité et compétences vérifiées</span></div>
-                </div>
-                <div className="resp-row" style={{marginBottom:0}}>
-                  <div className="resp-icon"><Ic.Globe style={{color:'var(--c)'}}/></div>
-                  <div className="resp-text"><strong>Multilangue</strong><span>FR, EN, ZH</span></div>
-                </div>
-              </div>
-
-              <div className="sidebar-card">
-                <div className="sidebar-title">Garanties incluses</div>
-                <div className="guarantee-list">
-                  {['Paiement sécurisé via escrow','Remboursement si insatisfait','Support inclus 30 jours','NDA disponible sur demande','Révisions incluses'].map(g => (
-                    <div key={g} className="guarantee-item"><div className="guarantee-dot"/>{g}</div>
-                  ))}
-                </div>
-              </div>
-
-              {expert.similar.length > 0 && (
-                <div className="sidebar-card">
-                  <div className="sidebar-title">Experts similaires</div>
-                  {expert.similar.map((s,i) => (
-                    <a key={i} href={`profil-expert.html?id=${s.id}`} className="similar-expert" style={{textDecoration:'none',color:'inherit'}}>
-                      <div className="sim-avatar" style={{background:s.color}}>{s.initials}</div>
-                      <div className="sim-info">
-                        <div className="sim-name">{s.name}</div>
-                        <div className="sim-spec">{s.spec}</div>
-                      </div>
-                      <div className="sim-rate">{s.rate}</div>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  const tabs = [{
+    id: 'apropos',
+    label: 'À propos'
+  }, {
+    id: 'competences',
+    label: 'Compétences'
+  }, {
+    id: 'portfolio',
+    label: 'Portfolio'
+  }, {
+    id: 'avis',
+    label: `Avis (${expert.reviewCount})`
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "recherche.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Retour aux experts"), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Mon dashboard")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginBottom: 24,
+      marginTop: 20
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "index.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Accueil"), /*#__PURE__*/React.createElement("span", null, "/"), /*#__PURE__*/React.createElement("a", {
+    href: "recherche.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Experts"), /*#__PURE__*/React.createElement("span", null, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-2)'
+    }
+  }, expert.name)), /*#__PURE__*/React.createElement("div", {
+    className: "hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-avatar-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-avatar"
+  }, expert.initials), expert.available && /*#__PURE__*/React.createElement("div", {
+    className: "hero-badge"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "hero-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "hero-name"
+  }, expert.name), /*#__PURE__*/React.createElement("div", {
+    className: "hero-title"
+  }, expert.title)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 14px',
+      fontSize: 13
+    },
+    onClick: () => setSaved(s => !s)
+  }, /*#__PURE__*/React.createElement(Ic.Heart, {
+    style: {
+      stroke: saved ? 'var(--v)' : 'currentColor',
+      fill: saved ? 'var(--v)' : 'none'
+    }
+  }), saved ? 'Sauvegardé' : 'Sauvegarder'), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 14px',
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Share, null), "Partager"))), /*#__PURE__*/React.createElement("div", {
+    className: "hero-rating"
+  }, /*#__PURE__*/React.createElement(Stars, {
+    rating: expert.rating
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "rating-val"
+  }, expert.rating), /*#__PURE__*/React.createElement("span", {
+    className: "rating-count"
+  }, "(", expert.reviewCount, " avis)"), expert.available && /*#__PURE__*/React.createElement("div", {
+    className: "dispo-chip",
+    style: {
+      marginLeft: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dispo-dot"
+  }), "Disponible maintenant")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-tags"
+  }, expert.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "tag"
+  }, t))), /*#__PURE__*/React.createElement("div", {
+    className: "hero-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Location, null), expert.location), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Clock, null), expert.timezone), /*#__PURE__*/React.createElement("div", {
+    className: "meta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Globe, null), expert.languages)))), /*#__PURE__*/React.createElement("div", {
+    className: "hero-tabs"
+  }, tabs.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: `htab ${tab === t.id ? 'active' : ''}`,
+    onClick: () => setTab(t.id)
+  }, t.label))))), /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-row",
+    style: {
+      marginTop: 32
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val purple"
+  }, expert.stats.missions), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Missions r\xE9alis\xE9es")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val green"
+  }, expert.stats.success), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Taux de succ\xE8s")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val cyan"
+  }, expert.stats.response), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Temps de r\xE9ponse")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-cell"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-val orange"
+  }, expert.stats.satisfaction), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, "Note satisfaction"))), /*#__PURE__*/React.createElement("div", {
+    className: "body-grid"
+  }, /*#__PURE__*/React.createElement("div", null, tab === 'apropos' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "\xC0 propos"), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, expert.about ? expert.about.split('\n\n').map((p, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    className: "about-text",
+    style: {
+      marginBottom: i < expert.about.split('\n\n').length - 1 ? 14 : 0
+    }
+  }, p)) : /*#__PURE__*/React.createElement("p", {
+    className: "about-text",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Ce profil est en cours de configuration."))), /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Derniers avis ", /*#__PURE__*/React.createElement("span", null, expert.reviewCount, " au total")), expert.reviews.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 13,
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r)'
+    }
+  }, "Aucun avis pour le moment.") : expert.reviews.slice(0, 2).map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "review-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-avatar",
+    style: {
+      background: r.color
+    }
+  }, r.initials), /*#__PURE__*/React.createElement("div", {
+    className: "review-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-name"
+  }, r.name), /*#__PURE__*/React.createElement("div", {
+    className: "review-date"
+  }, r.date)), /*#__PURE__*/React.createElement(Stars, {
+    rating: r.rating,
+    size: 12
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "review-body"
+  }, r.body), r.mission && /*#__PURE__*/React.createElement("div", {
+    className: "review-mission"
+  }, "Mission : ", r.mission))), expert.reviews.length > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      marginTop: 4
+    },
+    onClick: () => setTab('avis')
+  }, "Voir tous les avis ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), tab === 'competences' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, expert.skills.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 13,
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-lg)'
+    }
+  }, "Comp\xE9tences non renseign\xE9es.") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Niveaux de comp\xE9tence"), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skill-bar-wrap"
+  }, expert.skills.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "skill-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skill-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "skill-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skill-fill",
+    style: {
+      width: `${s.pct}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "skill-pct"
+  }, s.pct, "%")))))), /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Technologies d\xE9clar\xE9es"), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skills-grid"
+  }, expert.skills.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "skill-chip"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: 'var(--green)',
+      width: 12,
+      height: 12
+    }
+  }), s.name))))))), tab === 'portfolio' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "R\xE9alisations ", /*#__PURE__*/React.createElement("span", null, expert.portfolio.length, " projets")), expert.portfolio.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '32px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 13,
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-lg)'
+    }
+  }, "Aucun projet ajout\xE9 pour le moment.") : /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-grid"
+  }, expert.portfolio.map((p, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "portfolio-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-thumb"
+  }, p.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-name"
+  }, p.name), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-desc"
+  }, p.desc), /*#__PURE__*/React.createElement("div", {
+    className: "portfolio-tags"
+  }, p.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "ptag"
+  }, t))))))))), tab === 'avis' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Tous les avis ", /*#__PURE__*/React.createElement("span", null, expert.reviewCount, " avis")), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 16,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 32
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 48,
+      fontWeight: 800,
+      letterSpacing: '-0.04em',
+      lineHeight: 1
+    }
+  }, expert.rating), /*#__PURE__*/React.createElement(Stars, {
+    rating: expert.rating,
+    size: 16
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 4
+    }
+  }, expert.reviewCount, " avis")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, [5, 4, 3, 2, 1].map(n => /*#__PURE__*/React.createElement("div", {
+    key: n,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      width: 8
+    }
+  }, n), /*#__PURE__*/React.createElement("svg", {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "var(--orange)"
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      height: 5,
+      background: 'var(--surf-2)',
+      borderRadius: 999,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      background: 'linear-gradient(90deg,var(--orange),#EF4444)',
+      borderRadius: 999,
+      width: n === 5 ? '92%' : n === 4 ? '6%' : '1%'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      width: 28
+    }
+  }, n === 5 ? '92%' : n === 4 ? '6%' : '1%'))))), expert.reviews.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px',
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 13,
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r)'
+    }
+  }, "Cet expert n'a pas encore d'avis.") : expert.reviews.map((r, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "review-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-avatar",
+    style: {
+      background: r.color
+    }
+  }, r.initials), /*#__PURE__*/React.createElement("div", {
+    className: "review-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "review-name"
+  }, r.name), /*#__PURE__*/React.createElement("div", {
+    className: "review-date"
+  }, r.date)), /*#__PURE__*/React.createElement(Stars, {
+    rating: r.rating,
+    size: 12
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "review-body"
+  }, r.body), r.mission && /*#__PURE__*/React.createElement("div", {
+    className: "review-mission"
+  }, "Mission : ", r.mission)))))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)',
+      marginBottom: 4
+    }
+  }, "Tarif horaire"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      fontWeight: 800,
+      letterSpacing: '-0.03em'
+    }
+  }, expert.tarif_heure > 0 ? expert.tarif_heure : '—', /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16,
+      color: 'var(--text-3)'
+    }
+  }, "$/h")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "ou sur devis pour les projets forfait")), /*#__PURE__*/React.createElement("a", {
+    href: `nouveau-brief.html?expert_id=${new URLSearchParams(window.location.search).get('id') || ''}`,
+    className: "btn btn-primary",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Briefcase, null), "Poster un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "messages.html",
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Message, null), "Envoyer un message")), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-title"
+  }, "Informations"), /*#__PURE__*/React.createElement("div", {
+    className: "resp-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "resp-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Clock, {
+    style: {
+      color: 'var(--vs)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "resp-text"
+  }, /*#__PURE__*/React.createElement("strong", null, "R\xE9ponse rapide"), /*#__PURE__*/React.createElement("span", null, "R\xE9pond en moins de 2h en moyenne"))), /*#__PURE__*/React.createElement("div", {
+    className: "resp-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "resp-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Shield, {
+    style: {
+      color: 'var(--green)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "resp-text"
+  }, /*#__PURE__*/React.createElement("strong", null, "Profil v\xE9rifi\xE9"), /*#__PURE__*/React.createElement("span", null, "Identit\xE9 et comp\xE9tences v\xE9rifi\xE9es"))), /*#__PURE__*/React.createElement("div", {
+    className: "resp-row",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "resp-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Globe, {
+    style: {
+      color: 'var(--c)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "resp-text"
+  }, /*#__PURE__*/React.createElement("strong", null, "Multilangue"), /*#__PURE__*/React.createElement("span", null, "FR, EN, ZH")))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-title"
+  }, "Garanties incluses"), /*#__PURE__*/React.createElement("div", {
+    className: "guarantee-list"
+  }, ['Paiement sécurisé via escrow', 'Remboursement si insatisfait', 'Support inclus 30 jours', 'NDA disponible sur demande', 'Révisions incluses'].map(g => /*#__PURE__*/React.createElement("div", {
+    key: g,
+    className: "guarantee-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "guarantee-dot"
+  }), g)))), expert.similar.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-title"
+  }, "Experts similaires"), expert.similar.map((s, i) => /*#__PURE__*/React.createElement("a", {
+    key: i,
+    href: `profil-expert.html?id=${s.id}`,
+    className: "similar-expert",
+    style: {
+      textDecoration: 'none',
+      color: 'inherit'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sim-avatar",
+    style: {
+      background: s.color
+    }
+  }, s.initials), /*#__PURE__*/React.createElement("div", {
+    className: "sim-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sim-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "sim-spec"
+  }, s.spec)), /*#__PURE__*/React.createElement("div", {
+    className: "sim-rate"
+  }, s.rate)))))))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

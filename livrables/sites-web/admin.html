@@ -155,54 +155,208 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <div id="root"></div>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script type="text/babel">
-const { useState, useEffect, useCallback } = React;
-
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback
+} = React;
 const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const ADMIN_EMAIL = 'pjoacenel@gmail.com';
-
-const avatarColor = (str) => {
-  const colors = ['#7C3AED','#059669','#D97706','#DC2626','#2563EB','#DB2777','#0891B2'];
-  let h = 0; for (let c of (str||'')) h = (h * 31 + c.charCodeAt(0)) & 0xFFFFFF;
+const avatarColor = str => {
+  const colors = ['#7C3AED', '#059669', '#D97706', '#DC2626', '#2563EB', '#DB2777', '#0891B2'];
+  let h = 0;
+  for (let c of str || '') h = h * 31 + c.charCodeAt(0) & 0xFFFFFF;
   return colors[Math.abs(h) % colors.length];
 };
-const initials = (name) => (name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-const fmtDate = (d) => d ? new Date(d).toLocaleDateString('fr-CA', {day:'2-digit',month:'short',year:'numeric'}) : '';
-const fmtMoney = (n) => n ? `${Number(n).toLocaleString('fr-CA')}$` : '0$';
+const initials = name => (name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric'
+}) : '';
+const fmtMoney = n => n ? `${Number(n).toLocaleString('fr-CA')}$` : '0$';
 
 /* ── SIDEBAR NAV ── */
-function Sidebar({ tab, setTab, onLogout, pendingExperts }) {
-  const items = [
-    { id:'dashboard', label:'Dashboard', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> },
-    { id:'experts',   label:'Experts', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>, badge: pendingExperts },
-    { id:'users',     label:'Utilisateurs', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
-    { id:'missions',  label:'Missions', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> },
-    { id:'payments',  label:'Paiements', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
-    { id:'blog',      label:'Blog', icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> },
-  ];
-  return (
-    <aside className="sidebar" id="sidebar">
-      <div className="sidebar-section">
-        <div className="sidebar-label">Navigation</div>
-        {items.map(it => (
-          <button key={it.id} className={`nav-item ${tab===it.id?'active':''}`} onClick={()=>setTab(it.id)}>
-            {it.icon}{it.label}
-            {it.badge > 0 && <span className="nav-pending">{it.badge}</span>}
-          </button>
-        ))}
-      </div>
-      <div className="sidebar-bottom">
-        <button className="nav-item" onClick={onLogout}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          Déconnexion
-        </button>
-      </div>
-    </aside>
-  );
+function Sidebar({
+  tab,
+  setTab,
+  onLogout,
+  pendingExperts
+}) {
+  const items = [{
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "3",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "14",
+      y: "3",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "14",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "14",
+      y: "14",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }))
+  }, {
+    id: 'experts',
+    label: 'Experts',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("polygon", {
+      points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+    })),
+    badge: pendingExperts
+  }, {
+    id: 'users',
+    label: 'Utilisateurs',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "9",
+      cy: "7",
+      r: "4"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M23 21v-2a4 4 0 0 0-3-3.87"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 3.13a4 4 0 0 1 0 7.75"
+    }))
+  }, {
+    id: 'missions',
+    label: 'Missions',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "14 2 14 8 20 8"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "13",
+      x2: "8",
+      y2: "13"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "17",
+      x2: "8",
+      y2: "17"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "10 9 9 9 8 9"
+    }))
+  }, {
+    id: 'payments',
+    label: 'Paiements',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "1",
+      y: "4",
+      width: "22",
+      height: "16",
+      rx: "2"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "1",
+      y1: "10",
+      x2: "23",
+      y2: "10"
+    }))
+  }, {
+    id: 'blog',
+    label: 'Blog',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M12 20h9"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+    }))
+  }];
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "sidebar",
+    id: "sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Navigation"), items.map(it => /*#__PURE__*/React.createElement("button", {
+    key: it.id,
+    className: `nav-item ${tab === it.id ? 'active' : ''}`,
+    onClick: () => setTab(it.id)
+  }, it.icon, it.label, it.badge > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "nav-pending"
+  }, it.badge)))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-bottom"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "nav-item",
+    onClick: onLogout
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  })), "D\xE9connexion")));
 }
 
 /* ── DASHBOARD TAB ── */
@@ -210,15 +364,25 @@ function DashboardTab() {
   const [stats, setStats] = useState(null);
   useEffect(() => {
     (async () => {
-      const [users, experts, missions, payments, articles, subs, enrollments] = await Promise.all([
-        sb.from('profiles').select('id', { count: 'exact', head: true }),
-        sb.from('experts').select('id', { count: 'exact', head: true }),
-        sb.from('missions').select('id', { count: 'exact', head: true }),
-        sb.from('missions').select('montant').eq('statut', 'payee'),
-        sb.from('blog_articles').select('id', { count: 'exact', head: true }).eq('status', 'published'),
-        sb.from('blog_subscribers').select('id', { count: 'exact', head: true }),
-        sb.from('academy_enrollments').select('id', { count: 'exact', head: true }),
-      ]);
+      const [users, experts, missions, payments, articles, subs, enrollments] = await Promise.all([sb.from('profiles').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('experts').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('missions').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('missions').select('montant').eq('statut', 'payee'), sb.from('blog_articles').select('id', {
+        count: 'exact',
+        head: true
+      }).eq('status', 'published'), sb.from('blog_subscribers').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('academy_enrollments').select('id', {
+        count: 'exact',
+        head: true
+      })]);
       const totalRevenue = (payments.data || []).reduce((s, m) => s + (Number(m.montant) || 0), 0);
       setStats({
         users: users.count || 0,
@@ -227,116 +391,185 @@ function DashboardTab() {
         revenue: totalRevenue,
         articles: articles.count || 0,
         subscribers: subs.count || 0,
-        enrollments: enrollments.count || 0,
+        enrollments: enrollments.count || 0
       });
     })();
   }, []);
-
   const [recentMissions, setRecentMissions] = useState([]);
   const [recentUsers, setRecentUsers] = useState([]);
   useEffect(() => {
     (async () => {
-      const { data: m } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', { ascending: false }).limit(5);
+      const {
+        data: m
+      } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', {
+        ascending: false
+      }).limit(5);
       setRecentMissions(m || []);
-      const { data: u } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', { ascending: false }).limit(5);
+      const {
+        data: u
+      } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', {
+        ascending: false
+      }).limit(5);
       setRecentUsers(u || []);
     })();
   }, []);
-
-  if (!stats) return <div className="spin" />;
-
-  const statCards = [
-    { label:'Revenus totaux', val: fmtMoney(stats.revenue), icon:'💰', color:'#7C3AED' },
-    { label:'Utilisateurs', val: stats.users, icon:'👥', color:'#06B6D4' },
-    { label:'Missions', val: stats.missions, icon:'📋', color:'#10B981' },
-    { label:'Abonnés newsletter', val: stats.subscribers, icon:'📧', color:'#F59E0B' },
-    { label:'Experts actifs', val: stats.experts, icon:'⭐', color:'#DB2777' },
-    { label:'Articles publiés', val: stats.articles, icon:'✍️', color:'#2563EB' },
-    { label:'Inscriptions Academy', val: stats.enrollments, icon:'🎓', color:'#059669' },
-  ];
-
-  const statusBadge = (s) => {
-    const map = { en_cours:'badge-blue', payee:'badge-green', terminee:'badge-green', annulee:'badge-red', en_attente:'badge-amber' };
-    return <span className={`badge ${map[s]||'badge-gray'}`}>{s?.replace('_',' ')}</span>;
+  if (!stats) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const statCards = [{
+    label: 'Revenus totaux',
+    val: fmtMoney(stats.revenue),
+    icon: '💰',
+    color: '#7C3AED'
+  }, {
+    label: 'Utilisateurs',
+    val: stats.users,
+    icon: '👥',
+    color: '#06B6D4'
+  }, {
+    label: 'Missions',
+    val: stats.missions,
+    icon: '📋',
+    color: '#10B981'
+  }, {
+    label: 'Abonnés newsletter',
+    val: stats.subscribers,
+    icon: '📧',
+    color: '#F59E0B'
+  }, {
+    label: 'Experts actifs',
+    val: stats.experts,
+    icon: '⭐',
+    color: '#DB2777'
+  }, {
+    label: 'Articles publiés',
+    val: stats.articles,
+    icon: '✍️',
+    color: '#2563EB'
+  }, {
+    label: 'Inscriptions Academy',
+    val: stats.enrollments,
+    icon: '🎓',
+    color: '#059669'
+  }];
+  const statusBadge = s => {
+    const map = {
+      en_cours: 'badge-blue',
+      payee: 'badge-green',
+      terminee: 'badge-green',
+      annulee: 'badge-red',
+      en_attente: 'badge-amber'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, s?.replace('_', ' '));
   };
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Dashboard Admin</div>
-          <div className="page-sub">Vue d'ensemble de CreatorFlow Market</div>
-        </div>
-      </div>
-
-      <div className="stats-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
-        {statCards.slice(0,4).map(s => (
-          <div key={s.label} className="stat-card">
-            <div className="stat-icon" style={{background:`${s.color}18`}}><span>{s.icon}</span></div>
-            <div className="stat-val">{s.val}</div>
-            <div className="stat-label">{s.label}</div>
-          </div>
-        ))}
-      </div>
-      <div className="stats-grid" style={{gridTemplateColumns:'repeat(3,1fr)',marginTop:'-14px'}}>
-        {statCards.slice(4).map(s => (
-          <div key={s.label} className="stat-card">
-            <div className="stat-icon" style={{background:`${s.color}18`}}><span>{s.icon}</span></div>
-            <div className="stat-val">{s.val}</div>
-            <div className="stat-label">{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="two-col">
-        <div className="section-card">
-          <div className="section-head">
-            <span className="section-title">Dernières missions</span>
-            <span className="section-count">{recentMissions.length} récentes</span>
-          </div>
-          {recentMissions.length === 0 ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-text">Aucune mission</div></div> :
-            <table className="data-table">
-              <thead><tr><th>Mission</th><th>Statut</th><th>Montant</th></tr></thead>
-              <tbody>
-                {recentMissions.map(m => (
-                  <tr key={m.id}>
-                    <td><div style={{fontWeight:600,color:'var(--text)',fontSize:12}}>{m.titre||'Sans titre'}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</div></td>
-                    <td>{statusBadge(m.statut)}</td>
-                    <td><span className="amount">{fmtMoney(m.montant)}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-        </div>
-
-        <div className="section-card">
-          <div className="section-head">
-            <span className="section-title">Nouveaux utilisateurs</span>
-            <span className="section-count">{recentUsers.length} récents</span>
-          </div>
-          {recentUsers.length === 0 ? <div className="empty-state"><div className="empty-icon">👥</div><div className="empty-text">Aucun utilisateur</div></div> :
-            <table className="data-table">
-              <thead><tr><th>Utilisateur</th><th>Rôle</th></tr></thead>
-              <tbody>
-                {recentUsers.map(u => (
-                  <tr key={u.id}>
-                    <td>
-                      <div className="user-row-info">
-                        <div className="mini-avatar" style={{background:avatarColor(u.full_name)}}>{initials(u.full_name)}</div>
-                        <div><div className="user-row-name">{u.full_name||'—'}</div><div className="user-row-email">{u.email}</div></div>
-                      </div>
-                    </td>
-                    <td><span className={`badge ${u.role==='expert'?'badge-purple':'badge-blue'}`}>{u.role||'client'}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-        </div>
-      </div>
-    </>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Dashboard Admin"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, "Vue d'ensemble de CreatorFlow Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(4,1fr)'
+    }
+  }, statCards.slice(0, 4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.label,
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: `${s.color}18`
+    }
+  }, /*#__PURE__*/React.createElement("span", null, s.icon)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, s.val), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, s.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(3,1fr)',
+      marginTop: '-14px'
+    }
+  }, statCards.slice(4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.label,
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: `${s.color}18`
+    }
+  }, /*#__PURE__*/React.createElement("span", null, s.icon)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, s.val), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, s.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Derni\xE8res missions"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, recentMissions.length, " r\xE9centes")), recentMissions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucune mission")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Montant"))), /*#__PURE__*/React.createElement("tbody", null, recentMissions.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)',
+      fontSize: 12
+    }
+  }, m.titre || 'Sans titre'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))), /*#__PURE__*/React.createElement("td", null, statusBadge(m.statut)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant)))))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Nouveaux utilisateurs"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, recentUsers.length, " r\xE9cents")), recentUsers.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun utilisateur")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Utilisateur"), /*#__PURE__*/React.createElement("th", null, "R\xF4le"))), /*#__PURE__*/React.createElement("tbody", null, recentUsers.map(u => /*#__PURE__*/React.createElement("tr", {
+    key: u.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-avatar",
+    style: {
+      background: avatarColor(u.full_name)
+    }
+  }, initials(u.full_name)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-name"
+  }, u.full_name || '—'), /*#__PURE__*/React.createElement("div", {
+    className: "user-row-email"
+  }, u.email)))), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${u.role === 'expert' ? 'badge-purple' : 'badge-blue'}`
+  }, u.role || 'client')))))))));
 }
 
 /* ── USERS TAB ── */
@@ -345,180 +578,250 @@ function UsersTab() {
   const [filter, setFilter] = useState('all');
   useEffect(() => {
     (async () => {
-      const { data } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', { ascending: false });
+      const {
+        data
+      } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', {
+        ascending: false
+      });
       setUsers(data || []);
     })();
   }, []);
-
-  if (!users) return <div className="spin" />;
-
-  const filtered = filter === 'all' ? users : users.filter(u => (u.role||'client') === filter);
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Utilisateurs</div>
-          <div className="page-sub">{users.length} comptes inscrits</div>
-        </div>
-        <div style={{display:'flex',gap:8}}>
-          {['all','client','expert'].map(f => (
-            <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
-              {f==='all'?'Tous':f==='client'?'Clients':'Experts'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="section-card">
-        <div className="section-head">
-          <span className="section-title">Liste des utilisateurs</span>
-          <span className="section-count">{filtered.length} résultats</span>
-        </div>
-        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">👥</div><div className="empty-text">Aucun utilisateur</div></div> :
-          <table className="data-table">
-            <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
-            <tbody>
-              {filtered.map(u => (
-                <tr key={u.id}>
-                  <td>
-                    <div className="user-row-info">
-                      <div className="mini-avatar" style={{background:avatarColor(u.full_name)}}>{initials(u.full_name)}</div>
-                      <div className="user-row-name">{u.full_name||'—'}</div>
-                    </div>
-                  </td>
-                  <td style={{color:'var(--text-3)',fontSize:12}}>{u.email}</td>
-                  <td><span className={`badge ${u.role==='expert'?'badge-purple':'badge-blue'}`}>{u.role||'client'}</span></td>
-                  <td style={{fontSize:12}}>{fmtDate(u.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        }
-      </div>
-    </>
-  );
+  if (!users) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const filtered = filter === 'all' ? users : users.filter(u => (u.role || 'client') === filter);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Utilisateurs"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, users.length, " comptes inscrits")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, ['all', 'client', 'expert'].map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? 'Tous' : f === 'client' ? 'Clients' : 'Experts')))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des utilisateurs"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun utilisateur")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Utilisateur"), /*#__PURE__*/React.createElement("th", null, "Email"), /*#__PURE__*/React.createElement("th", null, "R\xF4le"), /*#__PURE__*/React.createElement("th", null, "Inscrit le"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(u => /*#__PURE__*/React.createElement("tr", {
+    key: u.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-avatar",
+    style: {
+      background: avatarColor(u.full_name)
+    }
+  }, initials(u.full_name)), /*#__PURE__*/React.createElement("div", {
+    className: "user-row-name"
+  }, u.full_name || '—'))), /*#__PURE__*/React.createElement("td", {
+    style: {
+      color: 'var(--text-3)',
+      fontSize: 12
+    }
+  }, u.email), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${u.role === 'expert' ? 'badge-purple' : 'badge-blue'}`
+  }, u.role || 'client')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12
+    }
+  }, fmtDate(u.created_at))))))));
 }
 
 /* ── EXPERTS TAB ── */
-function ExpertsTab({ onApproval }) {
+function ExpertsTab({
+  onApproval
+}) {
   const [experts, setExperts] = useState(null);
   const [profiles, setProfiles] = useState({});
   const [loading, setLoading] = useState({});
   const [filter, setFilter] = useState('all');
-
   const loadExperts = async () => {
-    const { data: exp } = await sb.from('experts').select('id,statut,specialite,tarif_heure,note_moyenne,nb_avis,created_at').order('created_at', { ascending: false });
+    const {
+      data: exp
+    } = await sb.from('experts').select('id,statut,specialite,tarif_heure,note_moyenne,nb_avis,created_at').order('created_at', {
+      ascending: false
+    });
     setExperts(exp || []);
     if (exp && exp.length > 0) {
       const ids = exp.map(e => e.id).filter(Boolean);
       if (ids.length > 0) {
-        const { data: profs } = await sb.from('profiles').select('id,prenom,nom,email').in('id', ids);
+        const {
+          data: profs
+        } = await sb.from('profiles').select('id,prenom,nom,email').in('id', ids);
         const map = {};
-        (profs || []).forEach(p => { map[p.id] = p; });
+        (profs || []).forEach(p => {
+          map[p.id] = p;
+        });
         setProfiles(map);
       }
     }
   };
-
-  useEffect(() => { loadExperts(); }, []);
-
+  useEffect(() => {
+    loadExperts();
+  }, []);
   const updateStatut = async (id, newStatut) => {
-    setLoading(l => ({...l, [id]: true}));
-    await sb.from('experts').update({ statut: newStatut }).eq('id', id);
+    setLoading(l => ({
+      ...l,
+      [id]: true
+    }));
+    await sb.from('experts').update({
+      statut: newStatut
+    }).eq('id', id);
     await loadExperts();
     if (onApproval) onApproval();
-    setLoading(l => ({...l, [id]: false}));
+    setLoading(l => ({
+      ...l,
+      [id]: false
+    }));
   };
-
-  if (!experts) return <div className="spin" />;
-
+  if (!experts) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
   const filtered = filter === 'all' ? experts : experts.filter(e => e.statut === filter);
   const pending = experts.filter(e => e.statut === 'pending').length;
-
-  const statutBadge = (s) => {
-    const map = { approved:'badge-green', pending:'badge-amber', rejected:'badge-red' };
-    const labels = { approved:'Approuvé', pending:'En attente', rejected:'Rejeté' };
-    return <span className={`badge ${map[s]||'badge-gray'}`}>{labels[s]||s}</span>;
+  const statutBadge = s => {
+    const map = {
+      approved: 'badge-green',
+      pending: 'badge-amber',
+      rejected: 'badge-red'
+    };
+    const labels = {
+      approved: 'Approuvé',
+      pending: 'En attente',
+      rejected: 'Rejeté'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, labels[s] || s);
   };
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Experts</div>
-          <div className="page-sub">{experts.length} experts inscrits — {pending} en attente d'approbation</div>
-        </div>
-      </div>
-
-      <div style={{display:'flex',gap:8,marginBottom:20}}>
-        {['all','pending','approved','rejected'].map(f => (
-          <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
-            {f==='all'?`Tous (${experts.length})`:f==='pending'?`En attente (${experts.filter(e=>e.statut==='pending').length})`:f==='approved'?`Approuvés (${experts.filter(e=>e.statut==='approved').length})`:`Rejetés (${experts.filter(e=>e.statut==='rejected').length})`}
-          </button>
-        ))}
-      </div>
-
-      {pending > 0 && filter !== 'approved' && filter !== 'rejected' && (
-        <div style={{background:'rgba(245,158,11,0.08)',border:'1px solid rgba(245,158,11,0.25)',borderRadius:12,padding:'12px 16px',marginBottom:16,fontSize:13,color:'var(--amber)'}}>
-          ⚠️ {pending} expert{pending > 1 ? 's' : ''} en attente d'approbation — ils ne sont pas visibles publiquement.
-        </div>
-      )}
-
-      <div className="section-card">
-        <div className="section-head">
-          <span className="section-title">Liste des experts</span>
-          <span className="section-count">{filtered.length} résultats</span>
-        </div>
-        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">⭐</div><div className="empty-text">Aucun expert</div></div> :
-          <table className="data-table">
-            <thead><tr><th>Expert</th><th>Tarif</th><th>Note</th><th>Statut</th><th>Actions</th></tr></thead>
-            <tbody>
-              {filtered.map(e => {
-                const prof = profiles[e.id] || {};
-                const fullName = `${prof.prenom||''} ${prof.nom||''}`.trim() || '—';
-                return (
-                  <tr key={e.id}>
-                    <td>
-                      <div className="user-row-info">
-                        <div className="mini-avatar" style={{background:avatarColor(fullName)}}>{initials(fullName)}</div>
-                        <div><div className="user-row-name">{fullName}</div><div className="user-row-email">{prof.email||'—'}</div><div style={{fontSize:10,color:'var(--text-3)'}}>{e.specialite||''}</div></div>
-                      </div>
-                    </td>
-                    <td style={{fontSize:12}}>{e.tarif_heure ? `${e.tarif_heure}$/h` : '—'}</td>
-                    <td style={{fontSize:12}}>{e.note_moyenne ? `${e.note_moyenne}/5 (${e.nb_avis} avis)` : '—'}</td>
-                    <td>{statutBadge(e.statut)}</td>
-                    <td>
-                      {e.statut === 'pending' && (
-                        <>
-                          <button className="btn-approve" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'approved')}>
-                            {loading[e.id] ? '...' : '✓ Approuver'}
-                          </button>
-                          <button className="btn-reject" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'rejected')}>
-                            ✕ Rejeter
-                          </button>
-                        </>
-                      )}
-                      {e.statut === 'approved' && (
-                        <button className="btn-reject" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'rejected')}>
-                          Révoquer
-                        </button>
-                      )}
-                      {e.statut === 'rejected' && (
-                        <button className="btn-approve" disabled={loading[e.id]} onClick={()=>updateStatut(e.id,'approved')}>
-                          Réapprouver
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        }
-      </div>
-    </>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Experts"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, experts.length, " experts inscrits \u2014 ", pending, " en attente d'approbation"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      marginBottom: 20
+    }
+  }, ['all', 'pending', 'approved', 'rejected'].map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? `Tous (${experts.length})` : f === 'pending' ? `En attente (${experts.filter(e => e.statut === 'pending').length})` : f === 'approved' ? `Approuvés (${experts.filter(e => e.statut === 'approved').length})` : `Rejetés (${experts.filter(e => e.statut === 'rejected').length})`))), pending > 0 && filter !== 'approved' && filter !== 'rejected' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(245,158,11,0.08)',
+      border: '1px solid rgba(245,158,11,0.25)',
+      borderRadius: 12,
+      padding: '12px 16px',
+      marginBottom: 16,
+      fontSize: 13,
+      color: 'var(--amber)'
+    }
+  }, "\u26A0\uFE0F ", pending, " expert", pending > 1 ? 's' : '', " en attente d'approbation \u2014 ils ne sont pas visibles publiquement."), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des experts"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\u2B50"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun expert")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Expert"), /*#__PURE__*/React.createElement("th", null, "Tarif"), /*#__PURE__*/React.createElement("th", null, "Note"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Actions"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(e => {
+    const prof = profiles[e.id] || {};
+    const fullName = `${prof.prenom || ''} ${prof.nom || ''}`.trim() || '—';
+    return /*#__PURE__*/React.createElement("tr", {
+      key: e.id
+    }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+      className: "user-row-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mini-avatar",
+      style: {
+        background: avatarColor(fullName)
+      }
+    }, initials(fullName)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "user-row-name"
+    }, fullName), /*#__PURE__*/React.createElement("div", {
+      className: "user-row-email"
+    }, prof.email || '—'), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: 'var(--text-3)'
+      }
+    }, e.specialite || '')))), /*#__PURE__*/React.createElement("td", {
+      style: {
+        fontSize: 12
+      }
+    }, e.tarif_heure ? `${e.tarif_heure}$/h` : '—'), /*#__PURE__*/React.createElement("td", {
+      style: {
+        fontSize: 12
+      }
+    }, e.note_moyenne ? `${e.note_moyenne}/5 (${e.nb_avis} avis)` : '—'), /*#__PURE__*/React.createElement("td", null, statutBadge(e.statut)), /*#__PURE__*/React.createElement("td", null, e.statut === 'pending' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+      className: "btn-approve",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'approved')
+    }, loading[e.id] ? '...' : '✓ Approuver'), /*#__PURE__*/React.createElement("button", {
+      className: "btn-reject",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'rejected')
+    }, "\u2715 Rejeter")), e.statut === 'approved' && /*#__PURE__*/React.createElement("button", {
+      className: "btn-reject",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'rejected')
+    }, "R\xE9voquer"), e.statut === 'rejected' && /*#__PURE__*/React.createElement("button", {
+      className: "btn-approve",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'approved')
+    }, "R\xE9approuver")));
+  })))));
 }
 
 /* ── MISSIONS TAB ── */
@@ -529,138 +832,234 @@ function MissionsTab() {
   const [modalData, setModalData] = useState(null);
   const [newStatut, setNewStatut] = useState('');
   const [saving, setSaving] = useState(false);
-
   const loadMissions = async () => {
-    const { data } = await sb.from('missions').select('id,titre,statut,montant,prix,categorie,client_id,expert_id,deadline,progression,created_at').order('created_at', { ascending: false });
+    const {
+      data
+    } = await sb.from('missions').select('id,titre,statut,montant,prix,categorie,client_id,expert_id,deadline,progression,created_at').order('created_at', {
+      ascending: false
+    });
     setMissions(data || []);
   };
-
-  useEffect(() => { loadMissions(); }, []);
-
   useEffect(() => {
-    if (!selected) { setModalData(null); return; }
+    loadMissions();
+  }, []);
+  useEffect(() => {
+    if (!selected) {
+      setModalData(null);
+      return;
+    }
     setModalData(null);
     (async () => {
-      const { data: m } = await sb.from('missions').select('*').eq('id', selected).single();
+      const {
+        data: m
+      } = await sb.from('missions').select('*').eq('id', selected).single();
       if (!m) return;
-      const results = await Promise.all([
-        m.client_id ? sb.from('profiles').select('full_name,email').eq('id', m.client_id).single() : Promise.resolve(null),
-        m.expert_id ? sb.from('profiles').select('full_name,email').eq('id', m.expert_id).single() : Promise.resolve(null),
-      ]);
-      setModalData({ mission: m, client: results[0]?.data || null, expert: results[1]?.data || null });
+      const results = await Promise.all([m.client_id ? sb.from('profiles').select('full_name,email').eq('id', m.client_id).single() : Promise.resolve(null), m.expert_id ? sb.from('profiles').select('full_name,email').eq('id', m.expert_id).single() : Promise.resolve(null)]);
+      setModalData({
+        mission: m,
+        client: results[0]?.data || null,
+        expert: results[1]?.data || null
+      });
       setNewStatut(m.statut || '');
     })();
   }, [selected]);
-
   const saveStatut = async () => {
     if (!selected || !newStatut) return;
     setSaving(true);
-    await sb.from('missions').update({ statut: newStatut }).eq('id', selected);
+    await sb.from('missions').update({
+      statut: newStatut
+    }).eq('id', selected);
     await loadMissions();
-    setModalData(d => d ? {...d, mission: {...d.mission, statut: newStatut}} : d);
+    setModalData(d => d ? {
+      ...d,
+      mission: {
+        ...d.mission,
+        statut: newStatut
+      }
+    } : d);
     setSaving(false);
   };
-
-  if (!missions) return <div className="spin" />;
-
-  const statuses = ['all','en_attente','en_cours','terminee','payee','annulee'];
+  if (!missions) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const statuses = ['all', 'en_attente', 'en_cours', 'terminee', 'payee', 'annulee'];
   const filtered = filter === 'all' ? missions : missions.filter(m => m.statut === filter);
-  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s,m) => s + (Number(m.montant||m.prix)||0), 0);
-
-  const statusBadge = (s) => {
-    const map = { en_cours:'badge-blue', payee:'badge-green', terminee:'badge-green', annulee:'badge-red', en_attente:'badge-amber' };
-    const labels = { en_cours:'En cours', payee:'Payée', terminee:'Terminée', annulee:'Annulée', en_attente:'En attente' };
-    return <span className={`badge ${map[s]||'badge-gray'}`}>{labels[s]||s}</span>;
+  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s, m) => s + (Number(m.montant || m.prix) || 0), 0);
+  const statusBadge = s => {
+    const map = {
+      en_cours: 'badge-blue',
+      payee: 'badge-green',
+      terminee: 'badge-green',
+      annulee: 'badge-red',
+      en_attente: 'badge-amber'
+    };
+    const labels = {
+      en_cours: 'En cours',
+      payee: 'Payée',
+      terminee: 'Terminée',
+      annulee: 'Annulée',
+      en_attente: 'En attente'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, labels[s] || s);
   };
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Missions</div>
-          <div className="page-sub">{missions.length} missions — {fmtMoney(totalRevenue)} encaissés</div>
-        </div>
-      </div>
-
-      <div style={{display:'flex',gap:8,marginBottom:20,flexWrap:'wrap'}}>
-        {statuses.map(f => (
-          <button key={f} onClick={()=>setFilter(f)} style={{padding:'6px 14px',borderRadius:99,fontSize:12,fontWeight:600,border:'1px solid',borderColor:filter===f?'var(--v)':'var(--border-2)',background:filter===f?'rgba(124,58,237,0.15)':'transparent',color:filter===f?'var(--vs)':'var(--text-3)',cursor:'pointer'}}>
-            {f==='all'?`Toutes (${missions.length})`:`${f.replace('_',' ')} (${missions.filter(m=>m.statut===f).length})`}
-          </button>
-        ))}
-      </div>
-
-      <div className="section-card">
-        <div className="section-head">
-          <span className="section-title">Liste des missions</span>
-          <span className="section-count">{filtered.length} résultats — cliquer pour les détails</span>
-        </div>
-        {filtered.length === 0 ? <div className="empty-state"><div className="empty-icon">📋</div><div className="empty-text">Aucune mission</div></div> :
-          <table className="data-table">
-            <thead><tr><th>Mission</th><th>Catégorie</th><th>Statut</th><th>Montant</th><th>Date</th></tr></thead>
-            <tbody>
-              {filtered.map(m => (
-                <tr key={m.id} className="clickable" onClick={()=>setSelected(m.id)}>
-                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div></td>
-                  <td style={{fontSize:11,color:'var(--text-3)'}}>{m.categorie||'—'}</td>
-                  <td>{statusBadge(m.statut)}</td>
-                  <td><span className="amount">{fmtMoney(m.montant||m.prix)}</span></td>
-                  <td style={{fontSize:12,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        }
-      </div>
-
-      {selected && (
-        <div className="modal-overlay" onClick={e=>{ if(e.target===e.currentTarget) setSelected(null); }}>
-          <div className="modal">
-            <div className="modal-head">
-              <span className="modal-title">{modalData?.mission?.titre || 'Détail mission'}</span>
-              <button className="modal-close" onClick={()=>setSelected(null)}>✕</button>
-            </div>
-            <div className="modal-body">
-              {!modalData ? <div className="spin" /> : (
-                <>
-                  <div className="modal-section">Informations</div>
-                  <div className="modal-row"><span className="modal-label">Catégorie</span><span className="modal-val">{modalData.mission.categorie||'—'}</span></div>
-                  <div className="modal-row"><span className="modal-label">Montant</span><span className="modal-val">{fmtMoney(modalData.mission.montant||modalData.mission.prix)}</span></div>
-                  <div className="modal-row"><span className="modal-label">Deadline</span><span className="modal-val">{modalData.mission.deadline||'—'}</span></div>
-                  <div className="modal-row"><span className="modal-label">Progression</span><span className="modal-val">{modalData.mission.progression != null ? `${modalData.mission.progression}%` : '—'}</span></div>
-                  <div className="modal-row"><span className="modal-label">Créée le</span><span className="modal-val">{fmtDate(modalData.mission.created_at)}</span></div>
-
-                  <div className="modal-section">Parties</div>
-                  <div className="modal-row">
-                    <span className="modal-label">Client</span>
-                    <span className="modal-val">{modalData.client ? `${modalData.client.full_name} — ${modalData.client.email}` : '—'}</span>
-                  </div>
-                  <div className="modal-row">
-                    <span className="modal-label">Expert</span>
-                    <span className="modal-val">{modalData.expert ? `${modalData.expert.full_name} — ${modalData.expert.email}` : '—'}</span>
-                  </div>
-
-                  <div className="modal-section">Changer le statut</div>
-                  <div style={{display:'flex',gap:10,alignItems:'center',paddingTop:8}}>
-                    <select className="status-select" value={newStatut} onChange={e=>setNewStatut(e.target.value)}>
-                      <option value="en_attente">En attente</option>
-                      <option value="en_cours">En cours</option>
-                      <option value="terminee">Terminée</option>
-                      <option value="payee">Payée</option>
-                      <option value="annulee">Annulée</option>
-                    </select>
-                    <button className="btn-save" disabled={saving || newStatut === modalData.mission.statut} onClick={saveStatut}>
-                      {saving ? 'Enregistrement...' : 'Enregistrer'}
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Missions"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, missions.length, " missions \u2014 ", fmtMoney(totalRevenue), " encaiss\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      marginBottom: 20,
+      flexWrap: 'wrap'
+    }
+  }, statuses.map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? `Toutes (${missions.length})` : `${f.replace('_', ' ')} (${missions.filter(m => m.statut === f).length})`))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des missions"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats \u2014 cliquer pour les d\xE9tails")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucune mission")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Montant"), /*#__PURE__*/React.createElement("th", null, "Date"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id,
+    className: "clickable",
+    onClick: () => setSelected(m.id)
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)'
+    }
+  }, m.titre || 'Sans titre')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, m.categorie || '—'), /*#__PURE__*/React.createElement("td", null, statusBadge(m.statut)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant || m.prix))), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))))))), selected && /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: e => {
+      if (e.target === e.currentTarget) setSelected(null);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-title"
+  }, modalData?.mission?.titre || 'Détail mission'), /*#__PURE__*/React.createElement("button", {
+    className: "modal-close",
+    onClick: () => setSelected(null)
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "modal-body"
+  }, !modalData ? /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  }) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Informations"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.categorie || '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Montant"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, fmtMoney(modalData.mission.montant || modalData.mission.prix))), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Deadline"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.deadline || '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Progression"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.progression != null ? `${modalData.mission.progression}%` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Cr\xE9\xE9e le"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, fmtDate(modalData.mission.created_at))), /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Parties"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Client"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.client ? `${modalData.client.full_name} — ${modalData.client.email}` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Expert"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.expert ? `${modalData.expert.full_name} — ${modalData.expert.email}` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Changer le statut"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      alignItems: 'center',
+      paddingTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "status-select",
+    value: newStatut,
+    onChange: e => setNewStatut(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "en_attente"
+  }, "En attente"), /*#__PURE__*/React.createElement("option", {
+    value: "en_cours"
+  }, "En cours"), /*#__PURE__*/React.createElement("option", {
+    value: "terminee"
+  }, "Termin\xE9e"), /*#__PURE__*/React.createElement("option", {
+    value: "payee"
+  }, "Pay\xE9e"), /*#__PURE__*/React.createElement("option", {
+    value: "annulee"
+  }, "Annul\xE9e")), /*#__PURE__*/React.createElement("button", {
+    className: "btn-save",
+    disabled: saving || newStatut === modalData.mission.statut,
+    onClick: saveStatut
+  }, saving ? 'Enregistrement...' : 'Enregistrer')))))));
 }
 
 /* ── PAYMENTS TAB ── */
@@ -668,65 +1067,95 @@ function PaymentsTab() {
   const [missions, setMissions] = useState(null);
   useEffect(() => {
     (async () => {
-      const { data } = await sb.from('missions').select('id,titre,montant,created_at,statut').eq('statut','payee').order('created_at', { ascending: false });
+      const {
+        data
+      } = await sb.from('missions').select('id,titre,montant,created_at,statut').eq('statut', 'payee').order('created_at', {
+        ascending: false
+      });
       setMissions(data || []);
     })();
   }, []);
-
-  if (!missions) return <div className="spin" />;
-
-  const total = missions.reduce((s,m) => s + (Number(m.montant)||0), 0);
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Paiements</div>
-          <div className="page-sub">{missions.length} paiements confirmés</div>
-        </div>
-      </div>
-
-      <div className="stats-grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(16,185,129,0.12)'}}>💰</div>
-          <div className="stat-val">{fmtMoney(total)}</div>
-          <div className="stat-label">Revenus totaux</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)'}}>📊</div>
-          <div className="stat-val">{missions.length}</div>
-          <div className="stat-label">Transactions</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(6,182,212,0.12)'}}>📈</div>
-          <div className="stat-val">{missions.length > 0 ? fmtMoney(Math.round(total/missions.length)) : '0$'}</div>
-          <div className="stat-label">Panier moyen</div>
-        </div>
-      </div>
-
-      <div className="section-card">
-        <div className="section-head">
-          <span className="section-title">Historique des paiements</span>
-          <span className="section-count">{missions.length} entrées</span>
-        </div>
-        {missions.length === 0 ? <div className="empty-state"><div className="empty-icon">💳</div><div className="empty-text">Aucun paiement encore</div></div> :
-          <table className="data-table">
-            <thead><tr><th>Mission</th><th>Montant</th><th>Statut</th><th>Date</th></tr></thead>
-            <tbody>
-              {missions.map(m => (
-                <tr key={m.id}>
-                  <td><div style={{fontWeight:600,color:'var(--text)'}}>{m.titre||'Sans titre'}</div></td>
-                  <td><span className="amount">{fmtMoney(m.montant)}</span></td>
-                  <td><span className="badge badge-green">Payée</span></td>
-                  <td style={{fontSize:12,color:'var(--text-3)'}}>{fmtDate(m.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        }
-      </div>
-    </>
-  );
+  if (!missions) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const total = missions.reduce((s, m) => s + (Number(m.montant) || 0), 0);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Paiements"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, missions.length, " paiements confirm\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(3,1fr)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.12)'
+    }
+  }, "\uD83D\uDCB0"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, fmtMoney(total)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Revenus totaux")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)'
+    }
+  }, "\uD83D\uDCCA"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missions.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Transactions")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.12)'
+    }
+  }, "\uD83D\uDCC8"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missions.length > 0 ? fmtMoney(Math.round(total / missions.length)) : '0$'), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Panier moyen"))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Historique des paiements"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, missions.length, " entr\xE9es")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCB3"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun paiement encore")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Montant"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Date"))), /*#__PURE__*/React.createElement("tbody", null, missions.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)'
+    }
+  }, m.titre || 'Sans titre')), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant))), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "badge badge-green"
+  }, "Pay\xE9e")), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))))))));
 }
 
 /* ── BLOG TAB ── */
@@ -735,96 +1164,143 @@ function BlogTab() {
   const [subscribers, setSubscribers] = useState(null);
   useEffect(() => {
     (async () => {
-      const [a, s] = await Promise.all([
-        sb.from('blog_articles').select('id,title,category,status,views,created_at').order('created_at', { ascending: false }).limit(50),
-        sb.from('blog_subscribers').select('id,email,source,created_at').order('created_at', { ascending: false }).limit(50),
-      ]);
+      const [a, s] = await Promise.all([sb.from('blog_articles').select('id,title,category,status,views,created_at').order('created_at', {
+        ascending: false
+      }).limit(50), sb.from('blog_subscribers').select('id,email,source,created_at').order('created_at', {
+        ascending: false
+      }).limit(50)]);
       setArticles(a.data || []);
       setSubscribers(s.data || []);
     })();
   }, []);
-
-  if (!articles || !subscribers) return <div className="spin" />;
-
+  if (!articles || !subscribers) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
   const published = articles.filter(a => a.status === 'published').length;
-  const totalViews = articles.reduce((s,a) => s + (Number(a.views)||0), 0);
-
-  return (
-    <>
-      <div className="page-header">
-        <div>
-          <div className="page-title">Blog & Newsletter</div>
-          <div className="page-sub">{published} articles publiés — {subscribers.length} abonnés</div>
-        </div>
-      </div>
-
-      <div className="stats-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(124,58,237,0.12)'}}>✍️</div>
-          <div className="stat-val">{articles.length}</div>
-          <div className="stat-label">Articles total</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(16,185,129,0.12)'}}>✅</div>
-          <div className="stat-val">{published}</div>
-          <div className="stat-label">Publiés</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(6,182,212,0.12)'}}>👁️</div>
-          <div className="stat-val">{totalViews.toLocaleString('fr-CA')}</div>
-          <div className="stat-label">Vues totales</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon" style={{background:'rgba(245,158,11,0.12)'}}>📧</div>
-          <div className="stat-val">{subscribers.length}</div>
-          <div className="stat-label">Abonnés</div>
-        </div>
-      </div>
-
-      <div className="two-col">
-        <div className="section-card">
-          <div className="section-head">
-            <span className="section-title">Articles récents</span>
-            <span className="section-count">{articles.length}</span>
-          </div>
-          {articles.length === 0 ? <div className="empty-state"><div className="empty-icon">✍️</div><div className="empty-text">Aucun article</div></div> :
-            <table className="data-table">
-              <thead><tr><th>Titre</th><th>Statut</th><th>Vues</th></tr></thead>
-              <tbody>
-                {articles.slice(0,15).map(a => (
-                  <tr key={a.id}>
-                    <td><div style={{fontWeight:600,color:'var(--text)',fontSize:12,maxWidth:220,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{a.title}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{a.category}</div></td>
-                    <td><span className={`badge ${a.status==='published'?'badge-green':'badge-amber'}`}>{a.status==='published'?'Publié':'Brouillon'}</span></td>
-                    <td style={{fontSize:12,fontWeight:600}}>{(Number(a.views)||0).toLocaleString('fr-CA')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-        </div>
-
-        <div className="section-card">
-          <div className="section-head">
-            <span className="section-title">Abonnés newsletter</span>
-            <span className="section-count">{subscribers.length}</span>
-          </div>
-          {subscribers.length === 0 ? <div className="empty-state"><div className="empty-icon">📧</div><div className="empty-text">Aucun abonné</div></div> :
-            <table className="data-table">
-              <thead><tr><th>Email</th><th>Source</th></tr></thead>
-              <tbody>
-                {subscribers.slice(0,15).map(s => (
-                  <tr key={s.id}>
-                    <td style={{fontSize:12,color:'var(--text)'}}>{s.email}</td>
-                    <td><span className="badge badge-gray">{s.source||'blog'}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          }
-        </div>
-      </div>
-    </>
-  );
+  const totalViews = articles.reduce((s, a) => s + (Number(a.views) || 0), 0);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Blog & Newsletter"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, published, " articles publi\xE9s \u2014 ", subscribers.length, " abonn\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(4,1fr)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)'
+    }
+  }, "\u270D\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, articles.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Articles total")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.12)'
+    }
+  }, "\u2705"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, published), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Publi\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.12)'
+    }
+  }, "\uD83D\uDC41\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, totalViews.toLocaleString('fr-CA')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Vues totales")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(245,158,11,0.12)'
+    }
+  }, "\uD83D\uDCE7"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, subscribers.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Abonn\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Articles r\xE9cents"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, articles.length)), articles.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\u270D\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun article")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Titre"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Vues"))), /*#__PURE__*/React.createElement("tbody", null, articles.slice(0, 15).map(a => /*#__PURE__*/React.createElement("tr", {
+    key: a.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)',
+      fontSize: 12,
+      maxWidth: 220,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, a.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, a.category)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${a.status === 'published' ? 'badge-green' : 'badge-amber'}`
+  }, a.status === 'published' ? 'Publié' : 'Brouillon')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, (Number(a.views) || 0).toLocaleString('fr-CA'))))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Abonn\xE9s newsletter"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, subscribers.length)), subscribers.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCE7"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun abonn\xE9")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Email"), /*#__PURE__*/React.createElement("th", null, "Source"))), /*#__PURE__*/React.createElement("tbody", null, subscribers.slice(0, 15).map(s => /*#__PURE__*/React.createElement("tr", {
+    key: s.id
+  }, /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text)'
+    }
+  }, s.email), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "badge badge-gray"
+  }, s.source || 'blog')))))))));
 }
 
 /* ── APP ROOT ── */
@@ -832,78 +1308,98 @@ function App() {
   const [session, setSession] = useState(undefined);
   const [tab, setTab] = useState('dashboard');
   const [pendingExperts, setPendingExperts] = useState(0);
-
   useEffect(() => {
-    sb.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: { subscription } } = sb.auth.onAuthStateChange((_, s) => setSession(s));
+    sb.auth.getSession().then(({
+      data
+    }) => setSession(data.session));
+    const {
+      data: {
+        subscription
+      }
+    } = sb.auth.onAuthStateChange((_, s) => setSession(s));
     return () => subscription.unsubscribe();
   }, []);
-
   const loadPending = useCallback(async () => {
-    const { count } = await sb.from('experts').select('id', { count: 'exact', head: true }).eq('statut', 'pending');
+    const {
+      count
+    } = await sb.from('experts').select('id', {
+      count: 'exact',
+      head: true
+    }).eq('statut', 'pending');
     setPendingExperts(count || 0);
   }, []);
-
   useEffect(() => {
     if (session?.user?.email === ADMIN_EMAIL) loadPending();
   }, [session, loadPending]);
-
-  const logout = async () => { await sb.auth.signOut(); };
-
-  if (session === undefined) return <div className="spin" style={{marginTop:80}} />;
-
+  const logout = async () => {
+    await sb.auth.signOut();
+  };
+  if (session === undefined) return /*#__PURE__*/React.createElement("div", {
+    className: "spin",
+    style: {
+      marginTop: 80
+    }
+  });
   if (!session || session.user?.email !== ADMIN_EMAIL) {
-    return (
-      <div className="access-denied">
-        <div style={{fontSize:48}}>🔒</div>
-        <h1>Accès refusé</h1>
-        <p>Cette page est réservée à l'administrateur de CreatorFlow Market.</p>
-        {!session ?
-          <a href="/connexion.html" className="btn btn-primary">Se connecter</a> :
-          <button className="btn btn-primary" onClick={logout}>Changer de compte</button>
-        }
-      </div>
-    );
+    return /*#__PURE__*/React.createElement("div", {
+      className: "access-denied"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 48
+      }
+    }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("h1", null, "Acc\xE8s refus\xE9"), /*#__PURE__*/React.createElement("p", null, "Cette page est r\xE9serv\xE9e \xE0 l'administrateur de CreatorFlow Market."), !session ? /*#__PURE__*/React.createElement("a", {
+      href: "/connexion.html",
+      className: "btn btn-primary"
+    }, "Se connecter") : /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-primary",
+      onClick: logout
+    }, "Changer de compte"));
   }
-
   const userName = session.user?.email?.split('@')[0] || 'Admin';
   const tabs = {
     dashboard: DashboardTab,
-    experts: () => <ExpertsTab onApproval={loadPending} />,
+    experts: () => /*#__PURE__*/React.createElement(ExpertsTab, {
+      onApproval: loadPending
+    }),
     users: UsersTab,
     missions: MissionsTab,
     payments: PaymentsTab,
-    blog: BlogTab,
+    blog: BlogTab
   };
   const ActiveTab = tabs[tab];
-
-  return (
-    <>
-      <nav className="nav">
-        <div className="nav-inner">
-          <div className="nav-brand">
-            <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-            <span className="admin-badge">Admin</span>
-          </div>
-          <div className="nav-right">
-            <div className="user-chip">
-              <div className="avatar">{initials(userName)}</div>
-              <span className="user-name">{userName}</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-      <Sidebar tab={tab} setTab={setTab} onLogout={logout} pendingExperts={pendingExperts} />
-      <main className="main">
-        <div className="main-inner">
-          <ActiveTab />
-        </div>
-      </main>
-    </>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-brand"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("span", {
+    className: "admin-badge"
+  }, "Admin")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar"
+  }, initials(userName)), /*#__PURE__*/React.createElement("span", {
+    className: "user-name"
+  }, userName))))), /*#__PURE__*/React.createElement(Sidebar, {
+    tab: tab,
+    setTab: setTab,
+    onLogout: logout,
+    pendingExperts: pendingExperts
+  }), /*#__PURE__*/React.createElement("main", {
+    className: "main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "main-inner"
+  }, /*#__PURE__*/React.createElement(ActiveTab, null))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

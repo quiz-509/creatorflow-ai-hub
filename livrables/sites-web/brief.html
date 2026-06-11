@@ -119,49 +119,137 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const Ic = {
-  Arrow:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Back:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>,
-  Check:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  Clock:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  Shield:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
-  Star:(p)=><svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Back: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M12 19l-7-7 7-7"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Clock: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "12 6 12 12 16 14"
+  })),
+  Shield: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))
 };
-
-const CATS = ['Agents IA','Automatisation','Chatbots','Développement IA','Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'];
-
+const CATS = ['Agents IA', 'Automatisation', 'Chatbots', 'Développement IA', 'Prompt Engineering', 'Montage vidéo IA', 'Branding IA', 'Formation IA'];
 function App() {
-  useEffect(() => { document.getElementById('cfm-loader')?.remove(); }, []);
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
   const [step, setStep] = useState(1);
   const [done, setDone] = useState(false);
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [form, setForm] = useState({ cat:'', budget:'', delai:'', desc:'', nom:'', email:'', entreprise:'', tel:'' });
-
+  const [form, setForm] = useState({
+    cat: '',
+    budget: '',
+    delai: '',
+    desc: '',
+    nom: '',
+    email: '',
+    entreprise: '',
+    tel: ''
+  });
   useEffect(() => {
-    sb.auth.getSession().then(async ({ data }) => {
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
       if (data.session) {
         const u = data.session.user;
         setUserId(u.id);
-        const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+        const {
+          data: profile
+        } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
         if (profile) {
           const nom = `${profile.prenom || ''} ${profile.nom || ''}`.trim();
-          setForm(f => ({ ...f, nom, email: u.email }));
+          setForm(f => ({
+            ...f,
+            nom,
+            email: u.email
+          }));
         }
       }
     });
     const el = document.getElementById('cursor-glow');
-    const move = e => { el.style.left = e.clientX+'px'; el.style.top = e.clientY+'px'; };
-    window.addEventListener('mousemove', move, { passive: true });
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
     const handler = e => {
       const btn = e.target.closest('.btn');
       if (!btn) return;
@@ -169,15 +257,20 @@ function App() {
       const size = Math.max(r.width, r.height);
       const span = document.createElement('span');
       span.className = 'btn-ripple-el';
-      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-r.left-size/2}px;top:${e.clientY-r.top-size/2}px`;
-      btn.appendChild(span); setTimeout(() => span.remove(), 680);
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
     };
     document.addEventListener('click', handler);
-    return () => { window.removeEventListener('mousemove', move); document.removeEventListener('click', handler); };
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
   }, []);
-
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-
+  const set = (k, v) => setForm(f => ({
+    ...f,
+    [k]: v
+  }));
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
@@ -191,193 +284,334 @@ function App() {
       email_contact: form.email,
       entreprise: form.entreprise,
       telephone: form.tel,
-      statut: 'ouvert',
+      statut: 'ouvert'
     });
     setSaving(false);
     setDone(true);
   }
-
-  return (
-    <React.Fragment>
-      <nav className="nav"><div className="wrap nav-inner">
-        <a href="/" className="brand"><div className="brand-logo"/><span>CreatorFlow Market</span></a>
-        <div className="nav-links">
-          <a href="experts.html" className="nav-link">Experts</a>
-          <a href="brief.html" className="nav-link">Déposer un brief</a>
-          <a href="inscription.html" className="nav-link">Devenir expert</a>
-        </div>
-        <div style={{display:'flex',gap:8}}>
-          <a href="connexion.html" className="btn btn-ghost btn-sm">Connexion</a>
-        </div>
-      </div></nav>
-
-      <div className="page-wrap">
-        <div className="wrap">
-          <div style={{paddingTop:20,marginBottom:8}}>
-            <span className="eyebrow">Déposer un brief</span>
-            <h1 style={{fontSize:'clamp(28px,4vw,44px)',fontWeight:800,letterSpacing:'-0.03em',margin:'12px 0 6px'}}>
-              Décrivez votre besoin,<br/>on trouve l'expert.
-            </h1>
-            <p style={{fontSize:16,color:'var(--text-2)',maxWidth:480}}>Réponse sous 24h · Matching garanti · Zéro engagement</p>
-          </div>
-          <div className="brief-layout">
-            <div>
-              {!done ? (
-                <React.Fragment>
-                  <div className="steps-nav">
-                    {[1,2,3].map(s => (
-                      <React.Fragment key={s}>
-                        <div className={`step-dot ${step === s ? 'active' : step > s ? 'done' : ''}`}>
-                          {step > s ? <Ic.Check/> : s}
-                        </div>
-                        {s < 3 && <div className={`step-line ${step > s ? 'done' : ''}`}/>}
-                      </React.Fragment>
-                    ))}
-                    <span style={{marginLeft:12,fontSize:13,color:'var(--text-3)'}}>Étape {step}/3</span>
-                  </div>
-
-                  <form name="brief-client" method="POST" data-netlify="true" onSubmit={handleSubmit}>
-                    <input type="hidden" name="form-name" value="brief-client"/>
-
-                    {step === 1 && (
-                      <div className="form-card">
-                        <h2 className="form-title">Quel est votre besoin ?</h2>
-                        <p className="form-sub">Sélectionnez la catégorie qui correspond le mieux à votre projet.</p>
-                        <div className="form-group">
-                          <label className="form-label">Catégorie *</label>
-                          <div className="cat-grid">
-                            {CATS.map(c => (
-                              <div key={c} className={`cat-opt ${form.cat === c ? 'sel' : ''}`} onClick={() => set('cat', c)}>{c}</div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Budget estimé *</label>
-                          <select className="form-select" value={form.budget} onChange={e => set('budget', e.target.value)} required>
-                            <option value="">Sélectionner un budget</option>
-                            <option value="moins500">Moins de 500$</option>
-                            <option value="500-2000">500$ — 2 000$</option>
-                            <option value="2000-5000">2 000$ — 5 000$</option>
-                            <option value="plus5000">Plus de 5 000$</option>
-                            <option value="nsp">Je ne sais pas encore</option>
-                          </select>
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Délai souhaité *</label>
-                          <select className="form-select" value={form.delai} onChange={e => set('delai', e.target.value)} required>
-                            <option value="">Sélectionner un délai</option>
-                            <option value="urgent">Urgent (cette semaine)</option>
-                            <option value="2semaines">Dans 2 semaines</option>
-                            <option value="1mois">Dans 1 mois</option>
-                            <option value="flexible">Flexible</option>
-                          </select>
-                        </div>
-                        <div className="form-actions">
-                          <button type="button" className="btn btn-primary" onClick={() => { if(form.cat && form.budget && form.delai) setStep(2); }}>
-                            Continuer <Ic.Arrow/>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {step === 2 && (
-                      <div className="form-card">
-                        <h2 className="form-title">Décrivez votre projet</h2>
-                        <p className="form-sub">Plus vous êtes précis, plus le matching sera pertinent.</p>
-                        <div className="form-group">
-                          <label className="form-label">Description du projet *</label>
-                          <textarea className="form-textarea" placeholder="Décrivez votre projet, vos objectifs, les contraintes techniques, les livrables attendus..." value={form.desc} onChange={e => set('desc', e.target.value)} required style={{minHeight:160}}/>
-                        </div>
-                        <div className="form-actions">
-                          <button type="button" className="btn btn-ghost" onClick={() => setStep(1)}><Ic.Back/>Retour</button>
-                          <button type="button" className="btn btn-primary" onClick={() => { if(form.desc) setStep(3); }}>
-                            Continuer <Ic.Arrow/>
-                          </button>
-                        </div>
-                      </div>
-                    )}
-
-                    {step === 3 && (
-                      <div className="form-card">
-                        <h2 className="form-title">Vos coordonnées</h2>
-                        <p className="form-sub">Pour recevoir les profils d'experts correspondants sous 24h.</p>
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label className="form-label">Prénom & Nom *</label>
-                            <input className="form-input" type="text" placeholder="Jean Dupont" value={form.nom} onChange={e => set('nom', e.target.value)} required/>
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Email professionnel *</label>
-                            <input className="form-input" type="email" placeholder="jean@entreprise.com" value={form.email} onChange={e => set('email', e.target.value)} required/>
-                          </div>
-                        </div>
-                        <div className="form-row">
-                          <div className="form-group">
-                            <label className="form-label">Entreprise</label>
-                            <input className="form-input" type="text" placeholder="Nom de votre entreprise" value={form.entreprise} onChange={e => set('entreprise', e.target.value)}/>
-                          </div>
-                          <div className="form-group">
-                            <label className="form-label">Téléphone</label>
-                            <input className="form-input" type="tel" placeholder="+33 6 00 00 00 00" value={form.tel} onChange={e => set('tel', e.target.value)}/>
-                          </div>
-                        </div>
-                        <input type="hidden" name="categorie" value={form.cat}/>
-                        <input type="hidden" name="budget" value={form.budget}/>
-                        <input type="hidden" name="delai" value={form.delai}/>
-                        <input type="hidden" name="description" value={form.desc}/>
-                        <div className="form-actions">
-                          <button type="button" className="btn btn-ghost" onClick={() => setStep(2)}><Ic.Back/>Retour</button>
-                          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Envoi en cours…' : <><span>Envoyer mon brief</span><Ic.Arrow/></>}</button>
-                        </div>
-                      </div>
-                    )}
-                  </form>
-                </React.Fragment>
-              ) : (
-                <div className="form-card success-card">
-                  <div className="success-icon">✓</div>
-                  <h2 className="success-title">Brief envoyé !</h2>
-                  <p className="success-sub">Notre équipe analyse votre brief et vous propose des profils d'experts sous 24h.</p>
-                  <a href="experts.html" className="btn btn-primary">Voir les experts <Ic.Arrow/></a>
-                </div>
-              )}
-            </div>
-
-            <div className="brief-sidebar">
-              <div className="sidebar-card">
-                <div style={{fontSize:13,fontWeight:700,marginBottom:16,color:'var(--text)'}}>Pourquoi passer par CreatorFlow Market ?</div>
-                {[
-                  {icon:<Ic.Clock/>,title:'Réponse en 24h',sub:'Matching personnalisé garanti'},
-                  {icon:<Ic.Shield/>,title:'Experts certifiés',sub:'Profils vérifiés par notre équipe'},
-                  {icon:<Ic.Star/>,title:'Missions sécurisées',sub:'Paiement libéré à la livraison'},
-                ].map((w,i) => (
-                  <div key={i} className="why-item">
-                    <div className="why-icon">{w.icon}</div>
-                    <div className="why-text"><b>{w.title}</b><span>{w.sub}</span></div>
-                  </div>
-                ))}
-              </div>
-              <div className="sidebar-card">
-                <div style={{fontSize:13,fontWeight:700,marginBottom:12,color:'var(--text)'}}>Ce que vous recevrez</div>
-                {['3 profils d\'experts sélectionnés','Estimation de tarif personnalisée','Disponibilités à jour','Introduction directe avec l\'expert'].map((t,i) => (
-                  <div key={i} className="trust-row">
-                    <Ic.Check/>
-                    <span>{t}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <footer><div className="wrap footer-mini">
-          <span style={{fontSize:13,color:'var(--text-3)'}}>© 2026 CreatorFlow Market</span>
-          <div className="footer-links"><a href="/">Accueil</a><a href="experts.html">Experts</a><a href="cgu.html">Mentions légales</a><a href="politique-confidentialite.html">Confidentialité</a></div>
-        </div></footer>
-      </div>
-    </React.Fragment>
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "nav-link"
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "nav-link"
+  }, "Devenir expert")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost btn-sm"
+  }, "Connexion")))), /*#__PURE__*/React.createElement("div", {
+    className: "page-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 20,
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontSize: 'clamp(28px,4vw,44px)',
+      fontWeight: 800,
+      letterSpacing: '-0.03em',
+      margin: '12px 0 6px'
+    }
+  }, "D\xE9crivez votre besoin,", /*#__PURE__*/React.createElement("br", null), "on trouve l'expert."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 16,
+      color: 'var(--text-2)',
+      maxWidth: 480
+    }
+  }, "R\xE9ponse sous 24h \xB7 Matching garanti \xB7 Z\xE9ro engagement")), /*#__PURE__*/React.createElement("div", {
+    className: "brief-layout"
+  }, /*#__PURE__*/React.createElement("div", null, !done ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "steps-nav"
+  }, [1, 2, 3].map(s => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: s
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `step-dot ${step === s ? 'active' : step > s ? 'done' : ''}`
+  }, step > s ? /*#__PURE__*/React.createElement(Ic.Check, null) : s), s < 3 && /*#__PURE__*/React.createElement("div", {
+    className: `step-line ${step > s ? 'done' : ''}`
+  }))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 12,
+      fontSize: 13,
+      color: 'var(--text-3)'
+    }
+  }, "\xC9tape ", step, "/3")), /*#__PURE__*/React.createElement("form", {
+    name: "brief-client",
+    method: "POST",
+    "data-netlify": "true",
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "form-name",
+    value: "brief-client"
+  }), step === 1 && /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Quel est votre besoin ?"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "S\xE9lectionnez la cat\xE9gorie qui correspond le mieux \xE0 votre projet."), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Cat\xE9gorie *"), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, CATS.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c,
+    className: `cat-opt ${form.cat === c ? 'sel' : ''}`,
+    onClick: () => set('cat', c)
+  }, c)))), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Budget estim\xE9 *"), /*#__PURE__*/React.createElement("select", {
+    className: "form-select",
+    value: form.budget,
+    onChange: e => set('budget', e.target.value),
+    required: true
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "S\xE9lectionner un budget"), /*#__PURE__*/React.createElement("option", {
+    value: "moins500"
+  }, "Moins de 500$"), /*#__PURE__*/React.createElement("option", {
+    value: "500-2000"
+  }, "500$ \u2014 2 000$"), /*#__PURE__*/React.createElement("option", {
+    value: "2000-5000"
+  }, "2 000$ \u2014 5 000$"), /*#__PURE__*/React.createElement("option", {
+    value: "plus5000"
+  }, "Plus de 5 000$"), /*#__PURE__*/React.createElement("option", {
+    value: "nsp"
+  }, "Je ne sais pas encore"))), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "D\xE9lai souhait\xE9 *"), /*#__PURE__*/React.createElement("select", {
+    className: "form-select",
+    value: form.delai,
+    onChange: e => set('delai', e.target.value),
+    required: true
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "S\xE9lectionner un d\xE9lai"), /*#__PURE__*/React.createElement("option", {
+    value: "urgent"
+  }, "Urgent (cette semaine)"), /*#__PURE__*/React.createElement("option", {
+    value: "2semaines"
+  }, "Dans 2 semaines"), /*#__PURE__*/React.createElement("option", {
+    value: "1mois"
+  }, "Dans 1 mois"), /*#__PURE__*/React.createElement("option", {
+    value: "flexible"
+  }, "Flexible"))), /*#__PURE__*/React.createElement("div", {
+    className: "form-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary",
+    onClick: () => {
+      if (form.cat && form.budget && form.delai) setStep(2);
+    }
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 2 && /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "D\xE9crivez votre projet"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "Plus vous \xEAtes pr\xE9cis, plus le matching sera pertinent."), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Description du projet *"), /*#__PURE__*/React.createElement("textarea", {
+    className: "form-textarea",
+    placeholder: "D\xE9crivez votre projet, vos objectifs, les contraintes techniques, les livrables attendus...",
+    value: form.desc,
+    onChange: e => set('desc', e.target.value),
+    required: true,
+    style: {
+      minHeight: 160
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-ghost",
+    onClick: () => setStep(1)
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary",
+    onClick: () => {
+      if (form.desc) setStep(3);
+    }
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 3 && /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Vos coordonn\xE9es"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "Pour recevoir les profils d'experts correspondants sous 24h."), /*#__PURE__*/React.createElement("div", {
+    className: "form-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Pr\xE9nom & Nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "text",
+    placeholder: "Jean Dupont",
+    value: form.nom,
+    onChange: e => set('nom', e.target.value),
+    required: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Email professionnel *"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "email",
+    placeholder: "jean@entreprise.com",
+    value: form.email,
+    onChange: e => set('email', e.target.value),
+    required: true
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "form-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Entreprise"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "text",
+    placeholder: "Nom de votre entreprise",
+    value: form.entreprise,
+    onChange: e => set('entreprise', e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "T\xE9l\xE9phone"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "tel",
+    placeholder: "+33 6 00 00 00 00",
+    value: form.tel,
+    onChange: e => set('tel', e.target.value)
+  }))), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "categorie",
+    value: form.cat
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "budget",
+    value: form.budget
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "delai",
+    value: form.delai
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "hidden",
+    name: "description",
+    value: form.desc
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "form-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "btn btn-ghost",
+    onClick: () => setStep(2)
+  }, /*#__PURE__*/React.createElement(Ic.Back, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary",
+    disabled: saving
+  }, saving ? 'Envoi en cours…' : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, "Envoyer mon brief"), /*#__PURE__*/React.createElement(Ic.Arrow, null))))))) : /*#__PURE__*/React.createElement("div", {
+    className: "form-card success-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-icon"
+  }, "\u2713"), /*#__PURE__*/React.createElement("h2", {
+    className: "success-title"
+  }, "Brief envoy\xE9 !"), /*#__PURE__*/React.createElement("p", {
+    className: "success-sub"
+  }, "Notre \xE9quipe analyse votre brief et vous propose des profils d'experts sous 24h."), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-primary"
+  }, "Voir les experts ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), /*#__PURE__*/React.createElement("div", {
+    className: "brief-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      marginBottom: 16,
+      color: 'var(--text)'
+    }
+  }, "Pourquoi passer par CreatorFlow Market ?"), [{
+    icon: /*#__PURE__*/React.createElement(Ic.Clock, null),
+    title: 'Réponse en 24h',
+    sub: 'Matching personnalisé garanti'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Shield, null),
+    title: 'Experts certifiés',
+    sub: 'Profils vérifiés par notre équipe'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Star, null),
+    title: 'Missions sécurisées',
+    sub: 'Paiement libéré à la livraison'
+  }].map((w, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "why-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "why-icon"
+  }, w.icon), /*#__PURE__*/React.createElement("div", {
+    className: "why-text"
+  }, /*#__PURE__*/React.createElement("b", null, w.title), /*#__PURE__*/React.createElement("span", null, w.sub))))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700,
+      marginBottom: 12,
+      color: 'var(--text)'
+    }
+  }, "Ce que vous recevrez"), ['3 profils d\'experts sélectionnés', 'Estimation de tarif personnalisée', 'Disponibilités à jour', 'Introduction directe avec l\'expert'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "trust-row"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), /*#__PURE__*/React.createElement("span", null, t))))))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("div", {
+    className: "wrap footer-mini"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)'
+    }
+  }, "\xA9 2026 CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
+    href: "experts.html"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html"
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html"
+  }, "Confidentialit\xE9"))))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>

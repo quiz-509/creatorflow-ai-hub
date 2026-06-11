@@ -174,76 +174,321 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cjtglfutckaogsmwhfsv.supabase.co',
-  'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei'
-);
-
-const COLORS = [
-  'linear-gradient(135deg,#7C3AED,#A78BFA)',
-  'linear-gradient(135deg,#0891B2,#06B6D4)',
-  'linear-gradient(135deg,#059669,#10B981)',
-  'linear-gradient(135deg,#6D28D9,#7C3AED)',
-  'linear-gradient(135deg,#9333EA,#7C3AED)',
-  'linear-gradient(135deg,#DC2626,#EF4444)',
-  'linear-gradient(135deg,#D97706,#F59E0B)',
-];
-
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const COLORS = ['linear-gradient(135deg,#7C3AED,#A78BFA)', 'linear-gradient(135deg,#0891B2,#06B6D4)', 'linear-gradient(135deg,#059669,#10B981)', 'linear-gradient(135deg,#6D28D9,#7C3AED)', 'linear-gradient(135deg,#9333EA,#7C3AED)', 'linear-gradient(135deg,#DC2626,#EF4444)', 'linear-gradient(135deg,#D97706,#F59E0B)'];
 const Ic = {
-  Search:(p)=><svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  Send:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
-  Attach:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>,
-  Emoji:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>,
-  Phone:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l1.7-1.7a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
-  Video:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>,
-  Info:(p)=><svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
-  Arrow:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>,
-  Star:(p)=><svg {...p} width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
-  Download:(p)=><svg {...p} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-  Msg:(p)=><svg {...p} width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Send: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "22",
+    y1: "2",
+    x2: "11",
+    y2: "13"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "22 2 15 22 11 13 2 9 22 2"
+  })),
+  Attach: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"
+  })),
+  Emoji: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8 14s1.5 2 4 2 4-2 4-2"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "9",
+    y1: "9",
+    x2: "9.01",
+    y2: "9"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "15",
+    y1: "9",
+    x2: "15.01",
+    y2: "9"
+  })),
+  Phone: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6.18 6.18l1.7-1.7a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
+  })),
+  Video: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "23 7 16 12 23 17 23 7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "1",
+    y: "5",
+    width: "15",
+    height: "14",
+    rx: "2"
+  })),
+  Info: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "8",
+    x2: "12",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "16",
+    x2: "12.01",
+    y2: "16"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Download: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "7 10 12 15 17 10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "15",
+    x2: "12",
+    y2: "3"
+  })),
+  Msg: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "32",
+    height: "32",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+  }))
 };
 
 // Données mock de secours (si aucune conversation en base)
-const MOCK_CONVS = [
-  {id:1, name:'Amélie Chen', initials:'AC', color:'linear-gradient(135deg,#7C3AED,#A78BFA)', online:true, mission:'Chatbot IA e-commerce', preview:'Les maquettes sont parfaites !', time:'12 min', unread:1, note:4.9},
-  {id:2, name:'Karim Benali', initials:'KB', color:'linear-gradient(135deg,#0891B2,#06B6D4)', online:true, mission:'Automatisation RH', preview:"J'ai besoin d'un accès API...", time:'2h', unread:1, note:4.7},
-  {id:3, name:'Sofia Martins', initials:'SM', color:'linear-gradient(135deg,#059669,#10B981)', online:false, mission:'Agent IA données', preview:'Merci pour la collaboration !', time:'3j', unread:0, note:5.0},
-];
-
+const MOCK_CONVS = [{
+  id: 1,
+  name: 'Amélie Chen',
+  initials: 'AC',
+  color: 'linear-gradient(135deg,#7C3AED,#A78BFA)',
+  online: true,
+  mission: 'Chatbot IA e-commerce',
+  preview: 'Les maquettes sont parfaites !',
+  time: '12 min',
+  unread: 1,
+  note: 4.9
+}, {
+  id: 2,
+  name: 'Karim Benali',
+  initials: 'KB',
+  color: 'linear-gradient(135deg,#0891B2,#06B6D4)',
+  online: true,
+  mission: 'Automatisation RH',
+  preview: "J'ai besoin d'un accès API...",
+  time: '2h',
+  unread: 1,
+  note: 4.7
+}, {
+  id: 3,
+  name: 'Sofia Martins',
+  initials: 'SM',
+  color: 'linear-gradient(135deg,#059669,#10B981)',
+  online: false,
+  mission: 'Agent IA données',
+  preview: 'Merci pour la collaboration !',
+  time: '3j',
+  unread: 0,
+  note: 5.0
+}];
 const MOCK_THREADS = {
-  1: [
-    {id:1, side:'left', text:"Bonjour ! J'ai bien reçu l'accès au back-office. Je commence l'intégration du widget demain matin.", time:'Hier 14:22', type:'text'},
-    {id:2, side:'right', text:"Super ! Par contre j'ai besoin de te donner l'accès à l'API de notre CRM pour les données clients. Tu as un email pour que je t'invite ?", time:'Hier 15:05', type:'text'},
-    {id:3, side:'left', text:'Oui, tu peux utiliser amelie.chen@creatorflow.io. Merci !', time:'Hier 15:12', type:'text'},
-    {id:4, side:'right', text:"Invitation envoyée. Les maquettes du widget sont prêtes aussi, je les envoie ce soir.", time:'Hier 15:30', type:'text'},
-    {id:5, side:'left', text:'Les maquettes sont parfaites ! Je peux commencer l\'intégration cet après-midi.', time:'Il y a 12 min', type:'text'},
-  ],
-  2: [
-    {id:1, side:'right', text:'Bonjour Karim, où en êtes-vous sur le pipeline RH ?', time:'Hier 09:00', type:'text'},
-    {id:2, side:'left', text:"Bonjour ! J'ai bien avancé, les 3 premiers workflows sont terminés. Il me manque juste un accès à l'API RH pour les 2 derniers.", time:'Hier 09:14', type:'text'},
-    {id:3, side:'left', text:"J'ai besoin d'un accès à l'API RH pour continuer sur les modules 4 et 5.", time:'Il y a 2h', type:'text'},
-  ],
-  3: [
-    {id:1, side:'left', text:'Mission terminée et livrée ! Tout est documenté dans le rapport final.', time:'Il y a 3j', type:'text'},
-    {id:2, side:'right', text:'Merci Sofia, excellent travail ! On va certainement refaire appel à vous.', time:'Il y a 3j', type:'text'},
-    {id:3, side:'left', text:"Merci pour la collaboration ! N'hésitez pas si vous avez d'autres besoins IA.", time:'Il y a 3j', type:'text'},
-  ],
+  1: [{
+    id: 1,
+    side: 'left',
+    text: "Bonjour ! J'ai bien reçu l'accès au back-office. Je commence l'intégration du widget demain matin.",
+    time: 'Hier 14:22',
+    type: 'text'
+  }, {
+    id: 2,
+    side: 'right',
+    text: "Super ! Par contre j'ai besoin de te donner l'accès à l'API de notre CRM pour les données clients. Tu as un email pour que je t'invite ?",
+    time: 'Hier 15:05',
+    type: 'text'
+  }, {
+    id: 3,
+    side: 'left',
+    text: 'Oui, tu peux utiliser amelie.chen@creatorflow.io. Merci !',
+    time: 'Hier 15:12',
+    type: 'text'
+  }, {
+    id: 4,
+    side: 'right',
+    text: "Invitation envoyée. Les maquettes du widget sont prêtes aussi, je les envoie ce soir.",
+    time: 'Hier 15:30',
+    type: 'text'
+  }, {
+    id: 5,
+    side: 'left',
+    text: 'Les maquettes sont parfaites ! Je peux commencer l\'intégration cet après-midi.',
+    time: 'Il y a 12 min',
+    type: 'text'
+  }],
+  2: [{
+    id: 1,
+    side: 'right',
+    text: 'Bonjour Karim, où en êtes-vous sur le pipeline RH ?',
+    time: 'Hier 09:00',
+    type: 'text'
+  }, {
+    id: 2,
+    side: 'left',
+    text: "Bonjour ! J'ai bien avancé, les 3 premiers workflows sont terminés. Il me manque juste un accès à l'API RH pour les 2 derniers.",
+    time: 'Hier 09:14',
+    type: 'text'
+  }, {
+    id: 3,
+    side: 'left',
+    text: "J'ai besoin d'un accès à l'API RH pour continuer sur les modules 4 et 5.",
+    time: 'Il y a 2h',
+    type: 'text'
+  }],
+  3: [{
+    id: 1,
+    side: 'left',
+    text: 'Mission terminée et livrée ! Tout est documenté dans le rapport final.',
+    time: 'Il y a 3j',
+    type: 'text'
+  }, {
+    id: 2,
+    side: 'right',
+    text: 'Merci Sofia, excellent travail ! On va certainement refaire appel à vous.',
+    time: 'Il y a 3j',
+    type: 'text'
+  }, {
+    id: 3,
+    side: 'left',
+    text: "Merci pour la collaboration ! N'hésitez pas si vous avez d'autres besoins IA.",
+    time: 'Il y a 3j',
+    type: 'text'
+  }]
 };
-
 function fmtTime(iso) {
   const d = new Date(iso);
   const now = new Date();
   const diff = (now - d) / 1000;
   if (diff < 60) return "À l'instant";
-  if (diff < 3600) return `Il y a ${Math.floor(diff/60)} min`;
-  if (diff < 86400) return d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
-  return d.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+  if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  return d.toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short'
+  });
 }
-
 function App() {
   const [activeConv, setActiveConv] = useState(null);
   const [convs, setConvs] = useState([]);
@@ -263,39 +508,54 @@ function App() {
   // Initialisation : auth + chargement conversations
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { window.location.href = 'connexion.html'; return; }
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
       const uid = session.user.id;
       userIdRef.current = uid;
-
-      const { data: profile } = await sb.from('profiles').select('prenom, nom').eq('id', uid).single();
-      setUser({ ...session.user, prenom: profile?.prenom || '', nom: profile?.nom || '' });
+      const {
+        data: profile
+      } = await sb.from('profiles').select('prenom, nom').eq('id', uid).single();
+      setUser({
+        ...session.user,
+        prenom: profile?.prenom || '',
+        nom: profile?.nom || ''
+      });
 
       // Charger les conversations réelles
-      const { data: convData } = await sb.from('conversations')
-        .select('id, client_id, expert_id, created_at')
-        .or(`client_id.eq.${uid},expert_id.eq.${uid}`)
-        .order('created_at', { ascending: false });
-
+      const {
+        data: convData
+      } = await sb.from('conversations').select('id, client_id, expert_id, created_at').or(`client_id.eq.${uid},expert_id.eq.${uid}`).order('created_at', {
+        ascending: false
+      });
       if (convData?.length > 0) {
         const otherIds = convData.map(c => c.client_id === uid ? c.expert_id : c.client_id).filter(Boolean);
-        const { data: otherProfiles } = await sb.from('profiles').select('id, prenom, nom').in('id', otherIds);
+        const {
+          data: otherProfiles
+        } = await sb.from('profiles').select('id, prenom, nom').in('id', otherIds);
         const pm = {};
         otherProfiles?.forEach(p => pm[p.id] = p);
 
         // Charger le dernier message de chaque conversation
         const lastMsgs = await Promise.all(convData.map(async c => {
-          const { data } = await sb.from('messages')
-            .select('content, created_at')
-            .eq('conversation_id', c.id)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
-          return { convId: c.id, msg: data };
+          const {
+            data
+          } = await sb.from('messages').select('content, created_at').eq('conversation_id', c.id).order('created_at', {
+            ascending: false
+          }).limit(1).single();
+          return {
+            convId: c.id,
+            msg: data
+          };
         }));
         const lastMsgMap = {};
         lastMsgs.forEach(l => lastMsgMap[l.convId] = l.msg);
-
         const mapped = convData.map((c, i) => {
           const otherId = c.client_id === uid ? c.expert_id : c.client_id;
           const other = pm[otherId] || {};
@@ -304,17 +564,17 @@ function App() {
           const lastMsg = lastMsgMap[c.id];
           return {
             id: c.id,
-            name, initials,
+            name,
+            initials,
             color: COLORS[i % COLORS.length],
             online: false,
             mission: null,
             preview: lastMsg?.content || 'Démarrer la conversation...',
             time: lastMsg ? fmtTime(lastMsg.created_at) : '',
             unread: 0,
-            note: null,
+            note: null
           };
         });
-
         setConvs(mapped);
         setActiveConv(mapped[0].id);
         setUsingReal(true);
@@ -324,7 +584,6 @@ function App() {
         setActiveConv(1);
         setUsingReal(false);
       }
-
       setLoading(false);
     })();
   }, []);
@@ -332,350 +591,524 @@ function App() {
   // Chargement messages + abonnement Realtime
   useEffect(() => {
     if (!activeConv || loading) return;
-
     if (!usingReal) {
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({
+        behavior: 'smooth'
+      }), 50);
       return;
     }
-
     setRealMessages([]);
     setRtConnected(false);
-
     (async () => {
-      const { data: msgs } = await sb.from('messages')
-        .select('id, created_at, sender_id, content, type')
-        .eq('conversation_id', activeConv)
-        .order('created_at', { ascending: true });
-
+      const {
+        data: msgs
+      } = await sb.from('messages').select('id, created_at, sender_id, content, type').eq('conversation_id', activeConv).order('created_at', {
+        ascending: true
+      });
       const uid = userIdRef.current;
       const mapped = (msgs || []).map(m => ({
         id: m.id,
         side: m.sender_id === uid ? 'right' : 'left',
         text: m.content,
         time: fmtTime(m.created_at),
-        type: m.type || 'text',
+        type: m.type || 'text'
       }));
       setRealMessages(mapped);
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({
+        behavior: 'smooth'
+      }), 50);
     })();
-
-    const channel = sb.channel(`conv-${activeConv}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `conversation_id=eq.${activeConv}`,
-      }, (payload) => {
-        const m = payload.new;
-        const uid = userIdRef.current;
-        setRealMessages(prev => [...prev, {
-          id: m.id,
-          side: m.sender_id === uid ? 'right' : 'left',
-          text: m.content,
-          time: fmtTime(m.created_at),
-          type: m.type || 'text',
-        }]);
-        setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
-      })
-      .subscribe((status) => {
-        setRtConnected(status === 'SUBSCRIBED');
-      });
-
-    return () => { sb.removeChannel(channel); setRtConnected(false); };
+    const channel = sb.channel(`conv-${activeConv}`).on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages',
+      filter: `conversation_id=eq.${activeConv}`
+    }, payload => {
+      const m = payload.new;
+      const uid = userIdRef.current;
+      setRealMessages(prev => [...prev, {
+        id: m.id,
+        side: m.sender_id === uid ? 'right' : 'left',
+        text: m.content,
+        time: fmtTime(m.created_at),
+        type: m.type || 'text'
+      }]);
+      setTimeout(() => messagesEndRef.current?.scrollIntoView({
+        behavior: 'smooth'
+      }), 50);
+    }).subscribe(status => {
+      setRtConnected(status === 'SUBSCRIBED');
+    });
+    return () => {
+      sb.removeChannel(channel);
+      setRtConnected(false);
+    };
   }, [activeConv, usingReal, loading]);
-
   async function sendMsg(e) {
     e.preventDefault();
     if (!input.trim()) return;
-
     if (usingReal) {
-      const { error } = await sb.from('messages').insert({
+      const {
+        error
+      } = await sb.from('messages').insert({
         conversation_id: activeConv,
         sender_id: userIdRef.current,
         content: input.trim(),
-        type: 'text',
+        type: 'text'
       });
       if (!error) {
         // Mettre à jour le preview de la conversation
-        setConvs(prev => prev.map(c => c.id === activeConv ? { ...c, preview: input.trim(), time: "À l'instant" } : c));
+        setConvs(prev => prev.map(c => c.id === activeConv ? {
+          ...c,
+          preview: input.trim(),
+          time: "À l'instant"
+        } : c));
       }
     } else {
-      const newMsg = { id: Date.now(), side: 'right', text: input, time: "À l'instant", type: 'text' };
-      setMockThreads(prev => ({ ...prev, [activeConv]: [...(prev[activeConv] || []), newMsg] }));
+      const newMsg = {
+        id: Date.now(),
+        side: 'right',
+        text: input,
+        time: "À l'instant",
+        type: 'text'
+      };
+      setMockThreads(prev => ({
+        ...prev,
+        [activeConv]: [...(prev[activeConv] || []), newMsg]
+      }));
     }
     setInput('');
   }
-
-  const messages = usingReal ? realMessages : (mockThreads[activeConv] || []);
+  const messages = usingReal ? realMessages : mockThreads[activeConv] || [];
   const conv = convs.find(c => c.id === activeConv);
-  const userInitials = user ? ((user.prenom||'?')[0] + (user.nom||'?')[0]).toUpperCase() : '…';
+  const userInitials = user ? ((user.prenom || '?')[0] + (user.nom || '?')[0]).toUpperCase() : '…';
   const userName = user ? `${user.prenom} ${user.nom}`.trim() || user.email : '…';
-
   const filtered = convs.filter(c => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase());
     if (convTab === 'unread') return matchSearch && c.unread > 0;
     if (convTab === 'missions') return matchSearch && c.mission;
     return matchSearch;
   });
-
-  if (loading || !conv) return (
-    <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',color:'var(--text-3)',flexDirection:'column',gap:12}}>
-      <div style={{width:32,height:32,border:'2px solid var(--v)',borderTopColor:'transparent',borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-      <span style={{fontSize:13}}>Chargement des messages...</span>
-    </div>
-  );
-
-  return (
-    <React.Fragment>
-      {/* NAV */}
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="/" className="brand"><div className="brand-logo"></div><span>CreatorFlow Market</span></a>
-          <div className="nav-right">
-            {usingReal && (
-              <span className={`rt-badge`}>
-                <span className="rt-dot"/>
-                {rtConnected ? 'Temps réel actif' : 'Connexion...'}
-              </span>
-            )}
-            <a href="dashboard-client.html" style={{fontSize:13,color:'var(--text-3)',padding:'6px 12px',borderRadius:8,background:'var(--surf)',border:'1px solid var(--border-2)'}}>
-              ← Dashboard
-            </a>
-            <div className="user-chip">
-              <div className="av">{userInitials}</div>
-              <span style={{fontSize:13,fontWeight:600}}>{userName}</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="app">
-
-        {/* PANEL CONVERSATIONS */}
-        <div className="conv-panel">
-          <div className="conv-header">
-            <div className="conv-title">Messages</div>
-            <div className="search-box">
-              <Ic.Search style={{color:'var(--text-3)',flexShrink:0}}/>
-              <input placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)}/>
-            </div>
-          </div>
-          <div className="conv-tabs">
-            {[{id:'all',label:'Tous'},{id:'unread',label:'Non lus'},{id:'missions',label:'Missions'}].map(t => (
-              <div key={t.id} className={`ctab ${convTab===t.id?'active':''}`} onClick={() => setConvTab(t.id)}>{t.label}</div>
-            ))}
-          </div>
-          <div className="conv-list">
-            {filtered.length === 0 ? (
-              <div style={{padding:24,textAlign:'center',color:'var(--text-3)',fontSize:12}}>Aucune conversation</div>
-            ) : filtered.map(c => (
-              <div key={c.id} className={`conv-item ${activeConv===c.id?'active':''}`} onClick={() => setActiveConv(c.id)}>
-                <div className="ca" style={{background:c.color}}>
-                  {c.initials}
-                  {c.online && <span className="online-dot"/>}
-                </div>
-                <div className="conv-body">
-                  <div className="conv-name">
-                    {c.name}
-                    <span className="conv-time">{c.time}</span>
-                  </div>
-                  <div className={`conv-preview ${c.unread>0?'unread':''}`}>
-                    <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.preview}</span>
-                    {c.unread > 0 && <span className="unread-badge">{c.unread}</span>}
-                  </div>
-                  {c.mission && <div className="mission-tag">🚀 {c.mission}</div>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ZONE CHAT */}
-        <div className="chat-area">
-
-          {/* EN-TÊTE CHAT */}
-          <div className="chat-head">
-            <div className="ch-av" style={{background:conv.color}}>{conv.initials}</div>
-            <div>
-              <div className="ch-name">{conv.name}</div>
-              {conv.online
-                ? <div className="ch-status">En ligne</div>
-                : <div style={{fontSize:11,color:'var(--text-3)'}}>Hors ligne</div>
-              }
-            </div>
-            <div className="chat-head-actions">
-              <button className="icon-btn"><Ic.Phone/></button>
-              <button className="icon-btn"><Ic.Video/></button>
-              <button className="icon-btn" onClick={() => setShowProfile(p => !p)}><Ic.Info/></button>
-            </div>
-          </div>
-
-          {/* BANDEAU MISSION */}
-          {conv.mission && (
-            <div className="mission-banner">
-              <span className="mission-banner-icon">🚀</span>
-              <div className="mission-banner-text">
-                Mission liée : <strong>{conv.mission}</strong>
-              </div>
-              <div className="mission-banner-prog">
-                <div className="mini-prog"><div className="mini-prog-fill" style={{width:'65%'}}/></div>
-                <span style={{fontSize:10,color:'var(--text-3)'}}>65%</span>
-                <a href="mission.html" style={{fontSize:11,color:'var(--vs)',fontWeight:600,display:'flex',alignItems:'center',gap:3}}>Voir <Ic.Arrow/></a>
-              </div>
-            </div>
-          )}
-
-          {/* MESSAGES */}
-          <div className="chat-messages">
-            {messages.length === 0 ? (
-              <div className="empty-state">
-                <div className="empty-icon"><Ic.Msg/></div>
-                <span style={{fontSize:13}}>Aucun message. Démarrez la conversation !</span>
-              </div>
-            ) : (
-              <>
-                <div className="day-sep"><span className="day-label">Aujourd'hui</span></div>
-                {messages.map((m, i) => {
-                  const prev = messages[i-1];
-                  const sameAuthor = prev && prev.side === m.side;
-                  return (
-                    <div key={m.id} className={`msg-row ${m.side}`} style={{marginTop: sameAuthor ? 1 : 10}}>
-                      <div className="row-av" style={{background: m.side==='left' ? conv.color : 'linear-gradient(135deg,#7C3AED,#6D28D9)', visibility: sameAuthor ? 'hidden' : 'visible'}}>
-                        {m.side==='left' ? conv.initials : userInitials}
-                      </div>
-                      <div className="bubble-col">
-                        {m.type === 'file' ? (
-                          <div className="file-bubble">
-                            <div className="file-icon">{m.file?.icon || '📎'}</div>
-                            <div style={{flex:1,minWidth:0}}>
-                              <div className="file-name">{m.file?.name || 'Fichier'}</div>
-                              <div className="file-size">{m.file?.size || ''}</div>
-                            </div>
-                            <button className="icon-btn" style={{width:28,height:28}}><Ic.Download/></button>
-                          </div>
-                        ) : (
-                          <div className={`bubble ${m.side}`}>{m.text}</div>
-                        )}
-                        {!sameAuthor && <div className="bubble-meta">{m.time}</div>}
-                      </div>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-
-            {/* TYPING (uniquement en mode mock) */}
-            {!usingReal && conv.online && (
-              <div className="typing" style={{marginTop:8}}>
-                <div className="row-av" style={{background:conv.color,width:28,height:28,borderRadius:'50%',display:'grid',placeItems:'center',fontSize:10,fontWeight:700,color:'#fff'}}>{conv.initials}</div>
-                <div className="typing-dots">
-                  <div className="typing-dot"/>
-                  <div className="typing-dot"/>
-                  <div className="typing-dot"/>
-                </div>
-                <span style={{fontSize:11,color:'var(--text-3)'}}>{conv.name} est en train d'écrire...</span>
-              </div>
-            )}
-            <div ref={messagesEndRef}/>
-          </div>
-
-          {/* INPUT */}
-          <div className="chat-input-wrap">
-            <form className="input-row" onSubmit={sendMsg}>
-              <div className="input-actions">
-                <button type="button" className="icon-btn"><Ic.Attach/></button>
-                <button type="button" className="icon-btn"><Ic.Emoji/></button>
-              </div>
-              <textarea
-                className="input-box"
-                placeholder={`Message à ${conv.name}...`}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(e); }}}
-                rows={1}
-              />
-              <button type="submit" className="send-btn" disabled={!input.trim()}>
-                <Ic.Send/>
-              </button>
-            </form>
-          </div>
-        </div>
-
-        {/* PANEL PROFIL */}
-        {showProfile && (
-          <div className="profile-panel">
-            <div className="pp-header">
-              <div className="pp-av" style={{background:conv.color}}>{conv.initials}</div>
-              <div className="pp-name">{conv.name}</div>
-              {conv.mission && <div className="pp-spec">Expert certifié CreatorFlow</div>}
-              {conv.online && <div className="pp-online">En ligne maintenant</div>}
-            </div>
-
-            {conv.note && (
-              <div className="pp-section">
-                <div className="pp-section-title">Évaluation</div>
-                <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:10}}>
-                  {[1,2,3,4,5].map(i => <Ic.Star key={i} style={{color:'var(--amber)'}}/>)}
-                  <span style={{fontSize:13,fontWeight:700}}>{conv.note}</span>
-                </div>
-                <div className="pp-stat-row">
-                  <span className="pp-stat-label">Missions réalisées</span>
-                  <span className="pp-stat-val">18</span>
-                </div>
-                <div className="pp-stat-row">
-                  <span className="pp-stat-label">Taux de succès</span>
-                  <span className="pp-stat-val" style={{color:'var(--green)'}}>100%</span>
-                </div>
-                <div className="pp-stat-row">
-                  <span className="pp-stat-label">Temps de réponse</span>
-                  <span className="pp-stat-val">&lt; 2h</span>
-                </div>
-              </div>
-            )}
-
-            {conv.mission && (
-              <div className="pp-section">
-                <div className="pp-section-title">Mission en cours</div>
-                <div className="pp-mission-card">
-                  <div className="pp-m-title">{conv.mission}</div>
-                  <div className="pp-m-prog"><div className="pp-m-prog-fill" style={{width:'65%'}}/></div>
-                  <div className="pp-m-meta">65% · Livraison 10 juin</div>
-                </div>
-                <a href="mission.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center',marginTop:10}}>
-                  Voir la mission <Ic.Arrow/>
-                </a>
-              </div>
-            )}
-
-            {conv.note && (
-              <div className="pp-section">
-                <div className="pp-section-title">Actions</div>
-                <div style={{display:'flex',flexDirection:'column',gap:8}}>
-                  <a href="profil-expert.html" className="btn btn-ghost" style={{width:'100%',justifyContent:'center'}}>Voir le profil</a>
-                </div>
-              </div>
-            )}
-
-            {usingReal && (
-              <div className="pp-section">
-                <div className="pp-section-title">Connexion</div>
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <span className={`rt-badge`}>
-                    <span className="rt-dot"/>
-                    {rtConnected ? 'Temps réel actif' : 'En attente...'}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </React.Fragment>
-  );
+  if (loading || !conv) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      color: 'var(--text-3)',
+      flexDirection: 'column',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 32,
+      height: 32,
+      border: '2px solid var(--v)',
+      borderTopColor: 'transparent',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite'
+    }
+  }), /*#__PURE__*/React.createElement("style", null, `@keyframes spin{to{transform:rotate(360deg)}}`), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13
+    }
+  }, "Chargement des messages..."));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, usingReal && /*#__PURE__*/React.createElement("span", {
+    className: `rt-badge`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "rt-dot"
+  }), rtConnected ? 'Temps réel actif' : 'Connexion...'), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)',
+      padding: '6px 12px',
+      borderRadius: 8,
+      background: 'var(--surf)',
+      border: '1px solid var(--border-2)'
+    }
+  }, "\u2190 Dashboard"), /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "av"
+  }, userInitials), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, userName))))), /*#__PURE__*/React.createElement("div", {
+    className: "app"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "conv-panel"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "conv-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "conv-title"
+  }, "Messages"), /*#__PURE__*/React.createElement("div", {
+    className: "search-box"
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    placeholder: "Rechercher...",
+    value: search,
+    onChange: e => setSearch(e.target.value)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "conv-tabs"
+  }, [{
+    id: 'all',
+    label: 'Tous'
+  }, {
+    id: 'unread',
+    label: 'Non lus'
+  }, {
+    id: 'missions',
+    label: 'Missions'
+  }].map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: `ctab ${convTab === t.id ? 'active' : ''}`,
+    onClick: () => setConvTab(t.id)
+  }, t.label))), /*#__PURE__*/React.createElement("div", {
+    className: "conv-list"
+  }, filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 24,
+      textAlign: 'center',
+      color: 'var(--text-3)',
+      fontSize: 12
+    }
+  }, "Aucune conversation") : filtered.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: `conv-item ${activeConv === c.id ? 'active' : ''}`,
+    onClick: () => setActiveConv(c.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ca",
+    style: {
+      background: c.color
+    }
+  }, c.initials, c.online && /*#__PURE__*/React.createElement("span", {
+    className: "online-dot"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "conv-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "conv-name"
+  }, c.name, /*#__PURE__*/React.createElement("span", {
+    className: "conv-time"
+  }, c.time)), /*#__PURE__*/React.createElement("div", {
+    className: `conv-preview ${c.unread > 0 ? 'unread' : ''}`
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, c.preview), c.unread > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "unread-badge"
+  }, c.unread)), c.mission && /*#__PURE__*/React.createElement("div", {
+    className: "mission-tag"
+  }, "\uD83D\uDE80 ", c.mission)))))), /*#__PURE__*/React.createElement("div", {
+    className: "chat-area"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "chat-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ch-av",
+    style: {
+      background: conv.color
+    }
+  }, conv.initials), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "ch-name"
+  }, conv.name), conv.online ? /*#__PURE__*/React.createElement("div", {
+    className: "ch-status"
+  }, "En ligne") : /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, "Hors ligne")), /*#__PURE__*/React.createElement("div", {
+    className: "chat-head-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "icon-btn"
+  }, /*#__PURE__*/React.createElement(Ic.Phone, null)), /*#__PURE__*/React.createElement("button", {
+    className: "icon-btn"
+  }, /*#__PURE__*/React.createElement(Ic.Video, null)), /*#__PURE__*/React.createElement("button", {
+    className: "icon-btn",
+    onClick: () => setShowProfile(p => !p)
+  }, /*#__PURE__*/React.createElement(Ic.Info, null)))), conv.mission && /*#__PURE__*/React.createElement("div", {
+    className: "mission-banner"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mission-banner-icon"
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    className: "mission-banner-text"
+  }, "Mission li\xE9e : ", /*#__PURE__*/React.createElement("strong", null, conv.mission)), /*#__PURE__*/React.createElement("div", {
+    className: "mission-banner-prog"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-prog"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-prog-fill",
+    style: {
+      width: '65%'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: 'var(--text-3)'
+    }
+  }, "65%"), /*#__PURE__*/React.createElement("a", {
+    href: "mission.html",
+    style: {
+      fontSize: 11,
+      color: 'var(--vs)',
+      fontWeight: 600,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 3
+    }
+  }, "Voir ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), /*#__PURE__*/React.createElement("div", {
+    className: "chat-messages"
+  }, messages.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Msg, null)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucun message. D\xE9marrez la conversation !")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "day-sep"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "day-label"
+  }, "Aujourd'hui")), messages.map((m, i) => {
+    const prev = messages[i - 1];
+    const sameAuthor = prev && prev.side === m.side;
+    return /*#__PURE__*/React.createElement("div", {
+      key: m.id,
+      className: `msg-row ${m.side}`,
+      style: {
+        marginTop: sameAuthor ? 1 : 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "row-av",
+      style: {
+        background: m.side === 'left' ? conv.color : 'linear-gradient(135deg,#7C3AED,#6D28D9)',
+        visibility: sameAuthor ? 'hidden' : 'visible'
+      }
+    }, m.side === 'left' ? conv.initials : userInitials), /*#__PURE__*/React.createElement("div", {
+      className: "bubble-col"
+    }, m.type === 'file' ? /*#__PURE__*/React.createElement("div", {
+      className: "file-bubble"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "file-icon"
+    }, m.file?.icon || '📎'), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "file-name"
+    }, m.file?.name || 'Fichier'), /*#__PURE__*/React.createElement("div", {
+      className: "file-size"
+    }, m.file?.size || '')), /*#__PURE__*/React.createElement("button", {
+      className: "icon-btn",
+      style: {
+        width: 28,
+        height: 28
+      }
+    }, /*#__PURE__*/React.createElement(Ic.Download, null))) : /*#__PURE__*/React.createElement("div", {
+      className: `bubble ${m.side}`
+    }, m.text), !sameAuthor && /*#__PURE__*/React.createElement("div", {
+      className: "bubble-meta"
+    }, m.time)));
+  })), !usingReal && conv.online && /*#__PURE__*/React.createElement("div", {
+    className: "typing",
+    style: {
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "row-av",
+    style: {
+      background: conv.color,
+      width: 28,
+      height: 28,
+      borderRadius: '50%',
+      display: 'grid',
+      placeItems: 'center',
+      fontSize: 10,
+      fontWeight: 700,
+      color: '#fff'
+    }
+  }, conv.initials), /*#__PURE__*/React.createElement("div", {
+    className: "typing-dots"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "typing-dot"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "typing-dot"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "typing-dot"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, conv.name, " est en train d'\xE9crire...")), /*#__PURE__*/React.createElement("div", {
+    ref: messagesEndRef
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "chat-input-wrap"
+  }, /*#__PURE__*/React.createElement("form", {
+    className: "input-row",
+    onSubmit: sendMsg
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "input-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "icon-btn"
+  }, /*#__PURE__*/React.createElement(Ic.Attach, null)), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "icon-btn"
+  }, /*#__PURE__*/React.createElement(Ic.Emoji, null))), /*#__PURE__*/React.createElement("textarea", {
+    className: "input-box",
+    placeholder: `Message à ${conv.name}...`,
+    value: input,
+    onChange: e => setInput(e.target.value),
+    onKeyDown: e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMsg(e);
+      }
+    },
+    rows: 1
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "send-btn",
+    disabled: !input.trim()
+  }, /*#__PURE__*/React.createElement(Ic.Send, null))))), showProfile && /*#__PURE__*/React.createElement("div", {
+    className: "profile-panel"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-av",
+    style: {
+      background: conv.color
+    }
+  }, conv.initials), /*#__PURE__*/React.createElement("div", {
+    className: "pp-name"
+  }, conv.name), conv.mission && /*#__PURE__*/React.createElement("div", {
+    className: "pp-spec"
+  }, "Expert certifi\xE9 CreatorFlow"), conv.online && /*#__PURE__*/React.createElement("div", {
+    className: "pp-online"
+  }, "En ligne maintenant")), conv.note && /*#__PURE__*/React.createElement("div", {
+    className: "pp-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-section-title"
+  }, "\xC9valuation"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 10
+    }
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement(Ic.Star, {
+    key: i,
+    style: {
+      color: 'var(--amber)'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, conv.note)), /*#__PURE__*/React.createElement("div", {
+    className: "pp-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-label"
+  }, "Missions r\xE9alis\xE9es"), /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-val"
+  }, "18")), /*#__PURE__*/React.createElement("div", {
+    className: "pp-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-label"
+  }, "Taux de succ\xE8s"), /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-val",
+    style: {
+      color: 'var(--green)'
+    }
+  }, "100%")), /*#__PURE__*/React.createElement("div", {
+    className: "pp-stat-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-label"
+  }, "Temps de r\xE9ponse"), /*#__PURE__*/React.createElement("span", {
+    className: "pp-stat-val"
+  }, "< 2h"))), conv.mission && /*#__PURE__*/React.createElement("div", {
+    className: "pp-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-section-title"
+  }, "Mission en cours"), /*#__PURE__*/React.createElement("div", {
+    className: "pp-mission-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-m-title"
+  }, conv.mission), /*#__PURE__*/React.createElement("div", {
+    className: "pp-m-prog"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-m-prog-fill",
+    style: {
+      width: '65%'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pp-m-meta"
+  }, "65% \xB7 Livraison 10 juin")), /*#__PURE__*/React.createElement("a", {
+    href: "mission.html",
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      marginTop: 10
+    }
+  }, "Voir la mission ", /*#__PURE__*/React.createElement(Ic.Arrow, null))), conv.note && /*#__PURE__*/React.createElement("div", {
+    className: "pp-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-section-title"
+  }, "Actions"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  }, "Voir le profil"))), usingReal && /*#__PURE__*/React.createElement("div", {
+    className: "pp-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pp-section-title"
+  }, "Connexion"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `rt-badge`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "rt-dot"
+  }), rtConnected ? 'Temps réel actif' : 'En attente...'))))));
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>
