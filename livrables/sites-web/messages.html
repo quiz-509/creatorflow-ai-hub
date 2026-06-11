@@ -585,6 +585,50 @@ function App() {
         setUsingReal(false);
       }
       setLoading(false);
+
+      // Abonnement nouvelles conversations entrantes
+      const convChannel = sb.channel('new-convs-' + uid)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'conversations',
+          filter: 'expert_id=eq.' + uid
+        }, async payload => {
+          const c = payload.new;
+          const otherId = c.client_id;
+          const { data: other } = await sb.from('profiles').select('prenom, nom').eq('id', otherId).single();
+          const name = other ? `${other.prenom || ''} ${other.nom || ''}`.trim() || 'Client' : 'Client';
+          const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() || '??';
+          setConvs(prev => [{
+            id: c.id, name, initials,
+            color: COLORS[prev.length % COLORS.length],
+            online: false, mission: null,
+            preview: 'Nouvelle conversation', time: "À l'instant",
+            unread: 1, note: null
+          }, ...prev]);
+          setUsingReal(true);
+        })
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'conversations',
+          filter: 'client_id=eq.' + uid
+        }, async payload => {
+          const c = payload.new;
+          const otherId = c.expert_id;
+          const { data: other } = await sb.from('profiles').select('prenom, nom').eq('id', otherId).single();
+          const name = other ? `${other.prenom || ''} ${other.nom || ''}`.trim() || 'Expert' : 'Expert';
+          const initials = name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() || '??';
+          setConvs(prev => [{
+            id: c.id, name, initials,
+            color: COLORS[prev.length % COLORS.length],
+            online: false, mission: null,
+            preview: 'Nouvelle conversation', time: "À l'instant",
+            unread: 1, note: null
+          }, ...prev]);
+          setUsingReal(true);
+        })
+        .subscribe();
     })();
   }, []);
 
@@ -633,6 +677,12 @@ function App() {
         time: fmtTime(m.created_at),
         type: m.type || 'text'
       }]);
+      setConvs(prev => prev.map(c => c.id === m.conversation_id ? {
+        ...c,
+        preview: m.content,
+        time: "À l'instant",
+        unread: m.sender_id !== uid ? c.unread + 1 : c.unread
+      } : c));
       setTimeout(() => messagesEndRef.current?.scrollIntoView({
         behavior: 'smooth'
       }), 50);
