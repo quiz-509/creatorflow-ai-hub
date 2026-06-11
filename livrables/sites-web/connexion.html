@@ -134,10 +134,22 @@ function App() {
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
+  const isRecovery = window.location.hash.includes('type=recovery');
+  const [showPasswordUpdate, setShowPasswordUpdate] = useState(isRecovery);
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [updateDone, setUpdateDone] = useState(false);
   useEffect(() => {
     document.getElementById('cfm-loader')?.remove();
   }, []);
   useEffect(() => {
+    const { data: authListener } = sb.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setShowPasswordUpdate(true);
+    });
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+  useEffect(() => {
+    if (isRecovery) return;
     sb.auth.getSession().then(async ({
       data
     }) => {
@@ -200,6 +212,17 @@ function App() {
       setLoading(false);
     }
   };
+  const handleUpdatePassword = async e => {
+    e.preventDefault();
+    if (newPass.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères.'); return; }
+    if (newPass !== confirmPass) { setError('Les mots de passe ne correspondent pas.'); return; }
+    setLoading(true);
+    setError('');
+    const { error: updateError } = await sb.auth.updateUser({ password: newPass });
+    setLoading(false);
+    if (updateError) setError('Erreur : ' + updateError.message);
+    else { setUpdateDone(true); setTimeout(() => { window.location.href = 'connexion.html'; }, 2500); }
+  };
   const handleReset = async e => {
     e.preventDefault();
     setLoading(true);
@@ -212,6 +235,88 @@ function App() {
     setLoading(false);
     if (!resetError) setResetSent(true);else setError('Erreur : ' + resetError.message);
   };
+  if (showPasswordUpdate) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")))), /*#__PURE__*/React.createElement("div", {
+    className: "login-page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-text"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-sub"
+  }, "Nouveau mot de passe")), /*#__PURE__*/React.createElement("div", {
+    className: "form-box"
+  }, !updateDone ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "D\xE9finir votre mot de passe"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "Choisissez un nouveau mot de passe s\xE9curis\xE9 pour votre compte."), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleUpdatePassword
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Nouveau mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: "8 caract\xE8res minimum",
+    value: newPass,
+    onChange: e => setNewPass(e.target.value),
+    required: true,
+    minLength: 8
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Confirmer le mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: "Confirmez votre mot de passe",
+    value: confirmPass,
+    onChange: e => setConfirmPass(e.target.value),
+    required: true
+  })), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#EF4444',
+      fontSize: 13,
+      marginBottom: 12,
+      padding: '10px 14px',
+      background: 'rgba(239,68,68,0.08)',
+      borderRadius: 8
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary form-submit",
+    disabled: loading
+  }, loading ? 'Mise \xE0 jour…' : 'Mettre \xE0 jour le mot de passe'))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '20px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "✅"), /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Mot de passe mis \xE0 jour\xA0!"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginTop: 8
+    }
+  }, "Vous allez \xEAtre redirig\xE9 vers la connexion…"))))));
   if (showReset) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
     className: "nav"
   }, /*#__PURE__*/React.createElement("div", {
