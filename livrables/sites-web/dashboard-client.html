@@ -29,7 +29,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--v);border:1.5px solid var(--bg);}
 .user-chip{display:flex;align-items:center;gap:9px;padding:5px 10px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
 .user-chip:hover{border-color:var(--border-3);}
-.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .user-name{font-size:13px;font-weight:600;}
 
 /* SIDEBAR */
@@ -451,6 +452,7 @@ function App() {
   const [missionCount, setMissionCount] = useState(0);
   const [budgetTotal, setBudgetTotal] = useState(0);
   const [propositions, setPropositions] = useState([]);
+  const [avatarUrl, setAvatarUrl] = useState('');
   useEffect(() => {
     sb.auth.getSession().then(async ({
       data
@@ -468,6 +470,7 @@ function App() {
         const n = profile.nom || '';
         setPrenom(p);
         setInitials(((p[0] || '?') + (n[0] || '?')).toUpperCase());
+        setAvatarUrl(profile.avatar_url || '');
         setUser({
           ...u,
           ...profile
@@ -605,7 +608,7 @@ function App() {
     className: "user-chip"
   }, /*#__PURE__*/React.createElement("div", {
     className: "avatar"
-  }, initials), /*#__PURE__*/React.createElement("span", {
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: ""}) : initials), /*#__PURE__*/React.createElement("span", {
     className: "user-name"
   }, user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : 'Chargement…'))))), /*#__PURE__*/React.createElement("aside", {
     className: `sidebar${sidebarOpen ? ' open' : ''}`

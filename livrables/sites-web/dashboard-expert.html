@@ -28,7 +28,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--green);border:1.5px solid var(--bg);}
 .expert-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
 .expert-chip:hover{border-color:var(--border-3);}
-.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .badge-expert{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.25);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:0.06em;}
 
 .sidebar{position:fixed;top:var(--nav);left:0;bottom:0;width:var(--sidebar);background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
@@ -149,7 +150,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* PROFIL CARD */
 .profil-card{background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(124,58,237,0.08));border:1px solid rgba(6,182,212,0.2);border-radius:var(--r-lg);padding:20px;text-align:center;}
-.profil-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;border:2px solid rgba(6,182,212,0.3);}
+.profil-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;border:2px solid rgba(6,182,212,0.3);overflow:hidden;}
+.profil-avatar-lg img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .profil-name{font-size:16px;font-weight:800;margin-bottom:3px;}
 .profil-spec{font-size:12px;color:var(--text-3);margin-bottom:14px;}
 .stars{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:14px;}
@@ -531,6 +533,7 @@ function App() {
   const [convs, setConvs] = useState([]);
   const [missions, setMissions] = useState([]);
   const [missionCount, setMissionCount] = useState(0);
+  const [avatarUrl, setAvatarUrl] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedBrief, setSelectedBrief] = useState(null);
   const [montantForm, setMontantForm] = useState('');
@@ -554,10 +557,10 @@ function App() {
       const {
         data: exp
       } = await sb.from('experts').select('*').eq('id', u.id).single();
-      if (profile) setUser({
-        ...u,
-        ...profile
-      });
+      if (profile) {
+        setUser({ ...u, ...profile });
+        setAvatarUrl(profile.avatar_url || '');
+      }
       if (exp) {
         setExpert(exp);
         setDispo(exp.disponible !== false);
@@ -749,7 +752,7 @@ function App() {
     className: "expert-chip"
   }, /*#__PURE__*/React.createElement("div", {
     className: "avatar"
-  }, initials), /*#__PURE__*/React.createElement("span", {
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: ""}) : initials), /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 13,
       fontWeight: 600
@@ -1056,7 +1059,7 @@ function App() {
     className: "profil-card"
   }, /*#__PURE__*/React.createElement("div", {
     className: "profil-avatar-lg"
-  }, initials), /*#__PURE__*/React.createElement("div", {
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: ""}) : initials), /*#__PURE__*/React.createElement("div", {
     className: "profil-name"
   }, fullName), /*#__PURE__*/React.createElement("div", {
     className: "profil-spec"

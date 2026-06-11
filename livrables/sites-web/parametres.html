@@ -76,7 +76,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* AVATAR */
 .avatar-row{display:flex;align-items:center;gap:20px;padding:20px;background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;}
-.avatar-big{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;}
+.avatar-big{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;}
+.avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .avatar-info{flex:1;}
 .avatar-name{font-size:15px;font-weight:700;margin-bottom:2px;}
 .avatar-email{font-size:13px;color:var(--text-3);}
@@ -377,6 +378,9 @@ function App() {
   const [toast, setToast] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
   const toastTimer = useRef(null);
 
   // Profil state
@@ -450,6 +454,7 @@ function App() {
           entreprise: profile.entreprise || ''
         }));
         setInitials(((p[0] || '?') + (n[0] || '?')).toUpperCase());
+        setAvatarUrl(profile.avatar_url || '');
       }
       if (exp) {
         setProfil(prev => ({
@@ -652,13 +657,45 @@ function App() {
     className: "avatar-row"
   }, /*#__PURE__*/React.createElement("div", {
     className: "avatar-big"
-  }, initials), /*#__PURE__*/React.createElement("div", {
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: "Photo de profil"}) : initials), /*#__PURE__*/React.createElement("div", {
     className: "avatar-info"
   }, /*#__PURE__*/React.createElement("div", {
     className: "avatar-name"
   }, profil.prenom, " ", profil.nom), /*#__PURE__*/React.createElement("div", {
     className: "avatar-email"
-  }, profil.email))), /*#__PURE__*/React.createElement("div", {
+  }, profil.email), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-actions",
+    style: {marginTop: 10}
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost btn-sm",
+    disabled: uploading,
+    onClick: () => fileInputRef.current && fileInputRef.current.click()
+  }, uploading ? "Upload…" : "Changer la photo"), /*#__PURE__*/React.createElement("input", {
+    ref: fileInputRef,
+    type: "file",
+    accept: "image/jpeg,image/png,image/webp",
+    style: {display: 'none'},
+    onChange: async e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Photo trop lourde (max 5MB).'); return; }
+      setUploading(true);
+      try {
+        const { data: { session: s } } = await sb.auth.getSession();
+        if (!s) return;
+        const uid = s.user.id;
+        const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = uid + '/avatar.' + ext;
+        const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
+        if (upErr) throw upErr;
+        const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(path);
+        await sb.from('profiles').update({ avatar_url: publicUrl }).eq('id', uid);
+        setAvatarUrl(publicUrl + '?t=' + Date.now());
+        showToast();
+      } catch (err) { alert('Erreur upload : ' + err.message); }
+      finally { setUploading(false); e.target.value = ''; }
+    }
+  })))), /*#__PURE__*/React.createElement("div", {
     className: "input-grid"
   }, /*#__PURE__*/React.createElement("div", {
     className: "field"
