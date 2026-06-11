@@ -178,7 +178,7 @@ const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
   month: 'short',
   year: 'numeric'
 }) : '';
-const fmtMoney = n => n ? `${Number(n).toLocaleString('fr-CA')}$` : '0$';
+const fmtMoney = n => n ? `${Number(n).toLocaleString('fr-CA')} $` : '0 $';
 
 /* ── SIDEBAR NAV ── */
 function Sidebar({
@@ -800,7 +800,7 @@ function ExpertsTab({
       style: {
         fontSize: 12
       }
-    }, e.tarif_heure ? `${e.tarif_heure}$/h` : '—'), /*#__PURE__*/React.createElement("td", {
+    }, e.tarif_heure ? `${e.tarif_heure} $/h` : '—'), /*#__PURE__*/React.createElement("td", {
       style: {
         fontSize: 12
       }

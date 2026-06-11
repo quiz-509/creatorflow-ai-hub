@@ -381,7 +381,7 @@ function App() {
     }
   }, "\u23F3"), /*#__PURE__*/React.createElement("div", null, "Chargement du cours\u2026")));
   if (!course) return null;
-  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $CAD`;
+  const prix = course.prix === 0 ? 'Gratuit' : `${course.prix.toLocaleString('fr-CA')} $`;
   const instrName = instructor ? `${instructor.prenom || ''} ${instructor.nom || ''}`.trim() : 'Expert';
   const instrInitials = instrName ? instrName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : 'EX';
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
