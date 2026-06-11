@@ -534,6 +534,7 @@ function App() {
   const [missions, setMissions] = useState([]);
   const [missionCount, setMissionCount] = useState(0);
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [hasUnread, setHasUnread] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedBrief, setSelectedBrief] = useState(null);
   const [montantForm, setMontantForm] = useState('');
@@ -609,6 +610,11 @@ function App() {
         head: true
       }).eq('expert_id', u.id);
       setMissionCount(totalM || 0);
+      const { count: unread } = await sb.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', u.id).eq('read', false);
+      setHasUnread((unread || 0) > 0);
+      const ch = sb.channel('notifs-expert-' + u.id)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: 'user_id=eq.' + u.id }, () => setHasUnread(true))
+        .subscribe();
       document.getElementById('sk')?.remove();
     });
     const el = document.getElementById('cursor-glow');
@@ -744,9 +750,11 @@ function App() {
     className: "brand-logo"
   }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market"))), /*#__PURE__*/React.createElement("div", {
     className: "nav-right"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "notif-btn"
-  }, /*#__PURE__*/React.createElement(Ic.Bell, null), /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "notif-btn",
+    href: "notifications.html",
+    style: {textDecoration:'none',color:'inherit'}
+  }, /*#__PURE__*/React.createElement(Ic.Bell, null), hasUnread && /*#__PURE__*/React.createElement("span", {
     className: "notif-dot"
   })), /*#__PURE__*/React.createElement("div", {
     className: "expert-chip"

@@ -295,6 +295,29 @@ function App() {
         })));
       }
       setLoading(false);
+
+      const channel = sb.channel('notifs-' + u.id)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: 'user_id=eq.' + u.id
+        }, payload => {
+          const n = payload.new;
+          setNotifs(prev => [{
+            ...n,
+            unread: true,
+            group: getGroup(n.created_at),
+            time: getTimeAgo(n.created_at),
+            iconClass: n.icon_class || 'icon-purple',
+            badgeClass: n.badge_class || 'badge-purple',
+            desc: n.description,
+            action: n.href ? 'Voir' : null
+          }, ...prev]);
+        })
+        .subscribe();
+
+      return () => { sb.removeChannel(channel); };
     })();
     const el = document.getElementById('cursor-glow');
     const move = e => {
