@@ -290,6 +290,7 @@ function App() {
       description: fullDesc,
       nom_contact: `${profile?.prenom || ''} ${profile?.nom || ''}`.trim(),
       email_contact: user.email,
+      statut: 'ouvert',
     });
     setSubmitting(false);
     if (!error) setDone(true);
