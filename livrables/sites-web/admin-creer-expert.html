@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Créer un Expert — Admin CreatorFlow Market</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f0d1a; --bg2: #161228; --bg3: #1e1835;
+      --v: #7C3AED; --v2: #9F6FFF; --v3: #c4b5fd;
+      --text: #f1f0f7; --text-2: #a19cc5; --text-3: #6b6490;
+      --border: rgba(124,58,237,.2); --green: #10b981; --red: #ef4444;
+      --radius: 10px;
+    }
+    body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+    a { color: var(--v2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Loading / denied screens */
+    .fullscreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; flex-direction: column; gap: 16px; color: var(--text-2); }
+    .spinner { width: 32px; height: 32px; border: 3px solid rgba(124,58,237,.25); border-top-color: var(--v); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Layout */
+    header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
+    header .logo { font-weight: 700; font-size: 15px; color: var(--v2); }
+    header .breadcrumb { color: var(--text-3); font-size: 13px; }
+    header .breadcrumb span { color: var(--text-2); }
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 53px); overflow: hidden; }
+
+    /* Form panel */
+    .form-panel { padding: 24px; overflow-y: auto; border-right: 1px solid var(--border); }
+    .panel-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-2); margin-bottom: 5px; }
+    .form-group label .req { color: var(--v2); margin-left: 2px; }
+    input, select, textarea {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text); font-size: 13px; font-family: inherit;
+      padding: 9px 12px; outline: none; transition: border-color .15s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--v); }
+    textarea { resize: vertical; min-height: 90px; }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6490' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+    .char-count { font-size: 11px; color: var(--text-3); text-align: right; margin-top: 3px; }
+    .tags-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-chip { display: flex; align-items: center; gap: 5px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 5px 10px; font-size: 12px; cursor: pointer; transition: all .15s; user-select: none; }
+    .tag-chip:hover { border-color: var(--v); }
+    .tag-chip.selected { background: rgba(124,58,237,.2); border-color: var(--v); color: var(--v3); }
+    .tag-chip input[type=checkbox] { display: none; }
+    .avail-row { display: flex; align-items: center; gap: 10px; }
+    .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: var(--bg3); border: 1px solid var(--border); border-radius: 22px; cursor: pointer; transition: .2s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background: var(--text-3); border-radius: 50%; transition: .2s; }
+    .toggle input:checked + .toggle-slider { background: rgba(16,185,129,.2); border-color: var(--green); }
+    .toggle input:checked + .toggle-slider::before { background: var(--green); transform: translateX(18px); }
+    .pass-row { display: flex; gap: 8px; }
+    .pass-row input { flex: 1; }
+    .btn-ghost-sm { background: transparent; border: 1px solid var(--border); color: var(--text-2); border-radius: 7px; padding: 8px 12px; cursor: pointer; font-size: 12px; white-space: nowrap; transition: all .15s; }
+    .btn-ghost-sm:hover { border-color: var(--v); color: var(--v3); }
+    .hint { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+    /* SQL panel */
+    .sql-panel { display: flex; flex-direction: column; background: var(--bg2); overflow: hidden; }
+    .sql-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .sql-header-title { font-size: 13px; font-weight: 600; color: var(--text-2); display: flex; align-items: center; gap: 8px; }
+    .sql-status { font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+    .sql-status.ready { background: rgba(16,185,129,.15); color: var(--green); }
+    .sql-status.incomplete { background: rgba(107,100,144,.15); color: var(--text-3); }
+    .btn-copy { background: var(--v); color: #fff; border: none; border-radius: 7px; padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .15s; }
+    .btn-copy:hover { background: #6d28d9; }
+    .btn-copy.copied { background: var(--green); }
+    #sql-output { flex: 1; background: #0a0815; color: #e2e0f0; font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace; font-size: 12px; line-height: 1.7; padding: 16px 20px; border: none; outline: none; resize: none; overflow-y: auto; }
+    .instructions { flex-shrink: 0; border-top: 1px solid var(--border); padding: 16px 20px; }
+    .instructions h4 { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; }
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .step-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--text-2); }
+    .step-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(124,58,237,.2); color: var(--v3); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-list a { font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div id="loading-screen" class="fullscreen">
+  <div class="spinner"></div>
+  <span>Vérification de l'accès...</span>
+</div>
+
+<div id="denied-screen" class="fullscreen" style="display:none">
+  <div style="font-size:32px">🔒</div>
+  <div style="font-size:16px;font-weight:700">Accès réservé à l'administrateur</div>
+  <a href="connexion.html">Se connecter</a>
+</div>
+
+<div id="app" style="display:none">
+  <header>
+    <div class="logo">CreatorFlow Market</div>
+    <div class="breadcrumb">
+      <a href="admin.html">Admin</a>
+      &nbsp;›&nbsp;
+      <span>Créer un expert</span>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ─── FORMULAIRE ─── -->
+    <div class="form-panel">
+      <div class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+        Nouvel expert
+      </div>
+
+      <div class="section-label">Identité</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Prénom <span class="req">*</span></label>
+          <input id="prenom" type="text" placeholder="Marie" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Nom <span class="req">*</span></label>
+          <input id="nom" type="text" placeholder="Dupont" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email <span class="req">*</span></label>
+        <input id="email" type="email" placeholder="marie@example.com" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe temporaire <span class="req">*</span></label>
+        <div class="pass-row">
+          <input id="password" type="text" value="">
+          <button class="btn-ghost-sm" onclick="genPassword()">Générer</button>
+        </div>
+        <div class="hint">L'expert devra le changer à sa première connexion via "Mot de passe oublié".</div>
+      </div>
+      <div class="form-group">
+        <label>URL photo de profil</label>
+        <input id="photo_url" type="url" placeholder="https://... (laisser vide si inconnue)">
+      </div>
+      <div class="form-group">
+        <label>Profil LinkedIn</label>
+        <input id="linkedin" type="url" placeholder="https://linkedin.com/in/...">
+      </div>
+
+      <div class="section-label">Expertise</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Spécialité principale <span class="req">*</span></label>
+          <select id="specialite">
+            <option value="">Choisir...</option>
+            <option>Agents IA</option>
+            <option>Automatisation</option>
+            <option>Chatbots</option>
+            <option>Développement IA</option>
+            <option>Prompt Engineering</option>
+            <option>Montage vidéo IA</option>
+            <option>Branding IA</option>
+            <option>Formation IA</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Niveau</label>
+          <select id="niveau">
+            <option value="confirme">Confirmé (2-5 ans)</option>
+            <option value="senior">Senior (5+ ans)</option>
+            <option value="junior">Junior (0-2 ans)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Compétences supplémentaires <span style="color:var(--text-3)">(cochez toutes celles qui s'appliquent)</span></label>
+        <div class="tags-grid" id="competences-grid"></div>
+      </div>
+      <div class="form-group">
+        <label>Bio <span class="req">*</span></label>
+        <textarea id="bio" maxlength="400" placeholder="Décrivez l'expertise, l'approche et la valeur ajoutée de cet expert en 2-3 phrases..." oninput="updateCharCount(this, 'bio-count', 400)"></textarea>
+        <div class="char-count"><span id="bio-count">0</span>/400</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tarif horaire ($/h) <span class="req">*</span></label>
+          <input id="tarif" type="number" min="30" max="500" placeholder="95">
+        </div>
+        <div class="form-group">
+          <label>Disponibilité immédiate</label>
+          <div class="avail-row" style="margin-top:8px">
+            <label class="toggle">
+              <input type="checkbox" id="disponible" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span id="disponible-label" style="font-size:13px;color:var(--green)">Disponible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SQL PREVIEW ─── -->
+    <div class="sql-panel">
+      <div class="sql-header">
+        <div class="sql-header-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          SQL à exécuter dans Supabase
+          <span id="sql-status" class="sql-status incomplete">Incomplet</span>
+        </div>
+        <button class="btn-copy" id="copy-btn" onclick="copySql()">Copier</button>
+      </div>
+      <textarea id="sql-output" readonly spellcheck="false"></textarea>
+      <div class="instructions">
+        <h4>Comment utiliser ce script :</h4>
+        <ol class="step-list">
+          <li><span class="step-num">1</span>Remplissez le formulaire — le SQL se génère en temps réel</li>
+          <li><span class="step-num">2</span>Cliquez sur <strong style="color:var(--v3)">Copier</strong> quand le statut est <span style="color:var(--green)">Prêt</span></li>
+          <li><span class="step-num">3</span>Ouvrez <a href="https://supabase.com/dashboard/project/cjtglfutckaogsmwhfsv/sql/new" target="_blank">Supabase SQL Editor →</a></li>
+          <li><span class="step-num">4</span>Collez et exécutez — l'expert est créé et approuvé directement</li>
+          <li><span class="step-num">5</span>Dans <a href="https://supabase.com/dashboard/project/cjtglfutckaogsmwhfsv/auth/users" target="_blank">Auth &rsaquo; Users →</a>, envoyez un "Send password reset" pour que l'expert change son mot de passe</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const ADMIN_EMAIL  = 'pjoacenel@gmail.com';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const SPECIALITES = [
+  'Agents IA','Automatisation','Chatbots','Développement IA',
+  'Prompt Engineering','Montage vidéo IA','Branding IA','Formation IA'
+];
+
+/* ── Auth guard ── */
+sb.auth.getSession().then(({ data: { session } }) => {
+  document.getElementById('loading-screen').style.display = 'none';
+  if (!session || session.user.email !== ADMIN_EMAIL) {
+    document.getElementById('denied-screen').style.display = 'flex';
+  } else {
+    document.getElementById('app').style.display = 'block';
+    init();
+  }
+});
+
+/* ── Init ── */
+function init() {
+  genPassword();
+  buildCompetencesGrid();
+  bindInputs();
+  generateSQL();
+}
+
+function buildCompetencesGrid() {
+  const grid = document.getElementById('competences-grid');
+  SPECIALITES.forEach(s => {
+    const chip = document.createElement('label');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `<input type="checkbox" value="${s}"><span>${s}</span>`;
+    chip.querySelector('input').addEventListener('change', e => {
+      chip.classList.toggle('selected', e.target.checked);
+      generateSQL();
+    });
+    grid.appendChild(chip);
+  });
+}
+
+function bindInputs() {
+  ['prenom','nom','email','password','photo_url','linkedin','specialite','niveau','bio','tarif'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', generateSQL);
+  });
+  document.getElementById('specialite').addEventListener('change', generateSQL);
+  document.getElementById('niveau').addEventListener('change', generateSQL);
+  document.getElementById('disponible').addEventListener('change', e => {
+    document.getElementById('disponible-label').textContent = e.target.checked ? 'Disponible' : 'Non disponible';
+    document.getElementById('disponible-label').style.color = e.target.checked ? 'var(--green)' : 'var(--text-3)';
+    generateSQL();
+  });
+}
+
+/* ── Helpers ── */
+function genPassword() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#';
+  let p = '';
+  for (let i = 0; i < 12; i++) p += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('password').value = p;
+  generateSQL();
+}
+
+function updateCharCount(el, countId, max) {
+  document.getElementById(countId).textContent = el.value.length;
+  generateSQL();
+}
+
+function esc(str) {
+  return (str || '').replace(/'/g, "''");
+}
+
+function getCompetences() {
+  const boxes = document.querySelectorAll('#competences-grid input:checked');
+  return Array.from(boxes).map(b => b.value);
+}
+
+function toSqlArray(arr) {
+  if (!arr || arr.length === 0) return "ARRAY[]::text[]";
+  return "ARRAY[" + arr.map(v => `'${esc(v)}'`).join(', ') + "]";
+}
+
+function isReady() {
+  const v = f => (document.getElementById(f)?.value || '').trim();
+  return v('prenom') && v('nom') && v('email') && v('password') && v('specialite') && v('bio') && v('tarif');
+}
+
+/* ── SQL generation ── */
+function generateSQL() {
+  const prenom    = esc((document.getElementById('prenom')?.value || '').trim());
+  const nom       = esc((document.getElementById('nom')?.value || '').trim());
+  const email     = esc((document.getElementById('email')?.value || '').trim());
+  const password  = esc((document.getElementById('password')?.value || '').trim());
+  const photo     = esc((document.getElementById('photo_url')?.value || '').trim());
+  const linkedin  = esc((document.getElementById('linkedin')?.value || '').trim());
+  const specialite = esc((document.getElementById('specialite')?.value || '').trim());
+  const niveau    = document.getElementById('niveau')?.value || 'confirme';
+  const bio       = esc((document.getElementById('bio')?.value || '').trim());
+  const tarif     = parseInt(document.getElementById('tarif')?.value) || 0;
+  const dispo     = document.getElementById('disponible')?.checked ? 'true' : 'false';
+
+  const competences = getCompetences();
+  if (specialite && !competences.includes(specialite)) competences.unshift(specialite);
+
+  const now = new Date().toLocaleDateString('fr-CA');
+
+  const sql = isReady() ? `-- ══════════════════════════════════════════════════
+-- Créer l'expert : ${prenom} ${nom}
+-- Généré le ${now} via admin-creer-expert.html
+-- ══════════════════════════════════════════════════
+
+DO $$
+DECLARE
+  eid   UUID := gen_random_uuid();
+  eml   TEXT := '${email}';
+BEGIN
+
+  -- 1. Compte Auth
+  INSERT INTO auth.users (
+    instance_id, id, aud, role, email,
+    encrypted_password, email_confirmed_at,
+    raw_app_meta_data, raw_user_meta_data,
+    is_super_admin, created_at, updated_at
+  ) VALUES (
+    '00000000-0000-0000-0000-000000000000',
+    eid, 'authenticated', 'authenticated', eml,
+    crypt('${password}', gen_salt('bf')),
+    now(),
+    '{"provider":"email","providers":["email"]}'::jsonb,
+    '{"type_utilisateur":"expert"}'::jsonb,
+    false, now(), now()
+  );
+
+  -- 2. Identité (nécessaire pour connexion email)
+  INSERT INTO auth.identities (
+    id, user_id, identity_data, provider,
+    last_sign_in_at, created_at, updated_at, provider_id
+  ) VALUES (
+    gen_random_uuid(), eid,
+    json_build_object('sub', eid::text, 'email', eml),
+    'email', now(), now(), now(), eid::text
+  );
+
+  -- 3. Profil
+  INSERT INTO profiles (
+    id, prenom, nom, email, type_utilisateur, role,
+    bio, linkedin, photo_url, referral_code
+  ) VALUES (
+    eid, '${prenom}', '${nom}', eml, 'expert', 'expert',
+    '${bio}',
+    ${linkedin ? `'${linkedin}'` : 'NULL'},
+    ${photo ? `'${photo}'` : 'NULL'},
+    upper(substring(replace(eid::text, '-', ''), 1, 4) || '-' ||
+          substring(replace(eid::text, '-', ''), 5, 4))
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    prenom = EXCLUDED.prenom,
+    nom    = EXCLUDED.nom,
+    bio    = EXCLUDED.bio;
+
+  -- 4. Expert (statut approved dès la création)
+  INSERT INTO experts (
+    id, specialite, niveau, bio, linkedin,
+    competences, categories,
+    tarif_heure, disponible, statut, photo_url
+  ) VALUES (
+    eid,
+    '${specialite}',
+    '${niveau}',
+    '${bio}',
+    ${linkedin ? `'${linkedin}'` : 'NULL'},
+    ${toSqlArray(competences)},
+    ${toSqlArray(competences)},
+    ${tarif},
+    ${dispo},
+    'approved',
+    ${photo ? `'${photo}'` : 'NULL'}
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    specialite  = EXCLUDED.specialite,
+    niveau      = EXCLUDED.niveau,
+    bio         = EXCLUDED.bio,
+    competences = EXCLUDED.competences,
+    categories  = EXCLUDED.categories,
+    tarif_heure = EXCLUDED.tarif_heure,
+    disponible  = EXCLUDED.disponible,
+    statut      = 'approved',
+    photo_url   = EXCLUDED.photo_url;
+
+  RAISE NOTICE 'Expert créé : ${prenom} ${nom} (ID : %)', eid;
+
+END $$;`
+  : `-- Remplissez tous les champs obligatoires (*) pour générer le SQL.`;
+
+  document.getElementById('sql-output').value = sql;
+
+  const status = document.getElementById('sql-status');
+  const ready  = isReady();
+  status.textContent  = ready ? 'Prêt' : 'Incomplet';
+  status.className    = 'sql-status ' + (ready ? 'ready' : 'incomplete');
+}
+
+/* ── Copy ── */
+function copySql() {
+  const sql = document.getElementById('sql-output').value;
+  if (!isReady()) return;
+  navigator.clipboard.writeText(sql).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copié !';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copier'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+</script>
+</body>
+</html>

@@ -730,7 +730,11 @@ function ExpertsTab({
     className: "page-title"
   }, "Experts"), /*#__PURE__*/React.createElement("div", {
     className: "page-sub"
-  }, experts.length, " experts inscrits \u2014 ", pending, " en attente d'approbation"))), /*#__PURE__*/React.createElement("div", {
+  }, experts.length, " experts inscrits \u2014 ", pending, " en attente d'approbation")), /*#__PURE__*/React.createElement("a", {
+    href: "admin-creer-expert.html",
+    className: "btn btn-primary",
+    style: { fontSize: 13, padding: '8px 16px' }
+  }, "+ Ajouter un expert")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 8,
