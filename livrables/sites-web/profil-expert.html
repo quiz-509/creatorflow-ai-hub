@@ -156,7 +156,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 @media(max-width:768px){
   .wrap{padding:0 16px;}
-  .body-grid{grid-template-columns:1fr;gap:20px;padding:20px 0 48px;}
+  .body-grid{grid-template-columns:1fr!important;gap:20px;padding:20px 0 48px;}
   .stats-row{grid-template-columns:repeat(2,1fr);}
   .stat-cell{padding:16px 12px;}
   .stat-val{font-size:18px;}
@@ -164,12 +164,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .hero-section{padding:24px 0 0;}
   .btn{padding:10px 18px;font-size:13px;}
   .btn-lg{padding:12px 20px;font-size:14px;}
-  .action-btns{flex-direction:column;gap:8px;}
-  .action-btns .btn{width:100%;justify-content:center;}
-  .profile-header{flex-direction:column;gap:16px;}
-  .profile-header .avatar-wrap{margin:0 auto;}
+  .hero-inner{flex-direction:column;align-items:center;gap:16px;}
+  .hero-avatar-wrap{margin:0 auto;}
+  .hero-info{width:100%;}
+  .hero-actions{min-width:unset;width:100%;}
+  .hero-actions .btn{width:100%;justify-content:center;}
   .prof-tags{flex-wrap:wrap;}
   .prof-location{flex-wrap:wrap;gap:8px;}
+  .sidebar-card{margin-bottom:12px;}
 }
 @media(max-width:480px){
   .stats-row{grid-template-columns:1fr 1fr;}
