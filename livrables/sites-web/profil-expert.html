@@ -436,21 +436,21 @@ function App() {
       const params = new URLSearchParams(window.location.search);
       const expertId = params.get('id');
       const targetId = expertId || (await sb.auth.getSession()).data?.session?.user?.id;
-      if (!targetId) return;
-      const [{
-        data: profile
-      }, {
-        data: exp
-      }, {
-        data: reviewsList
-      }, {
-        count: missionsTotal
-      }] = await Promise.all([sb.from('profiles').select('*').eq('id', targetId).single(), sb.from('experts').select('*').eq('id', targetId).single(), sb.from('reviews').select('note, commentaire, client_prenom, client_nom, created_at').eq('expert_id', targetId).order('created_at', {
-        ascending: false
-      }).limit(20), sb.from('missions').select('id', {
-        count: 'exact',
-        head: true
-      }).eq('expert_id', targetId).eq('statut', 'termine')]);
+      console.log('[profil-expert] expertId:', expertId, '| targetId:', targetId);
+      if (!targetId) { console.warn('[profil-expert] No targetId — abort'); return; }
+      const [profileRes, expRes, reviewsRes, missionsRes] = await Promise.all([
+        sb.from('profiles').select('id, prenom, nom, photo_url').eq('id', targetId).maybeSingle(),
+        sb.from('experts').select('*').eq('id', targetId).maybeSingle(),
+        sb.from('reviews').select('note, commentaire, client_prenom, client_nom, created_at').eq('expert_id', targetId).order('created_at', {ascending: false}).limit(20),
+        sb.from('missions').select('id', {count: 'exact', head: true}).eq('expert_id', targetId).eq('statut', 'termine')
+      ]);
+      if (profileRes.error) console.error('[profil-expert] profiles error:', profileRes.error);
+      if (expRes.error) console.error('[profil-expert] experts error:', expRes.error);
+      console.log('[profil-expert] profile:', profileRes.data, '| exp:', expRes.data);
+      const profile = profileRes.data;
+      const exp = expRes.data;
+      const reviewsList = reviewsRes.data;
+      const missionsTotal = missionsRes.count;
       const prenom = profile?.prenom || '';
       const nom = profile?.nom || '';
       const fullName = `${prenom} ${nom}`.trim();
@@ -508,8 +508,8 @@ function App() {
       const mCount = missionsTotal || 0;
       setExpert(prev => ({
         ...prev,
-        name: fullName || prev.name,
-        initials,
+        name: fullName || (exp ? 'Expert IA' : prev.name),
+        initials: (prenom || nom) ? initials : (exp ? 'EX' : '??'),
         title: exp?.specialite ? `Expert ${exp.specialite}` : prev.title,
         about: exp?.bio || '',
         available: exp?.disponible ?? prev.available,
