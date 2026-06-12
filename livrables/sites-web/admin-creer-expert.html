@@ -339,43 +339,51 @@ function generateSQL() {
   const now = new Date().toLocaleDateString('fr-CA');
 
   const sql = isReady() ? `-- ══════════════════════════════════════════════════
--- Créer l'expert : ${prenom} ${nom}
+-- Expert : ${prenom} ${nom}
 -- Généré le ${now} via admin-creer-expert.html
 -- ══════════════════════════════════════════════════
 
 DO $$
 DECLARE
-  eid   UUID := gen_random_uuid();
-  eml   TEXT := '${email}';
+  eid     UUID;
+  eml     TEXT    := '${email}';
+  is_new  BOOLEAN := false;
 BEGIN
 
-  -- 1. Compte Auth
-  INSERT INTO auth.users (
-    instance_id, id, aud, role, email,
-    encrypted_password, email_confirmed_at,
-    raw_app_meta_data, raw_user_meta_data,
-    is_super_admin, created_at, updated_at
-  ) VALUES (
-    '00000000-0000-0000-0000-000000000000',
-    eid, 'authenticated', 'authenticated', eml,
-    crypt('${password}', gen_salt('bf')),
-    now(),
-    '{"provider":"email","providers":["email"]}'::jsonb,
-    '{"type_utilisateur":"expert"}'::jsonb,
-    false, now(), now()
-  );
+  -- Vérifier si le compte existe déjà
+  SELECT id INTO eid FROM auth.users WHERE email = eml;
 
-  -- 2. Identité (nécessaire pour connexion email)
-  INSERT INTO auth.identities (
-    id, user_id, identity_data, provider,
-    last_sign_in_at, created_at, updated_at, provider_id
-  ) VALUES (
-    gen_random_uuid(), eid,
-    json_build_object('sub', eid::text, 'email', eml),
-    'email', now(), now(), now(), eid::text
-  );
+  IF eid IS NULL THEN
+    -- Nouveau compte Auth
+    eid    := gen_random_uuid();
+    is_new := true;
 
-  -- 3. Profil
+    INSERT INTO auth.users (
+      instance_id, id, aud, role, email,
+      encrypted_password, email_confirmed_at,
+      raw_app_meta_data, raw_user_meta_data,
+      is_super_admin, created_at, updated_at
+    ) VALUES (
+      '00000000-0000-0000-0000-000000000000',
+      eid, 'authenticated', 'authenticated', eml,
+      crypt('${password}', gen_salt('bf')),
+      now(),
+      '{"provider":"email","providers":["email"]}'::jsonb,
+      '{"type_utilisateur":"expert"}'::jsonb,
+      false, now(), now()
+    );
+
+    INSERT INTO auth.identities (
+      id, user_id, identity_data, provider,
+      last_sign_in_at, created_at, updated_at, provider_id
+    ) VALUES (
+      gen_random_uuid(), eid,
+      json_build_object('sub', eid::text, 'email', eml),
+      'email', now(), now(), now(), eid::text
+    );
+  END IF;
+
+  -- Profil
   INSERT INTO profiles (
     id, prenom, nom, email, type_utilisateur, role,
     bio, linkedin, photo_url, referral_code
@@ -388,11 +396,13 @@ BEGIN
           substring(replace(eid::text, '-', ''), 5, 4))
   )
   ON CONFLICT (id) DO UPDATE SET
-    prenom = EXCLUDED.prenom,
-    nom    = EXCLUDED.nom,
-    bio    = EXCLUDED.bio;
+    prenom    = EXCLUDED.prenom,
+    nom       = EXCLUDED.nom,
+    bio       = EXCLUDED.bio,
+    linkedin  = EXCLUDED.linkedin,
+    photo_url = EXCLUDED.photo_url;
 
-  -- 4. Expert (statut approved dès la création)
+  -- Expert (statut approved dès la création)
   INSERT INTO experts (
     id, specialite, niveau, bio, linkedin,
     competences, categories,
@@ -421,7 +431,8 @@ BEGIN
     statut      = 'approved',
     photo_url   = EXCLUDED.photo_url;
 
-  RAISE NOTICE 'Expert créé : ${prenom} ${nom} (ID : %)', eid;
+  RAISE NOTICE 'Expert % : ${prenom} ${nom} (ID : %)',
+    CASE WHEN is_new THEN 'créé' ELSE 'mis à jour' END, eid;
 
 END $$;`
   : `-- Remplissez tous les champs obligatoires (*) pour générer le SQL.`;
