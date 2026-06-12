@@ -436,8 +436,11 @@ function App() {
       const params = new URLSearchParams(window.location.search);
       const expertId = params.get('id');
       const targetId = expertId || (await sb.auth.getSession()).data?.session?.user?.id;
-      console.log('[profil-expert] expertId:', expertId, '| targetId:', targetId);
-      if (!targetId) { console.warn('[profil-expert] No targetId — abort'); return; }
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(targetId || '');
+      if (!targetId || !isUUID) {
+        setExpert(prev => ({...prev, name: 'Profil introuvable', initials: '—', title: 'ID invalide — utilisez le lien depuis la liste des experts'}));
+        return;
+      }
       const [profileRes, expRes, reviewsRes, missionsRes] = await Promise.all([
         sb.from('profiles').select('id, prenom, nom, photo_url').eq('id', targetId).maybeSingle(),
         sb.from('experts').select('*').eq('id', targetId).maybeSingle(),
