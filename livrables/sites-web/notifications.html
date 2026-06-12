@@ -101,6 +101,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 #cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
 @keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
 .fade-up{animation:fade-up 400ms var(--ease) both;}
+@media(max-width:480px){.nav-inner{padding:0 12px;}.nav-right .btn-primary{display:none;}.nav-right .btn-ghost{font-size:12px;padding:7px 12px;}}
   </style>
 </head>
 <body>
