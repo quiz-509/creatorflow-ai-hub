@@ -8,10 +8,11 @@
   <meta name="robots" content="noindex, nofollow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
   <style>
-:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--f-display:'Plus Jakarta Sans',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;overflow-x:hidden;}
 body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
@@ -35,12 +36,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes fade-up{from{opacity:0;transform:translateY(24px);filter:blur(4px);}to{opacity:1;transform:none;filter:blur(0);}}
 .login-card{width:100%;max-width:420px;position:relative;animation:fade-up 600ms var(--ease) 80ms both;}
 .login-logo{text-align:center;margin-bottom:32px;}
-.login-logo-text{font-size:20px;font-weight:800;letter-spacing:-0.02em;}
+.login-logo-text{font-family:var(--f-display);font-size:20px;font-weight:800;letter-spacing:-0.025em;}
 .login-logo-text em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
 .login-logo-sub{font-size:13px;color:var(--text-3);margin-top:4px;}
 .form-box{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:36px;position:relative;overflow:hidden;}
 .form-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
-.form-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.form-title{font-family:var(--f-display);font-size:22px;font-weight:800;letter-spacing:-0.025em;margin-bottom:4px;}
 .form-sub{font-size:13px;color:var(--text-2);margin-bottom:28px;}
 .form-group{margin-bottom:18px;}
 .form-label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px;}

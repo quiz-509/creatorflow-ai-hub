@@ -23,8 +23,9 @@
   <meta name="robots" content="index, follow"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
   <style>
 :root {
   --bg:#04040A; --bg-2:#07070F; --surf:#0C0C18; --surf-2:#101020; --surf-3:#14142A;
@@ -34,6 +35,7 @@
   --c:#06B6D4; --cs:#67E8F9; --green:#10B981; --amber:#F59E0B; --red:#EF4444;
   --r:14px; --r-lg:20px; --r-xl:28px;
   --f:'Inter',system-ui,sans-serif;
+  --f-display:'Plus Jakarta Sans',system-ui,sans-serif;
   --ease:cubic-bezier(0.16,1,0.3,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -69,16 +71,17 @@ img{display:block;max-width:100%;}
 .page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 900px 500px at 50% 0%,rgba(124,58,237,0.14),transparent 70%);pointer-events:none;}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--vs);}
 .eyebrow::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);}
-.page-title{font-size:clamp(36px,5vw,58px);font-weight:800;letter-spacing:-0.03em;margin:16px 0 16px;line-height:1.1;}
+.page-title{font-family:var(--f-display);font-size:clamp(38px,5vw,62px);font-weight:800;letter-spacing:-0.04em;margin:16px 0 16px;line-height:1.08;}
 .page-title em{background:linear-gradient(135deg,#C084FC,var(--v),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;}
 .page-sub{font-size:17px;color:var(--text-2);max-width:540px;margin:0 auto;}
 
 /* PRICING GRID */
 .pricing-section{padding:0 0 80px;}
 .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:80px;}
-.price-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:40px;position:relative;overflow:hidden;transition:border-color 300ms ease,transform 300ms ease;}
-.price-card:hover{border-color:var(--border-2);transform:translateY(-2px);}
-.price-card.featured{border-color:rgba(124,58,237,0.4);background:linear-gradient(145deg,rgba(124,58,237,0.07),var(--surf));}
+.price-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:40px;position:relative;overflow:hidden;transition:transform 240ms var(--ease),box-shadow 240ms var(--ease),border-color 240ms var(--ease);}
+.price-card:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+.price-card.featured{border-color:rgba(124,58,237,0.4);background:linear-gradient(145deg,rgba(124,58,237,0.08),var(--surf));box-shadow:0 0 0 1px rgba(124,58,237,0.2),0 16px 48px rgba(124,58,237,0.15);}
+.price-card.featured:hover{box-shadow:0 0 0 1px rgba(124,58,237,0.35),0 24px 64px rgba(124,58,237,0.25);}
 .price-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
 .price-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--vs);background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.25);border-radius:999px;padding:3px 10px;margin-bottom:20px;}
 .price-badge.green{color:var(--green);background:rgba(16,185,129,0.10);border-color:rgba(16,185,129,0.25);}
@@ -158,12 +161,14 @@ img{display:block;max-width:100%;}
 .footer-links{display:flex;gap:20px;flex-wrap:wrap;}
 
 /* RESPONSIVE */
+@media(max-width:980px){
+  .nav-links{display:none;}
+}
 @media(max-width:768px){
   .pricing-grid{grid-template-columns:1fr;}
   .academy-header{flex-direction:column;}
   .academy-price-range{text-align:left;}
   .cta-section{padding:36px 24px;}
-  .nav-links{display:none;}
 }
 @media(max-width:640px){
   .wrap{padding:0 18px;}
