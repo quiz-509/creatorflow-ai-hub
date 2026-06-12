@@ -480,7 +480,7 @@ function ExpertCard({
     className: "exp-foot"
   }, /*#__PURE__*/React.createElement("div", {
     className: "exp-rate"
-  }, expert.rate, "$", /*#__PURE__*/React.createElement("small", null, "/heure")), /*#__PURE__*/React.createElement("div", {
+  }, expert.rate, "\xA0$ ", /*#__PURE__*/React.createElement("small", null, "/h")), /*#__PURE__*/React.createElement("div", {
     className: "exp-stars"
   }, /*#__PURE__*/React.createElement("span", {
     className: "s"
@@ -594,7 +594,12 @@ function App() {
     className: "page-title"
   }, "Trouvez votre expert ", /*#__PURE__*/React.createElement("em", null, "IA id\xE9al.")), /*#__PURE__*/React.createElement("p", {
     className: "page-sub"
-  }, "Chaque profil est v\xE9rifi\xE9 par notre \xE9quipe. Comp\xE9tences certifi\xE9es, r\xE9f\xE9rences valid\xE9es."))), /*#__PURE__*/React.createElement("div", {
+  }, "Chaque profil est v\xE9rifi\xE9 par notre \xE9quipe. Comp\xE9tences certifi\xE9es, r\xE9f\xE9rences valid\xE9es."))), /*#__PURE__*/React.createElement("div", {className:"trust-strip"},
+  /*#__PURE__*/React.createElement("div", {className:"trust-item"}, /*#__PURE__*/React.createElement("svg", {className:"trust-item-icon",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})), "Profils v\xE9rifi\xE9s"),
+  /*#__PURE__*/React.createElement("div", {className:"trust-item"}, /*#__PURE__*/React.createElement("svg", {className:"trust-item-icon",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"3",y:"11",width:"18",height:"11",rx:"2"}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0 1 10 0v4"})), "Paiement s\xE9curis\xE9"),
+  /*#__PURE__*/React.createElement("div", {className:"trust-item"}, /*#__PURE__*/React.createElement("svg", {className:"trust-item-icon",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:"12",cy:"12",r:"10"}), /*#__PURE__*/React.createElement("polyline", {points:"12 6 12 12 16 14"})), "R\xE9ponse sous 24\xA0h"),
+  /*#__PURE__*/React.createElement("div", {className:"trust-item"}, /*#__PURE__*/React.createElement("svg", {className:"trust-item-icon",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("polygon", {points:"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"})), "98 % de satisfaction")
+), /*#__PURE__*/React.createElement("div", {
     className: "wrap filter-wrap"
   }, /*#__PURE__*/React.createElement("div", {
     className: "filter-bar"
@@ -694,39 +699,76 @@ function App() {
       /*#__PURE__*/React.createElement("div", {className:"sk", style:{height:26,width:80,borderRadius:99}}),
       /*#__PURE__*/React.createElement("div", {className:"sk", style:{height:26,width:80,borderRadius:99}})
     )
-  ))) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "empty"
-  }, experts.length === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "Aucun expert disponible pour l'instant"), /*#__PURE__*/React.createElement("p", null, "La plateforme accueille ses premiers experts. ", /*#__PURE__*/React.createElement("a", {
-    href: "landing-expert.html",
-    style: {
-      color: 'var(--vs)'
-    }
-  }, "Rejoindre en tant qu'expert \u2192"))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "Aucun expert trouv\xE9"), /*#__PURE__*/React.createElement("p", null, "Essaie de modifier tes filtres."))) : /*#__PURE__*/React.createElement("div", {
+  ))) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty"},
+  /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, experts.length === 0 ? "\ud83d\ude80" : "\ud83d\udd0d"),
+  /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, experts.length === 0 ? "La plateforme est en cours de lancement" : "Aucun expert trouv\xE9"),
+  /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, experts.length === 0 ? "Sois parmi les premiers experts IA certifi\xE9s sur CreatorFlow Market. C\u2019est gratuit et rapide." : "Essaie de modifier ou r\xE9initialiser tes filtres pour voir plus de profils."),
+  experts.length === 0
+    ? /*#__PURE__*/React.createElement("a", {href:"landing-expert.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "Rejoindre en tant qu\u2019expert \u2192")
+    : /*#__PURE__*/React.createElement("button", {className:"btn btn-ghost btn-sm",style:{marginTop:8},onClick:()=>{setCat('Toutes');setBudget('tous');setDispo('tous');setSort('note');}}, "R\xE9initialiser les filtres")
+) : /*#__PURE__*/React.createElement("div", {
     className: "experts-grid"
   }, filtered.map((e, i) => /*#__PURE__*/React.createElement(ExpertCard, {
     key: e.id,
     expert: e,
     delay: i * 60
-  })))), /*#__PURE__*/React.createElement("footer", null, /*#__PURE__*/React.createElement("div", {
-    className: "wrap footer-mini"
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 13,
-      color: 'var(--text-3)'
-    }
-  }, "\xA9 2026 CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
-    className: "footer-links"
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "/"
-  }, "Accueil"), /*#__PURE__*/React.createElement("a", {
-    href: "brief.html"
-  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
-    href: "inscription.html"
-  }, "Devenir expert"), /*#__PURE__*/React.createElement("a", {
-    href: "cgu.html"
-  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
-    href: "politique-confidentialite.html"
-  }, "Confidentialit\xE9")))));
+  })))), /*#__PURE__*/React.createElement("footer", {className:"footer-premium"},
+  /*#__PURE__*/React.createElement("div", {className:"fp-wrap"},
+    /*#__PURE__*/React.createElement("div", {className:"fp-grid"},
+      /*#__PURE__*/React.createElement("div", {className:"fp-brand"},
+        /*#__PURE__*/React.createElement("a", {href:"index.html",className:"brand",style:{textDecoration:'none',color:'inherit'}},
+          /*#__PURE__*/React.createElement("div", {className:"brand-logo",style:{backgroundImage:"url('/logo.jpg')"}}),
+          /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", {style:{fontStyle:'normal',color:'var(--vs)'}}, "Market"))
+        ),
+        /*#__PURE__*/React.createElement("p", {className:"fp-brand-tag"}, "La marketplace qui connecte les entreprises aux meilleurs experts IA certifi\xE9s."),
+        /*#__PURE__*/React.createElement("div", {className:"fp-trust-badges"},
+          /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"3",y:"11",width:"18",height:"11",rx:"2",ry:"2"}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0 1 10 0v4"})), "Paiements s\xE9curis\xE9s par Stripe"),
+          /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})), "Experts certifi\xE9s et v\xE9rifi\xE9s"),
+          /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:"12",cy:"12",r:"10"}), /*#__PURE__*/React.createElement("polyline", {points:"12 6 12 12 16 14"})), "R\xE9ponse garantie sous 24\xA0h")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"fp-social"},
+          /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://youtube.com/@creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"YouTube"}, /*#__PURE__*/React.createElement("svg", {width:15,height:15,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"}))),
+          /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://tiktok.com/@creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"TikTok"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M19.6 3a3 3 0 0 1-3-3h-3.4v15.4a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 2.3-1.74V9.8a5.4 5.4 0 1 0 4.3 5.2V8.9a9.8 9.8 0 0 0 5.8 1.9V7.4a6.5 6.5 0 0 1-2.8-.7V3z"}))),
+          /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://instagram.com/creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"Instagram"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"2",y:"2",width:"20",height:"20",rx:"5",ry:"5"}), /*#__PURE__*/React.createElement("path", {d:"M16 11.4a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"}), /*#__PURE__*/React.createElement("line", {x1:"17.5",y1:"6.5",x2:"17.51",y2:"6.5"}))),
+          /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://facebook.com/creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"Facebook"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M22 12a10 10 0 1 0-11.6 9.9v-7h-2.5v-2.9h2.5v-2.2c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6v1.9h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"})))
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+        /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "Plateforme"),
+        /*#__PURE__*/React.createElement("ul", null,
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"experts.html"}, "Experts IA")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"academie.html"}, "Acad\xE9mie")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"pricing.html"}, "Tarifs")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"blog.html"}, "Blog IA"))
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+        /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "Experts"),
+        /*#__PURE__*/React.createElement("ul", null,
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"landing-expert.html"}, "Devenir expert")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"inscription.html"}, "Cr\xE9er un compte")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"brief.html"}, "D\xE9poser un brief"))
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+        /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "L\xE9gal"),
+        /*#__PURE__*/React.createElement("ul", null,
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"cgu.html"}, "CGU")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"politique-confidentialite.html"}, "Confidentialit\xE9")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"mailto:contact@creatorflowmarket.com"}, "Contact")),
+          /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"mailto:support@creatorflowmarket.com"}, "Support"))
+        )
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", {className:"fp-bottom"},
+      /*#__PURE__*/React.createElement("span", {className:"fp-copy"}, "\xA9 2026 CreatorFlow Market \xB7 Montr\xE9al, Canada"),
+      /*#__PURE__*/React.createElement("div", {className:"fp-bottom-links"},
+        /*#__PURE__*/React.createElement("a", {href:"cgu.html"}, "Mentions l\xE9gales"),
+        /*#__PURE__*/React.createElement("a", {href:"politique-confidentialite.html"}, "Vie priv\xE9e")
+      )
+    )
+  )
+)));
 }
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>

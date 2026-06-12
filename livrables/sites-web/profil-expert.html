@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
@@ -1118,7 +1118,66 @@ function App() {
     className: "sim-rate"
   }, s.rate)))))))));
 }
-ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+function PremiumFooter() {
+  return /*#__PURE__*/React.createElement("footer", {className:"footer-premium"},
+    /*#__PURE__*/React.createElement("div", {className:"fp-wrap"},
+      /*#__PURE__*/React.createElement("div", {className:"fp-grid"},
+        /*#__PURE__*/React.createElement("div", {className:"fp-brand"},
+          /*#__PURE__*/React.createElement("a", {href:"index.html",className:"brand",style:{textDecoration:'none',color:'inherit'}},
+            /*#__PURE__*/React.createElement("div", {className:"brand-logo",style:{backgroundImage:"url('/logo.jpg')"}}),
+            /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", {style:{fontStyle:'normal',color:'var(--vs)'}}, "Market"))
+          ),
+          /*#__PURE__*/React.createElement("p", {className:"fp-brand-tag"}, "La marketplace qui connecte les entreprises aux meilleurs experts IA certifi\xE9s."),
+          /*#__PURE__*/React.createElement("div", {className:"fp-trust-badges"},
+            /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"3",y:"11",width:"18",height:"11",rx:"2",ry:"2"}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0 1 10 0v4"})), "Paiements s\xE9curis\xE9s par Stripe"),
+            /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})), "Experts certifi\xE9s et v\xE9rifi\xE9s"),
+            /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:"12",cy:"12",r:"10"}), /*#__PURE__*/React.createElement("polyline", {points:"12 6 12 12 16 14"})), "R\xE9ponse garantie sous 24 h")
+          ),
+          /*#__PURE__*/React.createElement("div", {className:"fp-social"},
+            /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://youtube.com/@creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"YouTube"}, /*#__PURE__*/React.createElement("svg", {width:15,height:15,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"}))),
+            /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://tiktok.com/@creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"TikTok"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M19.6 3a3 3 0 0 1-3-3h-3.4v15.4a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 2.3-1.74V9.8a5.4 5.4 0 1 0 4.3 5.2V8.9a9.8 9.8 0 0 0 5.8 1.9V7.4a6.5 6.5 0 0 1-2.8-.7V3z"}))),
+            /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://instagram.com/creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"Instagram"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"2",y:"2",width:"20",height:"20",rx:"5",ry:"5"}), /*#__PURE__*/React.createElement("path", {d:"M16 11.4a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"}), /*#__PURE__*/React.createElement("line", {x1:"17.5",y1:"6.5",x2:"17.51",y2:"6.5"}))),
+            /*#__PURE__*/React.createElement("a", {className:"fp-social-btn",href:"https://facebook.com/creatorflowmarket",target:"_blank",rel:"noopener noreferrer","aria-label":"Facebook"}, /*#__PURE__*/React.createElement("svg", {width:14,height:14,viewBox:"0 0 24 24",fill:"currentColor"}, /*#__PURE__*/React.createElement("path", {d:"M22 12a10 10 0 1 0-11.6 9.9v-7h-2.5v-2.9h2.5v-2.2c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6v1.9h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"})))
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+          /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "Plateforme"),
+          /*#__PURE__*/React.createElement("ul", null,
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"experts.html"}, "Experts IA")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"academie.html"}, "Acad\xE9mie")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"pricing.html"}, "Tarifs")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"blog.html"}, "Blog IA"))
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+          /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "Experts"),
+          /*#__PURE__*/React.createElement("ul", null,
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"landing-expert.html"}, "Devenir expert")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"inscription.html"}, "Cr\xE9er un compte")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"brief.html"}, "D\xE9poser un brief"))
+          )
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"fp-col"},
+          /*#__PURE__*/React.createElement("div", {className:"fp-col-title"}, "L\xE9gal"),
+          /*#__PURE__*/React.createElement("ul", null,
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"cgu.html"}, "CGU")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"politique-confidentialite.html"}, "Confidentialit\xE9")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"mailto:contact@creatorflowmarket.com"}, "Contact")),
+            /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {href:"mailto:support@creatorflowmarket.com"}, "Support"))
+          )
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"fp-bottom"},
+        /*#__PURE__*/React.createElement("span", {className:"fp-copy"}, "\xA9 2026 CreatorFlow Market \xB7 Montr\xE9al, Canada"),
+        /*#__PURE__*/React.createElement("div", {className:"fp-bottom-links"},
+          /*#__PURE__*/React.createElement("a", {href:"cgu.html"}, "Mentions l\xE9gales"),
+          /*#__PURE__*/React.createElement("a", {href:"politique-confidentialite.html"}, "Vie priv\xE9e")
+        )
+      )
+    )
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(App, null), /*#__PURE__*/React.createElement(PremiumFooter, null)));
 </script>
 </body>
 </html>
