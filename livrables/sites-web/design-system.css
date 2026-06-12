@@ -450,3 +450,35 @@ select:focus {
     scroll-behavior:auto !important;
   }
 }
+
+/* ══ 26. SKELETON SYSTEM ════════════════════════════════════════════════ */
+@keyframes ds-shimmer {
+  0%   { background-position: -200% 0 }
+  100% { background-position:  200% 0 }
+}
+@keyframes ds-avail-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,.55) }
+  70%  { box-shadow: 0 0 0 6px rgba(16,185,129,0) }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0) }
+}
+.ds-sk {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,.04) 25%,
+    rgba(255,255,255,.09) 50%,
+    rgba(255,255,255,.04) 75%);
+  background-size: 200% 100%;
+  animation: ds-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.ds-sk-avatar { width: 112px; height: 112px; border-radius: 50% !important; }
+.ds-sk-lg     { height: 28px; }
+.ds-sk-md     { height: 16px; }
+.ds-sk-sm     { height: 12px; }
+.ds-sk-pill   { height: 24px; border-radius: 999px !important; }
+.ds-sk-block  { border-radius: 14px; }
+.avail-dot-live {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green, #10B981); flex-shrink: 0;
+  animation: ds-avail-pulse 1.8s ease-out infinite;
+}

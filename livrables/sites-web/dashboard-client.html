@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
@@ -761,29 +761,7 @@ function App() {
   }, "Mes briefs r\xE9cents"), /*#__PURE__*/React.createElement("a", {
     href: "nouveau-brief.html",
     className: "section-link"
-  }, "+ Nouveau brief")), briefs.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: '32px 20px',
-      textAlign: 'center',
-      color: 'var(--text-3)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 32,
-      marginBottom: 8
-    }
-  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      marginBottom: 16
-    }
-  }, "Aucun brief d\xE9pos\xE9 pour le moment"), /*#__PURE__*/React.createElement("a", {
-    href: "nouveau-brief.html",
-    className: "btn btn-primary btn-sm",
-    style: {
-      margin: '0 auto'
-    }
-  }, "D\xE9poser mon premier brief")) : briefs.map(b => /*#__PURE__*/React.createElement("div", {
+  }, "+ Nouveau brief")), briefs.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📋"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucun brief d\xE9pos\xE9"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "D\xE9crivez votre projet pour recevoir des propositions d'experts IA."), /*#__PURE__*/React.createElement("a", {href:"nouveau-brief.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "D\xE9poser mon premier brief")) : briefs.map(b => /*#__PURE__*/React.createElement("div", {
     key: b.id,
     className: "mission-item"
   }, /*#__PURE__*/React.createElement("div", {
@@ -818,29 +796,7 @@ function App() {
       fontSize: 12,
       color: 'var(--text-3)'
     }
-  }, missions.length, " mission", missions.length !== 1 ? 's' : '')), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: '32px 20px',
-      textAlign: 'center',
-      color: 'var(--text-3)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 32,
-      marginBottom: 8
-    }
-  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13,
-      marginBottom: 16
-    }
-  }, "Aucune mission en cours"), /*#__PURE__*/React.createElement("a", {
-    href: "experts.html",
-    className: "btn btn-primary btn-sm",
-    style: {
-      margin: '0 auto'
-    }
-  }, "Trouver un expert")) : missions.map(m => {
+  }, missions.length, " mission", missions.length !== 1 ? 's' : '')), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "🚀"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission en cours"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Vos missions apparaissent ici d\xE8s qu'un expert accepte votre brief."), /*#__PURE__*/React.createElement("a", {href:"experts.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "Trouver un expert")) : missions.map(m => {
     const statusMap = {
       nouveau: 'badge-green',
       en_cours: 'badge-green',

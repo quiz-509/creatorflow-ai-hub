@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
@@ -948,22 +948,7 @@ function App() {
       e.preventDefault();
       setActive('missions');
     }
-  }, "Tout voir \u2192")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: '32px 20px',
-      textAlign: 'center',
-      color: 'var(--text-3)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 32,
-      marginBottom: 8
-    }
-  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13
-    }
-  }, "Aucune mission en cours")) : missions.map(m => {
+  }, "Tout voir \u2192")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "🚀"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission en cours"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Vos missions actives apparaissent ici.")) : missions.map(m => {
     const statusMap = {
       nouveau: 'badge-green',
       en_cours: 'badge-green',
@@ -1036,22 +1021,7 @@ function App() {
       padding: '3px 9px',
       borderRadius: 99
     }
-  }, opps.length, " briefs")), opps.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      padding: '32px 20px',
-      textAlign: 'center',
-      color: 'var(--text-3)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 32,
-      marginBottom: 8
-    }
-  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 13
-    }
-  }, "Aucune opportunit\xE9 disponible pour le moment")) : opps.map(o => /*#__PURE__*/React.createElement("div", {
+  }, opps.length, " briefs")), opps.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📭"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune opportunit\xE9 disponible"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Les briefs clients correspondant \xE0 vos comp\xE9tences apparaissent ici.")) : opps.map(o => /*#__PURE__*/React.createElement("div", {
     key: o.id,
     className: "opp-item"
   }, /*#__PURE__*/React.createElement("div", {
