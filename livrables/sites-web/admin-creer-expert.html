@@ -385,22 +385,14 @@ BEGIN
 
   -- Profil
   INSERT INTO profiles (
-    id, prenom, nom, email, type_utilisateur,
-    bio, linkedin, photo_url, referral_code
+    id, prenom, nom, email, type_utilisateur
   ) VALUES (
-    eid, '${prenom}', '${nom}', eml, 'expert',
-    '${bio}',
-    ${linkedin ? `'${linkedin}'` : 'NULL'},
-    ${photo ? `'${photo}'` : 'NULL'},
-    upper(substring(replace(eid::text, '-', ''), 1, 4) || '-' ||
-          substring(replace(eid::text, '-', ''), 5, 4))
+    eid, '${prenom}', '${nom}', eml, 'expert'
   )
   ON CONFLICT (id) DO UPDATE SET
-    prenom    = EXCLUDED.prenom,
-    nom       = EXCLUDED.nom,
-    bio       = EXCLUDED.bio,
-    linkedin  = EXCLUDED.linkedin,
-    photo_url = EXCLUDED.photo_url;
+    prenom           = EXCLUDED.prenom,
+    nom              = EXCLUDED.nom,
+    type_utilisateur = 'expert';
 
   -- Expert (statut approved dès la création)
   INSERT INTO experts (
