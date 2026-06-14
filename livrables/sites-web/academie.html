@@ -267,12 +267,6 @@ img{display:block;max-width:100%;}
 .enroll-btn{padding:8px 18px;border-radius:999px;font-size:12px;font-weight:700;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;transition:all 200ms var(--ease);display:inline-flex;align-items:center;gap:5px;}
 .enroll-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px -4px var(--vg);}
 
-/* EMPTY */
-.empty-state{text-align:center;padding:80px 24px;color:var(--text-3);}
-.empty-icon{font-size:52px;margin-bottom:16px;}
-.empty-title{font-size:18px;font-weight:700;color:var(--text-2);margin-bottom:8px;}
-.empty-sub{font-size:14px;line-height:1.6;max-width:400px;margin:0 auto;}
-
 /* FINAL CTA */
 .final-cta{position:relative;z-index:1;padding:0 24px;margin-bottom:96px;}
 .final-cta-inner{max-width:1280px;margin:0 auto;background:linear-gradient(135deg,rgba(124,58,237,0.12) 0%,rgba(6,182,212,0.06) 100%);border:1px solid rgba(124,58,237,0.22);border-radius:var(--r-xl);padding:80px 64px;text-align:center;position:relative;overflow:hidden;}
@@ -1253,21 +1247,25 @@ function App() {
     className: "sec-title"
   }, activeCat === 'Tous' ? 'Tous les cours' : activeCat), /*#__PURE__*/React.createElement("div", {
     className: "sec-count"
-  }, filtered.length, " cours disponibles")), loading ? /*#__PURE__*/React.createElement("div", {
-    className: "empty-state"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "empty-icon"
-  }, "\u23F3"), /*#__PURE__*/React.createElement("div", {
-    className: "empty-title"
-  }, "Chargement\u2026")) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "empty-state"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "empty-icon"
-  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
-    className: "empty-title"
-  }, courses.length === 0 ? 'Bientôt disponible' : 'Aucun cours dans cette catégorie'), /*#__PURE__*/React.createElement("div", {
-    className: "empty-sub"
-  }, courses.length === 0 ? 'Les prochains cours arrivent très bientôt.' : 'Essayez une autre catégorie.')) : /*#__PURE__*/React.createElement("div", {
+  }, filtered.length, " cours disponibles")), loading ? /*#__PURE__*/React.createElement("div", {className:"courses-grid"}, [0,1,2,3,4,5].map(i => /*#__PURE__*/React.createElement("div", {key:i, className:"course-card", style:{opacity:1-i*0.09}},
+    /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-block", style:{width:"100%",aspectRatio:"16/9"}}),
+    /*#__PURE__*/React.createElement("div", {className:"course-body"},
+      /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-sm", style:{width:60,marginBottom:8}}),
+      /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-md", style:{width:"85%",marginBottom:6}}),
+      /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-sm", style:{width:"60%",marginBottom:16}}),
+      /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:8,marginBottom:16}},
+        /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-pill", style:{width:48}}),
+        /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-pill", style:{width:64}})
+      ),
+      /*#__PURE__*/React.createElement("div", {className:"course-footer"},
+        /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-lg", style:{width:60}}),
+        /*#__PURE__*/React.createElement("div", {className:"ds-sk ds-sk-pill", style:{width:80}})
+      )
+    )
+  ))) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty"},
+    /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, courses.length === 0 ? "🚀" : "🔍"),
+    /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, courses.length === 0 ? 'Bient\xF4t disponible' : 'Aucun cours dans cette cat\xE9gorie'),
+    /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, courses.length === 0 ? 'Les prochains cours arrivent tr\xE8s bient\xF4t.' : 'Essayez une autre cat\xE9gorie.')) : /*#__PURE__*/React.createElement("div", {
     className: "courses-grid"
   }, filtered.map(c => /*#__PURE__*/React.createElement(CourseCard, {
     key: c.id,
