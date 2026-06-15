@@ -799,6 +799,7 @@ function App() {
   }, missions.length, " mission", missions.length !== 1 ? 's' : '')), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "🚀"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission en cours"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Vos missions apparaissent ici d\xE8s qu'un expert accepte votre brief."), /*#__PURE__*/React.createElement("a", {href:"experts.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "Trouver un expert")) : missions.map(m => {
     const statusMap = {
       nouveau: 'badge-green',
+      en_attente_paiement: 'badge-amber',
       en_cours: 'badge-green',
       en_revision: 'badge-amber',
       termine: 'badge-green',
@@ -806,6 +807,7 @@ function App() {
     };
     const labelMap = {
       nouveau: 'Nouveau',
+      en_attente_paiement: 'Paiement en attente',
       en_cours: 'En cours',
       en_revision: 'En révision',
       termine: 'Terminé',
@@ -1059,7 +1061,7 @@ function App() {
           titre,
           categorie: titre,
           prix: p.montant || 0,
-          statut: 'en_cours'
+          statut: 'en_attente_paiement'
         }).select('id').single();
         if (missionErr) {
           alert('Erreur mission: ' + missionErr.message + '\nCode: ' + missionErr.code + '\nDétail: ' + missionErr.details);
@@ -1118,12 +1120,13 @@ function App() {
             id: newMission.id,
             titre,
             categorie: titre,
-            statut: 'en_cours',
+            statut: 'en_attente_paiement',
             prix: p.montant || 0,
             expert_id: p.expert_id,
             created_at: new Date().toISOString()
           }, ...prev]);
           setMissionCount(prev => prev + 1);
+          window.location.href = 'paiement.html?mission_id=' + newMission.id;
         }
       }
     }, "Accepter")));

@@ -323,6 +323,10 @@ function Sidebar({
     }), /*#__PURE__*/React.createElement("path", {
       d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
     }))
+  }, {
+    id: 'ai-workforce',
+    label: 'AI Workforce',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("circle",{cx:"12",cy:"7",r:"3"}), /*#__PURE__*/React.createElement("path",{d:"M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"}), /*#__PURE__*/React.createElement("circle",{cx:"4",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M2 20c0-2.2 1-4 2-4"}), /*#__PURE__*/React.createElement("circle",{cx:"20",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M22 20c0-2.2-1-4-2-4"}))
   }];
   return /*#__PURE__*/React.createElement("aside", {
     className: "sidebar",
@@ -1309,6 +1313,230 @@ function BlogTab() {
   }, s.source || 'blog')))))))));
 }
 
+/* ── AI WORKFORCE TAB ── */
+const AI_AGENT_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-agent';
+function AIWorkforceTab() {
+  const [agents, setAgents] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState(null);
+  const [modal, setModal] = useState(null);   // { agent } | null
+  const [prompt, setPrompt] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+  useEffect(() => {
+    (async () => {
+      const [{data: ag}, {data: tk}] = await Promise.all([
+        sb.from('ai_agents').select('*').order('created_at'),
+        sb.from('ai_tasks').select('*, ai_agents(name,icon)').order('created_at', {ascending: false}).limit(20)
+      ]);
+      setAgents(ag || []);
+      setTasks(tk || []);
+      setLoading(false);
+    })();
+  }, []);
+  const toggleAgent = async (agent) => {
+    const next = agent.status === 'active' ? 'inactive' : 'active';
+    setToggling(agent.id);
+    const {error} = await sb.from('ai_agents').update({status: next}).eq('id', agent.id);
+    if (!error) setAgents(prev => prev.map(a => a.id === agent.id ? {...a, status: next} : a));
+    setToggling(null);
+  };
+  const openModal = (agent) => { setModal(agent); setPrompt(''); setResult(''); };
+  const closeModal = () => { setModal(null); setPrompt(''); setResult(''); };
+  const runAgent = async () => {
+    if (!prompt.trim() || !modal) return;
+    setRunning(true);
+    setResult('');
+    try {
+      const {data: {session}} = await sb.auth.getSession();
+      const res = await fetch(AI_AGENT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
+        },
+        body: JSON.stringify({agent_slug: modal.slug, task_type: modal.name, input: prompt})
+      });
+      const json = await res.json();
+      if (json.error) { setResult('Erreur : ' + json.error); }
+      else {
+        setResult(json.output || '');
+        setAgents(prev => prev.map(a => a.id === modal.id ? {...a, tasks_completed: (a.tasks_completed||0)+1, last_active: new Date().toISOString()} : a));
+        const {data: tk} = await sb.from('ai_tasks').select('*, ai_agents(name,icon)').order('created_at', {ascending: false}).limit(20);
+        setTasks(tk || []);
+      }
+    } catch(e) { setResult('Erreur r\xE9seau : ' + e.message); }
+    setRunning(false);
+  };
+  if (loading) return /*#__PURE__*/React.createElement("div", {className: "spin"});
+  const activeCount = agents.filter(a => a.status === 'active').length;
+  const totalTasks = agents.reduce((s, a) => s + (a.tasks_completed || 0), 0);
+  const todayTasks = tasks.filter(t => new Date(t.created_at).toDateString() === new Date().toDateString()).length;
+  const statCards = [
+    {label: 'Agents actifs', val: activeCount + ' / ' + agents.length, icon: '🤖', color: '#7C3AED'},
+    {label: 'T\xE2ches compl\xE9t\xE9es', val: totalTasks, icon: '✅', color: '#10B981'},
+    {label: "T\xE2ches aujourd'hui", val: todayTasks, icon: '📊', color: '#06B6D4'}
+  ];
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {className: "page-header"},
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("div", {className: "page-title"}, "AI Workforce"),
+        /*#__PURE__*/React.createElement("div", {className: "page-sub"}, "4 employ\xE9s IA au service de CreatorFlow Market")
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "stats-grid", style: {gridTemplateColumns: "repeat(3,1fr)", marginBottom: 28}},
+      statCards.map(s => /*#__PURE__*/React.createElement("div", {key: s.label, className: "stat-card"},
+        /*#__PURE__*/React.createElement("div", {className: "stat-icon", style: {background: s.color + '18'}},
+          /*#__PURE__*/React.createElement("span", null, s.icon)
+        ),
+        /*#__PURE__*/React.createElement("div", {className: "stat-val"}, s.val),
+        /*#__PURE__*/React.createElement("div", {className: "stat-label"}, s.label)
+      ))
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "section-card", style: {marginBottom: 20}},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Employ\xE9s IA"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, activeCount + " actifs")
+      ),
+      /*#__PURE__*/React.createElement("div", {style: {display: "grid", gridTemplateColumns: "repeat(2,1fr)"}},
+        agents.map((agent, i) => /*#__PURE__*/React.createElement("div", {
+          key: agent.id,
+          style: {
+            padding: "20px 24px",
+            borderBottom: i < 2 ? "1px solid var(--border)" : "none",
+            borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none",
+            display: "flex", flexDirection: "column", gap: 14
+          }
+        },
+          /*#__PURE__*/React.createElement("div", {style: {display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}},
+            /*#__PURE__*/React.createElement("div", {style: {display:"flex",alignItems:"center",gap:12}},
+              /*#__PURE__*/React.createElement("div", {style: {
+                width:44,height:44,borderRadius:12,
+                background: agent.color+'18',
+                border: '1px solid '+agent.color+'30',
+                display:"grid",placeItems:"center",fontSize:22,flexShrink:0
+              }}, agent.icon),
+              /*#__PURE__*/React.createElement("div", null,
+                /*#__PURE__*/React.createElement("div", {style:{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:2}}, agent.name),
+                /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)",lineHeight:1.4}}, agent.description)
+              )
+            ),
+            /*#__PURE__*/React.createElement("span", {className:"badge "+(agent.status==='active'?'badge-green':'badge-gray')},
+              agent.status==='active' ? '● Actif' : '○ Inactif'
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)"}},
+              agent.tasks_completed, " t\xE2ches \xB7 ",
+              agent.last_active ? ("Actif "+fmtDate(agent.last_active)) : "Jamais utilis\xE9"
+            ),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              /*#__PURE__*/React.createElement("button", {
+                className: 'btn-approve',
+                style:{fontSize:11},
+                disabled: agent.status!=='active',
+                onClick: () => openModal(agent)
+              }, 'Tester'),
+              /*#__PURE__*/React.createElement("button", {
+                className: agent.status==='active' ? 'btn-reject' : 'btn-approve',
+                style:{fontSize:11},
+                disabled: toggling===agent.id,
+                onClick: () => toggleAgent(agent)
+              }, toggling===agent.id ? '…' : agent.status==='active' ? 'D\xE9sactiver' : 'Activer')
+            )
+          )
+        ))
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "section-card"},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Historique des t\xE2ches"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, tasks.length)
+      ),
+      tasks.length === 0
+        ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}},
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📋"),
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune t\xE2che enregistr\xE9e"),
+            /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Les t\xE2ches ex\xE9cut\xE9es par les agents appara\xEEtront ici.")
+          )
+        : /*#__PURE__*/React.createElement("table", {className:"data-table"},
+            /*#__PURE__*/React.createElement("thead", null,
+              /*#__PURE__*/React.createElement("tr", null,
+                /*#__PURE__*/React.createElement("th", null, "Agent"),
+                /*#__PURE__*/React.createElement("th", null, "Type"),
+                /*#__PURE__*/React.createElement("th", null, "Statut"),
+                /*#__PURE__*/React.createElement("th", null, "Date")
+              )
+            ),
+            /*#__PURE__*/React.createElement("tbody", null,
+              tasks.map(t => /*#__PURE__*/React.createElement("tr", {key: t.id},
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:8}},
+                    /*#__PURE__*/React.createElement("span", null, t.ai_agents ? t.ai_agents.icon : '🤖'),
+                    /*#__PURE__*/React.createElement("span", {style:{fontWeight:600,color:"var(--text)",fontSize:12}},
+                      t.ai_agents ? t.ai_agents.name : t.agent_id
+                    )
+                  )
+                ),
+                /*#__PURE__*/React.createElement("td", null, t.task_type),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("span", {
+                    className:"badge "+(t.status==='completed'?'badge-green':t.status==='failed'?'badge-red':'badge-amber')
+                  }, t.status)
+                ),
+                /*#__PURE__*/React.createElement("td", null, fmtDate(t.created_at))
+              ))
+            )
+          )
+    ),
+    modal && /*#__PURE__*/React.createElement("div", {className:"modal-overlay", onClick: closeModal},
+      /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:600}, onClick: e => e.stopPropagation()},
+        /*#__PURE__*/React.createElement("div", {className:"modal-head"},
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:10}},
+            /*#__PURE__*/React.createElement("span", {style:{fontSize:22}}, modal.icon),
+            /*#__PURE__*/React.createElement("span", {className:"modal-title"}, modal.name)
+          ),
+          /*#__PURE__*/React.createElement("button", {className:"modal-close", onClick: closeModal}, "\xD7")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"modal-body"},
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:8}},
+              "Votre demande"
+            ),
+            /*#__PURE__*/React.createElement("textarea", {
+              value: prompt,
+              onChange: e => setPrompt(e.target.value),
+              placeholder: "D\xE9crivez la t\xE2che \xE0 r\xE9aliser...",
+              style: {
+                width:"100%", minHeight:100, background:"var(--surf-2)",
+                border:"1px solid var(--border-2)", borderRadius:10,
+                color:"var(--text)", padding:"12px 14px", fontSize:13,
+                fontFamily:"var(--f)", resize:"vertical", boxSizing:"border-box"
+              }
+            })
+          ),
+          /*#__PURE__*/React.createElement("button", {
+            className:"btn-save",
+            style:{width:"100%",marginBottom: result ? 16 : 0},
+            disabled: running || !prompt.trim(),
+            onClick: runAgent
+          }, running ? "L'agent travaille…" : "Ex\xE9cuter"),
+          result && /*#__PURE__*/React.createElement("div", {
+            style:{
+              background:"var(--surf-2)", border:"1px solid var(--border-2)",
+              borderRadius:10, padding:"14px 16px", fontSize:13,
+              color:"var(--text-2)", lineHeight:1.7,
+              whiteSpace:"pre-wrap", maxHeight:320, overflowY:"auto"
+            }
+          }, result)
+        )
+      )
+    )
+  );
+}
+
 /* ── APP ROOT ── */
 function App() {
   const [session, setSession] = useState(undefined);
@@ -1370,7 +1598,8 @@ function App() {
     users: UsersTab,
     missions: MissionsTab,
     payments: PaymentsTab,
-    blog: BlogTab
+    blog: BlogTab,
+    'ai-workforce': AIWorkforceTab
   };
   const ActiveTab = tabs[tab];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {

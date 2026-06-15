@@ -951,6 +951,7 @@ function App() {
   }, "Tout voir \u2192")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "🚀"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission en cours"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Vos missions actives apparaissent ici.")) : missions.map(m => {
     const statusMap = {
       nouveau: 'badge-green',
+      en_attente_paiement: 'badge-amber',
       en_cours: 'badge-green',
       en_revision: 'badge-amber',
       termine: 'badge-green',
@@ -958,6 +959,7 @@ function App() {
     };
     const labelMap = {
       nouveau: 'Nouveau',
+      en_attente_paiement: 'Paiement en attente',
       en_cours: 'En cours',
       en_revision: 'En révision',
       termine: 'Terminé',
