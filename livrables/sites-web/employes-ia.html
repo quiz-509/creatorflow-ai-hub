@@ -169,13 +169,18 @@ function App() {
     if (!objective.trim()) return;
     setRunning(true);
     try {
+      const { data: { session } } = await sb.auth.getSession();
       const res = await fetch(AI_ORCHESTRATOR_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei',
+          'Authorization': `Bearer ${session?.access_token || ''}`
+        },
         body: JSON.stringify({ agent_slug: modalAgent.slug, title: title || objective.slice(0, 80), objective, client_id: user.id })
       });
       const json = await res.json();
-      if (json.error) throw new Error(json.error);
+      if (!res.ok || json.error) throw new Error(json.error || json.message || `Erreur serveur (${res.status})`);
       setDoneMsg("Votre demande a été transmise à l'agent. Notre équipe vérifie le résultat avant de vous le livrer — vous le retrouverez ci-dessous une fois validé.");
       await loadMissions(user.id);
     } catch (e) {
