@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Employés IA — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 24px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-18px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.back-link{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--text);}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);}
+.av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+
+.app{padding-top:var(--nav);max-width:1100px;margin:0 auto;padding-left:24px;padding-right:24px;padding-bottom:80px;}
+.page-header{padding:32px 0 8px;}
+.page-title{font-size:26px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.page-sub{font-size:14px;color:var(--text-2);max-width:640px;}
+
+.agents-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0 40px;}
+.agent-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:12px;}
+.agent-card-top{display:flex;align-items:center;gap:12px;}
+.agent-icon{width:48px;height:48px;border-radius:12px;background:var(--surf-2);display:grid;place-items:center;font-size:22px;flex-shrink:0;}
+.agent-name{font-size:15px;font-weight:700;}
+.agent-desc{font-size:12px;color:var(--text-2);line-height:1.5;flex:1;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:10px;font-size:13px;font-weight:600;transition:all 160ms;}
+.btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;}
+.btn-primary:hover{filter:brightness(1.1);}
+.btn-ghost{background:var(--surf-2);border:1px solid var(--border-2);color:var(--text);}
+.btn-ghost:hover{border-color:var(--border-3);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+.section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.section-title{font-size:14px;font-weight:700;}
+.mission-row{padding:16px 20px;border-bottom:1px solid var(--border);}
+.mission-row:last-child{border-bottom:none;}
+.mission-row-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.mission-row-title{font-size:13px;font-weight:600;}
+.mission-row-meta{font-size:11px;color:var(--text-3);margin-top:3px;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-amber{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-red{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.deliverable-box{margin-top:12px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:14px;font-size:12px;color:var(--text-2);white-space:pre-wrap;word-break:break-word;}
+.deliverable-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.ds-empty{padding:48px 24px;text-align:center;}
+.ds-empty-icon{font-size:28px;margin-bottom:8px;}
+.ds-empty-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+.ds-empty-sub{font-size:12px;color:var(--text-3);}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-lg);width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-head{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:15px;font-weight:700;}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+.field-label{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:6px;display:block;}
+.field-input,.field-textarea{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:9px;padding:10px 12px;font-family:var(--f);font-size:13px;color:var(--text);outline:none;}
+.field-input:focus,.field-textarea:focus{border-color:rgba(124,58,237,0.4);}
+.field-textarea{resize:vertical;min-height:110px;}
+.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+.loading-box{display:flex;align-items:center;gap:10px;padding:16px;background:var(--surf-2);border-radius:10px;font-size:13px;color:var(--text-2);}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--border-2);border-top-color:var(--vs);animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.result-box{padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;font-size:12px;color:var(--text-2);}
+
+@media(max-width:768px){
+  .app{padding-left:16px;padding-right:16px;}
+  .agents-grid{grid-template-columns:1fr;}
+  .nav-inner{padding:0 14px;}
+}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+const { useState, useEffect } = React;
+const { createClient } = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const AI_ORCHESTRATOR_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-orchestrator';
+
+function initials(name) {
+  if (!name) return '??';
+  return name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function fmtDate(d) {
+  return d ? new Date(d).toLocaleDateString('fr-CA', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+}
+
+function statusBadge(status, delivered) {
+  if (delivered) return React.createElement('span', { className: 'badge badge-green' }, 'Livré');
+  if (status === 'completed') return React.createElement('span', { className: 'badge badge-amber' }, 'En révision');
+  if (status === 'waiting_approval') return React.createElement('span', { className: 'badge badge-amber' }, 'En révision');
+  if (status === 'failed') return React.createElement('span', { className: 'badge badge-red' }, 'Échoué');
+  if (status === 'cancelled') return React.createElement('span', { className: 'badge badge-red' }, 'Annulé');
+  return React.createElement('span', { className: 'badge badge-purple' }, 'En cours');
+}
+
+function Deliverable({ mission, outputs }) {
+  if (!mission.delivered_to_client) return null;
+  const relevant = (outputs || []).filter(o => o.mission_id === mission.id);
+  return React.createElement('div', { className: 'deliverable-box' },
+    React.createElement('div', { className: 'deliverable-title' }, 'Livrable'),
+    mission.result_summary || 'Voir détail ci-dessous.',
+    relevant.map(o => React.createElement('div', { key: o.id, style: { marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--border-2)' } },
+      o.output_data?.title ? React.createElement('div', { style: { fontWeight: 700, color: 'var(--text)', marginBottom: 4 } }, o.output_data.title) : null,
+      o.output_data?.body || JSON.stringify(o.output_data)
+    ))
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [agents, setAgents] = useState([]);
+  const [missions, setMissions] = useState([]);
+  const [outputs, setOutputs] = useState([]);
+  const [modalAgent, setModalAgent] = useState(null);
+  const [title, setTitle] = useState('');
+  const [objective, setObjective] = useState('');
+  const [running, setRunning] = useState(false);
+  const [doneMsg, setDoneMsg] = useState('');
+
+  const loadMissions = async (userId) => {
+    const { data: ms } = await sb.from('agent_missions').select('*, ai_agents(name, icon, slug)').eq('created_by', userId).order('created_at', { ascending: false });
+    setMissions(ms || []);
+    const deliveredIds = (ms || []).filter(m => m.delivered_to_client).map(m => m.id);
+    if (deliveredIds.length) {
+      const { data: outs } = await sb.from('agent_outputs').select('*').in('mission_id', deliveredIds);
+      setOutputs(outs || []);
+    }
+  };
+
+  useEffect(() => {
+    sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) { window.location.href = 'connexion.html?redirect=employes-ia.html'; return; }
+      setUser(data.session.user);
+      const { data: ag } = await sb.from('ai_agents').select('*').eq('status', 'active').order('name');
+      setAgents(ag || []);
+      await loadMissions(data.session.user.id);
+    });
+  }, []);
+
+  const openModal = (agent) => { setModalAgent(agent); setTitle(''); setObjective(''); setDoneMsg(''); };
+  const closeModal = () => { if (!running) setModalAgent(null); };
+
+  const submitMission = async () => {
+    if (!objective.trim()) return;
+    setRunning(true);
+    try {
+      const res = await fetch(AI_ORCHESTRATOR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent_slug: modalAgent.slug, title: title || objective.slice(0, 80), objective, client_id: user.id })
+      });
+      const json = await res.json();
+      if (json.error) throw new Error(json.error);
+      setDoneMsg("Votre demande a été transmise à l'agent. Notre équipe vérifie le résultat avant de vous le livrer — vous le retrouverez ci-dessous une fois validé.");
+      await loadMissions(user.id);
+    } catch (e) {
+      setDoneMsg('Erreur : ' + e.message);
+    }
+    setRunning(false);
+  };
+
+  return React.createElement(React.Fragment, null,
+    React.createElement('div', { className: 'nav' },
+      React.createElement('div', { className: 'nav-inner' },
+        React.createElement('a', { href: '/', className: 'brand' },
+          React.createElement('div', { className: 'brand-logo' }),
+          React.createElement('span', null, 'CreatorFlow Market')
+        ),
+        React.createElement('div', { className: 'nav-right' },
+          React.createElement('a', { href: 'dashboard-client.html', className: 'back-link' }, '← Tableau de bord'),
+          user && React.createElement('div', { className: 'user-chip' },
+            React.createElement('div', { className: 'av' }, initials(user.email))
+          )
+        )
+      )
+    ),
+    React.createElement('div', { className: 'app' },
+      React.createElement('div', { className: 'page-header' },
+        React.createElement('div', { className: 'page-title' }, 'Employés IA'),
+        React.createElement('div', { className: 'page-sub' }, "Confiez une tâche à un employé IA comme vous le feriez avec un expert : décrivez votre besoin, l'agent l'exécute, notre équipe vérifie le résultat avant de vous le livrer.")
+      ),
+      React.createElement('div', { className: 'agents-grid' },
+        agents.map(a => React.createElement('div', { key: a.id, className: 'agent-card' },
+          React.createElement('div', { className: 'agent-card-top' },
+            React.createElement('div', { className: 'agent-icon' }, a.icon || '🤖'),
+            React.createElement('div', { className: 'agent-name' }, a.name)
+          ),
+          React.createElement('div', { className: 'agent-desc' }, a.description),
+          React.createElement('button', { className: 'btn btn-primary', onClick: () => openModal(a) }, 'Confier une tâche')
+        ))
+      ),
+      React.createElement('div', { className: 'section-card' },
+        React.createElement('div', { className: 'section-head' },
+          React.createElement('span', { className: 'section-title' }, 'Mes missions')
+        ),
+        missions.length === 0
+          ? React.createElement('div', { className: 'ds-empty' },
+              React.createElement('div', { className: 'ds-empty-icon' }, '🤖'),
+              React.createElement('div', { className: 'ds-empty-title' }, 'Aucune mission confiée'),
+              React.createElement('p', { className: 'ds-empty-sub' }, 'Choisissez un employé IA ci-dessus pour commencer.')
+            )
+          : missions.map(m => React.createElement('div', { key: m.id, className: 'mission-row' },
+              React.createElement('div', { className: 'mission-row-top' },
+                React.createElement('div', null,
+                  React.createElement('div', { className: 'mission-row-title' }, (m.ai_agents ? m.ai_agents.icon + ' ' : '') + m.title),
+                  React.createElement('div', { className: 'mission-row-meta' }, fmtDate(m.created_at))
+                ),
+                statusBadge(m.status, m.delivered_to_client)
+              ),
+              React.createElement(Deliverable, { mission: m, outputs: outputs })
+            ))
+      )
+    ),
+    modalAgent && React.createElement('div', { className: 'modal-backdrop', onClick: closeModal },
+      React.createElement('div', { className: 'modal', onClick: e => e.stopPropagation() },
+        React.createElement('div', { className: 'modal-head' },
+          React.createElement('div', { className: 'modal-title' }, 'Confier une tâche — ' + modalAgent.name),
+          React.createElement('button', { onClick: closeModal, disabled: running }, '✕')
+        ),
+        React.createElement('div', { className: 'modal-body' },
+          !doneMsg && React.createElement(React.Fragment, null,
+            React.createElement('div', null,
+              React.createElement('label', { className: 'field-label' }, 'Titre (optionnel)'),
+              React.createElement('input', { className: 'field-input', value: title, onChange: e => setTitle(e.target.value), placeholder: 'Ex: Plan de contenu pour mon lancement' })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'field-label' }, 'Décrivez votre besoin'),
+              React.createElement('textarea', { className: 'field-textarea', value: objective, onChange: e => setObjective(e.target.value), placeholder: 'Expliquez précisément ce que vous attendez de cet agent...' })
+            ),
+            running && React.createElement('div', { className: 'loading-box' },
+              React.createElement('div', { className: 'spinner' }),
+              "L'agent travaille sur votre demande…"
+            )
+          ),
+          doneMsg && React.createElement('div', { className: 'result-box' }, doneMsg)
+        ),
+        React.createElement('div', { className: 'modal-foot' },
+          !doneMsg
+            ? React.createElement(React.Fragment, null,
+                React.createElement('button', { className: 'btn btn-ghost', onClick: closeModal, disabled: running }, 'Annuler'),
+                React.createElement('button', { className: 'btn btn-primary', onClick: submitMission, disabled: running || !objective.trim() }, running ? 'En cours…' : 'Confier la mission')
+              )
+            : React.createElement('button', { className: 'btn btn-primary', onClick: closeModal }, 'Fermer')
+        )
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+</body>
+</html>
