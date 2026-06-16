@@ -8,8 +8,10 @@ const cors = {
 
 const AGENT_BRIEFS: Record<string, string> = {
   marketing: `Tu es le Marketing AI Agent de CreatorFlow Market, employé IA chargé de l'acquisition et de la visibilité.
-Tu reçois une mission du CEO. Construis un plan, exécute les actions disponibles via les outils fournis, puis termine avec finish_mission.
-Tu n'as pas d'outil de publication directe : toute action visible publiquement doit passer par request_approval.`,
+Tu reçois une mission du CEO. Utilise read_blog_subscribers pour connaître l'audience newsletter avant de rédiger une campagne.
+Rédige le sujet et le corps de l'email de campagne, puis appelle obligatoirement request_approval avec action_type="send_campaign_email" et action_data={"subject": "...", "body": "..."} et un context expliquant la cible et l'objectif. Ne déclenche jamais un envoi sans cette approbation.
+Tu peux aussi utiliser create_output pour enregistrer un plan ou une stratégie qui ne nécessite pas d'envoi immédiat.
+Termine toujours avec finish_mission en résumant ce qui a été produit et ce qui est en attente d'approbation.`,
 
   content: `Tu es le Content AI Agent de CreatorFlow Market, employé IA chargé de la production de contenu (blog).
 Tu reçois une mission du CEO. Rédige un contenu complet et de qualité, puis sauvegarde-le en brouillon avec create_blog_draft (jamais publié directement).
@@ -18,11 +20,14 @@ Une fois le brouillon créé, appelle obligatoirement request_approval avec acti
 Termine toujours avec finish_mission en résumant ce que tu as produit et en précisant que la publication est en attente d'approbation.`,
 
   prospecting: `Tu es le Prospecting AI Agent de CreatorFlow Market, employé IA chargé de la prospection commerciale.
-Tu reçois une mission du CEO. Identifie des actions concrètes, prépare les éléments nécessaires (messages, listes, qualification), et utilise request_approval avant tout envoi réel.
+Tu reçois une mission du CEO. Utilise read_open_briefs pour repérer des opportunités commerciales concrètes (briefs ouverts sans proposition acceptée) et identifier des profils d'experts à approcher ou des clients à relancer.
+Quand tu identifies un prospect précis à contacter par email (nom, email, raison du contact), rédige le message puis appelle obligatoirement request_approval avec action_type="send_prospect_email" et action_data={"to": "...", "subject": "...", "body": "..."} et un context expliquant pourquoi. Ne déclenche jamais un envoi sans cette approbation.
+Pour des résultats qui ne sont pas des envois directs (liste de prospects qualifiés, plan de prospection), utilise create_output.
 Termine avec finish_mission.`,
 
   support: `Tu es le Support AI Agent de CreatorFlow Market, employé IA chargé du support client.
-Tu reçois une mission du CEO. Prépare les réponses ou actions nécessaires, utilise request_approval avant tout envoi réel à un utilisateur.
+Tu reçois une mission du CEO. Utilise read_support_tickets pour voir les tickets ouverts (status=open).
+Pour chaque ticket à traiter, rédige une réponse puis appelle obligatoirement request_approval avec action_type="respond_support_ticket" et action_data={"ticket_id": "...", "response": "..."} et un context résumant le problème. Ne réponds jamais directement à un utilisateur sans cette approbation.
 Termine avec finish_mission.`,
 };
 
@@ -52,6 +57,37 @@ const TOOLS: Anthropic.Tool[] = [
         tags: { type: 'array', items: { type: 'string' } },
       },
       required: ['title', 'slug', 'content'],
+    },
+  },
+  {
+    name: 'read_blog_subscribers',
+    description: "Lire le nombre et un échantillon des abonnés à la newsletter du blog, pour dimensionner une campagne marketing. N'expose que l'email et la date d'inscription.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        limit: { type: 'number', description: 'Nombre maximum de résultats (défaut 20).' },
+      },
+    },
+  },
+  {
+    name: 'read_open_briefs',
+    description: "Lire les briefs clients ouverts (status='open'), sans proposition acceptée, pour identifier des opportunités commerciales à prospecter.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        limit: { type: 'number', description: 'Nombre maximum de résultats (défaut 15).' },
+      },
+    },
+  },
+  {
+    name: 'read_support_tickets',
+    description: "Lire les tickets de support clients/experts.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', description: "Filtrer par statut: open, in_progress, resolved, closed. Défaut: open." },
+        limit: { type: 'number', description: 'Nombre maximum de résultats (défaut 15).' },
+      },
     },
   },
   {
@@ -178,6 +214,23 @@ Deno.serve(async (req: Request) => {
             const input = block.input as { status?: string; limit?: number };
             let query = supabase.from('blog_articles').select('id, title, slug, status, category, created_at').order('created_at', { ascending: false }).limit(input.limit || 10);
             if (input.status) query = query.eq('status', input.status);
+            const { data, error } = await query;
+            if (error) throw new Error(error.message);
+            resultText = JSON.stringify(data);
+          } else if (block.name === 'read_blog_subscribers') {
+            const input = block.input as { limit?: number };
+            const { data, error, count } = await supabase.from('blog_subscribers').select('email, created_at', { count: 'exact' }).order('created_at', { ascending: false }).limit(input.limit || 20);
+            if (error) throw new Error(error.message);
+            resultText = JSON.stringify({ total: count, sample: data });
+          } else if (block.name === 'read_open_briefs') {
+            const input = block.input as { limit?: number };
+            const { data, error } = await supabase.from('briefs').select('id, titre, description, categorie, budget, created_at').eq('status', 'open').order('created_at', { ascending: false }).limit(input.limit || 15);
+            if (error) throw new Error(error.message);
+            resultText = JSON.stringify(data);
+          } else if (block.name === 'read_support_tickets') {
+            const input = block.input as { status?: string; limit?: number };
+            let query = supabase.from('support_tickets').select('id, subject, message, status, priority, created_at').order('created_at', { ascending: false }).limit(input.limit || 15);
+            query = query.eq('status', input.status || 'open');
             const { data, error } = await query;
             if (error) throw new Error(error.message);
             resultText = JSON.stringify(data);

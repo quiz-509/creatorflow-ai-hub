@@ -95,13 +95,21 @@ Deno.serve(async (req: Request) => {
   try {
     const { type, to, data } = await req.json();
 
-    if (!type || !to || !templates[type]) {
+    if (!type || !to || (type !== 'custom' && !templates[type])) {
       return new Response(JSON.stringify({ error: 'type ou destinataire manquant' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
       });
     }
 
-    const { subject, html } = templates[type](data || {});
+    if (type === 'custom' && !data?.subject) {
+      return new Response(JSON.stringify({ error: 'subject manquant pour un email custom' }), {
+        status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { subject, html } = type === 'custom'
+      ? { subject: data.subject as string, html: baseTemplate(`<div>${(data.body as string || '').replace(/\n/g, '<br>')}</div>`) }
+      : templates[type](data || {});
     const apiKey = Deno.env.get('RESEND_API_KEY') ?? '';
 
     const res = await fetch(RESEND_URL, {

@@ -1345,6 +1345,7 @@ function BlogTab() {
 /* ── AI WORKFORCE TAB ── */
 const AI_AGENT_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-agent';
 const AI_ORCHESTRATOR_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-orchestrator';
+const SEND_EMAIL_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email';
 function AIWorkforceTab() {
   const [agents, setAgents] = useState([]);
   const [tasks, setTasks] = useState([]);
@@ -1415,6 +1416,40 @@ function AIWorkforceTab() {
       const {data: {session}} = await sb.auth.getSession();
       if (approve && approval.action_type === 'publish_article' && approval.action_data?.article_id) {
         await sb.from('blog_articles').update({status: 'published', published_at: new Date().toISOString()}).eq('id', approval.action_data.article_id);
+      }
+      if (approve && approval.action_type === 'send_campaign_email') {
+        const { subject, body } = approval.action_data || {};
+        const { data: subs } = await sb.from('blog_subscribers').select('email');
+        for (const s of (subs || [])) {
+          await fetch(SEND_EMAIL_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ type: 'custom', to: s.email, data: { subject, body } })
+          });
+        }
+      }
+      if (approve && approval.action_type === 'send_prospect_email') {
+        const { to, subject, body } = approval.action_data || {};
+        await fetch(SEND_EMAIL_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+          body: JSON.stringify({ type: 'custom', to, data: { subject, body } })
+        });
+      }
+      if (approve && approval.action_type === 'respond_support_ticket' && approval.action_data?.ticket_id) {
+        const { ticket_id, response } = approval.action_data;
+        await sb.from('support_tickets').update({ ai_response: response, status: 'resolved', resolved_at: new Date().toISOString() }).eq('id', ticket_id);
+        const { data: ticket } = await sb.from('support_tickets').select('user_id, subject').eq('id', ticket_id).single();
+        if (ticket?.user_id) {
+          const { data: profile } = await sb.from('profiles').select('email').eq('id', ticket.user_id).single();
+          if (profile?.email) {
+            await fetch(SEND_EMAIL_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+              body: JSON.stringify({ type: 'custom', to: profile.email, data: { subject: `Réponse à votre ticket : ${ticket.subject}`, body: response } })
+            });
+          }
+        }
       }
       await sb.from('pending_approvals').update({
         status: approve ? 'approved' : 'rejected',
