@@ -1367,7 +1367,7 @@ function AIWorkforceTab() {
   const [delivering, setDelivering] = useState(null);
   const reloadMissionsAndApprovals = async () => {
     const [{data: ms}, {data: ap}] = await Promise.all([
-      sb.from('agent_missions').select('*, ai_agents(name,icon), profiles!agent_missions_created_by_fkey(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
+      sb.from('agent_missions').select('*, ai_agents(name,icon), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
       sb.from('pending_approvals').select('*, agent_missions(title)').eq('status', 'pending').order('created_at', {ascending: false})
     ]);
     setMissions(ms || []);
