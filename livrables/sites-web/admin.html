@@ -21,7 +21,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
-.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;}
+.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;overflow:hidden;}
+.nav-toggle{display:none;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0;color:var(--text);}
 .brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
 .brand-logo{width:56px;height:56px;background:url('/logo.jpg') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
 .brand span{margin-left:-18px;}
@@ -61,7 +62,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .stat-card:hover{border-color:var(--border-2);}
 .stat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-size:18px;}
 .stat-val{font-size:28px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
-.stat-label{font-size:12px;color:var(--text-3);font-weight:500;}
+.stat-label{font-size:12px;color:var(--text-3);font-weight:500;word-break:break-word;}
 
 /* SECTION CARD */
 .section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;}
@@ -147,8 +148,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* RESPONSIVE */
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%);transition:transform 0.3s var(--ease);}
+  .nav-toggle{display:flex;}
+  .nav-brand{width:auto;padding:0 8px;gap:8px;}
+  .brand span,.admin-badge{display:none;}
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s var(--ease);z-index:201;}
   .sidebar.open{transform:translateX(0);}
+  .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;}
   .main{margin-left:0;}
   .main-inner{padding:20px 16px 60px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
@@ -198,7 +203,9 @@ function Sidebar({
   tab,
   setTab,
   onLogout,
-  pendingExperts
+  pendingExperts,
+  open,
+  onClose
 }) {
   const items = [{
     id: 'dashboard',
@@ -339,8 +346,13 @@ function Sidebar({
     label: 'AI Workforce',
     icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("circle",{cx:"12",cy:"7",r:"3"}), /*#__PURE__*/React.createElement("path",{d:"M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"}), /*#__PURE__*/React.createElement("circle",{cx:"4",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M2 20c0-2.2 1-4 2-4"}), /*#__PURE__*/React.createElement("circle",{cx:"20",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M22 20c0-2.2-1-4-2-4"}))
   }];
-  return /*#__PURE__*/React.createElement("aside", {
-    className: "sidebar",
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    open && /*#__PURE__*/React.createElement("div", {
+      className: "sidebar-backdrop",
+      onClick: onClose
+    }),
+    /*#__PURE__*/React.createElement("aside", {
+    className: `sidebar ${open ? 'open' : ''}`,
     id: "sidebar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "sidebar-section"
@@ -349,7 +361,7 @@ function Sidebar({
   }, "Navigation"), items.map(it => /*#__PURE__*/React.createElement("button", {
     key: it.id,
     className: `nav-item ${tab === it.id ? 'active' : ''}`,
-    onClick: () => setTab(it.id)
+    onClick: () => { setTab(it.id); onClose && onClose(); }
   }, it.icon, it.label, it.badge > 0 && /*#__PURE__*/React.createElement("span", {
     className: "nav-pending"
   }, it.badge)))), /*#__PURE__*/React.createElement("div", {
@@ -373,7 +385,7 @@ function Sidebar({
     y1: "12",
     x2: "9",
     y2: "12"
-  })), "D\xE9connexion")));
+  })), "D\xE9connexion"))));
 }
 
 /* ── DASHBOARD TAB ── */
@@ -1754,6 +1766,7 @@ function App() {
   const [session, setSession] = useState(undefined);
   const [tab, setTab] = useState('dashboard');
   const [pendingExperts, setPendingExperts] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   useEffect(() => {
     sb.auth.getSession().then(({
       data
@@ -1820,7 +1833,11 @@ function App() {
     className: "nav-inner"
   }, /*#__PURE__*/React.createElement("div", {
     className: "nav-brand"
-  }, /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "nav-toggle",
+    onClick: () => setSidebarOpen(o => !o),
+    "aria-label": "Menu"
+  }, /*#__PURE__*/React.createElement("svg", {width:"18",height:"18",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("line",{x1:"3",y1:"6",x2:"21",y2:"6"}), /*#__PURE__*/React.createElement("line",{x1:"3",y1:"12",x2:"21",y2:"12"}), /*#__PURE__*/React.createElement("line",{x1:"3",y1:"18",x2:"21",y2:"18"}))), /*#__PURE__*/React.createElement("a", {
     href: "/",
     className: "brand"
   }, /*#__PURE__*/React.createElement("div", {
@@ -1839,7 +1856,9 @@ function App() {
     tab: tab,
     setTab: setTab,
     onLogout: logout,
-    pendingExperts: pendingExperts
+    pendingExperts: pendingExperts,
+    open: sidebarOpen,
+    onClose: () => setSidebarOpen(false)
   }), /*#__PURE__*/React.createElement("main", {
     className: "main"
   }, /*#__PURE__*/React.createElement("div", {
