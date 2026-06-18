@@ -120,6 +120,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-approve:hover{background:rgba(16,185,129,0.25);}
 .btn-reject{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.10);color:var(--red);border:1px solid rgba(239,68,68,0.25);cursor:pointer;transition:all 160ms;margin-left:6px;}
 .btn-reject:hover{background:rgba(239,68,68,0.2);}
+.btn-preview{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.25);cursor:pointer;transition:all 160ms;}
+.btn-preview:hover{background:rgba(124,58,237,0.22);}
+.preview-output{background:var(--surf-2);border:1px solid var(--border);border-radius:12px;padding:20px;white-space:pre-wrap;font-size:13px;line-height:1.75;color:var(--text);max-height:52vh;overflow-y:auto;font-family:var(--f);}
+.preview-meta{font-size:12px;color:var(--text-3);margin-bottom:4px;font-weight:500;}
 .btn-save{padding:8px 20px;border-radius:99px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#9333EA,var(--v));color:#fff;border:none;cursor:pointer;transition:all 160ms;}
 .btn-save:hover{opacity:0.88;}
 .btn-save:disabled{opacity:0.4;cursor:not-allowed;}
@@ -1365,6 +1369,7 @@ function AIWorkforceTab() {
   const [missionResult, setMissionResult] = useState('');
   const [resolvingApproval, setResolvingApproval] = useState(null);
   const [delivering, setDelivering] = useState(null);
+  const [previewModal, setPreviewModal] = useState(null);
   const reloadMissionsAndApprovals = async () => {
     const [{data: ms}, {data: ap}] = await Promise.all([
       sb.from('agent_missions').select('*, ai_agents(name,icon), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
@@ -1377,9 +1382,14 @@ function AIWorkforceTab() {
     setDelivering(mission.id);
     try {
       await sb.from('agent_missions').update({delivered_to_client: true, delivered_at: new Date().toISOString()}).eq('id', mission.id);
+      setPreviewModal(null);
       await reloadMissionsAndApprovals();
     } catch(e) { alert('Erreur : ' + e.message); }
     setDelivering(null);
+  };
+  const openPreview = async (mission) => {
+    const { data: outputs } = await sb.from('agent_outputs').select('*').eq('mission_id', mission.id).order('created_at');
+    setPreviewModal({ mission, outputs: outputs || [] });
   };
   useEffect(() => {
     (async () => {
@@ -1673,15 +1683,21 @@ function AIWorkforceTab() {
                 ),
                 /*#__PURE__*/React.createElement("td", null, fmtDate(m.created_at)),
                 /*#__PURE__*/React.createElement("td", null,
-                  m.delivered_to_client
-                    ? /*#__PURE__*/React.createElement("span", {className:"badge badge-green"}, "Livrée")
-                    : (m.status === 'completed' && m.profiles)
-                      ? /*#__PURE__*/React.createElement("button", {
-                          className:"btn-approve", style:{fontSize:11},
-                          disabled: delivering === m.id,
-                          onClick: () => deliverMission(m)
-                        }, delivering === m.id ? '…' : 'Livrer au client')
-                      : /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"var(--text-3)"}}, "—")
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}},
+                    m.status === 'completed' && /*#__PURE__*/React.createElement("button", {
+                      className:"btn-preview",
+                      onClick: () => openPreview(m)
+                    }, "👁 Voir"),
+                    m.delivered_to_client
+                      ? /*#__PURE__*/React.createElement("span", {className:"badge badge-green"}, "Livrée ✓")
+                      : (m.status === 'completed' && m.profiles)
+                        ? /*#__PURE__*/React.createElement("button", {
+                            className:"btn-approve", style:{fontSize:11},
+                            disabled: delivering === m.id,
+                            onClick: () => deliverMission(m)
+                          }, delivering === m.id ? '…' : 'Livrer au client')
+                        : /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"var(--text-3)"}}, "—")
+                  )
                 )
               ))
             )
@@ -1823,6 +1839,53 @@ function AIWorkforceTab() {
               whiteSpace:"pre-wrap", maxHeight:320, overflowY:"auto"
             }
           }, missionResult)
+        )
+      )
+    ),
+    previewModal && /*#__PURE__*/React.createElement("div", {
+      className:"modal-overlay",
+      onClick: e => { if (e.target === e.currentTarget) setPreviewModal(null); }
+    },
+      /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:720}},
+        /*#__PURE__*/React.createElement("div", {className:"modal-head"},
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", {className:"modal-title"}, previewModal.mission.ai_agents?.icon, " ", previewModal.mission.title),
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)",marginTop:4}},
+              previewModal.mission.profiles
+                ? `Commandé par ${(previewModal.mission.profiles.prenom||'')+' '+(previewModal.mission.profiles.nom||'')}`
+                : "Mission interne",
+              " · ", fmtDate(previewModal.mission.created_at)
+            )
+          ),
+          /*#__PURE__*/React.createElement("button", {className:"modal-close", onClick:()=>setPreviewModal(null)}, "×")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"modal-body"},
+          /*#__PURE__*/React.createElement("div", {className:"preview-meta"}, "OBJECTIF"),
+          /*#__PURE__*/React.createElement("div", {
+            style:{fontSize:13,color:"var(--text-2)",marginBottom:20,padding:"12px 16px",background:"var(--surf-2)",borderRadius:10,border:"1px solid var(--border)",lineHeight:1.65}
+          }, previewModal.mission.objective),
+          previewModal.outputs.length === 0
+            ? /*#__PURE__*/React.createElement("div", {style:{textAlign:"center",padding:"32px",color:"var(--text-3)",fontSize:13}}, "Aucun livrable enregistré pour cette mission.")
+            : previewModal.outputs.map((out, i) => /*#__PURE__*/React.createElement("div", {key:out.id, style:{marginBottom:16}},
+                /*#__PURE__*/React.createElement("div", {className:"preview-meta"}, `LIVRABLE ${previewModal.outputs.length > 1 ? i+1 : ''} · ${(out.output_type||'').toUpperCase()}`),
+                out.output_data?.title && /*#__PURE__*/React.createElement("div", {
+                  style:{fontSize:15,fontWeight:700,color:"var(--text)",marginBottom:10}
+                }, out.output_data.title),
+                /*#__PURE__*/React.createElement("div", {className:"preview-output"},
+                  out.output_data?.body || out.output_data?.content || out.result_summary || JSON.stringify(out.output_data, null, 2)
+                )
+              )),
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:10,marginTop:20,justifyContent:"flex-end"}},
+            /*#__PURE__*/React.createElement("button", {
+              className:"btn-reject", style:{marginLeft:0},
+              onClick:()=>setPreviewModal(null)
+            }, "Fermer"),
+            !previewModal.mission.delivered_to_client && previewModal.mission.profiles && /*#__PURE__*/React.createElement("button", {
+              className:"btn-approve",
+              disabled: delivering === previewModal.mission.id,
+              onClick: () => deliverMission(previewModal.mission)
+            }, delivering === previewModal.mission.id ? '…' : '✓ Livrer au client')
+          )
         )
       )
     )
