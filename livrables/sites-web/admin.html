@@ -1382,6 +1382,22 @@ function AIWorkforceTab() {
     setDelivering(mission.id);
     try {
       await sb.from('agent_missions').update({delivered_to_client: true, delivered_at: new Date().toISOString()}).eq('id', mission.id);
+      if (mission.profiles?.email) {
+        const agentName = mission.ai_agents?.name || 'un agent IA';
+        const clientPrenom = mission.profiles.prenom || mission.profiles.email;
+        fetch(SEND_EMAIL_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+          body: JSON.stringify({
+            type: 'custom',
+            to: mission.profiles.email,
+            data: {
+              subject: `Votre livrable est prêt — ${mission.title}`,
+              body: `Bonjour ${clientPrenom},\n\nVotre mission "${mission.title}" confiée à ${agentName} a été complétée et validée par notre équipe.\n\nVotre livrable est maintenant disponible dans votre espace client :\nhttps://creatorflowmarket.com/employes-ia.html\n\nÀ bientôt,\nL'équipe CreatorFlow Market`
+            }
+          })
+        });
+      }
       setPreviewModal(null);
       await reloadMissionsAndApprovals();
     } catch(e) { alert('Erreur : ' + e.message); }
