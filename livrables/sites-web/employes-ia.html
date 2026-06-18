@@ -111,6 +111,7 @@ function fmtDate(d) {
 
 function statusBadge(status, delivered) {
   if (delivered) return React.createElement('span', { className: 'badge badge-green' }, 'Livré');
+  if (status === 'pending_payment') return React.createElement('span', { className: 'badge badge-amber' }, '⏳ Paiement en attente');
   if (status === 'completed') return React.createElement('span', { className: 'badge badge-amber' }, 'En révision');
   if (status === 'waiting_approval') return React.createElement('span', { className: 'badge badge-amber' }, 'En révision');
   if (status === 'failed') return React.createElement('span', { className: 'badge badge-red' }, 'Échoué');
@@ -226,24 +227,22 @@ function App() {
     if (!objective.trim()) return;
     setRunning(true);
     try {
-      const { data: { session } } = await sb.auth.getSession();
-      const res = await fetch(AI_ORCHESTRATOR_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei',
-          'Authorization': `Bearer ${session?.access_token || ''}`
-        },
-        body: JSON.stringify({ agent_slug: modalAgent.slug, title: title || objective.slice(0, 80), objective, client_id: user.id })
-      });
-      const json = await res.json();
-      if (!res.ok || json.error) throw new Error(json.error || json.message || `Erreur serveur (${res.status})`);
-      setDoneMsg("Votre demande a été transmise à l'agent. Notre équipe vérifie le résultat avant de vous le livrer — vous le retrouverez ci-dessous une fois validé.");
-      await loadMissions(user.id);
+      const prixCents = modalAgent.prix_cents || 2999;
+      const { data: mission, error: mErr } = await sb.from('agent_missions').insert({
+        agent_id: modalAgent.id,
+        title: title || objective.slice(0, 80),
+        objective,
+        status: 'pending_payment',
+        created_by: user.id,
+        prix_cents: prixCents,
+        payment_status: 'unpaid',
+      }).select().single();
+      if (mErr || !mission) throw new Error(mErr?.message || 'Erreur lors de la création de la mission.');
+      window.location.href = `paiement.html?agent_mission_id=${mission.id}`;
     } catch (e) {
       setDoneMsg('Erreur : ' + e.message);
+      setRunning(false);
     }
-    setRunning(false);
   };
 
   return React.createElement(React.Fragment, null,
@@ -294,6 +293,10 @@ function App() {
                 ),
                 statusBadge(m.status, m.delivered_to_client)
               ),
+              m.status === 'pending_payment' && React.createElement('a', {
+                href: `paiement.html?agent_mission_id=${m.id}`,
+                style: { display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 10, padding: '8px 16px', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 8, fontSize: 12, fontWeight: 700, color: 'var(--vs)', textDecoration: 'none' }
+              }, '💳 Compléter le paiement →'),
               React.createElement(Deliverable, { mission: m, outputs: outputs })
             ))
       )
@@ -316,7 +319,7 @@ function App() {
             ),
             running && React.createElement('div', { className: 'loading-box' },
               React.createElement('div', { className: 'spinner' }),
-              "L'agent travaille sur votre demande…"
+              "Préparation de la mission… Redirection vers le paiement."
             )
           ),
           doneMsg && React.createElement('div', { className: 'result-box' }, doneMsg)

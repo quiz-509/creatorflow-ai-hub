@@ -136,7 +136,7 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
   try {
-    const { agent_slug, title, objective, client_id } = await req.json();
+    const { agent_slug, title, objective, client_id, mission_id: existing_mission_id } = await req.json();
 
     if (!agent_slug || !objective) {
       return new Response(JSON.stringify({ error: 'agent_slug et objective sont requis.' }), {
@@ -163,15 +163,28 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const { data: mission, error: missionErr } = await supabase.from('agent_missions').insert({
-      agent_id: agent.id,
-      title: title || objective.slice(0, 80),
-      objective,
-      status: 'in_progress',
-      started_at: new Date().toISOString(),
-      created_by: client_id || null,
-    }).select().single();
-    if (missionErr || !mission) throw new Error(missionErr?.message || 'Échec création mission.');
+    let mission;
+    if (existing_mission_id) {
+      const { data: m, error: mErr } = await supabase.from('agent_missions')
+        .update({ status: 'in_progress', started_at: new Date().toISOString() })
+        .eq('id', existing_mission_id)
+        .select()
+        .single();
+      if (mErr || !m) throw new Error(mErr?.message || 'Mission introuvable.');
+      mission = m;
+    } else {
+      const { data: m, error: missionErr } = await supabase.from('agent_missions').insert({
+        agent_id: agent.id,
+        title: title || objective.slice(0, 80),
+        objective,
+        status: 'in_progress',
+        started_at: new Date().toISOString(),
+        created_by: client_id || null,
+        payment_status: 'free',
+      }).select().single();
+      if (missionErr || !m) throw new Error(missionErr?.message || 'Échec création mission.');
+      mission = m;
+    }
 
     const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') ?? '' });
 

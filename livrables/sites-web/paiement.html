@@ -368,12 +368,14 @@ function App() {
   const params = new URLSearchParams(window.location.search);
   const missionId = params.get('mission_id');
   const courseId = params.get('course_id');
+  const agentMissionId = params.get('agent_mission_id');
   const isSuccess = params.get('payment') === 'success';
-  const mode = courseId ? 'course' : 'mission';
+  const mode = courseId ? 'course' : agentMissionId ? 'agent_mission' : 'mission';
   const [user, setUser] = useState(null);
   const [mission, setMission] = useState(null);
   const [expert, setExpert] = useState(null);
   const [course, setCourse] = useState(null);
+  const [agentMission, setAgentMission] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -466,6 +468,36 @@ function App() {
           }
         }
       }
+      if (agentMissionId) {
+        const { data: am } = await sb.from('agent_missions')
+          .select('*, ai_agents(name, slug, prix_cents)')
+          .eq('id', agentMissionId)
+          .single();
+        if (am) {
+          setAgentMission(am);
+          if (isSuccess && am.payment_status !== 'paid') {
+            await sb.from('agent_missions').update({ payment_status: 'paid' }).eq('id', agentMissionId);
+            const { data: { session: authSess } } = await sb.auth.getSession();
+            if (authSess) {
+              fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-orchestrator', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'apikey': ANON_KEY,
+                  'Authorization': `Bearer ${authSess.access_token}`
+                },
+                body: JSON.stringify({
+                  agent_slug: am.ai_agents?.slug,
+                  title: am.title,
+                  objective: am.objective,
+                  client_id: u.id,
+                  mission_id: agentMissionId
+                })
+              }).catch(() => {});
+            }
+          }
+        }
+      }
       setLoading(false);
     });
     const el = document.getElementById('cursor-glow');
@@ -501,6 +533,15 @@ function App() {
           success_url: `${base}?course_id=${courseId}&payment=success`,
           cancel_url: `${window.location.origin}/cours.html?id=${courseId}`
         };
+      } else if (mode === 'agent_mission' && agentMission) {
+        const prixCents = agentMission.prix_cents || agentMission.ai_agents?.prix_cents || 2999;
+        body = {
+          mission_id: agentMissionId,
+          amount_cents: prixCents,
+          mission_titre: `Mission IA : ${agentMission.title || agentMission.ai_agents?.name || 'Agent IA'}`,
+          success_url: `${base}?agent_mission_id=${agentMissionId}&payment=success`,
+          cancel_url: `${window.location.origin}/employes-ia.html`
+        };
       } else {
         if (!missionId || !mission) return;
         body = {
@@ -534,7 +575,8 @@ function App() {
   }
   const expertName = expert ? `${expert.prenom || ''} ${expert.nom || ''}`.trim() || 'Expert' : '…';
   const expertInitials = expertName.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'EX';
-  const prix = mode === 'course' ? course?.prix || 0 : mission?.prix || 0;
+  const prixRaw = mode === 'course' ? course?.prix || 0 : mode === 'agent_mission' ? (agentMission?.prix_cents || agentMission?.ai_agents?.prix_cents || 2999) / 100 : mission?.prix || 0;
+  const prix = prixRaw;
   const prixStr = prix > 0 ? `${prix.toLocaleString('fr-CA')}$` : '—';
   const instrImg = course ? FORMATEURS_IMG[(course.instructor || '').toLowerCase()] : null;
   const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
@@ -744,7 +786,38 @@ function App() {
     style: {
       color: 'var(--vs)'
     }
-  }, user?.email))))), !isSuccess && !missionId && !courseId && /*#__PURE__*/React.createElement("div", {
+  }, user?.email)))),
+  isSuccess && mode === 'agent_mission' && /*#__PURE__*/React.createElement("div", { style: { maxWidth: 520, margin: '0 auto' } },
+    /*#__PURE__*/React.createElement("div", { className: "card" },
+      /*#__PURE__*/React.createElement("div", { className: "success-wrap" },
+        /*#__PURE__*/React.createElement("div", { className: "success-ring" }, "✓"),
+        /*#__PURE__*/React.createElement("h1", { className: "success-title" }, "Mission lancée !"),
+        /*#__PURE__*/React.createElement("p", { className: "success-sub" },
+          "Paiement de ", /*#__PURE__*/React.createElement("strong", null, prixStr), " confirmé. L'agent IA travaille sur votre mission. Vous serez notifié par email à la livraison."
+        ),
+        /*#__PURE__*/React.createElement("div", { className: "success-details" },
+          [
+            { label: 'Mission', val: agentMission?.title || '—' },
+            { label: 'Agent', val: agentMission?.ai_agents?.name || '—' },
+            { label: 'Montant payé', val: prixStr },
+            { label: 'Date', val: new Date().toLocaleDateString('fr-CA', { day: 'numeric', month: 'long', year: 'numeric' }) },
+            { label: 'Statut', val: '⚙️ En cours d\'exécution' }
+          ].map((r, i) => /*#__PURE__*/React.createElement("div", { key: i, className: "suc-row" },
+            /*#__PURE__*/React.createElement("span", { className: "suc-label" }, r.label),
+            /*#__PURE__*/React.createElement("span", { className: "suc-val" }, r.val)
+          ))
+        ),
+        /*#__PURE__*/React.createElement("div", { style: { display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' } },
+          /*#__PURE__*/React.createElement("a", { href: "employes-ia.html", className: "btn btn-primary" }, "Voir mes missions →"),
+          /*#__PURE__*/React.createElement("a", { href: "agents-ia.html", className: "btn btn-ghost" }, "← Employés IA")
+        ),
+        /*#__PURE__*/React.createElement("div", { style: { marginTop: 20, fontSize: 12, color: 'var(--text-3)' } },
+          "Un reçu Stripe a été envoyé à ", /*#__PURE__*/React.createElement("span", { style: { color: 'var(--vs)' } }, user?.email)
+        )
+      )
+    )
+  ),
+  !isSuccess && !missionId && !courseId && !agentMissionId && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 480,
       margin: '80px auto',
