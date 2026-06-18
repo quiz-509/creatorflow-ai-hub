@@ -314,6 +314,19 @@ Deno.serve(async (req: Request) => {
       completed_at: missionStatusAfter !== 'waiting_approval' ? new Date().toISOString() : null,
     }).eq('id', mission.id);
 
+    // Si l'agent a terminé sans appeler create_output, on sauvegarde le résumé comme livrable de secours
+    if (finalStatus === 'completed' && finalSummary) {
+      const { count } = await supabase.from('agent_outputs').select('id', { count: 'exact', head: true }).eq('mission_id', mission.id).eq('status', 'completed');
+      if (!count) {
+        await supabase.from('agent_outputs').insert({
+          mission_id: mission.id,
+          output_type: 'summary',
+          output_data: { title: mission.title, body: finalSummary },
+          status: 'completed',
+        });
+      }
+    }
+
     await supabase.from('ai_agents').update({
       tasks_completed: (agent.tasks_completed || 0) + 1,
       last_active: new Date().toISOString(),

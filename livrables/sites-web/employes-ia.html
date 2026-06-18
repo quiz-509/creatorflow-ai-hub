@@ -172,9 +172,19 @@ function Deliverable({ mission, outputs }) {
       React.createElement('span', { style: { fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--vs)' } }, 'Livrable'),
       React.createElement('span', { style: { fontSize: 11, color: 'var(--text-3)' } }, `· ${mission.ai_agents?.name || 'Agent IA'}`)
     ),
-    relevant.length === 0
-      ? React.createElement('div', { style: { fontSize: 13, color: 'var(--text-2)', fontStyle: 'italic' } }, mission.result_summary || 'Livrable en cours de préparation.')
-      : relevant.map(renderOutputData)
+    relevant.length === 0 && mission.result_summary
+      ? React.createElement('div', { style: { position: 'relative' } },
+          React.createElement('div', {
+            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px', fontSize: 13, lineHeight: 1.8, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: 480, overflowY: 'auto' }
+          }, mission.result_summary),
+          React.createElement('button', {
+            onClick: () => navigator.clipboard.writeText(mission.result_summary).catch(() => {}),
+            style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer' }
+          }, 'Copier')
+        )
+      : relevant.length === 0
+        ? React.createElement('div', { style: { fontSize: 13, color: 'var(--text-3)', fontStyle: 'italic' } }, 'Livrable en cours de préparation.')
+        : relevant.map(renderOutputData)
   );
 }
 
