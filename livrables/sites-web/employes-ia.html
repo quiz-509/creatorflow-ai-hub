@@ -121,13 +121,60 @@ function statusBadge(status, delivered) {
 function Deliverable({ mission, outputs }) {
   if (!mission.delivered_to_client) return null;
   const relevant = (outputs || []).filter(o => o.mission_id === mission.id);
-  return React.createElement('div', { className: 'deliverable-box' },
-    React.createElement('div', { className: 'deliverable-title' }, 'Livrable'),
-    mission.result_summary || 'Voir détail ci-dessous.',
-    relevant.map(o => React.createElement('div', { key: o.id, style: { marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--border-2)' } },
-      o.output_data?.title ? React.createElement('div', { style: { fontWeight: 700, color: 'var(--text)', marginBottom: 4 } }, o.output_data.title) : null,
-      o.output_data?.body || JSON.stringify(o.output_data)
-    ))
+
+  const copyContent = (text) => {
+    navigator.clipboard.writeText(text).catch(() => {});
+  };
+
+  const renderOutputData = (o) => {
+    const d = o.output_data || {};
+    const body = d.body || d.content || d.text || d.plan || d.strategy || d.result || null;
+    const title = d.title || null;
+    const otherKeys = Object.keys(d).filter(k => !['title','body','content','text','plan','strategy','result'].includes(k));
+
+    return React.createElement('div', { key: o.id, style: { marginTop: 16 } },
+      title && React.createElement('div', {
+        style: { fontSize: 15, fontWeight: 800, color: 'var(--text)', marginBottom: 12, lineHeight: 1.4 }
+      }, title),
+      body && React.createElement('div', { style: { position: 'relative' } },
+        React.createElement('div', {
+          style: {
+            background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10,
+            padding: '16px', fontSize: 13, lineHeight: 1.8, color: 'var(--text)',
+            whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: 480, overflowY: 'auto'
+          }
+        }, body),
+        React.createElement('button', {
+          onClick: () => copyContent(body),
+          style: {
+            position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)',
+            border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px',
+            fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer'
+          }
+        }, 'Copier')
+      ),
+      !body && otherKeys.length > 0 && otherKeys.map(k =>
+        React.createElement('div', { key: k, style: { marginBottom: 10 } },
+          React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 } }, k),
+          React.createElement('div', {
+            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 8, padding: '12px', fontSize: 13, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }
+          }, typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))
+        )
+      ),
+      !body && otherKeys.length === 0 && React.createElement('div', {
+        style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px', fontSize: 13, color: 'var(--text-2)', whiteSpace: 'pre-wrap' }
+      }, JSON.stringify(d, null, 2))
+    );
+  };
+
+  return React.createElement('div', { className: 'deliverable-box', style: { marginTop: 14, background: 'var(--surf-2)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 12, padding: '16px 18px' } },
+    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 } },
+      React.createElement('span', { style: { fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--vs)' } }, 'Livrable'),
+      React.createElement('span', { style: { fontSize: 11, color: 'var(--text-3)' } }, `· ${mission.ai_agents?.name || 'Agent IA'}`)
+    ),
+    relevant.length === 0
+      ? React.createElement('div', { style: { fontSize: 13, color: 'var(--text-2)', fontStyle: 'italic' } }, mission.result_summary || 'Livrable en cours de préparation.')
+      : relevant.map(renderOutputData)
   );
 }
 
