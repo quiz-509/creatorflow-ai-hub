@@ -7,9 +7,10 @@ const cors = {
 };
 
 const CEO_EMAIL = Deno.env.get('CEO_EMAIL') ?? 'pjoacenel@gmail.com';
-const MAX_ITERATIONS = 15;
-const MAX_TOKENS = 8192;
-const WEB_SEARCH_MAX_PER_MISSION = 10;
+const MAX_ITERATIONS = 8;
+const MAX_TOKENS = 4096;
+const WEB_SEARCH_MAX_PER_MISSION = 4;
+const SOFT_TIMEOUT_MS = 110_000; // 110s — laisse 40s de marge avant le timeout Supabase (150s)
 
 // ---------------------------------------------------------------------------
 // AGENT BRIEFS — updated with Niveau 1 & 2 capabilities
@@ -520,8 +521,15 @@ Deno.serve(async (req: Request) => {
     let finalStatus: 'completed' | 'failed' = 'completed';
     let finished = false;
     let webSearchCount = 0;
+    const missionStartTime = Date.now();
 
     for (let iteration = 0; iteration < MAX_ITERATIONS && !finished; iteration++) {
+      // Soft timeout : on arrête proprement avant que Supabase ne tue la fonction
+      if (Date.now() - missionStartTime > SOFT_TIMEOUT_MS) {
+        finalSummary = `Mission interrompue après ${Math.round((Date.now() - missionStartTime) / 1000)}s (limite de temps atteinte). Le livrable partiel a été sauvegardé si create_output a été appelé.`;
+        finalStatus = 'failed';
+        break;
+      }
       const response = await anthropic.messages.create({
         model: 'claude-sonnet-4-6',
         max_tokens: MAX_TOKENS,
@@ -810,7 +818,7 @@ Deno.serve(async (req: Request) => {
                   'X-No-Cache': 'true',
                   'X-Return-Format': 'text',
                 },
-                signal: AbortSignal.timeout(15000),
+                signal: AbortSignal.timeout(8000),
               });
               if (!resp.ok) throw new Error(`Jina Reader error ${resp.status} pour ${input.url}`);
               const text = await resp.text();
