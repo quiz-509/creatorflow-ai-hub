@@ -82,10 +82,51 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes spin{to{transform:rotate(360deg);}}
 .result-box{padding:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;font-size:12px;color:var(--text-2);}
 
+/* Markdown rendu */
+.md-body{font-size:13.5px;line-height:1.85;color:var(--text);word-break:break-word;}
+.md-body h1{font-size:19px;font-weight:800;margin:20px 0 8px;letter-spacing:-0.02em;}
+.md-body h2{font-size:16px;font-weight:700;margin:18px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.md-body h3{font-size:14px;font-weight:700;margin:14px 0 6px;}
+.md-body p{margin:0 0 12px;}
+.md-body p:last-child{margin-bottom:0;}
+.md-body strong{font-weight:700;}
+.md-body em{font-style:italic;}
+.md-body hr{border:none;border-top:1px solid var(--border-2);margin:18px 0;}
+.md-body ul,.md-body ol{padding-left:22px;margin:0 0 12px;}
+.md-body li{margin-bottom:4px;}
+.md-body blockquote{border-left:3px solid var(--v);padding:8px 14px;background:rgba(124,58,237,0.06);border-radius:0 6px 6px 0;margin:12px 0;color:var(--text-2);}
+.md-body code{background:rgba(255,255,255,0.07);border-radius:4px;padding:1px 5px;font-size:0.88em;font-family:monospace;}
+.md-body pre{background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;overflow-x:auto;margin:12px 0;}
+.md-body pre code{background:none;padding:0;font-size:12px;}
+
+/* Métadonnées article */
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;padding:12px 0 4px;border-top:1px solid var(--border);}
+.meta-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:rgba(255,255,255,0.04);border:1px solid var(--border-2);border-radius:999px;font-size:11px;color:var(--text-2);}
+.meta-chip b{color:var(--text-3);font-weight:700;font-size:10px;text-transform:uppercase;margin-right:2px;}
+.meta-desc{font-size:12px;color:var(--text-2);line-height:1.6;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;margin-top:6px;}
+
+/* Grille images */
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+
+/* Cartes vidéo */
+.video-card{display:flex;gap:12px;background:var(--surf-3);border:1px solid var(--border-2);border-radius:10px;padding:10px;text-decoration:none;transition:border-color 180ms;}
+.video-card:hover{border-color:rgba(124,58,237,0.4);}
+.video-thumb{width:120px;height:68px;object-fit:cover;border-radius:6px;flex-shrink:0;}
+.video-thumb-placeholder{width:120px;height:68px;background:rgba(124,58,237,0.1);border-radius:6px;flex-shrink:0;display:grid;place-items:center;font-size:24px;}
+
 @media(max-width:768px){
   .app{padding-left:16px;padding-right:16px;}
   .agents-grid{grid-template-columns:1fr;}
   .nav-inner{padding:0 14px;}
+  .page-title{font-size:22px;}
+}
+@media(max-width:520px){
+  .img-grid{grid-template-columns:repeat(2,1fr);}
+  .video-card{flex-direction:column;}
+  .video-thumb,.video-thumb-placeholder{width:100%!important;height:auto!important;aspect-ratio:16/9;}
+  .page-title{font-size:20px;}
+  .modal{margin:0;border-radius:var(--r-lg) var(--r-lg) 0 0;position:fixed;bottom:0;max-height:92vh;}
+  .modal-backdrop{align-items:flex-end;padding:0;}
 }
   </style>
 </head>
@@ -94,6 +135,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
 <script>
 const { useState, useEffect } = React;
 const { createClient } = supabase;
@@ -123,18 +165,36 @@ function Deliverable({ mission, outputs }) {
   if (!mission.delivered_to_client) return null;
   const relevant = (outputs || []).filter(o => o.mission_id === mission.id);
 
-  const copyContent = (text) => {
-    navigator.clipboard.writeText(text).catch(() => {});
-  };
-
   const MEDIA_KEYS = ['images','videos'];
   const TEXT_KEYS = ['title','body','content','text','plan','strategy','result','sections'];
+  const META_KEYS = ['category','word_count','meta_description','suggested_tags','target_audience','publishing_notes'];
+
+  const renderMarkdown = (md) => {
+    if (typeof marked !== 'undefined') {
+      try { return marked.parse(String(md)); } catch(e) {}
+    }
+    return String(md).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  };
+
+  const renderMeta = (d) => {
+    const chips = [];
+    if (d.category) chips.push(React.createElement('span', { key:'cat', className:'meta-chip' }, React.createElement('b', null, 'Catégorie'), d.category));
+    if (d.word_count) chips.push(React.createElement('span', { key:'wc', className:'meta-chip' }, React.createElement('b', null, 'Mots'), String(d.word_count)));
+    if (d.target_audience) chips.push(React.createElement('span', { key:'ta', className:'meta-chip' }, React.createElement('b', null, 'Audience'), d.target_audience));
+    const tags = Array.isArray(d.suggested_tags) ? d.suggested_tags : (typeof d.suggested_tags === 'string' ? d.suggested_tags.split(',').map(t => t.trim()) : []);
+    tags.slice(0,5).forEach((tag,i) => chips.push(React.createElement('span', { key:'tag'+i, className:'meta-chip' }, '# ', tag)));
+    const extras = [];
+    if (chips.length) extras.push(React.createElement('div', { key:'chips', className:'meta-row' }, chips));
+    if (d.meta_description) extras.push(React.createElement('div', { key:'meta', className:'meta-desc' }, React.createElement('b', { style:{color:'var(--text-3)',fontSize:10,textTransform:'uppercase',letterSpacing:'0.07em',marginRight:6} }, 'SEO'), d.meta_description));
+    if (d.publishing_notes) extras.push(React.createElement('div', { key:'notes', className:'meta-desc', style:{fontStyle:'italic'} }, React.createElement('b', { style:{color:'var(--text-3)',fontSize:10,textTransform:'uppercase',letterSpacing:'0.07em',marginRight:6,fontStyle:'normal'} }, 'Notes'), d.publishing_notes));
+    return extras;
+  };
 
   const renderImages = (images) => {
     if (!images || !images.length) return null;
-    return React.createElement('div', { style: { marginTop: 16 } },
+    return React.createElement('div', { style: { marginTop: 20 } },
       React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 } }, `Images (${images.length})`),
-      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 } },
+      React.createElement('div', { className: 'img-grid' },
         images.map((img, i) =>
           React.createElement('div', { key: i, style: { borderRadius: 8, overflow: 'hidden', border: '1px solid var(--border-2)', background: 'var(--surf-3)' } },
             React.createElement('a', { href: img.url, target: '_blank', rel: 'noreferrer' },
@@ -146,7 +206,7 @@ function Deliverable({ mission, outputs }) {
                 href: (img.credit_url || '#') + (img.credit_url && !img.credit_url.includes('utm_') ? '?utm_source=creatorflow&utm_medium=referral' : ''),
                 target: '_blank', rel: 'noreferrer',
                 style: { fontSize: 10, color: 'var(--text-3)', display: 'block' }
-              }, img.credit ? `📷 ${img.credit}` : 'Unsplash')
+              }, img.credit ? '📷 ' + img.credit : 'Unsplash')
             )
           )
         )
@@ -156,21 +216,18 @@ function Deliverable({ mission, outputs }) {
 
   const renderVideos = (videos) => {
     if (!videos || !videos.length) return null;
-    return React.createElement('div', { style: { marginTop: 16 } },
+    return React.createElement('div', { style: { marginTop: 20 } },
       React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 } }, `Vidéos (${videos.length})`),
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
         videos.map((v, i) =>
-          React.createElement('a', {
-            key: i, href: v.url, target: '_blank', rel: 'noreferrer',
-            style: { display: 'flex', gap: 12, background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: 10, textDecoration: 'none', transition: 'border-color 180ms' }
-          },
+          React.createElement('a', { key: i, href: v.url, target: '_blank', rel: 'noreferrer', className: 'video-card' },
             v.thumbnail
-              ? React.createElement('img', { src: v.thumbnail, alt: v.title, style: { width: 120, height: 68, objectFit: 'cover', borderRadius: 6, flexShrink: 0 } })
-              : React.createElement('div', { style: { width: 120, height: 68, background: 'rgba(124,58,237,0.1)', borderRadius: 6, flexShrink: 0, display: 'grid', placeItems: 'center', fontSize: 24 } }, '▶'),
+              ? React.createElement('img', { src: v.thumbnail, alt: v.title || '', className: 'video-thumb' })
+              : React.createElement('div', { className: 'video-thumb-placeholder' }, '▶'),
             React.createElement('div', { style: { flex: 1, minWidth: 0 } },
               React.createElement('div', { style: { fontSize: 12, fontWeight: 700, color: 'var(--text)', lineHeight: 1.4, marginBottom: 4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } }, v.title),
               v.description && React.createElement('div', { style: { fontSize: 11, color: 'var(--text-3)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } }, v.description),
-              React.createElement('div', { style: { fontSize: 10, color: 'var(--vs)', marginTop: 4, fontWeight: 600 } }, v.platform === 'vimeo' ? '🎬 Vimeo' : '▶ YouTube')
+              React.createElement('div', { style: { fontSize: 10, color: 'var(--vs)', marginTop: 6, fontWeight: 600 } }, v.platform === 'vimeo' ? '🎬 Vimeo' : '▶ YouTube')
             )
           )
         )
@@ -184,58 +241,55 @@ function Deliverable({ mission, outputs }) {
     const title = d.title || null;
     const images = Array.isArray(d.images) ? d.images : null;
     const videos = Array.isArray(d.videos) ? d.videos : null;
-    const otherKeys = Object.keys(d).filter(k => ![...TEXT_KEYS, ...MEDIA_KEYS].includes(k));
+    const otherKeys = Object.keys(d).filter(k => ![...TEXT_KEYS, ...MEDIA_KEYS, ...META_KEYS].includes(k));
 
     return React.createElement('div', { key: o.id, style: { marginTop: 16 } },
       title && React.createElement('div', {
-        style: { fontSize: 15, fontWeight: 800, color: 'var(--text)', marginBottom: 12, lineHeight: 1.4 }
+        style: { fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.02em' }
       }, title),
       body && React.createElement('div', { style: { position: 'relative' } },
         React.createElement('div', {
-          style: {
-            background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10,
-            padding: '16px', fontSize: 13, lineHeight: 1.8, color: 'var(--text)',
-            whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: 480, overflowY: 'auto'
-          }
-        }, body),
+          className: 'md-body',
+          style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '18px 20px 18px 20px', maxHeight: 540, overflowY: 'auto' },
+          dangerouslySetInnerHTML: { __html: renderMarkdown(body) }
+        }),
         React.createElement('button', {
-          onClick: () => copyContent(body),
-          style: {
-            position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)',
-            border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px',
-            fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer'
-          }
+          onClick: () => navigator.clipboard.writeText(body).catch(() => {}),
+          style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer', zIndex: 2 }
         }, 'Copier')
       ),
       !body && otherKeys.length > 0 && otherKeys.map(k =>
         React.createElement('div', { key: k, style: { marginBottom: 10 } },
           React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 } }, k),
-          React.createElement('div', {
-            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 8, padding: '12px', fontSize: 13, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }
-          }, typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))
+          React.createElement('div', { style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 8, padding: '12px', fontSize: 13, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' } },
+            typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2)
+          )
         )
       ),
       !body && otherKeys.length === 0 && !images && !videos && React.createElement('div', {
         style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px', fontSize: 13, color: 'var(--text-2)', whiteSpace: 'pre-wrap' }
       }, JSON.stringify(d, null, 2)),
+      renderMeta(d),
       renderImages(images),
       renderVideos(videos)
     );
   };
 
-  return React.createElement('div', { className: 'deliverable-box', style: { marginTop: 14, background: 'var(--surf-2)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 12, padding: '16px 18px' } },
-    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 } },
+  return React.createElement('div', { style: { marginTop: 14, background: 'var(--surf-2)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 12, padding: '16px 18px' } },
+    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 } },
       React.createElement('span', { style: { fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--vs)' } }, 'Livrable'),
-      React.createElement('span', { style: { fontSize: 11, color: 'var(--text-3)' } }, `· ${mission.ai_agents?.name || 'Agent IA'}`)
+      React.createElement('span', { style: { fontSize: 11, color: 'var(--text-3)' } }, '· ' + (mission.ai_agents?.name || 'Agent IA'))
     ),
     relevant.length === 0 && mission.result_summary
       ? React.createElement('div', { style: { position: 'relative' } },
           React.createElement('div', {
-            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px', fontSize: 13, lineHeight: 1.8, color: 'var(--text)', whiteSpace: 'pre-wrap', wordBreak: 'break-word', maxHeight: 480, overflowY: 'auto' }
-          }, mission.result_summary),
+            className: 'md-body',
+            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px 18px', maxHeight: 480, overflowY: 'auto' },
+            dangerouslySetInnerHTML: { __html: renderMarkdown(mission.result_summary) }
+          }),
           React.createElement('button', {
             onClick: () => navigator.clipboard.writeText(mission.result_summary).catch(() => {}),
-            style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer' }
+            style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer', zIndex: 2 }
           }, 'Copier')
         )
       : relevant.length === 0
