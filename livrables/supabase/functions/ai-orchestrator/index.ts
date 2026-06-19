@@ -19,24 +19,29 @@ const AGENT_BRIEFS: Record<string, string> = {
   marketing: `Tu es le Marketing AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
 Un client t'a confié une mission décrite dans l'objectif. Exécute-la comme le ferait un consultant marketing senior.
 
+⚠️ RÈGLE ABSOLUE — BUDGET D'ITÉRATIONS :
+Tu as MAXIMUM 8 étapes. Tu DOIS appeler create_output au plus tard à l'étape 5.
+N'attends JAMAIS la dernière étape pour écrire le livrable — tu risques de ne rien livrer.
+Stratégie : 1-2 recherches MAX, puis écris directement le livrable complet.
+Si la mission est créative (plan de contenu, stratégie, copywriting) : commence à rédiger dès l'étape 2 sans chercher.
+
 CAPACITÉS DISPONIBLES :
-- Recherche web (search_web) : analyse marché, concurrents, tendances actuelles — utilise-la avant de produire une stratégie
-- Lecture d'URL (read_url) : consulte un site concurrent, une landing page, un article de référence
+- Recherche web (search_web) : analyse marché, concurrents, tendances — MAX 2 recherches par mission
+- Lecture d'URL (read_url) : consulte un site concurrent ou une source de référence
 - Mémoire client (read_client_memory) : retrouve les préférences et contexte des missions passées
 - Sauvegarde mémoire (save_to_memory) : mémorise le contexte client pour les prochaines missions
-- Rapports (create_report) : structure une analyse en sections documentées
-- Images (find_images) : trouve des visuels Unsplash pour illustrer une stratégie, une présentation, un rapport
-- Vidéos (find_videos) : trouve des vidéos YouTube de référence pour appuyer une recommandation
-- Livrable (create_output) : enregistre le livrable principal. Inclure les images et vidéos trouvées dans output_data.images et output_data.videos
+- Images (find_images) : trouve des visuels Unsplash pour illustrer une stratégie
+- Vidéos (find_videos) : trouve des vidéos YouTube de référence
+- Livrable (create_output) : enregistre le livrable principal — output_data doit contenir le contenu COMPLET (pas un résumé, pas un plan, le vrai livrable)
 - Notification CEO (notify_ceo) : si tu découvres une information critique pour l'entreprise
 
-PROCESSUS :
-1. Lis d'abord la mémoire client si disponible (read_client_memory)
-2. Effectue les recherches nécessaires (search_web, read_url)
-3. Si le livrable bénéficierait de visuels : find_images et/ou find_videos
-4. Produis le livrable complet avec create_output — inclure images[], videos[], et contenu complet dans output_data
-5. Si applicable, sauvegarde les infos clés du client (save_to_memory)
-6. Termine avec finish_mission
+PROCESSUS (respecte l'ordre, max 8 étapes) :
+1. Lis la mémoire client si disponible (read_client_memory) — optionnel
+2. 1 recherche web si vraiment nécessaire (search_web) — sinon passe directement à l'étape 3
+3. Rédige et enregistre le livrable complet avec create_output — c'est l'étape la plus importante
+4. find_images et/ou find_videos si des visuels enrichiraient le livrable (optionnel)
+5. save_to_memory si infos client importantes à retenir (optionnel)
+6. finish_mission
 
 Si le client demande une campagne email interne CreatorFlow : read_blog_subscribers puis request_approval (action_type="send_campaign_email"). Jamais sans approbation.`,
 
@@ -53,14 +58,17 @@ CAPACITÉS DISPONIBLES :
 - Livrable (create_output) : enregistre le contenu final. Format recommandé : output_type="content_piece", output_data={"title":..., "body":..., "images":[...], "videos":[...]}
 - Blog interne (create_blog_draft) : uniquement pour les articles du blog CreatorFlow lui-même
 
-PROCESSUS :
+⚠️ RÈGLE ABSOLUE — BUDGET D'ITÉRATIONS :
+Tu as MAXIMUM 8 étapes. Tu DOIS appeler create_output au plus tard à l'étape 5.
+Commence à écrire le contenu rapidement — pas après 5 recherches. 1-2 recherches MAX.
+
+PROCESSUS (respecte l'ordre) :
 1. Lis la mémoire client si disponible (read_client_memory) pour adapter le ton
-2. Recherche les meilleures sources ou tendances (search_web) si pertinent
-3. Rédige le contenu complet — pas un plan, le contenu réel
-4. Trouve des visuels pertinents (find_images) et vidéos de référence (find_videos) si applicable
-5. Enregistre avec create_output en incluant images et videos dans output_data
-6. Mémorise le style client si c'est une première mission (save_to_memory)
-7. Termine avec finish_mission`,
+2. 1 recherche web (search_web) si besoin d'angle ou de données actuelles — sinon saute
+3. Rédige et enregistre le contenu complet avec create_output — le vrai contenu, pas un plan
+4. find_images et find_videos pour enrichir le livrable (optionnel)
+5. save_to_memory si style client à retenir pour les prochaines missions (optionnel)
+6. finish_mission`,
 
   prospecting: `Tu es le Prospecting AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
 Un client t'a confié une mission de prospection. Exécute-la avec rigueur, comme un business developer expérimenté.
@@ -521,6 +529,8 @@ Deno.serve(async (req: Request) => {
     let finalStatus: 'completed' | 'failed' = 'completed';
     let finished = false;
     let webSearchCount = 0;
+    let outputSaved = false;
+    let outputReminded = false;
     const missionStartTime = Date.now();
 
     for (let iteration = 0; iteration < MAX_ITERATIONS && !finished; iteration++) {
@@ -543,6 +553,17 @@ Deno.serve(async (req: Request) => {
       if (response.stop_reason !== 'tool_use') {
         const textBlock = response.content.find((b) => b.type === 'text');
         finalSummary = textBlock?.type === 'text' ? textBlock.text : 'Mission terminée.';
+
+        // Si l'agent a répondu en texte sans sauvegarder de livrable, on le relance UNE fois
+        if (!outputSaved && !outputReminded) {
+          outputReminded = true;
+          messages.push({
+            role: 'user',
+            content: `Tu n'as pas encore appelé create_output. Appelle-le MAINTENANT avec le livrable complet pour la mission : "${objective}". N'explique pas — produis et sauvegarde directement.`,
+          });
+          continue;
+        }
+
         finished = true;
         break;
       }
@@ -720,6 +741,7 @@ Deno.serve(async (req: Request) => {
               output_data: input.output_data,
               status: 'completed',
             });
+            outputSaved = true;
             resultText = JSON.stringify({ ok: true });
 
           } else if (block.name === 'notify_ceo') {
@@ -998,21 +1020,14 @@ Deno.serve(async (req: Request) => {
       completed_at: missionStatusAfter !== 'waiting_approval' ? new Date().toISOString() : null,
     }).eq('id', mission.id as string);
 
-    // Livrable de secours si l'agent a oublié create_output
-    if (finalStatus === 'completed' && finalSummary) {
-      const { count } = await supabase
-        .from('agent_outputs')
-        .select('id', { count: 'exact', head: true })
-        .eq('mission_id', mission.id as string)
-        .eq('status', 'completed');
-      if (!count) {
-        await supabase.from('agent_outputs').insert({
-          mission_id: mission.id,
-          output_type: 'summary',
-          output_data: { title: mission.title as string, body: finalSummary },
-          status: 'completed',
-        });
-      }
+    // Dernier recours : si aucun livrable sauvegardé, on stocke le résumé textuel
+    if (finalStatus === 'completed' && !outputSaved && finalSummary) {
+      await supabase.from('agent_outputs').insert({
+        mission_id: mission.id,
+        output_type: 'summary',
+        output_data: { title: mission.title as string, body: finalSummary },
+        status: 'completed',
+      });
     }
 
     // Notification CEO automatique pour les missions payées

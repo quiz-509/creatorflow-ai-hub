@@ -229,8 +229,49 @@ function Deliverable({ mission, outputs }) {
   const relevant = (outputs || []).filter(o => o.mission_id === mission.id);
 
   const MEDIA_KEYS = ['images','videos'];
-  const TEXT_KEYS = ['title','body','content','text','plan','strategy','result','sections'];
+  const TEXT_KEYS = ['title','titre','body','content','text','plan','strategy','result','sections'];
   const META_KEYS = ['category','word_count','meta_description','suggested_tags','target_audience','publishing_notes'];
+
+  const structuredToMarkdown = (d) => {
+    let md = '';
+    if (d.description || d.resume_strategie || d.objectif) md += (d.description || d.resume_strategie || d.objectif) + '\n\n';
+    if (Array.isArray(d.posts)) {
+      d.posts.forEach((p, i) => {
+        md += `## Post ${p.numero || i+1}${p.titre ? ' — ' + p.titre : ''}\n\n`;
+        if (p.type) md += `**Type :** ${p.type}\n`;
+        if (p.format) md += `**Format :** ${p.format}\n`;
+        if (p.objectif) md += `**Objectif :** ${p.objectif}\n`;
+        if (p.meilleur_moment_publication) md += `**Meilleur moment :** ${p.meilleur_moment_publication}\n`;
+        md += '\n';
+        if (p.contenu_slides?.length) md += '**Slides :**\n' + p.contenu_slides.map(s => `- ${s}`).join('\n') + '\n\n';
+        if (p.script?.length) md += '**Script :**\n' + p.script.map(s => `- ${s}`).join('\n') + '\n\n';
+        if (p.concept_visuel) md += `**Concept visuel :** ${p.concept_visuel}\n\n`;
+        if (p.legende) md += `**Légende :**\n\n${p.legende}\n\n`;
+        if (p.kpi_vise) md += `**KPI visé :** ${p.kpi_vise}\n\n`;
+        md += '---\n\n';
+      });
+    }
+    if (d.conseils_generaux?.length) md += '## Conseils généraux\n\n' + d.conseils_generaux.map(c => `- ${c}`).join('\n') + '\n\n';
+    if (d.outils_recommandes) {
+      md += '## Outils recommandés\n\n';
+      (Array.isArray(d.outils_recommandes) ? d.outils_recommandes : [d.outils_recommandes]).forEach(o => {
+        if (typeof o === 'string') md += `- ${o}\n`;
+        else if (o.nom || o.name) md += `- **${o.nom || o.name}** : ${o.description || o.usage || ''}\n`;
+        else md += `- ${JSON.stringify(o)}\n`;
+      });
+      md += '\n';
+    }
+    if (d.calendrier_resume) {
+      md += '## Calendrier résumé\n\n';
+      Object.entries(d.calendrier_resume).forEach(([k, v]) => {
+        md += `**${k} :**\n`;
+        if (Array.isArray(v)) v.forEach(item => md += `- ${item}\n`);
+        else md += `${v}\n`;
+        md += '\n';
+      });
+    }
+    return md.trim();
+  };
 
   const renderMarkdown = (md) => {
     if (typeof marked !== 'undefined') {
@@ -303,8 +344,9 @@ function Deliverable({ mission, outputs }) {
 
   const renderOutputData = (o) => {
     const d = o.output_data || {};
-    const body = d.body || d.content || d.text || d.plan || d.strategy || d.result || null;
-    const title = d.title || null;
+    let body = d.body || d.content || d.text || d.plan || d.strategy || d.result || null;
+    if (!body && (d.posts || d.articles || d.sections_detail)) body = structuredToMarkdown(d);
+    const title = d.title || d.titre || null;
     const images = Array.isArray(d.images) ? d.images : null;
     const videos = Array.isArray(d.videos) ? d.videos : null;
     const otherKeys = Object.keys(d).filter(k => ![...TEXT_KEYS, ...MEDIA_KEYS, ...META_KEYS].includes(k));
