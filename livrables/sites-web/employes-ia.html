@@ -119,12 +119,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .agents-grid{grid-template-columns:1fr;}
   .nav-inner{padding:0 14px;}
   .page-title{font-size:22px;}
+  .brand-logo{width:180px;height:48px;}
 }
 @media(max-width:520px){
+  /* Header compact une seule ligne */
+  :root{--nav:52px;}
+  .nav-inner{padding:0 12px;gap:0;}
+  .brand-logo{width:148px;height:40px;}
+  .back-link{font-size:0;width:28px;flex-shrink:0;}
+  .back-link::before{content:'←';font-size:16px;color:var(--text-2);display:block;}
+  .user-chip{padding:3px 8px 3px 3px;gap:6px;}
+  .av{width:26px;height:26px;font-size:10px;}
+  .user-chip .chip-name{display:none;}
+  /* Livrable */
   .img-grid{grid-template-columns:repeat(2,1fr);}
   .video-card{flex-direction:column;}
   .video-thumb,.video-thumb-placeholder{width:100%!important;height:auto!important;aspect-ratio:16/9;}
   .page-title{font-size:20px;}
+  /* Modal bottom-sheet */
   .modal{margin:0;border-radius:var(--r-lg) var(--r-lg) 0 0;position:fixed;bottom:0;max-height:92vh;}
   .modal-backdrop{align-items:flex-end;padding:0;}
 }
@@ -253,7 +265,7 @@ function Deliverable({ mission, outputs }) {
       body && React.createElement('div', { style: { position: 'relative' } },
         React.createElement('div', {
           className: 'md-body',
-          style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '14px 16px', maxHeight: 560, overflowY: 'auto' },
+          style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '14px 16px' },
           dangerouslySetInnerHTML: { __html: renderMarkdown(body) }
         }),
         React.createElement('button', {
@@ -287,7 +299,7 @@ function Deliverable({ mission, outputs }) {
       ? React.createElement('div', { style: { position: 'relative' } },
           React.createElement('div', {
             className: 'md-body',
-            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '16px 18px', maxHeight: 480, overflowY: 'auto' },
+            style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '14px 16px' },
             dangerouslySetInnerHTML: { __html: renderMarkdown(mission.result_summary) }
           }),
           React.createElement('button', {
