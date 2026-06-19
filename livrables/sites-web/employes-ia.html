@@ -122,21 +122,72 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .brand-logo{width:180px;height:48px;}
 }
 @media(max-width:520px){
-  /* Header compact une seule ligne */
+  /* Header : compact, une seule ligne */
   :root{--nav:52px;}
-  .nav-inner{padding:0 12px;gap:0;}
+  .nav-inner{padding:0 12px;}
   .brand-logo{width:148px;height:40px;}
   .back-link{font-size:0;width:28px;flex-shrink:0;}
-  .back-link::before{content:'←';font-size:16px;color:var(--text-2);display:block;}
+  .back-link::before{content:'←';font-size:18px;color:var(--text-2);display:block;}
   .user-chip{padding:3px 8px 3px 3px;gap:6px;}
   .av{width:26px;height:26px;font-size:10px;}
-  .user-chip .chip-name{display:none;}
-  /* Livrable */
+
+  /* Layout : app full-width, plus de padding latéral */
+  .app{padding-left:0!important;padding-right:0!important;}
+  .page-header{padding:24px 16px 8px!important;}
+  .agents-grid{padding:0 16px;}
+
+  /* Section card : flat, bords latéraux supprimés */
+  .section-card{border-left:none;border-right:none;border-radius:0;}
+  .section-head{padding:12px 16px;}
+  .mission-row{padding:14px 16px;}
+
+  /* Livrable : mode document (85% largeur contenu) */
+  .deliverable-doc{
+    margin:12px -16px 0!important;
+    background:transparent!important;
+    border:none!important;
+    border-top:1px solid var(--border)!important;
+    border-radius:0!important;
+    padding:14px 0 8px!important;
+  }
+  .livrable-tag{padding:0 16px!important;margin-bottom:8px!important;}
+  .article-title{padding:0 16px!important;font-size:19px!important;margin-bottom:12px!important;margin-top:12px!important;}
+  .body-wrap{padding:0 16px!important;}
+
+  /* Markdown : transparent, sans carte, lecture directe */
+  .md-body{
+    background:transparent!important;
+    border:none!important;
+    border-radius:0!important;
+    padding:0!important;
+    font-size:15px!important;
+    line-height:1.72!important;
+  }
+
+  /* Bouton Copier : icône seule 30×30 */
+  .copy-btn{
+    top:4px!important;right:8px!important;
+    width:30px!important;height:30px!important;
+    padding:0!important;font-size:0!important;
+    background:rgba(124,58,237,0.12)!important;
+    border:1px solid rgba(124,58,237,0.25)!important;
+    border-radius:8px!important;cursor:pointer!important;
+  }
+  .copy-btn::after{content:'⎘';font-size:16px;color:var(--vs);display:block;text-align:center;line-height:30px;}
+
+  /* Métadonnées avec padding */
+  .meta-row{padding:10px 16px 4px!important;}
+  .meta-desc{margin:6px 16px 0!important;}
+
+  /* Médias avec padding */
+  .media-section{padding:0 16px!important;}
   .img-grid{grid-template-columns:repeat(2,1fr);}
   .video-card{flex-direction:column;}
   .video-thumb,.video-thumb-placeholder{width:100%!important;height:auto!important;aspect-ratio:16/9;}
+
   .page-title{font-size:20px;}
-  /* Modal bottom-sheet */
+
+  /* Modal : bottom-sheet */
   .modal{margin:0;border-radius:var(--r-lg) var(--r-lg) 0 0;position:fixed;bottom:0;max-height:92vh;}
   .modal-backdrop{align-items:flex-end;padding:0;}
 }
@@ -207,7 +258,7 @@ function Deliverable({ mission, outputs }) {
 
   const renderImages = (images) => {
     if (!images || !images.length) return null;
-    return React.createElement('div', { style: { marginTop: 20 } },
+    return React.createElement('div', { className: 'media-section', style: { marginTop: 20 } },
       React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 } }, `Images (${images.length})`),
       React.createElement('div', { className: 'img-grid' },
         images.map((img, i) =>
@@ -231,7 +282,7 @@ function Deliverable({ mission, outputs }) {
 
   const renderVideos = (videos) => {
     if (!videos || !videos.length) return null;
-    return React.createElement('div', { style: { marginTop: 20 } },
+    return React.createElement('div', { className: 'media-section', style: { marginTop: 20 } },
       React.createElement('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 } }, `Vidéos (${videos.length})`),
       React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
         videos.map((v, i) =>
@@ -258,17 +309,19 @@ function Deliverable({ mission, outputs }) {
     const videos = Array.isArray(d.videos) ? d.videos : null;
     const otherKeys = Object.keys(d).filter(k => ![...TEXT_KEYS, ...MEDIA_KEYS, ...META_KEYS].includes(k));
 
-    return React.createElement('div', { key: o.id, style: { marginTop: 16 } },
+    return React.createElement('div', { key: o.id },
       title && React.createElement('div', {
-        style: { fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.02em' }
+        className: 'article-title',
+        style: { fontSize: 17, fontWeight: 800, color: 'var(--text)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.02em', marginTop: 16 }
       }, title),
-      body && React.createElement('div', { style: { position: 'relative' } },
+      body && React.createElement('div', { className: 'body-wrap', style: { position: 'relative' } },
         React.createElement('div', {
           className: 'md-body',
           style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '14px 16px' },
           dangerouslySetInnerHTML: { __html: renderMarkdown(body) }
         }),
         React.createElement('button', {
+          className: 'copy-btn',
           onClick: () => navigator.clipboard.writeText(body).catch(() => {}),
           style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer', zIndex: 2 }
         }, 'Copier')
@@ -290,19 +343,20 @@ function Deliverable({ mission, outputs }) {
     );
   };
 
-  return React.createElement('div', { style: { marginTop: 14, background: 'var(--surf-2)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 12, padding: '16px 18px' } },
-    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 } },
+  return React.createElement('div', { className: 'deliverable-doc', style: { marginTop: 14, background: 'var(--surf-2)', border: '1px solid rgba(124,58,237,0.2)', borderRadius: 12, padding: '16px 18px' } },
+    React.createElement('div', { className: 'livrable-tag', style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 } },
       React.createElement('span', { style: { fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--vs)' } }, 'Livrable'),
       React.createElement('span', { style: { fontSize: 11, color: 'var(--text-3)' } }, '· ' + (mission.ai_agents?.name || 'Agent IA'))
     ),
     relevant.length === 0 && mission.result_summary
-      ? React.createElement('div', { style: { position: 'relative' } },
+      ? React.createElement('div', { className: 'body-wrap', style: { position: 'relative' } },
           React.createElement('div', {
             className: 'md-body',
             style: { background: 'var(--surf-3)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '14px 16px' },
             dangerouslySetInnerHTML: { __html: renderMarkdown(mission.result_summary) }
           }),
           React.createElement('button', {
+            className: 'copy-btn',
             onClick: () => navigator.clipboard.writeText(mission.result_summary).catch(() => {}),
             style: { position: 'absolute', top: 8, right: 8, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'var(--vs)', cursor: 'pointer', zIndex: 2 }
           }, 'Copier')
