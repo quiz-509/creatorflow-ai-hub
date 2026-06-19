@@ -24,15 +24,18 @@ CAPACITÉS DISPONIBLES :
 - Mémoire client (read_client_memory) : retrouve les préférences et contexte des missions passées
 - Sauvegarde mémoire (save_to_memory) : mémorise le contexte client pour les prochaines missions
 - Rapports (create_report) : structure une analyse en sections documentées
-- Livrable (create_output) : enregistre le livrable principal (stratégie, plan, calendrier, emails...)
+- Images (find_images) : trouve des visuels Unsplash pour illustrer une stratégie, une présentation, un rapport
+- Vidéos (find_videos) : trouve des vidéos YouTube de référence pour appuyer une recommandation
+- Livrable (create_output) : enregistre le livrable principal. Inclure les images et vidéos trouvées dans output_data.images et output_data.videos
 - Notification CEO (notify_ceo) : si tu découvres une information critique pour l'entreprise
 
 PROCESSUS :
 1. Lis d'abord la mémoire client si disponible (read_client_memory)
 2. Effectue les recherches nécessaires (search_web, read_url)
-3. Produis le livrable complet avec create_output — contenu complet dans output_data, pas un résumé
-4. Si applicable, sauvegarde les infos clés du client (save_to_memory)
-5. Termine avec finish_mission
+3. Si le livrable bénéficierait de visuels : find_images et/ou find_videos
+4. Produis le livrable complet avec create_output — inclure images[], videos[], et contenu complet dans output_data
+5. Si applicable, sauvegarde les infos clés du client (save_to_memory)
+6. Termine avec finish_mission
 
 Si le client demande une campagne email interne CreatorFlow : read_blog_subscribers puis request_approval (action_type="send_campaign_email"). Jamais sans approbation.`,
 
@@ -44,16 +47,19 @@ CAPACITÉS DISPONIBLES :
 - Lecture d'URL (read_url) : consulte un article de référence, un concurrent, une source d'inspiration
 - Mémoire client (read_client_memory) : ton de voix du client, thématiques récurrentes, audience cible
 - Sauvegarde mémoire (save_to_memory) : mémorise le style et les préférences éditoriales du client
-- Livrable (create_output) : enregistre le contenu final (output_type="content_piece", output_data={"title":..., "body":...})
+- Images (find_images) : trouve des visuels Unsplash pour illustrer l'article ou le post
+- Vidéos (find_videos) : trouve des vidéos YouTube complémentaires à intégrer dans le contenu
+- Livrable (create_output) : enregistre le contenu final. Format recommandé : output_type="content_piece", output_data={"title":..., "body":..., "images":[...], "videos":[...]}
 - Blog interne (create_blog_draft) : uniquement pour les articles du blog CreatorFlow lui-même
 
 PROCESSUS :
 1. Lis la mémoire client si disponible (read_client_memory) pour adapter le ton
 2. Recherche les meilleures sources ou tendances (search_web) si pertinent
 3. Rédige le contenu complet — pas un plan, le contenu réel
-4. Enregistre avec create_output, contenu entier dans output_data.body
-5. Mémorise le style client si c'est une première mission (save_to_memory)
-6. Termine avec finish_mission`,
+4. Trouve des visuels pertinents (find_images) et vidéos de référence (find_videos) si applicable
+5. Enregistre avec create_output en incluant images et videos dans output_data
+6. Mémorise le style client si c'est une première mission (save_to_memory)
+7. Termine avec finish_mission`,
 
   prospecting: `Tu es le Prospecting AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
 Un client t'a confié une mission de prospection. Exécute-la avec rigueur, comme un business developer expérimenté.
@@ -63,7 +69,9 @@ CAPACITÉS DISPONIBLES :
 - Lecture d'URL (read_url) : consulte le site d'une entreprise cible, son LinkedIn, ses offres
 - Mémoire client (read_client_memory) : ICP du client, secteurs ciblés, séquences passées
 - Sauvegarde mémoire (save_to_memory) : mémorise le profil de prospect idéal pour ce client
-- Livrable (create_output) : liste de prospects qualifiés, séquences d'emails, plan de prospection complet
+- Images (find_images) : visuels pour un rapport de prospection ou une présentation
+- Vidéos (find_videos) : vidéos de référence sur le secteur ciblé ou des témoignages
+- Livrable (create_output) : liste de prospects qualifiés, séquences d'emails, plan de prospection complet. Inclure images/videos si pertinent
 - Rapports (create_report) : analyse d'un marché, d'une niche, d'une opportunité
 
 PROCESSUS :
@@ -85,7 +93,9 @@ CAPACITÉS DISPONIBLES :
 - Mémoire client (read_client_memory) : contexte technique du client, outils utilisés, problèmes passés
 - Sauvegarde mémoire (save_to_memory) : mémorise l'environnement technique du client
 - Tickets (create_support_ticket / update_support_ticket) : pour les tickets de la plateforme
-- Livrable (create_output) : FAQ, procédure, réponse rédigée, base de connaissances
+- Images (find_images) : captures illustratives ou visuels pour une documentation
+- Vidéos (find_videos) : tutoriels YouTube à recommander au client pour résoudre son problème
+- Livrable (create_output) : FAQ, procédure, réponse rédigée, base de connaissances. Inclure videos si des tutoriels pertinents existent
 - Rapports (create_report) : analyse des tickets, rapport de résolution
 
 PROCESSUS :
@@ -325,6 +335,32 @@ const TOOLS: Anthropic.Tool[] = [
         file_id: { type: 'string', description: 'UUID du fichier dans client_files.' },
       },
       required: ['file_id'],
+    },
+  },
+  {
+    name: 'find_images',
+    description: "Trouver des images stock professionnelles (Unsplash) pour illustrer un contenu, un article, une stratégie. Retourne des URLs directement utilisables avec crédit photographe.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Sujet de l\'image en anglais pour de meilleurs résultats. Ex: "ai marketing dashboard", "content creator workspace".' },
+        count: { type: 'number', description: 'Nombre d\'images souhaitées (défaut 3, max 6).' },
+        orientation: { type: 'string', description: 'landscape (paysage, pour articles/headers), portrait (pour posts sociaux), squarish (carré, pour thumbnails). Défaut : landscape.' },
+      },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'find_videos',
+    description: "Trouver des vidéos YouTube ou Vimeo pertinentes pour enrichir un livrable, illustrer un concept, ou suggérer des ressources visuelles au client.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Sujet de la vidéo recherchée.' },
+        count: { type: 'number', description: 'Nombre de vidéos souhaitées (défaut 3, max 5).' },
+        platform: { type: 'string', description: 'youtube, vimeo, ou both. Défaut : youtube.' },
+      },
+      required: ['query'],
     },
   },
 ];
@@ -831,6 +867,91 @@ Deno.serve(async (req: Request) => {
                 file_type: data.file_type,
                 content: data.content_extracted.slice(0, 6000),
               });
+            }
+
+          } else if (block.name === 'find_images') {
+            const unsplashKey = Deno.env.get('UNSPLASH_ACCESS_KEY') ?? '';
+            if (!unsplashKey) {
+              resultText = JSON.stringify({ error: 'UNSPLASH_ACCESS_KEY non configurée. Ajoute-la dans les secrets Supabase.' });
+            } else {
+              const input = block.input as { query: string; count?: number; orientation?: string };
+              const params = new URLSearchParams({
+                query: input.query,
+                per_page: String(Math.min(input.count || 3, 6)),
+                orientation: input.orientation || 'landscape',
+                client_id: unsplashKey,
+              });
+              const resp = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
+                signal: AbortSignal.timeout(10000),
+              });
+              if (!resp.ok) throw new Error(`Unsplash error ${resp.status}`);
+              const data = await resp.json() as {
+                results: Array<{
+                  urls: { regular: string; small: string };
+                  alt_description: string;
+                  description: string;
+                  user: { name: string; links: { html: string } };
+                  width: number; height: number;
+                }>;
+              };
+              const images = data.results.map((img) => ({
+                url: img.urls.regular,
+                thumb: img.urls.small,
+                alt: img.alt_description || img.description || input.query,
+                credit: img.user.name,
+                credit_url: `${img.user.links.html}?utm_source=creatorflow&utm_medium=referral`,
+                width: img.width,
+                height: img.height,
+              }));
+              resultText = JSON.stringify({ images, total: images.length });
+            }
+
+          } else if (block.name === 'find_videos') {
+            if (webSearchCount >= WEB_SEARCH_MAX_PER_MISSION) {
+              resultText = JSON.stringify({ error: `Limite de ${WEB_SEARCH_MAX_PER_MISSION} recherches web atteinte.` });
+            } else if (!tavilyKey) {
+              resultText = JSON.stringify({ error: 'TAVILY_API_KEY non configurée.' });
+            } else {
+              const input = block.input as { query: string; count?: number; platform?: string };
+              webSearchCount++;
+              const platform = (input.platform || 'youtube').toLowerCase();
+              const includeDomains = platform === 'vimeo' ? ['vimeo.com']
+                : platform === 'both' || platform === 'les deux' ? ['youtube.com', 'vimeo.com']
+                : ['youtube.com'];
+              const resp = await fetch('https://api.tavily.com/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  api_key: tavilyKey,
+                  query: input.query,
+                  max_results: Math.min(input.count || 3, 5),
+                  include_domains: includeDomains,
+                  search_depth: 'basic',
+                }),
+                signal: AbortSignal.timeout(12000),
+              });
+              if (!resp.ok) throw new Error(`Tavily error ${resp.status}`);
+              const data = await resp.json() as {
+                results?: Array<{ title: string; url: string; content: string }>;
+              };
+              const videos = (data.results || []).map((r) => {
+                const ytMatch = r.url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+                const vimeoMatch = r.url.match(/vimeo\.com\/(\d+)/);
+                return {
+                  title: r.title,
+                  url: r.url,
+                  video_id: ytMatch?.[1] || vimeoMatch?.[1] || null,
+                  platform: ytMatch ? 'youtube' : vimeoMatch ? 'vimeo' : 'other',
+                  embed_url: ytMatch
+                    ? `https://www.youtube.com/embed/${ytMatch[1]}`
+                    : vimeoMatch ? `https://player.vimeo.com/video/${vimeoMatch[1]}` : null,
+                  thumbnail: ytMatch
+                    ? `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`
+                    : null,
+                  description: r.content.slice(0, 300),
+                };
+              });
+              resultText = JSON.stringify({ videos });
             }
 
           } else {
