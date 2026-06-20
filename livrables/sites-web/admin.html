@@ -1660,18 +1660,21 @@ function AIWorkforceTab() {
         });
         if (['send_email', 'send_prospect_email'].includes(approval.action_type)) {
           const emailTo = approval.action_data?.to;
-          if (emailTo) {
-            const { data: crmContact } = await sb.from('crm_contacts').select('id').eq('email', emailTo).maybeSingle();
-            if (crmContact?.id) {
-              await sb.from('crm_contacts').update({ status: 'contacted', updated_at: new Date().toISOString() }).eq('id', crmContact.id);
-              await sb.from('crm_activities').insert({
-                contact_id: crmContact.id,
-                mission_id: approval.mission_id,
-                type: 'email_sent',
-                subject: approval.action_data?.subject,
-                content: (approval.action_data?.body || '').slice(0, 500),
-              });
-            }
+          const crmContactIdDirect = approval.action_data?.crm_contact_id;
+          let crmContactId = crmContactIdDirect || null;
+          if (!crmContactId && emailTo) {
+            const { data: found } = await sb.from('crm_contacts').select('id').eq('email', emailTo).maybeSingle();
+            crmContactId = found?.id || null;
+          }
+          if (crmContactId) {
+            await sb.from('crm_contacts').update({ status: 'contacted', updated_at: new Date().toISOString() }).eq('id', crmContactId);
+            await sb.from('crm_activities').insert({
+              contact_id: crmContactId,
+              mission_id: approval.mission_id,
+              type: 'email_sent',
+              subject: approval.action_data?.subject,
+              content: (approval.action_data?.body || '').slice(0, 500),
+            });
           }
         }
       }

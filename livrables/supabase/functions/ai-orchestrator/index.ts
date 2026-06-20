@@ -99,12 +99,14 @@ PROCESSUS OBLIGATOIRE :
 1. read_client_memory — contexte client et ICP défini
 2. read_crm_contacts — voir les contacts déjà en base, éviter doublons
 3. search_web — trouver 3 à 5 prospects réels et qualifiés
-4. Pour chaque prospect : save_to_crm avec notes de qualification détaillées
+4. Pour chaque prospect : save_to_crm avec notes de qualification détaillées (récupère le crm_contact_id retourné)
 5. Rédiger les emails personnalisés (un par prospect prioritaire)
 6. create_output — rapport complet avec la liste qualifiée et les emails prêts
 7. save_to_memory — mémoriser le profil ICP si première mission
-8. request_approval — pour l'email au prospect le plus qualifié
+8. request_approval — pour l'email au prospect le plus qualifié. IMPORTANT : inclure OBLIGATOIREMENT crm_contact_id dans action_data si le contact est en CRM (utilise l'id retourné par save_to_crm ou lu dans read_crm_contacts)
 9. finish_mission
+
+⚠️ RÈGLE EMAIL CRM : Utilise TOUJOURS l'email récupéré depuis read_crm_contacts ou retourné par save_to_crm — jamais l'email mentionné dans l'objectif textuel (il peut contenir des fautes de frappe).
 
 Pour les missions internes : read_open_briefs pour identifier des opportunités.`,
 
