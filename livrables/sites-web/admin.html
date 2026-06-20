@@ -412,6 +412,10 @@ function Sidebar({
     id: 'ai-workforce',
     label: 'AI Workforce',
     icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("circle",{cx:"12",cy:"7",r:"3"}), /*#__PURE__*/React.createElement("path",{d:"M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"}), /*#__PURE__*/React.createElement("circle",{cx:"4",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M2 20c0-2.2 1-4 2-4"}), /*#__PURE__*/React.createElement("circle",{cx:"20",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M22 20c0-2.2-1-4-2-4"}))
+  }, {
+    id: 'crm',
+    label: 'CRM',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"}), /*#__PURE__*/React.createElement("circle",{cx:"9",cy:"7",r:"4"}), /*#__PURE__*/React.createElement("path",{d:"M23 21v-2a4 4 0 0 0-3-3.87"}), /*#__PURE__*/React.createElement("path",{d:"M16 3.13a4 4 0 0 1 0 7.75"}))
   }];
   return /*#__PURE__*/React.createElement(React.Fragment, null,
     open && /*#__PURE__*/React.createElement("div", {
@@ -1428,6 +1432,28 @@ function AIWorkforceTab() {
   const [delivering, setDelivering] = useState(null);
   const [rerunning, setRerunning] = useState(null);
   const [previewModal, setPreviewModal] = useState(null);
+  const [workflowRuns, setWorkflowRuns] = useState([]);
+  const [triggeringStep, setTriggeringStep] = useState(null);
+  const WORKFLOW_RUNNER_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/workflow-runner';
+  const loadWorkflowRuns = async () => {
+    const {data} = await sb.from('workflow_runs')
+      .select('*, agent_workflows(name, slug), workflow_step_runs(step_index, agent_slug, status, mission_id, output)')
+      .in('status', ['running','waiting','waiting_approval'])
+      .order('created_at', {ascending: false}).limit(10);
+    setWorkflowRuns(data || []);
+  };
+  const triggerNextStep = async (runId) => {
+    setTriggeringStep(runId);
+    const {data:{session}} = await sb.auth.getSession();
+    await fetch(WORKFLOW_RUNNER_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${SUPABASE_KEY}`,'apikey':SUPABASE_KEY},
+      body:JSON.stringify({run_id: runId})
+    });
+    await new Promise(r => setTimeout(r, 2000));
+    await loadWorkflowRuns();
+    setTriggeringStep(null);
+  };
   const reloadMissionsAndApprovals = async () => {
     const [{data: ms}, {data: ap}] = await Promise.all([
       sb.from('agent_missions').select('*, ai_agents(name,icon,slug), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
@@ -1492,6 +1518,7 @@ function AIWorkforceTab() {
       setAgents(ag || []);
       setTasks(tk || []);
       await reloadMissionsAndApprovals();
+      await loadWorkflowRuns();
       setLoading(false);
     })();
   }, []);
@@ -1609,6 +1636,44 @@ function AIWorkforceTab() {
       }
       if (approval.mission_id) {
         await sb.from('agent_missions').update({status: approve ? 'completed' : 'cancelled', completed_at: new Date().toISOString()}).eq('id', approval.mission_id);
+      }
+      // PRIORITÉ 1 — Rapport de mission + mise à jour CRM
+      if (approve && approval.mission_id) {
+        const actionLabels = {
+          publish_article: 'Article publié',
+          send_email: 'Email envoyé',
+          send_prospect_email: 'Email prospect envoyé',
+          send_campaign_email: 'Campagne email envoyée',
+          respond_support_ticket: 'Ticket support résolu',
+          trigger_workflow: 'Workflow déclenché',
+        };
+        await sb.from('agent_reports').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'ia-agent',
+          title: actionLabels[approval.action_type] || approval.action_type,
+          sections: {
+            action_type: approval.action_type,
+            executed_at: new Date().toISOString(),
+            approved_by: session?.user?.id,
+            details: approval.action_data,
+          }
+        });
+        if (['send_email', 'send_prospect_email'].includes(approval.action_type)) {
+          const emailTo = approval.action_data?.to;
+          if (emailTo) {
+            const { data: crmContact } = await sb.from('crm_contacts').select('id').eq('email', emailTo).maybeSingle();
+            if (crmContact?.id) {
+              await sb.from('crm_contacts').update({ status: 'contacted', updated_at: new Date().toISOString() }).eq('id', crmContact.id);
+              await sb.from('crm_activities').insert({
+                contact_id: crmContact.id,
+                mission_id: approval.mission_id,
+                type: 'email_sent',
+                subject: approval.action_data?.subject,
+                content: (approval.action_data?.body || '').slice(0, 500),
+              });
+            }
+          }
+        }
       }
       await reloadMissionsAndApprovals();
     } catch(e) { alert('Erreur : ' + e.message); }
@@ -1879,6 +1944,38 @@ function AIWorkforceTab() {
             )
           )
     ),
+    workflowRuns.length > 0 && /*#__PURE__*/React.createElement("div", {className:"section-card", style:{marginBottom:20, border:'1px solid rgba(124,58,237,0.3)'}},
+      /*#__PURE__*/React.createElement("div", {className:"section-head"},
+        /*#__PURE__*/React.createElement("span", {className:"section-title"}, "⚡ Workflows en cours"),
+        /*#__PURE__*/React.createElement("div", {style:{display:'flex',gap:8,alignItems:'center'}},
+          /*#__PURE__*/React.createElement("span", {className:"section-count"}, workflowRuns.length),
+          /*#__PURE__*/React.createElement("button", {className:"btn-preview", style:{fontSize:11}, onClick: loadWorkflowRuns}, "↻ Actualiser")
+        )
+      ),
+      workflowRuns.map(wr => {
+        const wfName = wr.agent_workflows?.name || wr.id.slice(0,8);
+        const steps = (wr.workflow_step_runs || []).sort((a,b) => a.step_index - b.step_index);
+        const STATUS_COLOR_WF = {running:'badge-purple',waiting:'badge-amber',waiting_approval:'badge-amber',completed:'badge-green',failed:'badge-red'};
+        return /*#__PURE__*/React.createElement("div", {key:wr.id, style:{padding:'14px 20px', borderBottom:'1px solid var(--border)'}},
+          /*#__PURE__*/React.createElement("div", {style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8,flexWrap:'wrap',gap:8}},
+            /*#__PURE__*/React.createElement("div", null,
+              /*#__PURE__*/React.createElement("span", {style:{fontWeight:600,fontSize:13,color:'var(--text)'}}, wfName),
+              /*#__PURE__*/React.createElement("span", {className:`badge ${STATUS_COLOR_WF[wr.status]||'badge-gray'}`, style:{marginLeft:8,fontSize:10}}, wr.status)
+            ),
+            wr.status === 'waiting' && /*#__PURE__*/React.createElement("button", {
+              className:"btn-approve", style:{fontSize:11, padding:'4px 10px'},
+              disabled: triggeringStep === wr.id,
+              onClick: () => triggerNextStep(wr.id)
+            }, triggeringStep===wr.id ? '⏳ Démarrage…' : `▶ Déclencher étape ${(wr.current_step||0)+1}`)
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{display:'flex',gap:6,flexWrap:'wrap'}},
+            steps.map(s => /*#__PURE__*/React.createElement("div", {key:s.step_index, style:{fontSize:11,padding:'3px 8px',borderRadius:6,background:'var(--surf-2)',border:`1px solid ${s.status==='completed'?'rgba(16,185,129,0.3)':s.status==='running'?'rgba(124,58,237,0.3)':s.status==='failed'?'rgba(239,68,68,0.3)':'var(--border-2)'}`,color:s.status==='completed'?'#10b981':s.status==='running'?'var(--vs)':s.status==='failed'?'#ef4444':'var(--text-3)'}},
+              `Étape ${s.step_index+1}: ${s.agent_slug} — ${s.status}`
+            ))
+          )
+        );
+      })
+    ),
     modal && /*#__PURE__*/React.createElement("div", {className:"modal-overlay", onClick: closeModal},
       /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:600}, onClick: e => e.stopPropagation()},
         /*#__PURE__*/React.createElement("div", {className:"modal-head"},
@@ -2033,6 +2130,114 @@ function AIWorkforceTab() {
   );
 }
 
+/* ── CRM TAB ── */
+function CRMTab() {
+  const [contacts, setContacts] = React.useState([]);
+  const [activities, setActivities] = React.useState({});
+  const [selected, setSelected] = React.useState(null);
+  const [updatingStatus, setUpdatingStatus] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  const CRM_STATUSES = ['new','contacted','responded','qualified','meeting_scheduled','lost','won'];
+  const STATUS_COLOR = {new:'badge-gray',contacted:'badge-amber',responded:'badge-purple',qualified:'badge-green',meeting_scheduled:'badge-blue',lost:'badge-red',won:'badge-green'};
+
+  const loadContacts = async () => {
+    setLoading(true);
+    const {data} = await sb.from('crm_contacts').select('*').order('created_at', {ascending:false});
+    setContacts(data || []);
+    setLoading(false);
+  };
+
+  const loadActivities = async (id) => {
+    const {data} = await sb.from('crm_activities').select('*').eq('contact_id', id).order('created_at', {ascending:false});
+    setActivities(prev => ({...prev, [id]: data || []}));
+  };
+
+  const updateStatus = async (id, status, e) => {
+    e.stopPropagation();
+    setUpdatingStatus(id);
+    await sb.from('crm_contacts').update({status, updated_at: new Date().toISOString()}).eq('id', id);
+    await loadContacts();
+    setUpdatingStatus(null);
+  };
+
+  React.useEffect(() => { loadContacts(); }, []);
+  React.useEffect(() => { if (selected) loadActivities(selected); }, [selected]);
+
+  const sel = contacts.find(c => c.id === selected);
+  const acts = selected ? (activities[selected] || []) : [];
+  const fmtDate = s => s ? new Date(s).toLocaleDateString('fr-CA') : '—';
+
+  return React.createElement('div', {className:'main'},
+    React.createElement('div', {className:'page-header'},
+      React.createElement('div', null,
+        React.createElement('div', {className:'page-title'}, 'CRM Prospects'),
+        React.createElement('div', {className:'page-sub'}, `${contacts.length} contact${contacts.length !== 1 ? 's' : ''} · Cliquer sur un contact pour voir les détails`)
+      ),
+      React.createElement('button', {className:'btn btn-primary', onClick: loadContacts, style:{fontSize:12}}, 'Actualiser')
+    ),
+    React.createElement('div', {style:{display:'grid', gridTemplateColumns: sel ? '1fr 380px' : '1fr', gap:16, alignItems:'start'}},
+      React.createElement('div', {className:'section-card'},
+        loading
+          ? React.createElement('div', {style:{padding:24, color:'var(--text-3)', textAlign:'center'}}, 'Chargement…')
+          : contacts.length === 0
+            ? React.createElement('div', {style:{padding:32, textAlign:'center', color:'var(--text-3)'}},
+                React.createElement('div', {style:{fontSize:36, marginBottom:8}}, '📋'),
+                React.createElement('div', {style:{fontWeight:700, marginBottom:4}}, 'Aucun prospect CRM'),
+                React.createElement('div', {style:{fontSize:13}}, 'Les agents enregistreront automatiquement les prospects trouvés lors des missions de prospection.')
+              )
+            : React.createElement('table', {className:'data-table'},
+                React.createElement('thead', null, React.createElement('tr', null,
+                  React.createElement('th', null, 'Nom'), React.createElement('th', null, 'Entreprise'), React.createElement('th', null, 'Email'),
+                  React.createElement('th', null, 'Statut'), React.createElement('th', null, 'Mise à jour')
+                )),
+                React.createElement('tbody', null, contacts.map(c =>
+                  React.createElement('tr', {key:c.id, className:`clickable${selected===c.id?' active-row':''}`, onClick:()=>setSelected(c.id===selected?null:c.id)},
+                    React.createElement('td', null, React.createElement('div', {style:{fontWeight:600, color:'var(--text)'}}, c.name)),
+                    React.createElement('td', null, c.company || '—'),
+                    React.createElement('td', null, React.createElement('div', {style:{fontSize:12}}, c.email || '—')),
+                    React.createElement('td', null,
+                      React.createElement('select', {
+                        value: c.status, disabled: updatingStatus===c.id,
+                        onChange: (e)=>updateStatus(c.id, e.target.value, e),
+                        onClick: e=>e.stopPropagation(),
+                        style:{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:6,padding:'3px 8px',fontSize:11,color:'var(--text)',cursor:'pointer'}
+                      }, CRM_STATUSES.map(s=>React.createElement('option',{key:s,value:s},s)))
+                    ),
+                    React.createElement('td', null, React.createElement('span', {className:`badge ${STATUS_COLOR[c.status]||'badge-gray'}`, style:{fontSize:10}}, c.status))
+                  )
+                ))
+              )
+      ),
+      sel && React.createElement('div', {className:'section-card', style:{position:'sticky', top:80}},
+        React.createElement('div', {style:{padding:'14px 18px', borderBottom:'1px solid var(--border)', display:'flex', justifyContent:'space-between', alignItems:'center'}},
+          React.createElement('div', null,
+            React.createElement('div', {style:{fontWeight:700, fontSize:14, color:'var(--text)'}}, sel.name),
+            React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, sel.company || '—')
+          ),
+          React.createElement('button', {onClick:()=>setSelected(null), style:{background:'none',border:'none',color:'var(--text-3)',cursor:'pointer',fontSize:20,lineHeight:1}}, '×')
+        ),
+        React.createElement('div', {style:{padding:'14px 18px', display:'flex', flexDirection:'column', gap:8, maxHeight:600, overflowY:'auto'}},
+          sel.email && React.createElement('div', {style:{fontSize:12, color:'var(--text-2)'}}, '✉ ', sel.email),
+          sel.website && React.createElement('a', {href:sel.website, target:'_blank', style:{fontSize:12, color:'var(--vs)'}}, '🔗 ', sel.website),
+          sel.role && React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, sel.role),
+          sel.tags?.length > 0 && React.createElement('div', {style:{display:'flex', gap:4, flexWrap:'wrap'}}, sel.tags.map(t=>React.createElement('span',{key:t,className:'badge badge-gray',style:{fontSize:10}},t))),
+          sel.notes && React.createElement('div', {style:{fontSize:12, color:'var(--text-2)', background:'var(--surf-2)', borderRadius:8, padding:'10px 12px', lineHeight:1.6, marginTop:4}}, sel.notes),
+          React.createElement('div', {style:{fontWeight:600, fontSize:11, color:'var(--text-3)', marginTop:8, textTransform:'uppercase', letterSpacing:'0.08em'}}, 'Activités'),
+          acts.length === 0
+            ? React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, 'Aucune activité enregistrée.')
+            : acts.map(a => React.createElement('div', {key:a.id, style:{fontSize:12, borderLeft:'2px solid var(--vs)', paddingLeft:10, paddingBottom:8}},
+                React.createElement('div', {style:{fontWeight:600, color:'var(--text)'}}, a.type.replace(/_/g,' ')),
+                a.subject && React.createElement('div', {style:{color:'var(--text-2)'}}, a.subject),
+                a.content && React.createElement('div', {style:{color:'var(--text-3)', fontSize:11, marginTop:2}}, a.content.slice(0,120)+'…'),
+                React.createElement('div', {style:{color:'var(--text-3)', fontSize:11, marginTop:2}}, fmtDate(a.created_at))
+              ))
+        )
+      )
+    )
+  );
+}
+
 /* ── APP ROOT ── */
 function App() {
   const [session, setSession] = useState(undefined);
@@ -2096,7 +2301,8 @@ function App() {
     missions: MissionsTab,
     payments: PaymentsTab,
     blog: BlogTab,
-    'ai-workforce': AIWorkforceTab
+    'ai-workforce': AIWorkforceTab,
+    'crm': CRMTab
   };
   const ActiveTab = tabs[tab];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {

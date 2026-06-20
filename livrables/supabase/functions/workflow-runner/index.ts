@@ -5,6 +5,8 @@ const cors = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+type Step = { index: number; agent_slug: string; objective_template: string; wait_approval?: boolean };
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
@@ -14,20 +16,12 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body = await req.json().catch(() => ({}));
+    const { workflow_slug, run_id, client_id } = body as { workflow_slug?: string; run_id?: string; client_id?: string };
 
-    // Mode : démarrer un workflow ou continuer un run existant
-    const { workflow_slug, run_id, client_id } = body as {
-      workflow_slug?: string;
-      run_id?: string;
-      client_id?: string;
-    };
-
-    // Continuer un run existant (appelé après approbation CEO)
     if (run_id) {
-      return await continueRun(supabase, supabaseUrl, serviceKey, run_id);
+      return await triggerNextStep(supabase, supabaseUrl, serviceKey, run_id);
     }
 
-    // Démarrer un nouveau workflow
     if (!workflow_slug) {
       return new Response(JSON.stringify({ error: 'workflow_slug ou run_id requis.' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
@@ -35,32 +29,19 @@ Deno.serve(async (req: Request) => {
     }
 
     const { data: workflow, error: wfErr } = await supabase
-      .from('agent_workflows')
-      .select('*')
-      .eq('slug', workflow_slug)
-      .eq('is_active', true)
-      .single();
+      .from('agent_workflows').select('*').eq('slug', workflow_slug).eq('is_active', true).single();
     if (wfErr || !workflow) throw new Error(`Workflow "${workflow_slug}" introuvable.`);
 
-    const steps = workflow.steps as Array<{
-      index: number; agent_slug: string; objective_template: string; wait_approval?: boolean;
-    }>;
+    const steps = workflow.steps as Step[];
     if (!steps?.length) throw new Error('Ce workflow n\'a aucune étape définie.');
 
-    // Créer le run
     const { data: run, error: runErr } = await supabase
       .from('workflow_runs')
       .insert({ workflow_id: workflow.id, status: 'running', current_step: 0, context: { client_id: client_id || null } })
-      .select('id')
-      .single();
+      .select('id').single();
     if (runErr || !run) throw new Error('Impossible de créer le run.');
 
-    // Exécuter l'étape 0
-    const result = await executeStep(supabase, supabaseUrl, serviceKey, run.id, steps[0], { client_id: client_id || null }, steps.length);
-
-    return new Response(JSON.stringify({ run_id: run.id, ...result }), {
-      headers: { ...cors, 'Content-Type': 'application/json' },
-    });
+    return await dispatchStep(supabase, supabaseUrl, serviceKey, run.id, steps[0], { client_id: client_id || null }, steps.length, req);
 
   } catch (err) {
     return new Response(JSON.stringify({ error: (err as Error).message }), {
@@ -69,96 +50,115 @@ Deno.serve(async (req: Request) => {
   }
 });
 
-async function continueRun(
+async function triggerNextStep(
   supabase: ReturnType<typeof createClient>,
   supabaseUrl: string,
   serviceKey: string,
   runId: string,
 ) {
-  const cors = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
-
-  const { data: run, error: runErr } = await supabase
+  const { data: run, error } = await supabase
     .from('workflow_runs')
     .select('*, agent_workflows(steps)')
-    .eq('id', runId)
-    .single();
-  if (runErr || !run) throw new Error('Run introuvable.');
+    .eq('id', runId).single();
+  if (error || !run) throw new Error('Run introuvable.');
 
-  const steps = (run.agent_workflows as { steps: Array<{ index: number; agent_slug: string; objective_template: string; wait_approval?: boolean }> }).steps;
-  const nextStep = run.current_step + 1;
+  const steps = (run.agent_workflows as { steps: Step[] }).steps;
+  const nextStep = run.current_step as number;
 
   if (nextStep >= steps.length) {
     await supabase.from('workflow_runs').update({ status: 'completed', completed_at: new Date().toISOString() }).eq('id', runId);
-    return new Response(JSON.stringify({ run_id: runId, status: 'completed', message: 'Workflow terminé.' }), { headers: cors });
+    return new Response(JSON.stringify({ run_id: runId, status: 'completed', message: 'Workflow terminé.' }), {
+      headers: { ...cors, 'Content-Type': 'application/json' },
+    });
   }
 
-  await supabase.from('workflow_runs').update({ status: 'running', current_step: nextStep }).eq('id', runId);
-  const result = await executeStep(supabase, supabaseUrl, serviceKey, runId, steps[nextStep], run.context as Record<string, unknown>, steps.length);
-  return new Response(JSON.stringify({ run_id: runId, ...result }), { headers: cors });
+  return await dispatchStep(supabase, supabaseUrl, serviceKey, runId, steps[nextStep], run.context as Record<string, unknown>, steps.length, null);
 }
 
-async function executeStep(
+async function dispatchStep(
   supabase: ReturnType<typeof createClient>,
   supabaseUrl: string,
   serviceKey: string,
   runId: string,
-  step: { index: number; agent_slug: string; objective_template: string; wait_approval?: boolean },
+  step: Step,
   context: Record<string, unknown>,
   totalSteps: number,
+  req: Request | null,
 ) {
   // Créer le step_run
   const { data: stepRun } = await supabase
     .from('workflow_step_runs')
     .insert({ run_id: runId, step_index: step.index, agent_slug: step.agent_slug, status: 'running', started_at: new Date().toISOString() })
-    .select('id')
-    .single();
+    .select('id').single();
 
-  // Résoudre l'objective_template avec le contexte
+  // Résoudre le template d'objectif
   let objective = step.objective_template;
   for (const [k, v] of Object.entries(context)) {
-    objective = objective.replace(`{{${k}}}`, String(v ?? ''));
+    objective = objective.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), String(v ?? ''));
   }
 
-  // Appeler l'orchestrateur
-  const res = await fetch(`${supabaseUrl}/functions/v1/ai-orchestrator`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${serviceKey}`, 'apikey': serviceKey },
-    body: JSON.stringify({ agent_slug: step.agent_slug, objective, client_id: context.client_id || null }),
-  });
-  const json = await res.json() as { mission_id?: string; status?: string; result_summary?: string; error?: string };
+  // Appel asynchrone de l'orchestrateur — ne bloque pas la réponse HTTP
+  const runOrchestrator = async () => {
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/ai-orchestrator`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${serviceKey}`, 'apikey': serviceKey },
+        body: JSON.stringify({ agent_slug: step.agent_slug, objective, client_id: context.client_id || null }),
+      });
+      const json = await res.json() as { mission_id?: string; status?: string; result_summary?: string };
 
-  const stepStatus = json.status === 'completed' ? 'completed' : json.status === 'waiting_approval' ? 'waiting_approval' : 'failed';
+      const stepStatus = json.status === 'completed' ? 'completed'
+        : json.status === 'waiting_approval' ? 'waiting_approval' : 'failed';
 
-  // Mettre à jour step_run
-  await supabase.from('workflow_step_runs').update({
-    status: stepStatus,
-    mission_id: json.mission_id || null,
-    output: { result_summary: json.result_summary, status: json.status },
-    completed_at: new Date().toISOString(),
-  }).eq('id', stepRun?.id);
+      await supabase.from('workflow_step_runs').update({
+        status: stepStatus,
+        mission_id: json.mission_id || null,
+        output: { result_summary: (json.result_summary || '').slice(0, 1000) },
+        completed_at: new Date().toISOString(),
+      }).eq('id', stepRun?.id);
 
-  // Mettre à jour le context du run avec les outputs de cette étape
-  const newContext = { ...context, [`step_${step.index}_summary`]: (json.result_summary || '').slice(0, 500), [`step_${step.index}_mission_id`]: json.mission_id };
-  await supabase.from('workflow_runs').update({ context: newContext }).eq('id', runId);
+      // Mettre à jour context + current_step
+      const { data: runNow } = await supabase.from('workflow_runs').select('context').eq('id', runId).single();
+      const newContext = {
+        ...(runNow?.context as Record<string, unknown> || {}),
+        [`step_${step.index}_summary`]: (json.result_summary || '').slice(0, 500),
+        [`step_${step.index}_mission_id`]: json.mission_id,
+      };
 
-  const isLastStep = step.index === totalSteps - 1;
+      if (stepStatus === 'waiting_approval') {
+        await supabase.from('workflow_runs').update({ status: 'waiting_approval', context: newContext }).eq('id', runId);
+      } else if (stepStatus === 'failed') {
+        await supabase.from('workflow_runs').update({ status: 'failed', context: newContext }).eq('id', runId);
+      } else {
+        const isLast = step.index + 1 >= totalSteps;
+        await supabase.from('workflow_runs').update({
+          context: newContext,
+          current_step: step.index + 1,
+          status: isLast ? 'completed' : 'waiting',
+          completed_at: isLast ? new Date().toISOString() : null,
+        }).eq('id', runId);
+      }
+    } catch (err) {
+      await supabase.from('workflow_step_runs').update({ status: 'failed', completed_at: new Date().toISOString() }).eq('id', stepRun?.id);
+      await supabase.from('workflow_runs').update({ status: 'failed' }).eq('id', runId);
+    }
+  };
 
-  if (stepStatus === 'waiting_approval') {
-    await supabase.from('workflow_runs').update({ status: 'waiting_approval' }).eq('id', runId);
-    return { status: 'waiting_approval', step: step.index, message: `Étape ${step.index + 1}/${totalSteps} en attente d'approbation CEO.`, mission_id: json.mission_id };
+  // Utiliser EdgeRuntime.waitUntil si disponible (Supabase Edge Runtime)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const edgeRuntime = globalThis as any;
+  if (edgeRuntime.EdgeRuntime?.waitUntil) {
+    edgeRuntime.EdgeRuntime.waitUntil(runOrchestrator());
+  } else {
+    // Fallback synchrone pour les environnements sans waitUntil
+    await runOrchestrator();
   }
 
-  if (stepStatus === 'failed') {
-    await supabase.from('workflow_runs').update({ status: 'failed' }).eq('id', runId);
-    return { status: 'failed', step: step.index, error: json.result_summary };
-  }
-
-  if (isLastStep) {
-    await supabase.from('workflow_runs').update({ status: 'completed', completed_at: new Date().toISOString() }).eq('id', runId);
-    return { status: 'completed', step: step.index, message: `Workflow terminé en ${totalSteps} étapes.` };
-  }
-
-  // Étape suivante immédiate (pas de wait_approval)
-  await supabase.from('workflow_runs').update({ current_step: step.index + 1 }).eq('id', runId);
-  return { status: 'step_completed', step: step.index, next_step: step.index + 1, message: `Étape ${step.index + 1}/${totalSteps} terminée.` };
+  return new Response(JSON.stringify({
+    run_id: runId,
+    status: 'step_dispatched',
+    step: step.index,
+    step_run_id: stepRun?.id,
+    message: `Étape ${step.index + 1}/${totalSteps} démarrée. Vérifiez workflow_step_runs.status pour suivre l'avancement.`,
+  }), { headers: { ...cors, 'Content-Type': 'application/json' } });
 }

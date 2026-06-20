@@ -235,6 +235,8 @@ const { useState, useEffect } = React;
 const { createClient } = supabase;
 const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
 const AI_ORCHESTRATOR_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-orchestrator';
+const AGENT_FILE_UPLOAD_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/agent-file-upload';
+const SUPABASE_ANON_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
 
 function initials(name) {
   if (!name) return '??';
@@ -450,6 +452,8 @@ function App() {
   const [objective, setObjective] = useState('');
   const [running, setRunning] = useState(false);
   const [doneMsg, setDoneMsg] = useState('');
+  const [attachedFile, setAttachedFile] = useState(null);
+  const [fileUploading, setFileUploading] = useState(false);
 
   const loadMissions = async (userId) => {
     const { data: ms } = await sb.from('agent_missions').select('*, ai_agents(name, icon, slug)').eq('created_by', userId).order('created_at', { ascending: false });
@@ -472,7 +476,34 @@ function App() {
     });
   }, []);
 
-  const openModal = (agent) => { setModalAgent(agent); setTitle(''); setObjective(''); setDoneMsg(''); };
+  const openModal = (agent) => { setModalAgent(agent); setTitle(''); setObjective(''); setDoneMsg(''); setAttachedFile(null); };
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setFileUploading(true);
+    setAttachedFile({ name: file.name, uploading: true });
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const form = new FormData();
+      form.append('file', file);
+      const res = await fetch(AGENT_FILE_UPLOAD_URL, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${session.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+        body: form
+      });
+      const json = await res.json();
+      if (json.file_id) {
+        setAttachedFile({ name: file.name, id: json.file_id, type: json.file_type, ok: true });
+        setObjective(prev => (prev ? prev + '\n\n' : '') + `[Fichier joint : ${file.name}]\nUtilise read_client_file avec file_id="${json.file_id}" pour lire ce fichier et baser ton travail sur son contenu.`);
+      } else {
+        setAttachedFile({ name: file.name, error: json.error || 'Upload échoué' });
+      }
+    } catch(err) {
+      setAttachedFile({ name: file.name, error: err.message });
+    }
+    setFileUploading(false);
+  };
   const closeModal = () => { if (!running) setModalAgent(null); };
 
   const submitMission = async () => {
@@ -568,6 +599,18 @@ function App() {
             React.createElement('div', null,
               React.createElement('label', { className: 'field-label' }, 'Décrivez votre besoin'),
               React.createElement('textarea', { className: 'field-textarea', value: objective, onChange: e => setObjective(e.target.value), placeholder: 'Expliquez précisément ce que vous attendez de cet agent...' })
+            ),
+            React.createElement('div', null,
+              React.createElement('label', { className: 'field-label' }, 'Joindre un fichier (optionnel — PDF, CSV, TXT, JSON, Markdown)'),
+              !attachedFile
+                ? React.createElement('label', { style:{display:'flex',alignItems:'center',gap:10,padding:'10px 14px',background:'var(--surf-2)',border:'1px dashed var(--border-2)',borderRadius:9,cursor:'pointer',fontSize:13,color:'var(--text-3)'} },
+                    React.createElement('input', {type:'file', accept:'.pdf,.csv,.txt,.md,.json', style:{display:'none'}, onChange: handleFileSelect, disabled: fileUploading}),
+                    fileUploading ? '⏳ Upload en cours…' : '📎 Choisir un fichier'
+                  )
+                : React.createElement('div', {style:{padding:'10px 14px', background: attachedFile.ok ? 'rgba(16,185,129,0.07)' : attachedFile.error ? 'rgba(239,68,68,0.07)' : 'var(--surf-2)', border:`1px solid ${attachedFile.ok?'rgba(16,185,129,0.3)':attachedFile.error?'rgba(239,68,68,0.3)':'var(--border-2)'}`, borderRadius:9, fontSize:12, display:'flex', alignItems:'center', justifyContent:'space-between', gap:8}},
+                    React.createElement('span', null, attachedFile.ok ? '✅ ' : attachedFile.error ? '❌ ' : '⏳ ', attachedFile.name, attachedFile.ok ? ' — prêt' : attachedFile.error ? ` — ${attachedFile.error}` : ' — upload…'),
+                    React.createElement('button', {onClick:()=>setAttachedFile(null), style:{background:'none',border:'none',cursor:'pointer',color:'var(--text-3)',fontSize:16}}, '×')
+                  )
             ),
             running && React.createElement('div', { className: 'loading-box' },
               React.createElement('div', { className: 'spinner' }),

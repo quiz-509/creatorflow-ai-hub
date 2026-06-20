@@ -60,10 +60,16 @@ Deno.serve(async (req: Request) => {
         ['txt','md','csv','json','html','xml'].includes(fileExt)) {
       const text = await file.text();
       contentExtracted = text.slice(0, 50000); // max 50k chars
-    } else if (fileExt === 'pdf') {
-      contentExtracted = `[PDF] ${file.name} — ${(file.size / 1024).toFixed(0)} KB. Extraction PDF non disponible. Utilisez read_url si le document est accessible en ligne.`;
-    } else if (['docx', 'doc'].includes(fileExt)) {
-      contentExtracted = `[DOCX] ${file.name} — ${(file.size / 1024).toFixed(0)} KB. Extraction DOCX non disponible actuellement.`;
+    } else if (fileExt === 'pdf' || ['docx', 'doc'].includes(fileExt)) {
+      const { data: signedData } = await supabase.storage
+        .from('client-files')
+        .createSignedUrl(storagePath, 60 * 60 * 24);
+      const signedUrl = signedData?.signedUrl || '';
+      contentExtracted = `[${fileExt.toUpperCase()}] ${file.name} (${(file.size / 1024).toFixed(0)} KB)\n` +
+        (signedUrl
+          ? `Ce fichier est accessible via l'URL suivante (valide 24h) : ${signedUrl}\n` +
+            `L'agent peut le lire avec l'outil read_url en utilisant cette URL.`
+          : `Fichier uploadé. Extraction directe non disponible.`);
     } else {
       contentExtracted = `[Fichier binaire] ${file.name} — type: ${mimeType}, taille: ${(file.size / 1024).toFixed(0)} KB.`;
     }
