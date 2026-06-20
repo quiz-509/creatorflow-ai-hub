@@ -830,13 +830,27 @@ Deno.serve(async (req: Request) => {
               `[Approbation requise] ${input.action_type}`,
               `L'agent ${agent_slug} demande ton approbation.\n\nContexte : ${input.context}\n\nMission : ${mission.title as string}\n\nDonnées :\n${JSON.stringify(input.action_data, null, 2)}\n\nConnecte-toi à creatorflowmarket.com pour approuver ou rejeter.`,
             );
-            resultText = JSON.stringify({ ok: true, note: 'Approbation demandée au CEO.' });
+            // STOP immédiat — aucune action ne peut suivre une demande d'approbation
+            finalSummary = `En attente d'approbation CEO pour : ${input.action_type}. Contexte : ${input.context}`;
+            finished = true;
+            resultText = JSON.stringify({ ok: true, note: 'Approbation demandée au CEO. La mission est en pause — aucune autre action ne sera exécutée avant validation.' });
 
           // ----------------------------------------------------------------
           // NIVEAU 3 — Actions externes contrôlées
           // ----------------------------------------------------------------
           } else if (block.name === 'send_email') {
             const input = block.input as { to: string; subject: string; body: string; context: string };
+            // Vérifier qu'une approbation CEO existe pour cette mission avant d'envoyer
+            const { data: approval } = await supabase
+              .from('pending_approvals')
+              .select('id, status')
+              .eq('mission_id', mission.id as string)
+              .eq('action_type', 'send_email')
+              .eq('status', 'approved')
+              .maybeSingle();
+            if (!approval) {
+              resultText = JSON.stringify({ error: 'BLOQUÉ — Aucune approbation CEO pour send_email sur cette mission. Appelle request_approval en premier, puis attends la validation.' });
+            } else {
             // Log immuable AVANT envoi
             await supabase.from('agent_actions_log').insert({
               mission_id: mission.id,
@@ -856,9 +870,21 @@ Deno.serve(async (req: Request) => {
               `Mission : ${mission.title as string}\nDestinataire : ${input.to}\nSujet : ${input.subject}\n\nContexte : ${input.context}\n\nCorps :\n${input.body.slice(0, 1000)}`,
             );
             resultText = JSON.stringify({ ok: true, sent_to: input.to });
+            } // fin du bloc approval check
 
           } else if (block.name === 'publish_article') {
             const input = block.input as { article_id: string; context: string };
+            // Vérifier approbation CEO
+            const { data: pubApproval } = await supabase
+              .from('pending_approvals')
+              .select('id, status')
+              .eq('mission_id', mission.id as string)
+              .eq('action_type', 'publish_article')
+              .eq('status', 'approved')
+              .maybeSingle();
+            if (!pubApproval) {
+              resultText = JSON.stringify({ error: 'BLOQUÉ — Aucune approbation CEO pour publish_article sur cette mission. Appelle request_approval en premier.' });
+            } else {
             const { data: article, error: artErr } = await supabase
               .from('blog_articles')
               .update({ status: 'published', published_at: new Date().toISOString() })
@@ -882,6 +908,7 @@ Deno.serve(async (req: Request) => {
               `Agent ${agent_slug} a publié un article.\n\nTitre : ${article?.title}\nSlug : ${article?.slug}\nContexte : ${input.context}\n\nVoir : https://creatorflowmarket.com/blog.html`,
             );
             resultText = JSON.stringify({ ok: true, title: article?.title, slug: article?.slug });
+            } // fin du bloc approval check
 
           } else if (block.name === 'trigger_workflow') {
             const input = block.input as { workflow_slug: string; params?: Record<string, unknown>; context: string };
