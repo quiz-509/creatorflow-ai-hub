@@ -1527,6 +1527,15 @@ function AIWorkforceTab() {
       const {data: {session}} = await sb.auth.getSession();
       if (approve && approval.action_type === 'publish_article' && approval.action_data?.article_id) {
         await sb.from('blog_articles').update({status: 'published', published_at: new Date().toISOString()}).eq('id', approval.action_data.article_id);
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: 'publish_article',
+          action_data: { article_id: approval.action_data.article_id },
+          context: approval.context,
+          status: 'executed',
+          executed_at: new Date().toISOString(),
+        });
       }
       if (approve && approval.action_type === 'send_campaign_email') {
         const { subject, body } = approval.action_data || {};
@@ -1539,12 +1548,40 @@ function AIWorkforceTab() {
           });
         }
       }
-      if (approve && approval.action_type === 'send_prospect_email') {
+      if (approve && (approval.action_type === 'send_prospect_email' || approval.action_type === 'send_email')) {
         const { to, subject, body } = approval.action_data || {};
         await fetch(SEND_EMAIL_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
           body: JSON.stringify({ type: 'custom', to, data: { subject, body } })
+        });
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: approval.action_type,
+          action_data: { to, subject, body: (body || '').slice(0, 500) },
+          context: approval.context,
+          status: 'executed',
+          executed_at: new Date().toISOString(),
+        });
+      }
+      if (approve && approval.action_type === 'trigger_workflow') {
+        const { webhook_url, workflow_slug, params } = approval.action_data || {};
+        if (webhook_url) {
+          await fetch(webhook_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...(params || {}), mission_id: approval.mission_id })
+          });
+        }
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: 'trigger_workflow',
+          action_data: { workflow_slug, params: params || {} },
+          context: approval.context,
+          status: webhook_url ? 'executed' : 'failed',
+          executed_at: new Date().toISOString(),
         });
       }
       if (approve && approval.action_type === 'respond_support_ticket' && approval.action_data?.ticket_id) {
