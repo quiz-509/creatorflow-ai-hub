@@ -1369,10 +1369,11 @@ function AIWorkforceTab() {
   const [missionResult, setMissionResult] = useState('');
   const [resolvingApproval, setResolvingApproval] = useState(null);
   const [delivering, setDelivering] = useState(null);
+  const [rerunning, setRerunning] = useState(null);
   const [previewModal, setPreviewModal] = useState(null);
   const reloadMissionsAndApprovals = async () => {
     const [{data: ms}, {data: ap}] = await Promise.all([
-      sb.from('agent_missions').select('*, ai_agents(name,icon), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
+      sb.from('agent_missions').select('*, ai_agents(name,icon,slug), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
       sb.from('pending_approvals').select('*, agent_missions(title)').eq('status', 'pending').order('created_at', {ascending: false})
     ]);
     setMissions(ms || []);
@@ -1402,6 +1403,24 @@ function AIWorkforceTab() {
       await reloadMissionsAndApprovals();
     } catch(e) { alert('Erreur : ' + e.message); }
     setDelivering(null);
+  };
+  const rerunMission = async (mission) => {
+    const agentSlug = mission.ai_agents?.slug;
+    if (!agentSlug || !mission.objective) { alert('Impossible de relancer : agent ou objectif manquant.'); return; }
+    setRerunning(mission.id);
+    if (previewModal?.mission?.id === mission.id) setPreviewModal(null);
+    try {
+      const res = await fetch(AI_ORCHESTRATOR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        body: JSON.stringify({ agent_slug: agentSlug, objective: mission.objective, mission_id: mission.id })
+      });
+      const json = await res.json();
+      await reloadMissionsAndApprovals();
+      if (json.status === 'completed') { alert('✅ Mission relancée avec succès !'); }
+      else { alert('Mission relancée — statut : ' + (json.status || 'inconnu')); }
+    } catch(e) { alert('Erreur lors du relancement : ' + e.message); }
+    setRerunning(null);
   };
   const openPreview = async (mission) => {
     const { data: outputs } = await sb.from('agent_outputs').select('*').eq('mission_id', mission.id).order('created_at');
@@ -1704,6 +1723,12 @@ function AIWorkforceTab() {
                       className:"btn-preview",
                       onClick: () => openPreview(m)
                     }, "👁 Voir"),
+                    (m.status === 'failed' || m.status === 'in_progress') && /*#__PURE__*/React.createElement("button", {
+                      className:"btn-preview",
+                      style:{background:"rgba(245,158,11,0.12)",borderColor:"rgba(245,158,11,0.3)",color:"#d97706"},
+                      disabled: rerunning === m.id,
+                      onClick: () => rerunMission(m)
+                    }, rerunning === m.id ? '⏳ …' : '🔁 Relancer'),
                     m.delivered_to_client
                       ? /*#__PURE__*/React.createElement("span", {className:"badge badge-green"}, "Livrée ✓")
                       : (m.status === 'completed' && m.profiles)
@@ -1896,6 +1921,12 @@ function AIWorkforceTab() {
               className:"btn-reject", style:{marginLeft:0},
               onClick:()=>setPreviewModal(null)
             }, "Fermer"),
+            /*#__PURE__*/React.createElement("button", {
+              className:"btn-preview",
+              style:{background:"rgba(245,158,11,0.12)",borderColor:"rgba(245,158,11,0.3)",color:"#d97706"},
+              disabled: rerunning === previewModal.mission.id,
+              onClick: () => rerunMission(previewModal.mission)
+            }, rerunning === previewModal.mission.id ? '⏳ …' : '🔁 Relancer'),
             !previewModal.mission.delivered_to_client && previewModal.mission.profiles && /*#__PURE__*/React.createElement("button", {
               className:"btn-approve",
               disabled: delivering === previewModal.mission.id,
