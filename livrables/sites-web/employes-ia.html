@@ -191,9 +191,40 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .modal{margin:0;border-radius:var(--r-lg) var(--r-lg) 0 0;position:fixed;bottom:0;max-height:92vh;}
   .modal-backdrop{align-items:flex-end;padding:0;}
 }
+
+@keyframes sk-sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.sk{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:sk-sh 1.4s ease-in-out infinite;border-radius:8px;}
+.sk-overlay{position:fixed;inset:0;z-index:9999;background:#04040A;pointer-events:none;}
+.sk-nav{position:fixed;top:0;left:0;right:0;height:var(--nav,60px);background:rgba(4,4,10,0.92);border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:center;justify-content:space-between;padding:0 24px;}
+.sk-body{padding:calc(var(--nav,60px) + 32px) 20px 0;max-width:900px;margin:0 auto;}
+.sk-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:640px){.sk-stats{grid-template-columns:1fr 1fr;}}
+@media(max-width:400px){.sk-stats{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
+<div id="sk" class="sk-overlay">
+  <div class="sk-nav">
+    <div class="sk" style="width:36px;height:36px;border-radius:8px;"></div>
+    <div class="sk" style="width:148px;height:42px;border-radius:8px;"></div>
+    <div class="sk" style="width:80px;height:30px;border-radius:999px;"></div>
+  </div>
+  <div class="sk-body">
+    <div style="margin-bottom:24px;">
+      <div class="sk" style="width:200px;height:28px;margin-bottom:10px;"></div>
+      <div class="sk" style="width:300px;height:13px;"></div>
+    </div>
+    <div class="sk-stats">
+      <div class="sk" style="height:90px;border-radius:16px;"></div>
+      <div class="sk" style="height:90px;border-radius:16px;opacity:.8;"></div>
+      <div class="sk" style="height:90px;border-radius:16px;opacity:.6;"></div>
+    </div>
+    <div class="sk" style="height:52px;border-radius:16px 16px 0 0;margin-bottom:1px;"></div>
+    <div class="sk" style="height:200px;border-radius:0;margin-bottom:1px;opacity:.9;"></div>
+    <div class="sk" style="height:52px;border-radius:16px 16px 0 0;margin-top:16px;margin-bottom:1px;opacity:.7;"></div>
+    <div class="sk" style="height:160px;border-radius:0 0 16px 16px;opacity:.6;"></div>
+  </div>
+</div>
 <div id="root"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
@@ -437,6 +468,7 @@ function App() {
       const { data: ag } = await sb.from('ai_agents').select('*').eq('status', 'active').order('name');
       setAgents(ag || []);
       await loadMissions(data.session.user.id);
+      document.getElementById('sk')?.remove();
     });
   }, []);
 
