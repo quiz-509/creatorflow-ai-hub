@@ -1,16 +1,13 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const CEO_EMAIL = Deno.env.get('CEO_EMAIL') ?? 'pjoacenel@gmail.com';
+const CEO_EMAIL = process.env('CEO_EMAIL') ?? 'pjoacenel@gmail.com';
 const MAX_ITERATIONS = 15;
 const MAX_TOKENS = 8192;
-const WEB_SEARCH_MAX_PER_MISSION = 4;
-const SOFT_TIMEOUT_MS = 110_000; // 110s — laisse 40s de marge avant le timeout Supabase (150s)
+const WEB_SEARCH_MAX_PER_MISSION = 10;
 
 // ---------------------------------------------------------------------------
 // AGENT BRIEFS — updated with Niveau 1 & 2 capabilities
@@ -19,31 +16,21 @@ const AGENT_BRIEFS: Record<string, string> = {
   marketing: `Tu es le Marketing AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
 Un client t'a confié une mission décrite dans l'objectif. Exécute-la comme le ferait un consultant marketing senior.
 
-⚠️ RÈGLE ABSOLUE — BUDGET D'ITÉRATIONS :
-Tu as MAXIMUM 8 étapes. Tu DOIS appeler create_output au plus tard à l'étape 5.
-N'attends JAMAIS la dernière étape pour écrire le livrable — tu risques de ne rien livrer.
-Stratégie : 1-2 recherches MAX, puis écris directement le livrable complet.
-Si la mission est créative (plan de contenu, stratégie, copywriting) : commence à rédiger dès l'étape 2 sans chercher.
-
 CAPACITÉS DISPONIBLES :
-- Recherche web (search_web) : analyse marché, concurrents, tendances — MAX 2 recherches par mission
-- Lecture d'URL (read_url) : consulte un site concurrent ou une source de référence
+- Recherche web (search_web) : analyse marché, concurrents, tendances actuelles — utilise-la avant de produire une stratégie
+- Lecture d'URL (read_url) : consulte un site concurrent, une landing page, un article de référence
 - Mémoire client (read_client_memory) : retrouve les préférences et contexte des missions passées
 - Sauvegarde mémoire (save_to_memory) : mémorise le contexte client pour les prochaines missions
-- Images (find_images) : trouve des visuels Unsplash pour illustrer une stratégie
-- Vidéos (find_videos) : trouve des vidéos YouTube de référence
-- Livrable (create_output) : enregistre le livrable principal — output_data doit contenir le contenu COMPLET (pas un résumé, pas un plan, le vrai livrable)
+- Rapports (create_report) : structure une analyse en sections documentées
+- Livrable (create_output) : enregistre le livrable principal (stratégie, plan, calendrier, emails...)
 - Notification CEO (notify_ceo) : si tu découvres une information critique pour l'entreprise
-- Envoi email (send_email) : envoyer un email à un contact — toujours demander approbation CEO avant
-- Publication article (publish_article) : publier un article blog en ligne — toujours demander approbation CEO avant
 
-PROCESSUS (respecte l'ordre, max 8 étapes) :
-1. Lis la mémoire client si disponible (read_client_memory) — optionnel
-2. 1 recherche web si vraiment nécessaire (search_web) — sinon passe directement à l'étape 3
-3. Rédige et enregistre le livrable complet avec create_output — c'est l'étape la plus importante
-4. find_images et/ou find_videos si des visuels enrichiraient le livrable (optionnel)
-5. save_to_memory si infos client importantes à retenir (optionnel)
-6. finish_mission
+PROCESSUS :
+1. Lis d'abord la mémoire client si disponible (read_client_memory)
+2. Effectue les recherches nécessaires (search_web, read_url)
+3. Produis le livrable complet avec create_output — contenu complet dans output_data, pas un résumé
+4. Si applicable, sauvegarde les infos clés du client (save_to_memory)
+5. Termine avec finish_mission
 
 Si le client demande une campagne email interne CreatorFlow : read_blog_subscribers puis request_approval (action_type="send_campaign_email"). Jamais sans approbation.`,
 
@@ -55,58 +42,37 @@ CAPACITÉS DISPONIBLES :
 - Lecture d'URL (read_url) : consulte un article de référence, un concurrent, une source d'inspiration
 - Mémoire client (read_client_memory) : ton de voix du client, thématiques récurrentes, audience cible
 - Sauvegarde mémoire (save_to_memory) : mémorise le style et les préférences éditoriales du client
-- Images (find_images) : trouve des visuels Unsplash pour illustrer l'article ou le post
-- Vidéos (find_videos) : trouve des vidéos YouTube complémentaires à intégrer dans le contenu
-- Livrable (create_output) : enregistre le contenu final. Format recommandé : output_type="content_piece", output_data={"title":..., "body":..., "images":[...], "videos":[...]}
+- Livrable (create_output) : enregistre le contenu final (output_type="content_piece", output_data={"title":..., "body":...})
 - Blog interne (create_blog_draft) : uniquement pour les articles du blog CreatorFlow lui-même
-- Publication article (publish_article) : publier un article blog — toujours request_approval avant
-- Envoi email (send_email) : envoyer un email à un contact — toujours request_approval avant
 
-⚠️ RÈGLE ABSOLUE — BUDGET D'ITÉRATIONS :
-Tu as MAXIMUM 8 étapes. Tu DOIS appeler create_output au plus tard à l'étape 5.
-Commence à écrire le contenu rapidement — pas après 5 recherches. 1-2 recherches MAX.
-
-PROCESSUS (respecte l'ordre) :
+PROCESSUS :
 1. Lis la mémoire client si disponible (read_client_memory) pour adapter le ton
-2. 1 recherche web (search_web) si besoin d'angle ou de données actuelles — sinon saute
-3. Rédige et enregistre le contenu complet avec create_output — le vrai contenu, pas un plan
-4. find_images et find_videos pour enrichir le livrable (optionnel)
-5. save_to_memory si style client à retenir pour les prochaines missions (optionnel)
-6. finish_mission`,
+2. Recherche les meilleures sources ou tendances (search_web) si pertinent
+3. Rédige le contenu complet — pas un plan, le contenu réel
+4. Enregistre avec create_output, contenu entier dans output_data.body
+5. Mémorise le style client si c'est une première mission (save_to_memory)
+6. Termine avec finish_mission`,
 
-  prospecting: `Tu es le Prospecting AI Agent de CreatorFlow Market, un employé IA exécutant.
-Un client t'a confié une mission de prospection. Tu n'analyses pas : tu exécutes. Comme un business developer senior.
-
-⚠️ RÈGLE CRM ABSOLUE :
-Chaque prospect réel identifié DOIT être sauvegardé dans le CRM via save_to_crm IMMÉDIATEMENT.
-Vérifie toujours read_crm_contacts d'abord pour éviter les doublons.
-Après chaque action (email envoyé, note ajoutée), log dans le CRM avec log_crm_activity.
-Un prospect non enregistré dans le CRM = travail perdu.
+  prospecting: `Tu es le Prospecting AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
+Un client t'a confié une mission de prospection. Exécute-la avec rigueur, comme un business developer expérimenté.
 
 CAPACITÉS DISPONIBLES :
-- CRM (read_crm_contacts) : voir tous les contacts existants avant de chercher — évite les doublons
-- CRM (save_to_crm) : enregistrer chaque nouveau prospect trouvé avec nom, email, société, notes de qualification
-- CRM (update_crm_contact) : mettre à jour le statut après une action (contacted, responded, qualified)
-- CRM (log_crm_activity) : tracer chaque email envoyé, chaque note, chaque relance planifiée
-- Recherche web (search_web) : trouver des prospects réels avec sites, rôles, coordonnées
-- Lecture d'URL (read_url) : analyser le site d'un prospect pour personnaliser l'approche
-- Mémoire client (read_client_memory) : ICP du client, secteurs ciblés, résultats passés
-- Sauvegarde mémoire (save_to_memory) : mémoriser le profil ICP validé pour les prochaines missions
-- Livrable (create_output) : rapport de prospection complet — liste qualifiée, emails rédigés, plan de suivi
-- Approbation (request_approval) : OBLIGATOIRE avant tout envoi email réel
+- Recherche web (search_web) : trouve des prospects réels, vérifie des entreprises, analyse un secteur
+- Lecture d'URL (read_url) : consulte le site d'une entreprise cible, son LinkedIn, ses offres
+- Mémoire client (read_client_memory) : ICP du client, secteurs ciblés, séquences passées
+- Sauvegarde mémoire (save_to_memory) : mémorise le profil de prospect idéal pour ce client
+- Livrable (create_output) : liste de prospects qualifiés, séquences d'emails, plan de prospection complet
+- Rapports (create_report) : analyse d'un marché, d'une niche, d'une opportunité
 
-PROCESSUS OBLIGATOIRE :
-1. read_client_memory — contexte client et ICP défini
-2. read_crm_contacts — voir les contacts déjà en base, éviter doublons
-3. search_web — trouver 3 à 5 prospects réels et qualifiés
-4. Pour chaque prospect : save_to_crm avec notes de qualification détaillées
-5. Rédiger les emails personnalisés (un par prospect prioritaire)
-6. create_output — rapport complet avec la liste qualifiée et les emails prêts
-7. save_to_memory — mémoriser le profil ICP si première mission
-8. request_approval — pour l'email au prospect le plus qualifié
-9. finish_mission
+PROCESSUS :
+1. Lis la mémoire client pour comprendre le contexte (read_client_memory)
+2. Effectue les recherches nécessaires pour identifier des cibles réelles (search_web)
+3. Qualifie chaque prospect avec des données concrètes
+4. Produis le livrable avec create_output — contenu complet, actionnable immédiatement
+5. Mémorise le profil ICP si défini pour la première fois (save_to_memory)
+6. Termine avec finish_mission
 
-Pour les missions internes : read_open_briefs pour identifier des opportunités.`,
+Pour les missions CreatorFlow interne : read_open_briefs pour identifier des opportunités. request_approval avant tout envoi réel.`,
 
   support: `Tu es le Support AI Agent de CreatorFlow Market, un employé IA disponible sur la marketplace.
 Un client t'a confié une mission support. Réponds avec précision, clarté et efficacité.
@@ -117,11 +83,8 @@ CAPACITÉS DISPONIBLES :
 - Mémoire client (read_client_memory) : contexte technique du client, outils utilisés, problèmes passés
 - Sauvegarde mémoire (save_to_memory) : mémorise l'environnement technique du client
 - Tickets (create_support_ticket / update_support_ticket) : pour les tickets de la plateforme
-- Images (find_images) : captures illustratives ou visuels pour une documentation
-- Vidéos (find_videos) : tutoriels YouTube à recommander au client pour résoudre son problème
-- Livrable (create_output) : FAQ, procédure, réponse rédigée, base de connaissances. Inclure videos si des tutoriels pertinents existent
+- Livrable (create_output) : FAQ, procédure, réponse rédigée, base de connaissances
 - Rapports (create_report) : analyse des tickets, rapport de résolution
-- Envoi email (send_email) : répondre à un client par email — request_approval avant tout envoi
 
 PROCESSUS :
 1. Lis le contexte client (read_client_memory) pour comprendre son environnement
@@ -362,129 +325,6 @@ const TOOLS: Anthropic.Tool[] = [
       required: ['file_id'],
     },
   },
-  // --- CRM ---
-  {
-    name: 'save_to_crm',
-    description: "Enregistrer un prospect ou contact dans le CRM. Fait un upsert sur l'email — ne crée pas de doublon. À utiliser systématiquement après avoir identifié un prospect réel.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string', description: 'Nom complet du contact.' },
-        email: { type: 'string', description: 'Email du contact (sert de clé unique).' },
-        company: { type: 'string', description: 'Nom de la société.' },
-        website: { type: 'string', description: 'Site web de la société.' },
-        role: { type: 'string', description: 'Titre/rôle du contact.' },
-        notes: { type: 'string', description: 'Notes de qualification : pourquoi ce contact, forces, angle d\'approche.' },
-        tags: { type: 'array', items: { type: 'string' }, description: 'Tags : secteur, taille, priorité, etc.' },
-      },
-      required: ['name'],
-    },
-  },
-  {
-    name: 'read_crm_contacts',
-    description: "Lire les contacts CRM existants. Permet de vérifier si un prospect existe déjà et de voir son historique.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        status: { type: 'string', description: "Filtrer par statut : new, contacted, responded, qualified, meeting_scheduled, lost, won. Omettre pour tous." },
-        limit: { type: 'number', description: 'Nombre max de résultats (défaut 20).' },
-      },
-    },
-  },
-  {
-    name: 'update_crm_contact',
-    description: "Mettre à jour le statut ou les notes d'un contact CRM après une interaction.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        contact_id: { type: 'string', description: 'UUID du contact.' },
-        status: { type: 'string', description: "Nouveau statut : contacted, responded, qualified, meeting_scheduled, lost, won." },
-        notes: { type: 'string', description: 'Notes additionnelles à ajouter.' },
-      },
-      required: ['contact_id'],
-    },
-  },
-  {
-    name: 'log_crm_activity',
-    description: "Enregistrer une activité sur un contact CRM (email envoyé, note, relance prévue).",
-    input_schema: {
-      type: 'object',
-      properties: {
-        contact_id: { type: 'string', description: 'UUID du contact.' },
-        type: { type: 'string', description: "Type : email_sent, note, follow_up, meeting, call, linkedin." },
-        subject: { type: 'string', description: 'Sujet de l\'activité.' },
-        content: { type: 'string', description: 'Contenu détaillé.' },
-      },
-      required: ['contact_id', 'type'],
-    },
-  },
-
-  // --- Niveau 3 : Actions externes contrôlées ---
-  {
-    name: 'send_email',
-    description: "Envoyer un email à un contact (prospect, client, partenaire). RÈGLE ABSOLUE : toujours appeler request_approval avant send_email. Jamais d'envoi sans approbation CEO. Limité à 5 emails max par mission.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        to: { type: 'string', description: 'Adresse email du destinataire.' },
-        subject: { type: 'string', description: "Sujet de l'email." },
-        body: { type: 'string', description: "Corps de l'email en texte ou markdown." },
-        context: { type: 'string', description: "Pourquoi cet email est envoyé (pour le log)." },
-      },
-      required: ['to', 'subject', 'body', 'context'],
-    },
-  },
-  {
-    name: 'publish_article',
-    description: "Publier un article blog en ligne (changer statut draft → published). RÈGLE ABSOLUE : toujours appeler request_approval avant publish_article. Jamais sans approbation CEO.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        article_id: { type: 'string', description: 'UUID de l\'article dans blog_articles.' },
-        context: { type: 'string', description: "Pourquoi publier cet article maintenant." },
-      },
-      required: ['article_id', 'context'],
-    },
-  },
-  {
-    name: 'trigger_workflow',
-    description: "Déclencher un workflow n8n automatisé (séquence email, enrichissement, notification Slack...). Vérifie si requires_approval=true avant d'exécuter.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        workflow_slug: { type: 'string', description: 'Identifiant unique du workflow n8n.' },
-        params: { type: 'object', description: 'Paramètres à envoyer au workflow.' },
-        context: { type: 'string', description: "Ce que ce workflow va faire (pour le log et l'approbation)." },
-      },
-      required: ['workflow_slug', 'context'],
-    },
-  },
-  {
-    name: 'find_images',
-    description: "Trouver des images stock professionnelles (Unsplash) pour illustrer un contenu, un article, une stratégie. Retourne des URLs directement utilisables avec crédit photographe.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        query: { type: 'string', description: 'Sujet de l\'image en anglais pour de meilleurs résultats. Ex: "ai marketing dashboard", "content creator workspace".' },
-        count: { type: 'number', description: 'Nombre d\'images souhaitées (défaut 3, max 6).' },
-        orientation: { type: 'string', description: 'landscape (paysage, pour articles/headers), portrait (pour posts sociaux), squarish (carré, pour thumbnails). Défaut : landscape.' },
-      },
-      required: ['query'],
-    },
-  },
-  {
-    name: 'find_videos',
-    description: "Trouver des vidéos YouTube ou Vimeo pertinentes pour enrichir un livrable, illustrer un concept, ou suggérer des ressources visuelles au client.",
-    input_schema: {
-      type: 'object',
-      properties: {
-        query: { type: 'string', description: 'Sujet de la vidéo recherchée.' },
-        count: { type: 'number', description: 'Nombre de vidéos souhaitées (défaut 3, max 5).' },
-        platform: { type: 'string', description: 'youtube, vimeo, ou both. Défaut : youtube.' },
-      },
-      required: ['query'],
-    },
-  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -521,13 +361,13 @@ async function callSendEmail(
 // ---------------------------------------------------------------------------
 // Main handler
 // ---------------------------------------------------------------------------
-Deno.serve(async (req: Request) => {
+async function handler(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
-  const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
-  const tavilyKey = Deno.env.get('TAVILY_API_KEY') ?? '';
+  const supabaseUrl = process.env('SUPABASE_URL') ?? '';
+  const serviceKey = process.env('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  const anthropicKey = process.env('ANTHROPIC_API_KEY') ?? '';
+  const tavilyKey = process.env('TAVILY_API_KEY') ?? '';
 
   try {
     const { agent_slug, title, objective, client_id, mission_id: existing_mission_id } = await req.json();
@@ -642,17 +482,8 @@ Deno.serve(async (req: Request) => {
     let finalStatus: 'completed' | 'failed' = 'completed';
     let finished = false;
     let webSearchCount = 0;
-    let outputSaved = false;
-    let outputReminded = false;
-    const missionStartTime = Date.now();
 
     for (let iteration = 0; iteration < MAX_ITERATIONS && !finished; iteration++) {
-      // Soft timeout : on arrête proprement avant que Supabase ne tue la fonction
-      if (Date.now() - missionStartTime > SOFT_TIMEOUT_MS) {
-        finalSummary = `Mission interrompue après ${Math.round((Date.now() - missionStartTime) / 1000)}s (limite de temps atteinte). Le livrable partiel a été sauvegardé si create_output a été appelé.`;
-        finalStatus = 'failed';
-        break;
-      }
       const response = await anthropic.messages.create({
         model: 'claude-sonnet-4-6',
         max_tokens: MAX_TOKENS,
@@ -666,17 +497,6 @@ Deno.serve(async (req: Request) => {
       if (response.stop_reason !== 'tool_use') {
         const textBlock = response.content.find((b) => b.type === 'text');
         finalSummary = textBlock?.type === 'text' ? textBlock.text : 'Mission terminée.';
-
-        // Si l'agent a répondu en texte sans sauvegarder de livrable, on le relance UNE fois
-        if (!outputSaved && !outputReminded) {
-          outputReminded = true;
-          messages.push({
-            role: 'user',
-            content: `Tu n'as pas encore appelé create_output. Appelle-le MAINTENANT avec le livrable complet pour la mission : "${objective}". N'explique pas — produis et sauvegarde directement.`,
-          });
-          continue;
-        }
-
         finished = true;
         break;
       }
@@ -854,7 +674,6 @@ Deno.serve(async (req: Request) => {
               output_data: input.output_data,
               status: 'completed',
             });
-            outputSaved = true;
             resultText = JSON.stringify({ ok: true });
 
           } else if (block.name === 'notify_ceo') {
@@ -896,219 +715,7 @@ Deno.serve(async (req: Request) => {
               `[Approbation requise] ${input.action_type}`,
               `L'agent ${agent_slug} demande ton approbation.\n\nContexte : ${input.context}\n\nMission : ${mission.title as string}\n\nDonnées :\n${JSON.stringify(input.action_data, null, 2)}\n\nConnecte-toi à creatorflowmarket.com pour approuver ou rejeter.`,
             );
-            // STOP immédiat — aucune action ne peut suivre une demande d'approbation
-            finalSummary = `En attente d'approbation CEO pour : ${input.action_type}. Contexte : ${input.context}`;
-            finished = true;
-            resultText = JSON.stringify({ ok: true, note: 'Approbation demandée au CEO. La mission est en pause — aucune autre action ne sera exécutée avant validation.' });
-
-          // ----------------------------------------------------------------
-          // CRM
-          // ----------------------------------------------------------------
-          } else if (block.name === 'save_to_crm') {
-            const input = block.input as {
-              name: string; email?: string; company?: string; website?: string;
-              role?: string; notes?: string; tags?: string[];
-            };
-            const record = {
-              name: input.name,
-              email: input.email || null,
-              company: input.company || null,
-              website: input.website || null,
-              role: input.role || null,
-              notes: input.notes || null,
-              tags: input.tags || [],
-              agent_slug,
-              source_mission_id: mission.id as string,
-              updated_at: new Date().toISOString(),
-            };
-            let data: Record<string, unknown>;
-            if (input.email) {
-              const { data: d, error } = await supabase
-                .from('crm_contacts')
-                .upsert(record, { onConflict: 'email' })
-                .select('id, status')
-                .single();
-              if (error) throw new Error(error.message);
-              data = d as Record<string, unknown>;
-            } else {
-              const { data: d, error } = await supabase
-                .from('crm_contacts')
-                .insert(record)
-                .select('id, status')
-                .single();
-              if (error) throw new Error(error.message);
-              data = d as Record<string, unknown>;
-            }
-            resultText = JSON.stringify({ ok: true, contact_id: data.id, status: data.status });
-
-          } else if (block.name === 'read_crm_contacts') {
-            const input = block.input as { status?: string; limit?: number };
-            let query = supabase
-              .from('crm_contacts')
-              .select('id, name, email, company, website, role, status, notes, tags, created_at')
-              .order('created_at', { ascending: false })
-              .limit(input.limit || 20);
-            if (input.status) query = query.eq('status', input.status);
-            const { data, error } = await query;
-            if (error) throw new Error(error.message);
-            resultText = JSON.stringify(data);
-
-          } else if (block.name === 'update_crm_contact') {
-            const input = block.input as { contact_id: string; status?: string; notes?: string };
-            const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
-            if (input.status) updates.status = input.status;
-            if (input.notes) updates.notes = input.notes;
-            const { error } = await supabase
-              .from('crm_contacts')
-              .update(updates)
-              .eq('id', input.contact_id);
-            if (error) throw new Error(error.message);
-            resultText = JSON.stringify({ ok: true });
-
-          } else if (block.name === 'log_crm_activity') {
-            const input = block.input as { contact_id: string; type: string; subject?: string; content?: string };
-            const { error } = await supabase
-              .from('crm_activities')
-              .insert({
-                contact_id: input.contact_id,
-                mission_id: mission.id as string,
-                type: input.type,
-                subject: input.subject || null,
-                content: input.content || null,
-              });
-            if (error) throw new Error(error.message);
-            resultText = JSON.stringify({ ok: true });
-
-          // ----------------------------------------------------------------
-          // NIVEAU 3 — Actions externes contrôlées
-          // ----------------------------------------------------------------
-          } else if (block.name === 'send_email') {
-            const input = block.input as { to: string; subject: string; body: string; context: string };
-            // Vérifier qu'une approbation CEO existe pour cette mission avant d'envoyer
-            const { data: approval } = await supabase
-              .from('pending_approvals')
-              .select('id, status')
-              .eq('mission_id', mission.id as string)
-              .eq('action_type', 'send_email')
-              .eq('status', 'approved')
-              .maybeSingle();
-            if (!approval) {
-              resultText = JSON.stringify({ error: 'BLOQUÉ — Aucune approbation CEO pour send_email sur cette mission. Appelle request_approval en premier, puis attends la validation.' });
-            } else {
-            // Log immuable AVANT envoi
-            await supabase.from('agent_actions_log').insert({
-              mission_id: mission.id,
-              agent_slug,
-              action_type: 'send_email',
-              action_data: { to: input.to, subject: input.subject, body: input.body.slice(0, 500) },
-              context: input.context,
-              status: 'executed',
-              executed_at: new Date().toISOString(),
-            });
-            // Envoi via send-email
-            await callSendEmail(supabaseUrl, serviceKey, input.to, input.subject, input.body);
-            // Notifier le CEO
-            await callSendEmail(
-              supabaseUrl, serviceKey, CEO_EMAIL,
-              `[FYI] Email envoyé par agent ${agent_slug} → ${input.to}`,
-              `Mission : ${mission.title as string}\nDestinataire : ${input.to}\nSujet : ${input.subject}\n\nContexte : ${input.context}\n\nCorps :\n${input.body.slice(0, 1000)}`,
-            );
-            resultText = JSON.stringify({ ok: true, sent_to: input.to });
-            } // fin du bloc approval check
-
-          } else if (block.name === 'publish_article') {
-            const input = block.input as { article_id: string; context: string };
-            // Vérifier approbation CEO
-            const { data: pubApproval } = await supabase
-              .from('pending_approvals')
-              .select('id, status')
-              .eq('mission_id', mission.id as string)
-              .eq('action_type', 'publish_article')
-              .eq('status', 'approved')
-              .maybeSingle();
-            if (!pubApproval) {
-              resultText = JSON.stringify({ error: 'BLOQUÉ — Aucune approbation CEO pour publish_article sur cette mission. Appelle request_approval en premier.' });
-            } else {
-            const { data: article, error: artErr } = await supabase
-              .from('blog_articles')
-              .update({ status: 'published', published_at: new Date().toISOString() })
-              .eq('id', input.article_id)
-              .select('title, slug')
-              .single();
-            if (artErr) throw new Error(artErr.message);
-            // Log immuable
-            await supabase.from('agent_actions_log').insert({
-              mission_id: mission.id,
-              agent_slug,
-              action_type: 'publish_article',
-              action_data: { article_id: input.article_id, title: article?.title, slug: article?.slug },
-              context: input.context,
-              status: 'executed',
-              executed_at: new Date().toISOString(),
-            });
-            await callSendEmail(
-              supabaseUrl, serviceKey, CEO_EMAIL,
-              `[Article publié] ${article?.title || input.article_id}`,
-              `Agent ${agent_slug} a publié un article.\n\nTitre : ${article?.title}\nSlug : ${article?.slug}\nContexte : ${input.context}\n\nVoir : https://creatorflowmarket.com/blog.html`,
-            );
-            resultText = JSON.stringify({ ok: true, title: article?.title, slug: article?.slug });
-            } // fin du bloc approval check
-
-          } else if (block.name === 'trigger_workflow') {
-            const input = block.input as { workflow_slug: string; params?: Record<string, unknown>; context: string };
-            // Charger le workflow depuis n8n_workflows
-            const { data: wf, error: wfErr } = await supabase
-              .from('n8n_workflows')
-              .select('name, webhook_url, requires_approval')
-              .eq('slug', input.workflow_slug)
-              .single();
-            if (wfErr || !wf) {
-              resultText = JSON.stringify({ error: `Workflow "${input.workflow_slug}" introuvable. Vérifie la table n8n_workflows.` });
-            } else if (wf.requires_approval) {
-              // Requiert approbation CEO
-              const { data: output } = await supabase
-                .from('agent_outputs')
-                .insert({
-                  mission_id: mission.id,
-                  output_type: 'trigger_workflow',
-                  output_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
-                  status: 'waiting_approval',
-                })
-                .select('id')
-                .single();
-              await supabase.from('pending_approvals').insert({
-                mission_id: mission.id,
-                output_id: output?.id || null,
-                action_type: 'trigger_workflow',
-                action_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
-                context: input.context,
-              });
-              await callSendEmail(
-                supabaseUrl, serviceKey, CEO_EMAIL,
-                `[Approbation requise] Workflow n8n : ${wf.name}`,
-                `L'agent ${agent_slug} veut déclencher le workflow "${wf.name}".\n\nContexte : ${input.context}\n\nParamètres : ${JSON.stringify(input.params || {}, null, 2)}\n\nConnecte-toi à creatorflowmarket.com pour approuver.`,
-              );
-              resultText = JSON.stringify({ ok: true, note: `Workflow "${wf.name}" en attente d'approbation CEO.` });
-            } else {
-              // Exécution directe
-              const resp = await fetch(wf.webhook_url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...(input.params || {}), mission_id: mission.id, agent_slug }),
-                signal: AbortSignal.timeout(15000),
-              });
-              const wfStatus = resp.ok ? 'executed' : 'failed';
-              await supabase.from('agent_actions_log').insert({
-                mission_id: mission.id,
-                agent_slug,
-                action_type: 'trigger_workflow',
-                action_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
-                context: input.context,
-                status: wfStatus,
-                executed_at: new Date().toISOString(),
-              });
-              resultText = JSON.stringify({ ok: resp.ok, workflow: wf.name, status: wfStatus });
-            }
+            resultText = JSON.stringify({ ok: true, note: 'Approbation demandée au CEO.' });
 
           } else if (block.name === 'finish_mission') {
             const input = block.input as { result_summary: string; status: 'completed' | 'failed' };
@@ -1138,7 +745,7 @@ Deno.serve(async (req: Request) => {
                   search_depth: 'basic',
                   include_answer: true,
                 }),
-                signal: AbortSignal.timeout(12000),
+                signal: AbortSignal.timeout || AbortSignal.abort(12000),
               });
               if (!resp.ok) throw new Error(`Tavily error ${resp.status}`);
               const data = await resp.json() as {
@@ -1165,7 +772,7 @@ Deno.serve(async (req: Request) => {
                   'X-No-Cache': 'true',
                   'X-Return-Format': 'text',
                 },
-                signal: AbortSignal.timeout(8000),
+                signal: AbortSignal.timeout || AbortSignal.abort(15000),
               });
               if (!resp.ok) throw new Error(`Jina Reader error ${resp.status} pour ${input.url}`);
               const text = await resp.text();
@@ -1224,91 +831,6 @@ Deno.serve(async (req: Request) => {
               });
             }
 
-          } else if (block.name === 'find_images') {
-            const unsplashKey = Deno.env.get('UNSPLASH_ACCESS_KEY') ?? '';
-            if (!unsplashKey) {
-              resultText = JSON.stringify({ error: 'UNSPLASH_ACCESS_KEY non configurée. Ajoute-la dans les secrets Supabase.' });
-            } else {
-              const input = block.input as { query: string; count?: number; orientation?: string };
-              const params = new URLSearchParams({
-                query: input.query,
-                per_page: String(Math.min(input.count || 3, 6)),
-                orientation: input.orientation || 'landscape',
-                client_id: unsplashKey,
-              });
-              const resp = await fetch(`https://api.unsplash.com/search/photos?${params}`, {
-                signal: AbortSignal.timeout(10000),
-              });
-              if (!resp.ok) throw new Error(`Unsplash error ${resp.status}`);
-              const data = await resp.json() as {
-                results: Array<{
-                  urls: { regular: string; small: string };
-                  alt_description: string;
-                  description: string;
-                  user: { name: string; links: { html: string } };
-                  width: number; height: number;
-                }>;
-              };
-              const images = data.results.map((img) => ({
-                url: img.urls.regular,
-                thumb: img.urls.small,
-                alt: img.alt_description || img.description || input.query,
-                credit: img.user.name,
-                credit_url: `${img.user.links.html}?utm_source=creatorflow&utm_medium=referral`,
-                width: img.width,
-                height: img.height,
-              }));
-              resultText = JSON.stringify({ images, total: images.length });
-            }
-
-          } else if (block.name === 'find_videos') {
-            if (webSearchCount >= WEB_SEARCH_MAX_PER_MISSION) {
-              resultText = JSON.stringify({ error: `Limite de ${WEB_SEARCH_MAX_PER_MISSION} recherches web atteinte.` });
-            } else if (!tavilyKey) {
-              resultText = JSON.stringify({ error: 'TAVILY_API_KEY non configurée.' });
-            } else {
-              const input = block.input as { query: string; count?: number; platform?: string };
-              webSearchCount++;
-              const platform = (input.platform || 'youtube').toLowerCase();
-              const includeDomains = platform === 'vimeo' ? ['vimeo.com']
-                : platform === 'both' || platform === 'les deux' ? ['youtube.com', 'vimeo.com']
-                : ['youtube.com'];
-              const resp = await fetch('https://api.tavily.com/search', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  api_key: tavilyKey,
-                  query: input.query,
-                  max_results: Math.min(input.count || 3, 5),
-                  include_domains: includeDomains,
-                  search_depth: 'basic',
-                }),
-                signal: AbortSignal.timeout(12000),
-              });
-              if (!resp.ok) throw new Error(`Tavily error ${resp.status}`);
-              const data = await resp.json() as {
-                results?: Array<{ title: string; url: string; content: string }>;
-              };
-              const videos = (data.results || []).map((r) => {
-                const ytMatch = r.url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-                const vimeoMatch = r.url.match(/vimeo\.com\/(\d+)/);
-                return {
-                  title: r.title,
-                  url: r.url,
-                  video_id: ytMatch?.[1] || vimeoMatch?.[1] || null,
-                  platform: ytMatch ? 'youtube' : vimeoMatch ? 'vimeo' : 'other',
-                  embed_url: ytMatch
-                    ? `https://www.youtube.com/embed/${ytMatch[1]}`
-                    : vimeoMatch ? `https://player.vimeo.com/video/${vimeoMatch[1]}` : null,
-                  thumbnail: ytMatch
-                    ? `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`
-                    : null,
-                  description: r.content.slice(0, 300),
-                };
-              });
-              resultText = JSON.stringify({ videos });
-            }
-
           } else {
             resultText = JSON.stringify({ error: `Outil inconnu : ${block.name}` });
           }
@@ -1345,14 +867,21 @@ Deno.serve(async (req: Request) => {
       completed_at: missionStatusAfter !== 'waiting_approval' ? new Date().toISOString() : null,
     }).eq('id', mission.id as string);
 
-    // Dernier recours : si aucun livrable sauvegardé, on stocke le résumé textuel
-    if (finalStatus === 'completed' && !outputSaved && finalSummary) {
-      await supabase.from('agent_outputs').insert({
-        mission_id: mission.id,
-        output_type: 'summary',
-        output_data: { title: mission.title as string, body: finalSummary },
-        status: 'completed',
-      });
+    // Livrable de secours si l'agent a oublié create_output
+    if (finalStatus === 'completed' && finalSummary) {
+      const { count } = await supabase
+        .from('agent_outputs')
+        .select('id', { count: 'exact', head: true })
+        .eq('mission_id', mission.id as string)
+        .eq('status', 'completed');
+      if (!count) {
+        await supabase.from('agent_outputs').insert({
+          mission_id: mission.id,
+          output_type: 'summary',
+          output_data: { title: mission.title as string, body: finalSummary },
+          status: 'completed',
+        });
+      }
     }
 
     // Notification CEO automatique pour les missions payées

@@ -1470,7 +1470,7 @@ function AIWorkforceTab() {
       const res = await fetch(AI_ORCHESTRATOR_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
-        body: JSON.stringify({ agent_slug: agentSlug, objective: mission.objective, mission_id: mission.id })
+        body: JSON.stringify({ agent_slug: agentSlug, objective: mission.objective, mission_id: mission.id, client_id: mission.created_by || session?.user?.id })
       });
       const json = await res.json();
       await reloadMissionsAndApprovals();
@@ -1510,7 +1510,7 @@ function AIWorkforceTab() {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
         },
-        body: JSON.stringify({agent_slug: missionAgentSlug, title: missionTitle, objective: missionObjective})
+        body: JSON.stringify({agent_slug: missionAgentSlug, title: missionTitle, objective: missionObjective, client_id: session?.user?.id})
       });
       const json = await res.json();
       if (json.error) { setMissionResult('Erreur : ' + json.error); }
