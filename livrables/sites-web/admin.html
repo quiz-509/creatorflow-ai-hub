@@ -170,12 +170,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 @media(max-width:480px){
   .stats-grid, .stats-grid.cols-3{grid-template-columns:1fr;}
-  .section-card{overflow-x:hidden;}
-  .data-table{min-width:0;table-layout:fixed;}
-  .data-table th:last-child,.data-table td:last-child{display:none;}
-  .data-table th,.data-table td{padding:10px 8px;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .data-table td>div{max-width:100%!important;}
+  .section-card{overflow-x:auto;}
+  .data-table{min-width:0;}
+  .data-table th:nth-child(5),.data-table td:nth-child(5){display:none;}
+  .data-table th,.data-table td{padding:9px 8px;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .data-table td>div{max-width:120px!important;}
   .badge{font-size:9px;padding:2px 6px;}
+  .btn-approve,.btn-reject,.btn-preview{padding:4px 7px!important;font-size:10px!important;}
+  .main-inner{padding:16px 12px 60px!important;}
 }
   </style>
 </head>
