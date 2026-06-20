@@ -7,8 +7,8 @@ const cors = {
 };
 
 const CEO_EMAIL = Deno.env.get('CEO_EMAIL') ?? 'pjoacenel@gmail.com';
-const MAX_ITERATIONS = 8;
-const MAX_TOKENS = 4096;
+const MAX_ITERATIONS = 15;
+const MAX_TOKENS = 8192;
 const WEB_SEARCH_MAX_PER_MISSION = 4;
 const SOFT_TIMEOUT_MS = 110_000; // 110s — laisse 40s de marge avant le timeout Supabase (150s)
 
@@ -34,6 +34,8 @@ CAPACITÉS DISPONIBLES :
 - Vidéos (find_videos) : trouve des vidéos YouTube de référence
 - Livrable (create_output) : enregistre le livrable principal — output_data doit contenir le contenu COMPLET (pas un résumé, pas un plan, le vrai livrable)
 - Notification CEO (notify_ceo) : si tu découvres une information critique pour l'entreprise
+- Envoi email (send_email) : envoyer un email à un contact — toujours demander approbation CEO avant
+- Publication article (publish_article) : publier un article blog en ligne — toujours demander approbation CEO avant
 
 PROCESSUS (respecte l'ordre, max 8 étapes) :
 1. Lis la mémoire client si disponible (read_client_memory) — optionnel
@@ -57,6 +59,8 @@ CAPACITÉS DISPONIBLES :
 - Vidéos (find_videos) : trouve des vidéos YouTube complémentaires à intégrer dans le contenu
 - Livrable (create_output) : enregistre le contenu final. Format recommandé : output_type="content_piece", output_data={"title":..., "body":..., "images":[...], "videos":[...]}
 - Blog interne (create_blog_draft) : uniquement pour les articles du blog CreatorFlow lui-même
+- Publication article (publish_article) : publier un article blog — toujours request_approval avant
+- Envoi email (send_email) : envoyer un email à un contact — toujours request_approval avant
 
 ⚠️ RÈGLE ABSOLUE — BUDGET D'ITÉRATIONS :
 Tu as MAXIMUM 8 étapes. Tu DOIS appeler create_output au plus tard à l'étape 5.
@@ -82,6 +86,8 @@ CAPACITÉS DISPONIBLES :
 - Vidéos (find_videos) : vidéos de référence sur le secteur ciblé ou des témoignages
 - Livrable (create_output) : liste de prospects qualifiés, séquences d'emails, plan de prospection complet. Inclure images/videos si pertinent
 - Rapports (create_report) : analyse d'un marché, d'une niche, d'une opportunité
+- Envoi email (send_email) : envoyer un email de prospection à un contact identifié — TOUJOURS request_approval avant
+- Workflow n8n (trigger_workflow) : déclencher une séquence automatisée — request_approval si requires_approval=true
 
 PROCESSUS :
 1. Lis la mémoire client pour comprendre le contexte (read_client_memory)
@@ -106,6 +112,7 @@ CAPACITÉS DISPONIBLES :
 - Vidéos (find_videos) : tutoriels YouTube à recommander au client pour résoudre son problème
 - Livrable (create_output) : FAQ, procédure, réponse rédigée, base de connaissances. Inclure videos si des tutoriels pertinents existent
 - Rapports (create_report) : analyse des tickets, rapport de résolution
+- Envoi email (send_email) : répondre à un client par email — request_approval avant tout envoi
 
 PROCESSUS :
 1. Lis le contexte client (read_client_memory) pour comprendre son environnement
@@ -344,6 +351,46 @@ const TOOLS: Anthropic.Tool[] = [
         file_id: { type: 'string', description: 'UUID du fichier dans client_files.' },
       },
       required: ['file_id'],
+    },
+  },
+  // --- Niveau 3 : Actions externes contrôlées ---
+  {
+    name: 'send_email',
+    description: "Envoyer un email à un contact (prospect, client, partenaire). RÈGLE ABSOLUE : toujours appeler request_approval avant send_email. Jamais d'envoi sans approbation CEO. Limité à 5 emails max par mission.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        to: { type: 'string', description: 'Adresse email du destinataire.' },
+        subject: { type: 'string', description: "Sujet de l'email." },
+        body: { type: 'string', description: "Corps de l'email en texte ou markdown." },
+        context: { type: 'string', description: "Pourquoi cet email est envoyé (pour le log)." },
+      },
+      required: ['to', 'subject', 'body', 'context'],
+    },
+  },
+  {
+    name: 'publish_article',
+    description: "Publier un article blog en ligne (changer statut draft → published). RÈGLE ABSOLUE : toujours appeler request_approval avant publish_article. Jamais sans approbation CEO.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        article_id: { type: 'string', description: 'UUID de l\'article dans blog_articles.' },
+        context: { type: 'string', description: "Pourquoi publier cet article maintenant." },
+      },
+      required: ['article_id', 'context'],
+    },
+  },
+  {
+    name: 'trigger_workflow',
+    description: "Déclencher un workflow n8n automatisé (séquence email, enrichissement, notification Slack...). Vérifie si requires_approval=true avant d'exécuter.",
+    input_schema: {
+      type: 'object',
+      properties: {
+        workflow_slug: { type: 'string', description: 'Identifiant unique du workflow n8n.' },
+        params: { type: 'object', description: 'Paramètres à envoyer au workflow.' },
+        context: { type: 'string', description: "Ce que ce workflow va faire (pour le log et l'approbation)." },
+      },
+      required: ['workflow_slug', 'context'],
     },
   },
   {
@@ -784,6 +831,113 @@ Deno.serve(async (req: Request) => {
               `L'agent ${agent_slug} demande ton approbation.\n\nContexte : ${input.context}\n\nMission : ${mission.title as string}\n\nDonnées :\n${JSON.stringify(input.action_data, null, 2)}\n\nConnecte-toi à creatorflowmarket.com pour approuver ou rejeter.`,
             );
             resultText = JSON.stringify({ ok: true, note: 'Approbation demandée au CEO.' });
+
+          // ----------------------------------------------------------------
+          // NIVEAU 3 — Actions externes contrôlées
+          // ----------------------------------------------------------------
+          } else if (block.name === 'send_email') {
+            const input = block.input as { to: string; subject: string; body: string; context: string };
+            // Log immuable AVANT envoi
+            await supabase.from('agent_actions_log').insert({
+              mission_id: mission.id,
+              agent_slug,
+              action_type: 'send_email',
+              action_data: { to: input.to, subject: input.subject, body: input.body.slice(0, 500) },
+              context: input.context,
+              status: 'executed',
+              executed_at: new Date().toISOString(),
+            });
+            // Envoi via send-email
+            await callSendEmail(supabaseUrl, serviceKey, input.to, input.subject, input.body);
+            // Notifier le CEO
+            await callSendEmail(
+              supabaseUrl, serviceKey, CEO_EMAIL,
+              `[FYI] Email envoyé par agent ${agent_slug} → ${input.to}`,
+              `Mission : ${mission.title as string}\nDestinataire : ${input.to}\nSujet : ${input.subject}\n\nContexte : ${input.context}\n\nCorps :\n${input.body.slice(0, 1000)}`,
+            );
+            resultText = JSON.stringify({ ok: true, sent_to: input.to });
+
+          } else if (block.name === 'publish_article') {
+            const input = block.input as { article_id: string; context: string };
+            const { data: article, error: artErr } = await supabase
+              .from('blog_articles')
+              .update({ status: 'published', published_at: new Date().toISOString() })
+              .eq('id', input.article_id)
+              .select('title, slug')
+              .single();
+            if (artErr) throw new Error(artErr.message);
+            // Log immuable
+            await supabase.from('agent_actions_log').insert({
+              mission_id: mission.id,
+              agent_slug,
+              action_type: 'publish_article',
+              action_data: { article_id: input.article_id, title: article?.title, slug: article?.slug },
+              context: input.context,
+              status: 'executed',
+              executed_at: new Date().toISOString(),
+            });
+            await callSendEmail(
+              supabaseUrl, serviceKey, CEO_EMAIL,
+              `[Article publié] ${article?.title || input.article_id}`,
+              `Agent ${agent_slug} a publié un article.\n\nTitre : ${article?.title}\nSlug : ${article?.slug}\nContexte : ${input.context}\n\nVoir : https://creatorflowmarket.com/blog.html`,
+            );
+            resultText = JSON.stringify({ ok: true, title: article?.title, slug: article?.slug });
+
+          } else if (block.name === 'trigger_workflow') {
+            const input = block.input as { workflow_slug: string; params?: Record<string, unknown>; context: string };
+            // Charger le workflow depuis n8n_workflows
+            const { data: wf, error: wfErr } = await supabase
+              .from('n8n_workflows')
+              .select('name, webhook_url, requires_approval')
+              .eq('slug', input.workflow_slug)
+              .single();
+            if (wfErr || !wf) {
+              resultText = JSON.stringify({ error: `Workflow "${input.workflow_slug}" introuvable. Vérifie la table n8n_workflows.` });
+            } else if (wf.requires_approval) {
+              // Requiert approbation CEO
+              const { data: output } = await supabase
+                .from('agent_outputs')
+                .insert({
+                  mission_id: mission.id,
+                  output_type: 'trigger_workflow',
+                  output_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
+                  status: 'waiting_approval',
+                })
+                .select('id')
+                .single();
+              await supabase.from('pending_approvals').insert({
+                mission_id: mission.id,
+                output_id: output?.id || null,
+                action_type: 'trigger_workflow',
+                action_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
+                context: input.context,
+              });
+              await callSendEmail(
+                supabaseUrl, serviceKey, CEO_EMAIL,
+                `[Approbation requise] Workflow n8n : ${wf.name}`,
+                `L'agent ${agent_slug} veut déclencher le workflow "${wf.name}".\n\nContexte : ${input.context}\n\nParamètres : ${JSON.stringify(input.params || {}, null, 2)}\n\nConnecte-toi à creatorflowmarket.com pour approuver.`,
+              );
+              resultText = JSON.stringify({ ok: true, note: `Workflow "${wf.name}" en attente d'approbation CEO.` });
+            } else {
+              // Exécution directe
+              const resp = await fetch(wf.webhook_url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...(input.params || {}), mission_id: mission.id, agent_slug }),
+                signal: AbortSignal.timeout(15000),
+              });
+              const wfStatus = resp.ok ? 'executed' : 'failed';
+              await supabase.from('agent_actions_log').insert({
+                mission_id: mission.id,
+                agent_slug,
+                action_type: 'trigger_workflow',
+                action_data: { workflow_slug: input.workflow_slug, name: wf.name, params: input.params || {} },
+                context: input.context,
+                status: wfStatus,
+                executed_at: new Date().toISOString(),
+              });
+              resultText = JSON.stringify({ ok: resp.ok, workflow: wf.name, status: wfStatus });
+            }
 
           } else if (block.name === 'finish_mission') {
             const input = block.input as { result_summary: string; status: 'completed' | 'failed' };
