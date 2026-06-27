@@ -1,0 +1,2352 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--sidebar:240px;--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
+.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;overflow:hidden;}
+.nav-toggle{display:none;align-items:center;justify-content:center;width:32px;height:32px;flex-shrink:0;color:var(--text);}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.admin-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:99px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 10px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
+.user-chip:hover{border-color:var(--border-3);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:13px;font-weight:600;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--nav);left:0;bottom:0;width:var(--sidebar);background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-section{padding:16px 12px 8px;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 160ms;position:relative;border:none;background:none;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nav-item.active{background:rgba(124,58,237,0.12);color:var(--vs);}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--v);}
+.nav-item svg{opacity:0.7;flex-shrink:0;}
+.nav-item.active svg{opacity:1;}
+.sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid var(--border);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);padding-top:var(--nav);min-height:100vh;}
+.main-inner{padding:32px 32px 80px;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--text-2);}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stats-grid.cols-3{grid-template-columns:repeat(3,1fr);}
+.ai-agents-grid{display:grid;grid-template-columns:repeat(2,1fr);}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;position:relative;overflow:hidden;transition:border-color 180ms;}
+.stat-card:hover{border-color:var(--border-2);}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-size:18px;}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text-3);font-weight:500;word-break:break-word;}
+
+/* SECTION CARD */
+.section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:20px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.section-title{font-size:14px;font-weight:700;}
+.section-count{font-size:12px;color:var(--text-3);background:var(--surf-2);padding:2px 9px;border-radius:99px;border:1px solid var(--border);}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);padding:12px 20px;text-align:left;border-bottom:1px solid var(--border);}
+.data-table td{font-size:13px;padding:14px 20px;border-bottom:1px solid var(--border);color:var(--text-2);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.015);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-blue{background:rgba(6,182,212,0.10);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+.badge-red{background:rgba(239,68,68,0.10);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.badge-gray{background:rgba(255,255,255,0.05);color:var(--text-3);border:1px solid var(--border);}
+
+/* USER ROW */
+.user-row-info{display:flex;align-items:center;gap:10px;}
+.mini-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-row-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px;}
+.user-row-email{font-size:11px;color:var(--text-3);}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+
+/* AMOUNT */
+.amount{font-size:13px;font-weight:700;color:var(--text);}
+
+/* EMPTY */
+.empty-state{padding:48px 20px;text-align:center;color:var(--text-3);}
+.empty-icon{font-size:32px;margin-bottom:12px;}
+.empty-text{font-size:13px;}
+
+/* SPINNER */
+.spin{width:20px;height:20px;border:2px solid var(--border-2);border-top-color:var(--vs);border-radius:50%;animation:spin 0.7s linear infinite;margin:40px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ACCESS DENIED */
+.access-denied{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;text-align:center;padding:32px;}
+.access-denied h1{font-size:28px;font-weight:800;}
+.access-denied p{font-size:14px;color:var(--text-2);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms;white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;}
+.btn-primary:hover{transform:translateY(-1px);}
+
+/* ACTION BUTTONS */
+.btn-approve{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(16,185,129,0.15);color:var(--green);border:1px solid rgba(16,185,129,0.3);cursor:pointer;transition:all 160ms;}
+.btn-approve:hover{background:rgba(16,185,129,0.25);}
+.btn-reject{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.10);color:var(--red);border:1px solid rgba(239,68,68,0.25);cursor:pointer;transition:all 160ms;margin-left:6px;}
+.btn-reject:hover{background:rgba(239,68,68,0.2);}
+.btn-preview{padding:5px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.25);cursor:pointer;transition:all 160ms;}
+.btn-preview:hover{background:rgba(124,58,237,0.22);}
+.preview-output{background:var(--surf-2);border:1px solid var(--border);border-radius:12px;padding:20px;white-space:pre-wrap;font-size:13px;line-height:1.75;color:var(--text);max-height:52vh;overflow-y:auto;font-family:var(--f);}
+.preview-meta{font-size:12px;color:var(--text-3);margin-bottom:4px;font-weight:500;}
+.btn-save{padding:8px 20px;border-radius:99px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#9333EA,var(--v));color:#fff;border:none;cursor:pointer;transition:all 160ms;}
+.btn-save:hover{opacity:0.88;}
+.btn-save:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* NAV BADGE */
+.nav-pending{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:99px;min-width:16px;text-align:center;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);width:100%;max-width:560px;max-height:85vh;overflow-y:auto;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
+.modal-title{font-size:16px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,0.05);border:1px solid var(--border);cursor:pointer;color:var(--text-2);font-size:16px;}
+.modal-close:hover{background:rgba(255,255,255,0.10);color:var(--text);}
+.modal-body{padding:20px 24px;}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.modal-row:last-child{border:none;}
+.modal-label{font-size:12px;color:var(--text-3);font-weight:500;}
+.modal-val{font-size:13px;font-weight:600;color:var(--text);text-align:right;max-width:280px;}
+.modal-section{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin:16px 0 8px;}
+.status-select{background:var(--surf-2);border:1px solid var(--border-2);color:var(--text);padding:6px 12px;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;}
+
+/* CLICKABLE ROW */
+.data-table tr.clickable{cursor:pointer;}
+.data-table tr.clickable:hover td{background:rgba(124,58,237,0.06);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-toggle{display:flex;}
+  .nav-brand{width:auto;padding:0 8px;gap:8px;}
+  .brand span,.admin-badge{display:none;}
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s var(--ease);z-index:201;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;}
+  .main{margin-left:0;}
+  .main-inner{padding:20px 16px 60px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .stats-grid.cols-3{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+  .ai-agents-grid{grid-template-columns:1fr;}
+  .page-header{flex-wrap:wrap;gap:12px;}
+  .section-card{overflow-x:auto;}
+  .data-table{min-width:480px;}
+}
+@media(max-width:480px){
+  .stats-grid, .stats-grid.cols-3{grid-template-columns:1fr;}
+  .section-card{overflow-x:auto;}
+  .data-table{min-width:0;}
+  .data-table th:nth-child(5),.data-table td:nth-child(5){display:none;}
+  .data-table th,.data-table td{padding:9px 8px;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .data-table td>div{max-width:120px!important;}
+  .badge{font-size:9px;padding:2px 6px;}
+  .btn-approve,.btn-reject,.btn-preview{padding:4px 7px!important;font-size:10px!important;}
+  .main-inner{padding:16px 12px 60px!important;}
+}
+
+@keyframes sk-sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.sk{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:sk-sh 1.4s ease-in-out infinite;border-radius:8px;}
+.sk-overlay{position:fixed;inset:0;z-index:9999;background:#04040A;pointer-events:none;}
+.sk-nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(4,4,10,0.92);border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:center;gap:12px;padding:0 20px 0 0;}
+.sk-brand{width:var(--sidebar,240px);padding:0 20px;flex-shrink:0;display:flex;align-items:center;gap:10px;}
+.sk-sidebar{position:fixed;top:64px;left:0;bottom:0;width:var(--sidebar,240px);background:var(--surf);border-right:1px solid rgba(255,255,255,0.055);padding:16px 12px;}
+.sk-main{margin-left:var(--sidebar,240px);padding:96px 32px 0;}
+.sk-tabs{display:flex;gap:6px;margin-bottom:24px;}
+.sk-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:768px){.sk-sidebar{display:none;}.sk-main{margin-left:0;padding:80px 16px 0;}.sk-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.sk-stats{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<div id="sk" class="sk-overlay">
+  <div class="sk-nav">
+    <div class="sk-brand">
+      <div class="sk" style="width:36px;height:36px;border-radius:8px;flex-shrink:0;"></div>
+      <div class="sk" style="width:100px;height:13px;"></div>
+    </div>
+    <div class="sk" style="width:60px;height:22px;border-radius:99px;margin-right:auto;"></div>
+    <div class="sk" style="width:36px;height:36px;border-radius:9px;"></div>
+    <div class="sk" style="width:90px;height:32px;border-radius:999px;"></div>
+  </div>
+  <div class="sk-sidebar">
+    <div class="sk" style="height:9px;width:48px;border-radius:4px;margin-bottom:14px;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;margin-bottom:4px;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;margin-bottom:4px;opacity:.8;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;margin-bottom:4px;opacity:.65;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;margin-bottom:4px;opacity:.5;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;margin-bottom:4px;opacity:.38;"></div>
+    <div class="sk" style="height:34px;border-radius:10px;opacity:.26;"></div>
+  </div>
+  <div class="sk-main">
+    <div style="margin-bottom:22px;">
+      <div class="sk" style="width:180px;height:24px;margin-bottom:8px;"></div>
+      <div class="sk" style="width:260px;height:12px;"></div>
+    </div>
+    <div class="sk-tabs">
+      <div class="sk" style="width:70px;height:34px;border-radius:8px;"></div>
+      <div class="sk" style="width:90px;height:34px;border-radius:8px;opacity:.7;"></div>
+      <div class="sk" style="width:70px;height:34px;border-radius:8px;opacity:.55;"></div>
+      <div class="sk" style="width:80px;height:34px;border-radius:8px;opacity:.4;"></div>
+    </div>
+    <div class="sk-stats">
+      <div class="sk" style="height:100px;border-radius:16px;"></div>
+      <div class="sk" style="height:100px;border-radius:16px;opacity:.85;"></div>
+      <div class="sk" style="height:100px;border-radius:16px;opacity:.7;"></div>
+      <div class="sk" style="height:100px;border-radius:16px;opacity:.55;"></div>
+      <div class="sk" style="height:100px;border-radius:16px;opacity:.4;"></div>
+    </div>
+    <div class="sk" style="height:52px;border-radius:16px 16px 0 0;margin-bottom:1px;"></div>
+    <div class="sk" style="height:56px;border-radius:0;margin-bottom:1px;opacity:.9;"></div>
+    <div class="sk" style="height:56px;border-radius:0;margin-bottom:1px;opacity:.75;"></div>
+    <div class="sk" style="height:56px;border-radius:0 0 16px 16px;opacity:.6;"></div>
+  </div>
+</div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback
+} = React;
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const ADMIN_EMAIL = 'pjoacenel@gmail.com';
+const avatarColor = str => {
+  const colors = ['#7C3AED', '#059669', '#D97706', '#DC2626', '#2563EB', '#DB2777', '#0891B2'];
+  let h = 0;
+  for (let c of str || '') h = h * 31 + c.charCodeAt(0) & 0xFFFFFF;
+  return colors[Math.abs(h) % colors.length];
+};
+const initials = name => (name || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric'
+}) : '';
+const fmtMoney = n => n ? `${Number(n).toLocaleString('fr-CA')} $` : '0 $';
+
+/* ── SIDEBAR NAV ── */
+function Sidebar({
+  tab,
+  setTab,
+  onLogout,
+  pendingExperts,
+  open,
+  onClose
+}) {
+  const items = [{
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "3",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "14",
+      y: "3",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "3",
+      y: "14",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }), /*#__PURE__*/React.createElement("rect", {
+      x: "14",
+      y: "14",
+      width: "7",
+      height: "7",
+      rx: "1"
+    }))
+  }, {
+    id: 'experts',
+    label: 'Experts',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("polygon", {
+      points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+    })),
+    badge: pendingExperts
+  }, {
+    id: 'users',
+    label: 'Utilisateurs',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+    }), /*#__PURE__*/React.createElement("circle", {
+      cx: "9",
+      cy: "7",
+      r: "4"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M23 21v-2a4 4 0 0 0-3-3.87"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16 3.13a4 4 0 0 1 0 7.75"
+    }))
+  }, {
+    id: 'missions',
+    label: 'Missions',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "14 2 14 8 20 8"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "13",
+      x2: "8",
+      y2: "13"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "16",
+      y1: "17",
+      x2: "8",
+      y2: "17"
+    }), /*#__PURE__*/React.createElement("polyline", {
+      points: "10 9 9 9 8 9"
+    }))
+  }, {
+    id: 'payments',
+    label: 'Paiements',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: "1",
+      y: "4",
+      width: "22",
+      height: "16",
+      rx: "2"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: "1",
+      y1: "10",
+      x2: "23",
+      y2: "10"
+    }))
+  }, {
+    id: 'blog',
+    label: 'Blog',
+    icon: /*#__PURE__*/React.createElement("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2"
+    }, /*#__PURE__*/React.createElement("path", {
+      d: "M12 20h9"
+    }), /*#__PURE__*/React.createElement("path", {
+      d: "M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+    }))
+  }, {
+    id: 'ai-workforce',
+    label: 'AI Workforce',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("circle",{cx:"12",cy:"7",r:"3"}), /*#__PURE__*/React.createElement("path",{d:"M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"}), /*#__PURE__*/React.createElement("circle",{cx:"4",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M2 20c0-2.2 1-4 2-4"}), /*#__PURE__*/React.createElement("circle",{cx:"20",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M22 20c0-2.2-1-4-2-4"}))
+  }, {
+    id: 'crm',
+    label: 'CRM',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"}), /*#__PURE__*/React.createElement("circle",{cx:"9",cy:"7",r:"4"}), /*#__PURE__*/React.createElement("path",{d:"M23 21v-2a4 4 0 0 0-3-3.87"}), /*#__PURE__*/React.createElement("path",{d:"M16 3.13a4 4 0 0 1 0 7.75"}))
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    open && /*#__PURE__*/React.createElement("div", {
+      className: "sidebar-backdrop",
+      onClick: onClose
+    }),
+    /*#__PURE__*/React.createElement("aside", {
+    className: `sidebar ${open ? 'open' : ''}`,
+    id: "sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Navigation"), items.map(it => /*#__PURE__*/React.createElement("button", {
+    key: it.id,
+    className: `nav-item ${tab === it.id ? 'active' : ''}`,
+    onClick: () => { setTab(it.id); onClose && onClose(); }
+  }, it.icon, it.label, it.badge > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "nav-pending"
+  }, it.badge)))), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-bottom"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "nav-item",
+    onClick: onLogout
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  })), "D\xE9connexion"))));
+}
+
+/* ── DASHBOARD TAB ── */
+function DashboardTab() {
+  const [stats, setStats] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const [users, experts, missions, payments, articles, subs, enrollments] = await Promise.all([sb.from('profiles').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('experts').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('missions').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('missions').select('montant').eq('statut', 'payee'), sb.from('blog_articles').select('id', {
+        count: 'exact',
+        head: true
+      }).eq('status', 'published'), sb.from('blog_subscribers').select('id', {
+        count: 'exact',
+        head: true
+      }), sb.from('academy_enrollments').select('id', {
+        count: 'exact',
+        head: true
+      })]);
+      const totalRevenue = (payments.data || []).reduce((s, m) => s + (Number(m.montant) || 0), 0);
+      setStats({
+        users: users.count || 0,
+        experts: experts.count || 0,
+        missions: missions.count || 0,
+        revenue: totalRevenue,
+        articles: articles.count || 0,
+        subscribers: subs.count || 0,
+        enrollments: enrollments.count || 0
+      });
+    })();
+  }, []);
+  const [recentMissions, setRecentMissions] = useState([]);
+  const [recentUsers, setRecentUsers] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const {
+        data: m
+      } = await sb.from('missions').select('id,titre,statut,montant,created_at').order('created_at', {
+        ascending: false
+      }).limit(5);
+      setRecentMissions(m || []);
+      const {
+        data: u
+      } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', {
+        ascending: false
+      }).limit(5);
+      setRecentUsers(u || []);
+    })();
+  }, []);
+  if (!stats) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const statCards = [{
+    label: 'Revenus totaux',
+    val: fmtMoney(stats.revenue),
+    icon: '💰',
+    color: '#7C3AED'
+  }, {
+    label: 'Utilisateurs',
+    val: stats.users,
+    icon: '👥',
+    color: '#06B6D4'
+  }, {
+    label: 'Missions',
+    val: stats.missions,
+    icon: '📋',
+    color: '#10B981'
+  }, {
+    label: 'Abonnés newsletter',
+    val: stats.subscribers,
+    icon: '📧',
+    color: '#F59E0B'
+  }, {
+    label: 'Experts actifs',
+    val: stats.experts,
+    icon: '⭐',
+    color: '#DB2777'
+  }, {
+    label: 'Articles publiés',
+    val: stats.articles,
+    icon: '✍️',
+    color: '#2563EB'
+  }, {
+    label: 'Inscriptions Academy',
+    val: stats.enrollments,
+    icon: '🎓',
+    color: '#059669'
+  }];
+  const statusBadge = s => {
+    const map = {
+      en_cours: 'badge-blue',
+      payee: 'badge-green',
+      terminee: 'badge-green',
+      annulee: 'badge-red',
+      en_attente: 'badge-amber'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, s?.replace('_', ' '));
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Dashboard Admin"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, "Vue d'ensemble de CreatorFlow Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(4,1fr)'
+    }
+  }, statCards.slice(0, 4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.label,
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: `${s.color}18`
+    }
+  }, /*#__PURE__*/React.createElement("span", null, s.icon)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, s.val), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, s.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(3,1fr)',
+      marginTop: '-14px'
+    }
+  }, statCards.slice(4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.label,
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: `${s.color}18`
+    }
+  }, /*#__PURE__*/React.createElement("span", null, s.icon)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, s.val), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, s.label)))), /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Derni\xE8res missions"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, recentMissions.length, " r\xE9centes")), recentMissions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucune mission")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Montant"))), /*#__PURE__*/React.createElement("tbody", null, recentMissions.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)',
+      fontSize: 12
+    }
+  }, m.titre || 'Sans titre'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))), /*#__PURE__*/React.createElement("td", null, statusBadge(m.statut)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant)))))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Nouveaux utilisateurs"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, recentUsers.length, " r\xE9cents")), recentUsers.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun utilisateur")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Utilisateur"), /*#__PURE__*/React.createElement("th", null, "R\xF4le"))), /*#__PURE__*/React.createElement("tbody", null, recentUsers.map(u => /*#__PURE__*/React.createElement("tr", {
+    key: u.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-avatar",
+    style: {
+      background: avatarColor(u.full_name)
+    }
+  }, initials(u.full_name)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-name"
+  }, u.full_name || '—'), /*#__PURE__*/React.createElement("div", {
+    className: "user-row-email"
+  }, u.email)))), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${u.role === 'expert' ? 'badge-purple' : 'badge-blue'}`
+  }, u.role || 'client')))))))));
+}
+
+/* ── USERS TAB ── */
+function UsersTab() {
+  const [users, setUsers] = useState(null);
+  const [filter, setFilter] = useState('all');
+  useEffect(() => {
+    (async () => {
+      const {
+        data
+      } = await sb.from('profiles').select('id,full_name,email,role,created_at').order('created_at', {
+        ascending: false
+      });
+      setUsers(data || []);
+    })();
+  }, []);
+  if (!users) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const filtered = filter === 'all' ? users : users.filter(u => (u.role || 'client') === filter);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Utilisateurs"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, users.length, " comptes inscrits")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, ['all', 'client', 'expert'].map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? 'Tous' : f === 'client' ? 'Clients' : 'Experts')))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des utilisateurs"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun utilisateur")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Utilisateur"), /*#__PURE__*/React.createElement("th", null, "Email"), /*#__PURE__*/React.createElement("th", null, "R\xF4le"), /*#__PURE__*/React.createElement("th", null, "Inscrit le"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(u => /*#__PURE__*/React.createElement("tr", {
+    key: u.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    className: "user-row-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-avatar",
+    style: {
+      background: avatarColor(u.full_name)
+    }
+  }, initials(u.full_name)), /*#__PURE__*/React.createElement("div", {
+    className: "user-row-name"
+  }, u.full_name || '—'))), /*#__PURE__*/React.createElement("td", {
+    style: {
+      color: 'var(--text-3)',
+      fontSize: 12
+    }
+  }, u.email), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${u.role === 'expert' ? 'badge-purple' : 'badge-blue'}`
+  }, u.role || 'client')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12
+    }
+  }, fmtDate(u.created_at))))))));
+}
+
+/* ── EXPERTS TAB ── */
+function ExpertsTab({
+  onApproval
+}) {
+  const [experts, setExperts] = useState(null);
+  const [profiles, setProfiles] = useState({});
+  const [loading, setLoading] = useState({});
+  const [filter, setFilter] = useState('all');
+  const loadExperts = async () => {
+    const {
+      data: exp
+    } = await sb.from('experts').select('id,statut,specialite,tarif_heure,note_moyenne,nb_avis,created_at').order('created_at', {
+      ascending: false
+    });
+    setExperts(exp || []);
+    if (exp && exp.length > 0) {
+      const ids = exp.map(e => e.id).filter(Boolean);
+      if (ids.length > 0) {
+        const {
+          data: profs
+        } = await sb.from('profiles').select('id,prenom,nom,email').in('id', ids);
+        const map = {};
+        (profs || []).forEach(p => {
+          map[p.id] = p;
+        });
+        setProfiles(map);
+      }
+    }
+  };
+  useEffect(() => {
+    loadExperts();
+  }, []);
+  const updateStatut = async (id, newStatut) => {
+    setLoading(l => ({
+      ...l,
+      [id]: true
+    }));
+    await sb.from('experts').update({
+      statut: newStatut
+    }).eq('id', id);
+    await loadExperts();
+    if (onApproval) onApproval();
+    setLoading(l => ({
+      ...l,
+      [id]: false
+    }));
+  };
+  if (!experts) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const filtered = filter === 'all' ? experts : experts.filter(e => e.statut === filter);
+  const pending = experts.filter(e => e.statut === 'pending').length;
+  const statutBadge = s => {
+    const map = {
+      approved: 'badge-green',
+      pending: 'badge-amber',
+      rejected: 'badge-red'
+    };
+    const labels = {
+      approved: 'Approuvé',
+      pending: 'En attente',
+      rejected: 'Rejeté'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, labels[s] || s);
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Experts"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, experts.length, " experts inscrits \u2014 ", pending, " en attente d'approbation")), /*#__PURE__*/React.createElement("a", {
+    href: "admin-creer-expert.html",
+    className: "btn btn-primary",
+    style: { fontSize: 13, padding: '8px 16px' }
+  }, "+ Ajouter un expert")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      marginBottom: 20
+    }
+  }, ['all', 'pending', 'approved', 'rejected'].map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? `Tous (${experts.length})` : f === 'pending' ? `En attente (${experts.filter(e => e.statut === 'pending').length})` : f === 'approved' ? `Approuvés (${experts.filter(e => e.statut === 'approved').length})` : `Rejetés (${experts.filter(e => e.statut === 'rejected').length})`))), pending > 0 && filter !== 'approved' && filter !== 'rejected' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(245,158,11,0.08)',
+      border: '1px solid rgba(245,158,11,0.25)',
+      borderRadius: 12,
+      padding: '12px 16px',
+      marginBottom: 16,
+      fontSize: 13,
+      color: 'var(--amber)'
+    }
+  }, "\u26A0\uFE0F ", pending, " expert", pending > 1 ? 's' : '', " en attente d'approbation \u2014 ils ne sont pas visibles publiquement."), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des experts"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\u2B50"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun expert")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Expert"), /*#__PURE__*/React.createElement("th", null, "Tarif"), /*#__PURE__*/React.createElement("th", null, "Note"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Actions"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(e => {
+    const prof = profiles[e.id] || {};
+    const fullName = `${prof.prenom || ''} ${prof.nom || ''}`.trim() || '—';
+    return /*#__PURE__*/React.createElement("tr", {
+      key: e.id
+    }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+      className: "user-row-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mini-avatar",
+      style: {
+        background: avatarColor(fullName)
+      }
+    }, initials(fullName)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "user-row-name"
+    }, fullName), /*#__PURE__*/React.createElement("div", {
+      className: "user-row-email"
+    }, prof.email || '—'), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 10,
+        color: 'var(--text-3)'
+      }
+    }, e.specialite || '')))), /*#__PURE__*/React.createElement("td", {
+      style: {
+        fontSize: 12
+      }
+    }, e.tarif_heure ? `${e.tarif_heure} $/h` : '—'), /*#__PURE__*/React.createElement("td", {
+      style: {
+        fontSize: 12
+      }
+    }, e.note_moyenne ? `${e.note_moyenne}/5 (${e.nb_avis} avis)` : '—'), /*#__PURE__*/React.createElement("td", null, statutBadge(e.statut)), /*#__PURE__*/React.createElement("td", null, e.statut === 'pending' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+      className: "btn-approve",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'approved')
+    }, loading[e.id] ? '...' : '✓ Approuver'), /*#__PURE__*/React.createElement("button", {
+      className: "btn-reject",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'rejected')
+    }, "\u2715 Rejeter")), e.statut === 'approved' && /*#__PURE__*/React.createElement("button", {
+      className: "btn-reject",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'rejected')
+    }, "R\xE9voquer"), e.statut === 'rejected' && /*#__PURE__*/React.createElement("button", {
+      className: "btn-approve",
+      disabled: loading[e.id],
+      onClick: () => updateStatut(e.id, 'approved')
+    }, "R\xE9approuver")));
+  })))));
+}
+
+/* ── MISSIONS TAB ── */
+function MissionsTab() {
+  const [missions, setMissions] = useState(null);
+  const [filter, setFilter] = useState('all');
+  const [selected, setSelected] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [newStatut, setNewStatut] = useState('');
+  const [saving, setSaving] = useState(false);
+  const loadMissions = async () => {
+    const {
+      data
+    } = await sb.from('missions').select('id,titre,statut,montant,prix,categorie,client_id,expert_id,deadline,progression,created_at').order('created_at', {
+      ascending: false
+    });
+    setMissions(data || []);
+  };
+  useEffect(() => {
+    loadMissions();
+  }, []);
+  useEffect(() => {
+    if (!selected) {
+      setModalData(null);
+      return;
+    }
+    setModalData(null);
+    (async () => {
+      const {
+        data: m
+      } = await sb.from('missions').select('*').eq('id', selected).single();
+      if (!m) return;
+      const results = await Promise.all([m.client_id ? sb.from('profiles').select('full_name,email').eq('id', m.client_id).single() : Promise.resolve(null), m.expert_id ? sb.from('profiles').select('full_name,email').eq('id', m.expert_id).single() : Promise.resolve(null)]);
+      setModalData({
+        mission: m,
+        client: results[0]?.data || null,
+        expert: results[1]?.data || null
+      });
+      setNewStatut(m.statut || '');
+    })();
+  }, [selected]);
+  const saveStatut = async () => {
+    if (!selected || !newStatut) return;
+    setSaving(true);
+    await sb.from('missions').update({
+      statut: newStatut
+    }).eq('id', selected);
+    await loadMissions();
+    setModalData(d => d ? {
+      ...d,
+      mission: {
+        ...d.mission,
+        statut: newStatut
+      }
+    } : d);
+    setSaving(false);
+  };
+  if (!missions) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const statuses = ['all', 'en_attente', 'en_cours', 'terminee', 'payee', 'annulee'];
+  const filtered = filter === 'all' ? missions : missions.filter(m => m.statut === filter);
+  const totalRevenue = missions.filter(m => m.statut === 'payee').reduce((s, m) => s + (Number(m.montant || m.prix) || 0), 0);
+  const statusBadge = s => {
+    const map = {
+      en_cours: 'badge-blue',
+      payee: 'badge-green',
+      terminee: 'badge-green',
+      annulee: 'badge-red',
+      en_attente: 'badge-amber'
+    };
+    const labels = {
+      en_cours: 'En cours',
+      payee: 'Payée',
+      terminee: 'Terminée',
+      annulee: 'Annulée',
+      en_attente: 'En attente'
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      className: `badge ${map[s] || 'badge-gray'}`
+    }, labels[s] || s);
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Missions"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, missions.length, " missions \u2014 ", fmtMoney(totalRevenue), " encaiss\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      marginBottom: 20,
+      flexWrap: 'wrap'
+    }
+  }, statuses.map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilter(f),
+    style: {
+      padding: '6px 14px',
+      borderRadius: 99,
+      fontSize: 12,
+      fontWeight: 600,
+      border: '1px solid',
+      borderColor: filter === f ? 'var(--v)' : 'var(--border-2)',
+      background: filter === f ? 'rgba(124,58,237,0.15)' : 'transparent',
+      color: filter === f ? 'var(--vs)' : 'var(--text-3)',
+      cursor: 'pointer'
+    }
+  }, f === 'all' ? `Toutes (${missions.length})` : `${f.replace('_', ' ')} (${missions.filter(m => m.statut === f).length})`))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Liste des missions"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, filtered.length, " r\xE9sultats \u2014 cliquer pour les d\xE9tails")), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucune mission")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Montant"), /*#__PURE__*/React.createElement("th", null, "Date"))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id,
+    className: "clickable",
+    onClick: () => setSelected(m.id)
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)'
+    }
+  }, m.titre || 'Sans titre')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, m.categorie || '—'), /*#__PURE__*/React.createElement("td", null, statusBadge(m.statut)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant || m.prix))), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))))))), selected && /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: e => {
+      if (e.target === e.currentTarget) setSelected(null);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-title"
+  }, modalData?.mission?.titre || 'Détail mission'), /*#__PURE__*/React.createElement("button", {
+    className: "modal-close",
+    onClick: () => setSelected(null)
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "modal-body"
+  }, !modalData ? /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  }) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Informations"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.categorie || '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Montant"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, fmtMoney(modalData.mission.montant || modalData.mission.prix))), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Deadline"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.deadline || '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Progression"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.mission.progression != null ? `${modalData.mission.progression}%` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Cr\xE9\xE9e le"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, fmtDate(modalData.mission.created_at))), /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Parties"), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Client"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.client ? `${modalData.client.full_name} — ${modalData.client.email}` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "modal-label"
+  }, "Expert"), /*#__PURE__*/React.createElement("span", {
+    className: "modal-val"
+  }, modalData.expert ? `${modalData.expert.full_name} — ${modalData.expert.email}` : '—')), /*#__PURE__*/React.createElement("div", {
+    className: "modal-section"
+  }, "Changer le statut"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      alignItems: 'center',
+      paddingTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "status-select",
+    value: newStatut,
+    onChange: e => setNewStatut(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "en_attente"
+  }, "En attente"), /*#__PURE__*/React.createElement("option", {
+    value: "en_cours"
+  }, "En cours"), /*#__PURE__*/React.createElement("option", {
+    value: "terminee"
+  }, "Termin\xE9e"), /*#__PURE__*/React.createElement("option", {
+    value: "payee"
+  }, "Pay\xE9e"), /*#__PURE__*/React.createElement("option", {
+    value: "annulee"
+  }, "Annul\xE9e")), /*#__PURE__*/React.createElement("button", {
+    className: "btn-save",
+    disabled: saving || newStatut === modalData.mission.statut,
+    onClick: saveStatut
+  }, saving ? 'Enregistrement...' : 'Enregistrer')))))));
+}
+
+/* ── PAYMENTS TAB ── */
+function PaymentsTab() {
+  const [missions, setMissions] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const {
+        data
+      } = await sb.from('missions').select('id,titre,montant,created_at,statut').eq('statut', 'payee').order('created_at', {
+        ascending: false
+      });
+      setMissions(data || []);
+    })();
+  }, []);
+  if (!missions) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const total = missions.reduce((s, m) => s + (Number(m.montant) || 0), 0);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Paiements"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, missions.length, " paiements confirm\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(3,1fr)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.12)'
+    }
+  }, "\uD83D\uDCB0"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, fmtMoney(total)), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Revenus totaux")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)'
+    }
+  }, "\uD83D\uDCCA"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missions.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Transactions")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.12)'
+    }
+  }, "\uD83D\uDCC8"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missions.length > 0 ? fmtMoney(Math.round(total / missions.length)) : '0 $'), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Panier moyen"))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Historique des paiements"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, missions.length, " entr\xE9es")), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCB3"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun paiement encore")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Mission"), /*#__PURE__*/React.createElement("th", null, "Montant"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Date"))), /*#__PURE__*/React.createElement("tbody", null, missions.map(m => /*#__PURE__*/React.createElement("tr", {
+    key: m.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)'
+    }
+  }, m.titre || 'Sans titre')), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "amount"
+  }, fmtMoney(m.montant))), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "badge badge-green"
+  }, "Pay\xE9e")), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, fmtDate(m.created_at))))))));
+}
+
+/* ── BLOG TAB ── */
+function BlogTab() {
+  const [articles, setArticles] = useState(null);
+  const [subscribers, setSubscribers] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const [a, s] = await Promise.all([sb.from('blog_articles').select('id,title,category,status,views,created_at').order('created_at', {
+        ascending: false
+      }).limit(50), sb.from('blog_subscribers').select('id,email,source,created_at').order('created_at', {
+        ascending: false
+      }).limit(50)]);
+      setArticles(a.data || []);
+      setSubscribers(s.data || []);
+    })();
+  }, []);
+  if (!articles || !subscribers) return /*#__PURE__*/React.createElement("div", {
+    className: "spin"
+  });
+  const published = articles.filter(a => a.status === 'published').length;
+  const totalViews = articles.reduce((s, a) => s + (Number(a.views) || 0), 0);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Blog & Newsletter"), /*#__PURE__*/React.createElement("div", {
+    className: "page-sub"
+  }, published, " articles publi\xE9s \u2014 ", subscribers.length, " abonn\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid",
+    style: {
+      gridTemplateColumns: 'repeat(4,1fr)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)'
+    }
+  }, "\u270D\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, articles.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Articles total")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.12)'
+    }
+  }, "\u2705"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, published), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Publi\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.12)'
+    }
+  }, "\uD83D\uDC41\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, totalViews.toLocaleString('fr-CA')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Vues totales")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(245,158,11,0.12)'
+    }
+  }, "\uD83D\uDCE7"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, subscribers.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Abonn\xE9s"))), /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Articles r\xE9cents"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, articles.length)), articles.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\u270D\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun article")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Titre"), /*#__PURE__*/React.createElement("th", null, "Statut"), /*#__PURE__*/React.createElement("th", null, "Vues"))), /*#__PURE__*/React.createElement("tbody", null, articles.slice(0, 15).map(a => /*#__PURE__*/React.createElement("tr", {
+    key: a.id
+  }, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--text)',
+      fontSize: 12,
+      maxWidth: 220,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, a.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, a.category)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${a.status === 'published' ? 'badge-green' : 'badge-amber'}`
+  }, a.status === 'published' ? 'Publié' : 'Brouillon')), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, (Number(a.views) || 0).toLocaleString('fr-CA'))))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Abonn\xE9s newsletter"), /*#__PURE__*/React.createElement("span", {
+    className: "section-count"
+  }, subscribers.length)), subscribers.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "\uD83D\uDCE7"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-text"
+  }, "Aucun abonn\xE9")) : /*#__PURE__*/React.createElement("table", {
+    className: "data-table"
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "Email"), /*#__PURE__*/React.createElement("th", null, "Source"))), /*#__PURE__*/React.createElement("tbody", null, subscribers.slice(0, 15).map(s => /*#__PURE__*/React.createElement("tr", {
+    key: s.id
+  }, /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text)'
+    }
+  }, s.email), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {
+    className: "badge badge-gray"
+  }, s.source || 'blog')))))))));
+}
+
+/* ── AI WORKFORCE TAB ── */
+const AI_AGENT_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-agent';
+const AI_ORCHESTRATOR_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/ai-orchestrator';
+const SEND_EMAIL_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email';
+function AIWorkforceTab() {
+  const [agents, setAgents] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [missions, setMissions] = useState([]);
+  const [approvals, setApprovals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState(null);
+  const [modal, setModal] = useState(null);   // { agent } | null
+  const [prompt, setPrompt] = useState('');
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState('');
+  const [missionModal, setMissionModal] = useState(false);
+  const [missionAgentSlug, setMissionAgentSlug] = useState('content');
+  const [missionTitle, setMissionTitle] = useState('');
+  const [missionObjective, setMissionObjective] = useState('');
+  const [runningMission, setRunningMission] = useState(false);
+  const [missionResult, setMissionResult] = useState('');
+  const [resolvingApproval, setResolvingApproval] = useState(null);
+  const [delivering, setDelivering] = useState(null);
+  const [rerunning, setRerunning] = useState(null);
+  const [previewModal, setPreviewModal] = useState(null);
+  const [workflowRuns, setWorkflowRuns] = useState([]);
+  const [triggeringStep, setTriggeringStep] = useState(null);
+  const WORKFLOW_RUNNER_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/workflow-runner';
+  const loadWorkflowRuns = async () => {
+    const {data} = await sb.from('workflow_runs')
+      .select('*, agent_workflows(name, slug), workflow_step_runs(step_index, agent_slug, status, mission_id, output)')
+      .in('status', ['running','waiting','waiting_approval'])
+      .order('created_at', {ascending: false}).limit(10);
+    setWorkflowRuns(data || []);
+  };
+  const triggerNextStep = async (runId) => {
+    setTriggeringStep(runId);
+    const {data:{session}} = await sb.auth.getSession();
+    await fetch(WORKFLOW_RUNNER_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${SUPABASE_KEY}`,'apikey':SUPABASE_KEY},
+      body:JSON.stringify({run_id: runId})
+    });
+    await new Promise(r => setTimeout(r, 2000));
+    await loadWorkflowRuns();
+    setTriggeringStep(null);
+  };
+  const reloadMissionsAndApprovals = async () => {
+    const [{data: ms}, {data: ap}] = await Promise.all([
+      sb.from('agent_missions').select('*, ai_agents(name,icon,slug), profiles!created_by(prenom,nom,email)').order('created_at', {ascending: false}).limit(20),
+      sb.from('pending_approvals').select('*, agent_missions(title)').eq('status', 'pending').order('created_at', {ascending: false})
+    ]);
+    setMissions(ms || []);
+    setApprovals(ap || []);
+  };
+  const deliverMission = async (mission) => {
+    setDelivering(mission.id);
+    try {
+      await sb.from('agent_missions').update({delivered_to_client: true, delivered_at: new Date().toISOString()}).eq('id', mission.id);
+      if (mission.profiles?.email) {
+        const agentName = mission.ai_agents?.name || 'un agent IA';
+        const clientPrenom = mission.profiles.prenom || mission.profiles.email;
+        fetch(SEND_EMAIL_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+          body: JSON.stringify({
+            type: 'custom',
+            to: mission.profiles.email,
+            data: {
+              subject: `Votre livrable est prêt — ${mission.title}`,
+              body: `Bonjour ${clientPrenom},\n\nVotre mission "${mission.title}" confiée à ${agentName} a été complétée et validée par notre équipe.\n\nVotre livrable est maintenant disponible dans votre espace client :\nhttps://creatorflowmarket.com/employes-ia.html\n\nÀ bientôt,\nL'équipe CreatorFlow Market`
+            }
+          })
+        });
+      }
+      setPreviewModal(null);
+      await reloadMissionsAndApprovals();
+    } catch(e) { alert('Erreur : ' + e.message); }
+    setDelivering(null);
+  };
+  const rerunMission = async (mission) => {
+    const agentSlug = mission.ai_agents?.slug;
+    if (!agentSlug || !mission.objective) { alert('Impossible de relancer : agent ou objectif manquant.'); return; }
+    setRerunning(mission.id);
+    if (previewModal?.mission?.id === mission.id) setPreviewModal(null);
+    try {
+      const res = await fetch(AI_ORCHESTRATOR_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+        body: JSON.stringify({ agent_slug: agentSlug, objective: mission.objective, mission_id: mission.id, client_id: mission.created_by || session?.user?.id })
+      });
+      const json = await res.json();
+      await reloadMissionsAndApprovals();
+      if (json.status === 'completed') { alert('✅ Mission relancée avec succès !'); }
+      else { alert('Mission relancée — statut : ' + (json.status || 'inconnu')); }
+    } catch(e) { alert('Erreur lors du relancement : ' + e.message); }
+    setRerunning(null);
+  };
+  const openPreview = async (mission) => {
+    const { data: outputs } = await sb.from('agent_outputs').select('*').eq('mission_id', mission.id).order('created_at');
+    setPreviewModal({ mission, outputs: outputs || [] });
+  };
+  useEffect(() => {
+    (async () => {
+      const [{data: ag}, {data: tk}] = await Promise.all([
+        sb.from('ai_agents').select('*').order('created_at'),
+        sb.from('ai_tasks').select('*, ai_agents(name,icon)').order('created_at', {ascending: false}).limit(20)
+      ]);
+      setAgents(ag || []);
+      setTasks(tk || []);
+      await reloadMissionsAndApprovals();
+      await loadWorkflowRuns();
+      setLoading(false);
+    })();
+  }, []);
+  const openMissionModal = () => { setMissionModal(true); setMissionTitle(''); setMissionObjective(''); setMissionResult(''); };
+  const closeMissionModal = () => { setMissionModal(false); };
+  const createMission = async () => {
+    if (!missionObjective.trim()) return;
+    setRunningMission(true);
+    setMissionResult('');
+    try {
+      const {data: {session}} = await sb.auth.getSession();
+      const res = await fetch(AI_ORCHESTRATOR_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
+        },
+        body: JSON.stringify({agent_slug: missionAgentSlug, title: missionTitle, objective: missionObjective, client_id: session?.user?.id})
+      });
+      const json = await res.json();
+      if (json.error) { setMissionResult('Erreur : ' + json.error); }
+      else {
+        setMissionResult(json.result_summary || 'Mission termin\xE9e.');
+        await reloadMissionsAndApprovals();
+      }
+    } catch(e) { setMissionResult('Erreur r\xE9seau : ' + e.message); }
+    setRunningMission(false);
+  };
+  const resolveApproval = async (approval, approve) => {
+    setResolvingApproval(approval.id);
+    try {
+      const {data: {session}} = await sb.auth.getSession();
+      if (approve && approval.action_type === 'publish_article' && approval.action_data?.article_id) {
+        await sb.from('blog_articles').update({status: 'published', published_at: new Date().toISOString()}).eq('id', approval.action_data.article_id);
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: 'publish_article',
+          action_data: { article_id: approval.action_data.article_id },
+          context: approval.context,
+          status: 'executed',
+          executed_at: new Date().toISOString(),
+        });
+      }
+      if (approve && approval.action_type === 'send_campaign_email') {
+        const { subject, body } = approval.action_data || {};
+        const { data: subs } = await sb.from('blog_subscribers').select('email');
+        for (const s of (subs || [])) {
+          await fetch(SEND_EMAIL_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+            body: JSON.stringify({ type: 'custom', to: s.email, data: { subject, body } })
+          });
+        }
+      }
+      if (approve && (approval.action_type === 'send_prospect_email' || approval.action_type === 'send_email')) {
+        const { to, subject, body } = approval.action_data || {};
+        await fetch(SEND_EMAIL_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+          body: JSON.stringify({ type: 'custom', to, data: { subject, body } })
+        });
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: approval.action_type,
+          action_data: { to, subject, body: (body || '').slice(0, 500) },
+          context: approval.context,
+          status: 'executed',
+          executed_at: new Date().toISOString(),
+        });
+      }
+      if (approve && approval.action_type === 'trigger_workflow') {
+        const { webhook_url, workflow_slug, params } = approval.action_data || {};
+        if (webhook_url) {
+          await fetch(webhook_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...(params || {}), mission_id: approval.mission_id })
+          });
+        }
+        await sb.from('agent_actions_log').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'unknown',
+          action_type: 'trigger_workflow',
+          action_data: { workflow_slug, params: params || {} },
+          context: approval.context,
+          status: webhook_url ? 'executed' : 'failed',
+          executed_at: new Date().toISOString(),
+        });
+      }
+      if (approve && approval.action_type === 'respond_support_ticket' && approval.action_data?.ticket_id) {
+        const { ticket_id, response } = approval.action_data;
+        await sb.from('support_tickets').update({ ai_response: response, status: 'resolved', resolved_at: new Date().toISOString() }).eq('id', ticket_id);
+        const { data: ticket } = await sb.from('support_tickets').select('user_id, subject').eq('id', ticket_id).single();
+        if (ticket?.user_id) {
+          const { data: profile } = await sb.from('profiles').select('email').eq('id', ticket.user_id).single();
+          if (profile?.email) {
+            await fetch(SEND_EMAIL_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+              body: JSON.stringify({ type: 'custom', to: profile.email, data: { subject: `Réponse à votre ticket : ${ticket.subject}`, body: response } })
+            });
+          }
+        }
+      }
+      await sb.from('pending_approvals').update({
+        status: approve ? 'approved' : 'rejected',
+        resolved_at: new Date().toISOString(),
+        resolved_by: session?.user?.id || null
+      }).eq('id', approval.id);
+      if (approval.output_id) {
+        await sb.from('agent_outputs').update({status: approve ? 'completed' : 'cancelled'}).eq('id', approval.output_id);
+      }
+      if (approval.mission_id) {
+        await sb.from('agent_missions').update({status: approve ? 'completed' : 'cancelled', completed_at: new Date().toISOString()}).eq('id', approval.mission_id);
+      }
+      // PRIORITÉ 1 — Rapport de mission + mise à jour CRM
+      if (approve && approval.mission_id) {
+        const actionLabels = {
+          publish_article: 'Article publié',
+          send_email: 'Email envoyé',
+          send_prospect_email: 'Email prospect envoyé',
+          send_campaign_email: 'Campagne email envoyée',
+          respond_support_ticket: 'Ticket support résolu',
+          trigger_workflow: 'Workflow déclenché',
+        };
+        await sb.from('agent_reports').insert({
+          mission_id: approval.mission_id,
+          agent_slug: approval.action_data?.agent_slug || 'ia-agent',
+          title: actionLabels[approval.action_type] || approval.action_type,
+          sections: {
+            action_type: approval.action_type,
+            executed_at: new Date().toISOString(),
+            approved_by: session?.user?.id,
+            details: approval.action_data,
+          }
+        });
+        if (['send_email', 'send_prospect_email'].includes(approval.action_type)) {
+          const emailTo = approval.action_data?.to;
+          const crmContactIdDirect = approval.action_data?.crm_contact_id;
+          let crmContactId = crmContactIdDirect || null;
+          if (!crmContactId && emailTo) {
+            const { data: found } = await sb.from('crm_contacts').select('id').eq('email', emailTo).maybeSingle();
+            crmContactId = found?.id || null;
+          }
+          if (crmContactId) {
+            await sb.from('crm_contacts').update({ status: 'contacted', updated_at: new Date().toISOString() }).eq('id', crmContactId);
+            await sb.from('crm_activities').insert({
+              contact_id: crmContactId,
+              mission_id: approval.mission_id,
+              type: 'email_sent',
+              subject: approval.action_data?.subject,
+              content: (approval.action_data?.body || '').slice(0, 500),
+            });
+          }
+        }
+      }
+      await reloadMissionsAndApprovals();
+    } catch(e) { alert('Erreur : ' + e.message); }
+    setResolvingApproval(null);
+  };
+  const toggleAgent = async (agent) => {
+    const next = agent.status === 'active' ? 'inactive' : 'active';
+    setToggling(agent.id);
+    const {error} = await sb.from('ai_agents').update({status: next}).eq('id', agent.id);
+    if (!error) setAgents(prev => prev.map(a => a.id === agent.id ? {...a, status: next} : a));
+    setToggling(null);
+  };
+  const openModal = (agent) => { setModal(agent); setPrompt(''); setResult(''); };
+  const closeModal = () => { setModal(null); setPrompt(''); setResult(''); };
+  const runAgent = async () => {
+    if (!prompt.trim() || !modal) return;
+    setRunning(true);
+    setResult('');
+    try {
+      const {data: {session}} = await sb.auth.getSession();
+      const res = await fetch(AI_AGENT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${session?.access_token || SUPABASE_KEY}`
+        },
+        body: JSON.stringify({agent_slug: modal.slug, task_type: modal.name, input: prompt})
+      });
+      const json = await res.json();
+      if (json.error) { setResult('Erreur : ' + json.error); }
+      else {
+        setResult(json.output || '');
+        setAgents(prev => prev.map(a => a.id === modal.id ? {...a, tasks_completed: (a.tasks_completed||0)+1, last_active: new Date().toISOString()} : a));
+        const {data: tk} = await sb.from('ai_tasks').select('*, ai_agents(name,icon)').order('created_at', {ascending: false}).limit(20);
+        setTasks(tk || []);
+      }
+    } catch(e) { setResult('Erreur r\xE9seau : ' + e.message); }
+    setRunning(false);
+  };
+  if (loading) return /*#__PURE__*/React.createElement("div", {className: "spin"});
+  const activeCount = agents.filter(a => a.status === 'active').length;
+  const totalTasks = agents.reduce((s, a) => s + (a.tasks_completed || 0), 0);
+  const todayTasks = tasks.filter(t => new Date(t.created_at).toDateString() === new Date().toDateString()).length;
+  const statCards = [
+    {label: 'Agents actifs', val: activeCount + ' / ' + agents.length, icon: '🤖', color: '#7C3AED'},
+    {label: 'T\xE2ches compl\xE9t\xE9es', val: totalTasks, icon: '✅', color: '#10B981'},
+    {label: "T\xE2ches aujourd'hui", val: todayTasks, icon: '📊', color: '#06B6D4'}
+  ];
+  return /*#__PURE__*/React.createElement(React.Fragment, null,
+    /*#__PURE__*/React.createElement("div", {className: "page-header"},
+      /*#__PURE__*/React.createElement("div", null,
+        /*#__PURE__*/React.createElement("div", {className: "page-title"}, "AI Workforce"),
+        /*#__PURE__*/React.createElement("div", {className: "page-sub"}, "4 employ\xE9s IA au service de CreatorFlow Market")
+      ),
+      /*#__PURE__*/React.createElement("button", {
+        className: "btn btn-primary",
+        style: {fontSize: 13, padding: '8px 16px'},
+        onClick: openMissionModal
+      }, "+ Confier une mission")
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "stats-grid cols-3", style: {marginBottom: 28}},
+      statCards.map(s => /*#__PURE__*/React.createElement("div", {key: s.label, className: "stat-card"},
+        /*#__PURE__*/React.createElement("div", {className: "stat-icon", style: {background: s.color + '18'}},
+          /*#__PURE__*/React.createElement("span", null, s.icon)
+        ),
+        /*#__PURE__*/React.createElement("div", {className: "stat-val"}, s.val),
+        /*#__PURE__*/React.createElement("div", {className: "stat-label"}, s.label)
+      ))
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "section-card", style: {marginBottom: 20}},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Employ\xE9s IA"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, activeCount + " actifs")
+      ),
+      /*#__PURE__*/React.createElement("div", {className: "ai-agents-grid"},
+        agents.map((agent, i) => /*#__PURE__*/React.createElement("div", {
+          key: agent.id,
+          style: {
+            padding: "20px 24px",
+            borderBottom: i < agents.length - 1 ? "1px solid var(--border)" : "none",
+            display: "flex", flexDirection: "column", gap: 14
+          }
+        },
+          /*#__PURE__*/React.createElement("div", {style: {display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12}},
+            /*#__PURE__*/React.createElement("div", {style: {display:"flex",alignItems:"center",gap:12}},
+              /*#__PURE__*/React.createElement("div", {style: {
+                width:44,height:44,borderRadius:12,
+                background: agent.color+'18',
+                border: '1px solid '+agent.color+'30',
+                display:"grid",placeItems:"center",fontSize:22,flexShrink:0
+              }}, agent.icon),
+              /*#__PURE__*/React.createElement("div", null,
+                /*#__PURE__*/React.createElement("div", {style:{fontSize:13,fontWeight:700,color:"var(--text)",marginBottom:2}}, agent.name),
+                /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)",lineHeight:1.4}}, agent.description)
+              )
+            ),
+            /*#__PURE__*/React.createElement("span", {className:"badge "+(agent.status==='active'?'badge-green':'badge-gray')},
+              agent.status==='active' ? '● Actif' : '○ Inactif'
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap"}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)"}},
+              agent.tasks_completed, " t\xE2ches \xB7 ",
+              agent.last_active ? ("Actif "+fmtDate(agent.last_active)) : "Jamais utilis\xE9"
+            ),
+            /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6}},
+              /*#__PURE__*/React.createElement("button", {
+                className: 'btn-approve',
+                style:{fontSize:11},
+                disabled: agent.status!=='active',
+                onClick: () => openModal(agent)
+              }, 'Tester'),
+              /*#__PURE__*/React.createElement("button", {
+                className: agent.status==='active' ? 'btn-reject' : 'btn-approve',
+                style:{fontSize:11},
+                disabled: toggling===agent.id,
+                onClick: () => toggleAgent(agent)
+              }, toggling===agent.id ? '…' : agent.status==='active' ? 'D\xE9sactiver' : 'Activer')
+            )
+          )
+        ))
+      )
+    ),
+    approvals.length > 0 && /*#__PURE__*/React.createElement("div", {className: "section-card", style: {marginBottom: 20, border: '1px solid rgba(245,158,11,0.3)'}},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "⚠️ Approbations en attente"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, approvals.length)
+      ),
+      /*#__PURE__*/React.createElement("div", null,
+        approvals.map((a, i) => /*#__PURE__*/React.createElement("div", {
+          key: a.id,
+          style: {padding: "16px 20px", borderBottom: i < approvals.length - 1 ? "1px solid var(--border)" : "none", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap"}
+        },
+          /*#__PURE__*/React.createElement("div", {style: {minWidth: 0, flex: "1 1 220px"}},
+            /*#__PURE__*/React.createElement("div", {style: {fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 4, wordBreak: "break-word"}},
+              a.action_type, " — ", a.agent_missions ? a.agent_missions.title : ''
+            ),
+            /*#__PURE__*/React.createElement("div", {style: {fontSize: 12, color: "var(--text-2)", marginBottom: 4, wordBreak: "break-word"}}, a.context),
+            /*#__PURE__*/React.createElement("div", {style: {fontSize: 11, color: "var(--text-3)", fontFamily: "monospace", wordBreak: "break-all", maxWidth: "100%"}}, JSON.stringify(a.action_data))
+          ),
+          /*#__PURE__*/React.createElement("div", {style: {display: "flex", gap: 6, flexShrink: 0}},
+            /*#__PURE__*/React.createElement("button", {
+              className: "btn-approve", style: {fontSize: 11},
+              disabled: resolvingApproval === a.id,
+              onClick: () => resolveApproval(a, true)
+            }, resolvingApproval === a.id ? '…' : 'Approuver'),
+            /*#__PURE__*/React.createElement("button", {
+              className: "btn-reject", style: {fontSize: 11},
+              disabled: resolvingApproval === a.id,
+              onClick: () => resolveApproval(a, false)
+            }, 'Rejeter')
+          )
+        ))
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "section-card", style: {marginBottom: 20}},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Missions"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, missions.length)
+      ),
+      missions.length === 0
+        ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}},
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📋"),
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission confi\xE9e"),
+            /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Cliquez sur « Confier une mission » pour faire travailler un agent.")
+          )
+        : /*#__PURE__*/React.createElement("table", {className:"data-table"},
+            /*#__PURE__*/React.createElement("thead", null,
+              /*#__PURE__*/React.createElement("tr", null,
+                /*#__PURE__*/React.createElement("th", null, "Agent"),
+                /*#__PURE__*/React.createElement("th", null, "Mission"),
+                /*#__PURE__*/React.createElement("th", null, "Demandeur"),
+                /*#__PURE__*/React.createElement("th", null, "Statut"),
+                /*#__PURE__*/React.createElement("th", null, "Date"),
+                /*#__PURE__*/React.createElement("th", null, "Livraison")
+              )
+            ),
+            /*#__PURE__*/React.createElement("tbody", null,
+              missions.map(m => /*#__PURE__*/React.createElement("tr", {key: m.id},
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:8}},
+                    /*#__PURE__*/React.createElement("span", null, m.ai_agents ? m.ai_agents.icon : '🤖'),
+                    /*#__PURE__*/React.createElement("span", {style:{fontWeight:600,color:"var(--text)",fontSize:12,whiteSpace:"nowrap"}},
+                      m.ai_agents ? m.ai_agents.name : m.agent_id
+                    )
+                  )
+                ),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("div", {style:{fontWeight:600,color:"var(--text)",fontSize:12,maxWidth:240,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}, m.title)
+                ),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("span", {style:{fontSize:12,color:"var(--text-2)",whiteSpace:"nowrap"}},
+                    m.profiles ? (`${m.profiles.prenom||''} ${m.profiles.nom||''}`.trim() || m.profiles.email) : '— (interne)'
+                  )
+                ),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("span", {
+                    className:"badge "+(m.status==='completed'?'badge-green':m.status==='failed'?'badge-red':m.status==='waiting_approval'?'badge-amber':m.status==='cancelled'?'badge-gray':'badge-purple')
+                  }, m.status)
+                ),
+                /*#__PURE__*/React.createElement("td", null, fmtDate(m.created_at)),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}},
+                    m.status === 'completed' && /*#__PURE__*/React.createElement("button", {
+                      className:"btn-preview",
+                      onClick: () => openPreview(m)
+                    }, "👁 Voir"),
+                    (m.status === 'failed' || m.status === 'in_progress') && /*#__PURE__*/React.createElement("button", {
+                      className:"btn-preview",
+                      style:{background:"rgba(245,158,11,0.12)",borderColor:"rgba(245,158,11,0.3)",color:"#d97706"},
+                      disabled: rerunning === m.id,
+                      onClick: () => rerunMission(m)
+                    }, rerunning === m.id ? '⏳ …' : '🔁 Relancer'),
+                    m.delivered_to_client
+                      ? /*#__PURE__*/React.createElement("span", {className:"badge badge-green"}, "Livrée ✓")
+                      : (m.status === 'completed' && m.profiles)
+                        ? /*#__PURE__*/React.createElement("button", {
+                            className:"btn-approve", style:{fontSize:11},
+                            disabled: delivering === m.id,
+                            onClick: () => deliverMission(m)
+                          }, delivering === m.id ? '…' : 'Livrer au client')
+                        : /*#__PURE__*/React.createElement("span", {style:{fontSize:11,color:"var(--text-3)"}}, "—")
+                  )
+                )
+              ))
+            )
+          )
+    ),
+    /*#__PURE__*/React.createElement("div", {className: "section-card"},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Historique des t\xE2ches"),
+        /*#__PURE__*/React.createElement("span", {className: "section-count"}, tasks.length)
+      ),
+      tasks.length === 0
+        ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}},
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📋"),
+            /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune t\xE2che enregistr\xE9e"),
+            /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Les t\xE2ches ex\xE9cut\xE9es par les agents appara\xEEtront ici.")
+          )
+        : /*#__PURE__*/React.createElement("table", {className:"data-table"},
+            /*#__PURE__*/React.createElement("thead", null,
+              /*#__PURE__*/React.createElement("tr", null,
+                /*#__PURE__*/React.createElement("th", null, "Agent"),
+                /*#__PURE__*/React.createElement("th", null, "Type"),
+                /*#__PURE__*/React.createElement("th", null, "Statut"),
+                /*#__PURE__*/React.createElement("th", null, "Date")
+              )
+            ),
+            /*#__PURE__*/React.createElement("tbody", null,
+              tasks.map(t => /*#__PURE__*/React.createElement("tr", {key: t.id},
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:8}},
+                    /*#__PURE__*/React.createElement("span", null, t.ai_agents ? t.ai_agents.icon : '🤖'),
+                    /*#__PURE__*/React.createElement("span", {style:{fontWeight:600,color:"var(--text)",fontSize:12,whiteSpace:"nowrap"}},
+                      t.ai_agents ? t.ai_agents.name : t.agent_id
+                    )
+                  )
+                ),
+                /*#__PURE__*/React.createElement("td", null, t.task_type),
+                /*#__PURE__*/React.createElement("td", null,
+                  /*#__PURE__*/React.createElement("span", {
+                    className:"badge "+(t.status==='completed'?'badge-green':t.status==='failed'?'badge-red':'badge-amber')
+                  }, t.status)
+                ),
+                /*#__PURE__*/React.createElement("td", null, fmtDate(t.created_at))
+              ))
+            )
+          )
+    ),
+    workflowRuns.length > 0 && /*#__PURE__*/React.createElement("div", {className:"section-card", style:{marginBottom:20, border:'1px solid rgba(124,58,237,0.3)'}},
+      /*#__PURE__*/React.createElement("div", {className:"section-head"},
+        /*#__PURE__*/React.createElement("span", {className:"section-title"}, "⚡ Workflows en cours"),
+        /*#__PURE__*/React.createElement("div", {style:{display:'flex',gap:8,alignItems:'center'}},
+          /*#__PURE__*/React.createElement("span", {className:"section-count"}, workflowRuns.length),
+          /*#__PURE__*/React.createElement("button", {className:"btn-preview", style:{fontSize:11}, onClick: loadWorkflowRuns}, "↻ Actualiser")
+        )
+      ),
+      workflowRuns.map(wr => {
+        const wfName = wr.agent_workflows?.name || wr.id.slice(0,8);
+        const steps = (wr.workflow_step_runs || []).sort((a,b) => a.step_index - b.step_index);
+        const STATUS_COLOR_WF = {running:'badge-purple',waiting:'badge-amber',waiting_approval:'badge-amber',completed:'badge-green',failed:'badge-red'};
+        return /*#__PURE__*/React.createElement("div", {key:wr.id, style:{padding:'14px 20px', borderBottom:'1px solid var(--border)'}},
+          /*#__PURE__*/React.createElement("div", {style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8,flexWrap:'wrap',gap:8}},
+            /*#__PURE__*/React.createElement("div", null,
+              /*#__PURE__*/React.createElement("span", {style:{fontWeight:600,fontSize:13,color:'var(--text)'}}, wfName),
+              /*#__PURE__*/React.createElement("span", {className:`badge ${STATUS_COLOR_WF[wr.status]||'badge-gray'}`, style:{marginLeft:8,fontSize:10}}, wr.status)
+            ),
+            wr.status === 'waiting' && /*#__PURE__*/React.createElement("button", {
+              className:"btn-approve", style:{fontSize:11, padding:'4px 10px'},
+              disabled: triggeringStep === wr.id,
+              onClick: () => triggerNextStep(wr.id)
+            }, triggeringStep===wr.id ? '⏳ Démarrage…' : `▶ Déclencher étape ${(wr.current_step||0)+1}`)
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{display:'flex',gap:6,flexWrap:'wrap'}},
+            steps.map(s => /*#__PURE__*/React.createElement("div", {key:s.step_index, style:{fontSize:11,padding:'3px 8px',borderRadius:6,background:'var(--surf-2)',border:`1px solid ${s.status==='completed'?'rgba(16,185,129,0.3)':s.status==='running'?'rgba(124,58,237,0.3)':s.status==='failed'?'rgba(239,68,68,0.3)':'var(--border-2)'}`,color:s.status==='completed'?'#10b981':s.status==='running'?'var(--vs)':s.status==='failed'?'#ef4444':'var(--text-3)'}},
+              `Étape ${s.step_index+1}: ${s.agent_slug} — ${s.status}`
+            ))
+          )
+        );
+      })
+    ),
+    modal && /*#__PURE__*/React.createElement("div", {className:"modal-overlay", onClick: closeModal},
+      /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:600}, onClick: e => e.stopPropagation()},
+        /*#__PURE__*/React.createElement("div", {className:"modal-head"},
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",alignItems:"center",gap:10}},
+            /*#__PURE__*/React.createElement("span", {style:{fontSize:22}}, modal.icon),
+            /*#__PURE__*/React.createElement("span", {className:"modal-title"}, modal.name)
+          ),
+          /*#__PURE__*/React.createElement("button", {className:"modal-close", onClick: closeModal}, "\xD7")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"modal-body"},
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:8}},
+              "Votre demande"
+            ),
+            /*#__PURE__*/React.createElement("textarea", {
+              value: prompt,
+              onChange: e => setPrompt(e.target.value),
+              placeholder: "D\xE9crivez la t\xE2che \xE0 r\xE9aliser...",
+              style: {
+                width:"100%", minHeight:100, background:"var(--surf-2)",
+                border:"1px solid var(--border-2)", borderRadius:10,
+                color:"var(--text)", padding:"12px 14px", fontSize:13,
+                fontFamily:"var(--f)", resize:"vertical", boxSizing:"border-box"
+              }
+            })
+          ),
+          /*#__PURE__*/React.createElement("button", {
+            className:"btn-save",
+            style:{width:"100%",marginBottom: result ? 16 : 0},
+            disabled: running || !prompt.trim(),
+            onClick: runAgent
+          }, running ? "L'agent travaille…" : "Ex\xE9cuter"),
+          result && /*#__PURE__*/React.createElement("div", {
+            style:{
+              background:"var(--surf-2)", border:"1px solid var(--border-2)",
+              borderRadius:10, padding:"14px 16px", fontSize:13,
+              color:"var(--text-2)", lineHeight:1.7,
+              whiteSpace:"pre-wrap", maxHeight:320, overflowY:"auto"
+            }
+          }, result)
+        )
+      )
+    ),
+    missionModal && /*#__PURE__*/React.createElement("div", {className:"modal-overlay", onClick: closeMissionModal},
+      /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:600}, onClick: e => e.stopPropagation()},
+        /*#__PURE__*/React.createElement("div", {className:"modal-head"},
+          /*#__PURE__*/React.createElement("span", {className:"modal-title"}, "Confier une mission"),
+          /*#__PURE__*/React.createElement("button", {className:"modal-close", onClick: closeMissionModal}, "\xD7")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"modal-body"},
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:8}}, "Agent responsable"),
+            /*#__PURE__*/React.createElement("select", {
+              value: missionAgentSlug,
+              onChange: e => setMissionAgentSlug(e.target.value),
+              style: {width:"100%", background:"var(--surf-2)", border:"1px solid var(--border-2)", borderRadius:10, color:"var(--text)", padding:"10px 14px", fontSize:13, fontFamily:"var(--f)", boxSizing:"border-box"}
+            },
+              /*#__PURE__*/React.createElement("option", {value:"content"}, "Content AI Agent"),
+              /*#__PURE__*/React.createElement("option", {value:"marketing"}, "Marketing AI Agent"),
+              /*#__PURE__*/React.createElement("option", {value:"prospecting"}, "Prospecting AI Agent"),
+              /*#__PURE__*/React.createElement("option", {value:"support"}, "Support AI Agent")
+            )
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:8}}, "Titre (optionnel)"),
+            /*#__PURE__*/React.createElement("input", {
+              value: missionTitle,
+              onChange: e => setMissionTitle(e.target.value),
+              placeholder: "ex: Article sur les tendances IA 2026",
+              style: {width:"100%", background:"var(--surf-2)", border:"1px solid var(--border-2)", borderRadius:10, color:"var(--text)", padding:"10px 14px", fontSize:13, fontFamily:"var(--f)", boxSizing:"border-box"}
+            })
+          ),
+          /*#__PURE__*/React.createElement("div", {style:{marginBottom:14}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:12,fontWeight:600,color:"var(--text-2)",marginBottom:8}}, "Objectif d\xE9taill\xE9"),
+            /*#__PURE__*/React.createElement("textarea", {
+              value: missionObjective,
+              onChange: e => setMissionObjective(e.target.value),
+              placeholder: "D\xE9crivez la mission compl\xE8te \xE0 r\xE9aliser...",
+              style: {width:"100%", minHeight:120, background:"var(--surf-2)", border:"1px solid var(--border-2)", borderRadius:10, color:"var(--text)", padding:"12px 14px", fontSize:13, fontFamily:"var(--f)", resize:"vertical", boxSizing:"border-box"}
+            })
+          ),
+          /*#__PURE__*/React.createElement("button", {
+            className:"btn-save",
+            style:{width:"100%",marginBottom: missionResult ? 16 : 0},
+            disabled: runningMission || !missionObjective.trim(),
+            onClick: createMission
+          }, runningMission ? "L'agent travaille…" : "Lancer la mission"),
+          missionResult && /*#__PURE__*/React.createElement("div", {
+            style:{
+              background:"var(--surf-2)", border:"1px solid var(--border-2)",
+              borderRadius:10, padding:"14px 16px", fontSize:13,
+              color:"var(--text-2)", lineHeight:1.7,
+              whiteSpace:"pre-wrap", maxHeight:320, overflowY:"auto"
+            }
+          }, missionResult)
+        )
+      )
+    ),
+    previewModal && /*#__PURE__*/React.createElement("div", {
+      className:"modal-overlay",
+      onClick: e => { if (e.target === e.currentTarget) setPreviewModal(null); }
+    },
+      /*#__PURE__*/React.createElement("div", {className:"modal", style:{maxWidth:720}},
+        /*#__PURE__*/React.createElement("div", {className:"modal-head"},
+          /*#__PURE__*/React.createElement("div", null,
+            /*#__PURE__*/React.createElement("div", {className:"modal-title"}, previewModal.mission.ai_agents?.icon, " ", previewModal.mission.title),
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:11,color:"var(--text-3)",marginTop:4}},
+              previewModal.mission.profiles
+                ? `Commandé par ${(previewModal.mission.profiles.prenom||'')+' '+(previewModal.mission.profiles.nom||'')}`
+                : "Mission interne",
+              " · ", fmtDate(previewModal.mission.created_at)
+            )
+          ),
+          /*#__PURE__*/React.createElement("button", {className:"modal-close", onClick:()=>setPreviewModal(null)}, "×")
+        ),
+        /*#__PURE__*/React.createElement("div", {className:"modal-body"},
+          /*#__PURE__*/React.createElement("div", {className:"preview-meta"}, "OBJECTIF"),
+          /*#__PURE__*/React.createElement("div", {
+            style:{fontSize:13,color:"var(--text-2)",marginBottom:20,padding:"12px 16px",background:"var(--surf-2)",borderRadius:10,border:"1px solid var(--border)",lineHeight:1.65}
+          }, previewModal.mission.objective),
+          previewModal.outputs.length === 0
+            ? /*#__PURE__*/React.createElement("div", {style:{textAlign:"center",padding:"32px",color:"var(--text-3)",fontSize:13}}, "Aucun livrable enregistré pour cette mission.")
+            : previewModal.outputs.map((out, i) => /*#__PURE__*/React.createElement("div", {key:out.id, style:{marginBottom:16}},
+                /*#__PURE__*/React.createElement("div", {className:"preview-meta"}, `LIVRABLE ${previewModal.outputs.length > 1 ? i+1 : ''} · ${(out.output_type||'').toUpperCase()}`),
+                out.output_data?.title && /*#__PURE__*/React.createElement("div", {
+                  style:{fontSize:15,fontWeight:700,color:"var(--text)",marginBottom:10}
+                }, out.output_data.title),
+                /*#__PURE__*/React.createElement("div", {className:"preview-output"},
+                  out.output_data?.body || out.output_data?.content || out.result_summary || JSON.stringify(out.output_data, null, 2)
+                )
+              )),
+          /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:10,marginTop:20,justifyContent:"flex-end"}},
+            /*#__PURE__*/React.createElement("button", {
+              className:"btn-reject", style:{marginLeft:0},
+              onClick:()=>setPreviewModal(null)
+            }, "Fermer"),
+            /*#__PURE__*/React.createElement("button", {
+              className:"btn-preview",
+              style:{background:"rgba(245,158,11,0.12)",borderColor:"rgba(245,158,11,0.3)",color:"#d97706"},
+              disabled: rerunning === previewModal.mission.id,
+              onClick: () => rerunMission(previewModal.mission)
+            }, rerunning === previewModal.mission.id ? '⏳ …' : '🔁 Relancer'),
+            !previewModal.mission.delivered_to_client && previewModal.mission.profiles && /*#__PURE__*/React.createElement("button", {
+              className:"btn-approve",
+              disabled: delivering === previewModal.mission.id,
+              onClick: () => deliverMission(previewModal.mission)
+            }, delivering === previewModal.mission.id ? '…' : '✓ Livrer au client')
+          )
+        )
+      )
+    )
+  );
+}
+
+/* ── CRM TAB ── */
+function CRMTab() {
+  const [contacts, setContacts] = React.useState([]);
+  const [activities, setActivities] = React.useState({});
+  const [selected, setSelected] = React.useState(null);
+  const [updatingStatus, setUpdatingStatus] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+
+  const CRM_STATUSES = ['new','contacted','responded','qualified','meeting_scheduled','lost','won'];
+  const STATUS_COLOR = {new:'badge-gray',contacted:'badge-amber',responded:'badge-purple',qualified:'badge-green',meeting_scheduled:'badge-blue',lost:'badge-red',won:'badge-green'};
+
+  const loadContacts = async () => {
+    setLoading(true);
+    const {data} = await sb.from('crm_contacts').select('*').order('created_at', {ascending:false});
+    setContacts(data || []);
+    setLoading(false);
+  };
+
+  const loadActivities = async (id) => {
+    const {data} = await sb.from('crm_activities').select('*').eq('contact_id', id).order('created_at', {ascending:false});
+    setActivities(prev => ({...prev, [id]: data || []}));
+  };
+
+  const updateStatus = async (id, status, e) => {
+    e.stopPropagation();
+    setUpdatingStatus(id);
+    await sb.from('crm_contacts').update({status, updated_at: new Date().toISOString()}).eq('id', id);
+    await loadContacts();
+    setUpdatingStatus(null);
+  };
+
+  React.useEffect(() => { loadContacts(); }, []);
+  React.useEffect(() => { if (selected) loadActivities(selected); }, [selected]);
+
+  const sel = contacts.find(c => c.id === selected);
+  const acts = selected ? (activities[selected] || []) : [];
+  const fmtDate = s => s ? new Date(s).toLocaleDateString('fr-CA') : '—';
+
+  return React.createElement('div', {className:'main'},
+    React.createElement('div', {className:'page-header'},
+      React.createElement('div', null,
+        React.createElement('div', {className:'page-title'}, 'CRM Prospects'),
+        React.createElement('div', {className:'page-sub'}, `${contacts.length} contact${contacts.length !== 1 ? 's' : ''} · Cliquer sur un contact pour voir les détails`)
+      ),
+      React.createElement('button', {className:'btn btn-primary', onClick: loadContacts, style:{fontSize:12}}, 'Actualiser')
+    ),
+    React.createElement('div', {style:{display:'grid', gridTemplateColumns: sel ? '1fr 380px' : '1fr', gap:16, alignItems:'start'}},
+      React.createElement('div', {className:'section-card'},
+        loading
+          ? React.createElement('div', {style:{padding:24, color:'var(--text-3)', textAlign:'center'}}, 'Chargement…')
+          : contacts.length === 0
+            ? React.createElement('div', {style:{padding:32, textAlign:'center', color:'var(--text-3)'}},
+                React.createElement('div', {style:{fontSize:36, marginBottom:8}}, '📋'),
+                React.createElement('div', {style:{fontWeight:700, marginBottom:4}}, 'Aucun prospect CRM'),
+                React.createElement('div', {style:{fontSize:13}}, 'Les agents enregistreront automatiquement les prospects trouvés lors des missions de prospection.')
+              )
+            : React.createElement('table', {className:'data-table'},
+                React.createElement('thead', null, React.createElement('tr', null,
+                  React.createElement('th', null, 'Nom'), React.createElement('th', null, 'Entreprise'), React.createElement('th', null, 'Email'),
+                  React.createElement('th', null, 'Statut'), React.createElement('th', null, 'Mise à jour')
+                )),
+                React.createElement('tbody', null, contacts.map(c =>
+                  React.createElement('tr', {key:c.id, className:`clickable${selected===c.id?' active-row':''}`, onClick:()=>setSelected(c.id===selected?null:c.id)},
+                    React.createElement('td', null, React.createElement('div', {style:{fontWeight:600, color:'var(--text)'}}, c.name)),
+                    React.createElement('td', null, c.company || '—'),
+                    React.createElement('td', null, React.createElement('div', {style:{fontSize:12}}, c.email || '—')),
+                    React.createElement('td', null,
+                      React.createElement('select', {
+                        value: c.status, disabled: updatingStatus===c.id,
+                        onChange: (e)=>updateStatus(c.id, e.target.value, e),
+                        onClick: e=>e.stopPropagation(),
+                        style:{background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:6,padding:'3px 8px',fontSize:11,color:'var(--text)',cursor:'pointer'}
+                      }, CRM_STATUSES.map(s=>React.createElement('option',{key:s,value:s},s)))
+                    ),
+                    React.createElement('td', null, React.createElement('span', {className:`badge ${STATUS_COLOR[c.status]||'badge-gray'}`, style:{fontSize:10}}, c.status))
+                  )
+                ))
+              )
+      ),
+      sel && React.createElement('div', {className:'section-card', style:{position:'sticky', top:80}},
+        React.createElement('div', {style:{padding:'14px 18px', borderBottom:'1px solid var(--border)', display:'flex', justifyContent:'space-between', alignItems:'center'}},
+          React.createElement('div', null,
+            React.createElement('div', {style:{fontWeight:700, fontSize:14, color:'var(--text)'}}, sel.name),
+            React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, sel.company || '—')
+          ),
+          React.createElement('button', {onClick:()=>setSelected(null), style:{background:'none',border:'none',color:'var(--text-3)',cursor:'pointer',fontSize:20,lineHeight:1}}, '×')
+        ),
+        React.createElement('div', {style:{padding:'14px 18px', display:'flex', flexDirection:'column', gap:8, maxHeight:600, overflowY:'auto'}},
+          sel.email && React.createElement('div', {style:{fontSize:12, color:'var(--text-2)'}}, '✉ ', sel.email),
+          sel.website && React.createElement('a', {href:sel.website, target:'_blank', style:{fontSize:12, color:'var(--vs)'}}, '🔗 ', sel.website),
+          sel.role && React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, sel.role),
+          sel.tags?.length > 0 && React.createElement('div', {style:{display:'flex', gap:4, flexWrap:'wrap'}}, sel.tags.map(t=>React.createElement('span',{key:t,className:'badge badge-gray',style:{fontSize:10}},t))),
+          sel.notes && React.createElement('div', {style:{fontSize:12, color:'var(--text-2)', background:'var(--surf-2)', borderRadius:8, padding:'10px 12px', lineHeight:1.6, marginTop:4}}, sel.notes),
+          React.createElement('div', {style:{fontWeight:600, fontSize:11, color:'var(--text-3)', marginTop:8, textTransform:'uppercase', letterSpacing:'0.08em'}}, 'Activités'),
+          acts.length === 0
+            ? React.createElement('div', {style:{fontSize:12, color:'var(--text-3)'}}, 'Aucune activité enregistrée.')
+            : acts.map(a => React.createElement('div', {key:a.id, style:{fontSize:12, borderLeft:'2px solid var(--vs)', paddingLeft:10, paddingBottom:8}},
+                React.createElement('div', {style:{fontWeight:600, color:'var(--text)'}}, a.type.replace(/_/g,' ')),
+                a.subject && React.createElement('div', {style:{color:'var(--text-2)'}}, a.subject),
+                a.content && React.createElement('div', {style:{color:'var(--text-3)', fontSize:11, marginTop:2}}, a.content.slice(0,120)+'…'),
+                React.createElement('div', {style:{color:'var(--text-3)', fontSize:11, marginTop:2}}, fmtDate(a.created_at))
+              ))
+        )
+      )
+    )
+  );
+}
+
+/* ── APP ROOT ── */
+function App() {
+  const [session, setSession] = useState(undefined);
+  const [tab, setTab] = useState('dashboard');
+  const [pendingExperts, setPendingExperts] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  useEffect(() => {
+    sb.auth.getSession().then(({
+      data
+    }) => { setSession(data.session); document.getElementById('sk')?.remove(); });
+    const {
+      data: {
+        subscription
+      }
+    } = sb.auth.onAuthStateChange((_, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, []);
+  const loadPending = useCallback(async () => {
+    const {
+      count
+    } = await sb.from('experts').select('id', {
+      count: 'exact',
+      head: true
+    }).eq('statut', 'pending');
+    setPendingExperts(count || 0);
+  }, []);
+  useEffect(() => {
+    if (session?.user?.email === ADMIN_EMAIL) loadPending();
+  }, [session, loadPending]);
+  const logout = async () => {
+    await sb.auth.signOut();
+  };
+  if (session === undefined) return /*#__PURE__*/React.createElement("div", {
+    className: "spin",
+    style: {
+      marginTop: 80
+    }
+  });
+  if (!session || session.user?.email !== ADMIN_EMAIL) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "access-denied"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 48
+      }
+    }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("h1", null, "Acc\xE8s refus\xE9"), /*#__PURE__*/React.createElement("p", null, "Cette page est r\xE9serv\xE9e \xE0 l'administrateur de CreatorFlow Market."), !session ? /*#__PURE__*/React.createElement("a", {
+      href: "/connexion.html?redirect=admin.html",
+      className: "btn btn-primary"
+    }, "Se connecter") : /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-primary",
+      onClick: logout
+    }, "Changer de compte"));
+  }
+  const userName = session.user?.email?.split('@')[0] || 'Admin';
+  const tabs = {
+    dashboard: DashboardTab,
+    experts: () => /*#__PURE__*/React.createElement(ExpertsTab, {
+      onApproval: loadPending
+    }),
+    users: UsersTab,
+    missions: MissionsTab,
+    payments: PaymentsTab,
+    blog: BlogTab,
+    'ai-workforce': AIWorkforceTab,
+    'crm': CRMTab
+  };
+  const ActiveTab = tabs[tab];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-brand"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "nav-toggle",
+    onClick: () => setSidebarOpen(o => !o),
+    "aria-label": "Menu"
+  }, /*#__PURE__*/React.createElement("svg", {width:"18",height:"18",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("line",{x1:"3",y1:"6",x2:"21",y2:"6"}), /*#__PURE__*/React.createElement("line",{x1:"3",y1:"12",x2:"21",y2:"12"}), /*#__PURE__*/React.createElement("line",{x1:"3",y1:"18",x2:"21",y2:"18"}))), /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("span", {
+    className: "admin-badge"
+  }, "Admin")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar"
+  }, initials(userName)), /*#__PURE__*/React.createElement("span", {
+    className: "user-name"
+  }, userName))))), /*#__PURE__*/React.createElement(Sidebar, {
+    tab: tab,
+    setTab: setTab,
+    onLogout: logout,
+    pendingExperts: pendingExperts,
+    open: sidebarOpen,
+    onClose: () => setSidebarOpen(false)
+  }), /*#__PURE__*/React.createElement("main", {
+    className: "main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "main-inner"
+  }, /*#__PURE__*/React.createElement(ActiveTab, null))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title id="page-title">Article — CreatorFlow Market</title>
+  <meta id="page-desc" name="description" content="">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link id="page-canonical" rel="canonical" href="https://creatorflowmarket.com/blog">
+  <meta id="og-type"  property="og:type"        content="article">
+  <meta id="og-site"  property="og:site_name"   content="CreatorFlow Market">
+  <meta id="og-url"   property="og:url"          content="">
+  <meta id="og-title" property="og:title"        content="">
+  <meta id="og-desc"  property="og:description"  content="">
+  <meta id="og-img"   property="og:image"        content="https://creatorflowmarket.com/og-image.jpg">
+  <meta property="og:locale"   content="fr_CA">
+  <meta name="twitter:card"    content="summary_large_image">
+  <meta name="twitter:site"    content="@creatorflowmkt">
+  <meta id="tw-title" name="twitter:title"       content="">
+  <meta id="tw-desc"  name="twitter:description" content="">
+  <meta id="tw-img"   name="twitter:image"       content="https://creatorflowmarket.com/og-image.jpg">
+  <link rel="alternate" type="application/rss+xml" title="CreatorFlow Market — Blog IA" href="https://creatorflowmarket.com/rss.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+  <style>
+    :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--pink:#EC4899;--blue:#3B82F6;--r:12px;--r-lg:18px;--r-xl:24px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--f);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+    /* PROGRESS */
+    .rp{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--v),var(--c));z-index:600;transition:width 60ms linear;pointer-events:none;}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:24px;}
+    .logo{font-size:16px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;}
+    .nav-links{display:flex;align-items:center;gap:2px;flex:1;}
+    .nav-link{padding:7px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
+    .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.06);color:var(--text);}
+    .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;transition:all 200ms var(--ease);cursor:pointer;white-space:nowrap;}
+    .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+    .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+    .btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border:none;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
+
+    /* HERO */
+    .article-hero{padding:calc(var(--nav)+48px) 0 40px;background:transparent;border-bottom:1px solid var(--border);}
+    .hero-inner{max-width:1240px;margin:0 auto;padding:0 24px;}
+    @media(min-width:1100px){.hero-inner{display:grid;grid-template-columns:1fr 268px;gap:44px;align-items:center;}}
+    /* HERO DASHBOARD */
+    .hero-dashboard{background:rgba(255,255,255,0.03);border-radius:18px;padding:18px;display:none;}
+    @media(min-width:1100px){.hero-dashboard{display:block;}}
+    .hd-header{display:flex;align-items:center;gap:7px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .hd-dots{display:flex;gap:5px;}
+    .hd-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+    .hd-ttl{font-size:11px;font-weight:600;color:var(--text-3);letter-spacing:.06em;text-transform:uppercase;margin-left:2px;}
+    .hd-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
+    .hd-m{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 6px;text-align:center;}
+    .hd-m-val{display:block;font-size:15px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;}
+    .hd-m-lbl{display:block;font-size:10px;color:var(--text-3);margin-top:3px;line-height:1.3;}
+    .hd-chart{display:flex;align-items:flex-end;gap:5px;height:58px;margin-bottom:12px;padding:0 2px;}
+    .hd-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;}
+    .hd-bar{width:100%;border-radius:3px 3px 0 0;}
+    .hd-bar-day{font-size:9px;color:var(--text-3);font-weight:500;}
+    .hd-footer{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-3);}
+    .hd-dot-live{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);flex-shrink:0;animation:pdot 2s infinite;}
+    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.45}}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);margin-bottom:20px;}
+    .breadcrumb a:hover{color:var(--text-2);}
+    .bc-sep{opacity:.35;}
+    .cat-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:18px;}
+    .article-title{font-size:clamp(32px,4.5vw,52px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:14px;max-width:800px;}
+    .article-subtitle{font-size:18px;color:var(--text-2);line-height:1.6;margin-bottom:28px;max-width:720px;}
+    .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;font-size:13px;color:var(--text-3);padding-top:20px;border-top:1px solid var(--border);}
+    .hero-meta-chip{display:flex;align-items:center;gap:5px;}
+    .seo-pill{padding:2px 9px;border-radius:6px;font-size:11px;font-weight:700;}
+    .seo-good{background:rgba(16,185,129,.12);color:#10B981;border:1px solid rgba(16,185,129,.2);}
+    .seo-mid{background:rgba(245,158,11,.12);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
+
+    /* LAYOUT */
+    .article-layout{display:grid;grid-template-columns:minmax(0,860px) 300px;gap:52px;max-width:1240px;margin:0 auto;padding:40px 24px 80px;align-items:start;}
+    @media(max-width:1000px){.article-layout{grid-template-columns:1fr;}.right-sidebar{display:none;}}
+
+    /* TOC */
+    .toc-sidebar{max-height:calc(60vh);overflow-y:auto;padding-right:8px;padding-bottom:4px;}
+    .toc-sidebar::-webkit-scrollbar{width:3px;}
+    .toc-sidebar::-webkit-scrollbar-track{background:transparent;}
+    .toc-sidebar::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:99px;}
+    .toc-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-3);margin-bottom:12px;padding-left:12px;}
+    .toc-list{list-style:none;}
+    .toc-item{display:block;padding:6px 12px;font-size:13px;color:var(--text-3);border-left:2px solid var(--border);transition:all 150ms;cursor:pointer;border-radius:0 6px 6px 0;line-height:1.4;}
+    .toc-item:hover{color:var(--text-2);border-left-color:var(--border-2);}
+    .toc-item.active{color:var(--vs);border-left-color:var(--v);background:rgba(124,58,237,0.06);}
+    .toc-item.h3{padding-left:24px;font-size:12px;}
+
+    /* CONTENT */
+    .article-content-wrap{min-width:0;}
+    .article-content{font-size:18px;line-height:1.9;color:#C4C4DC;}
+    .article-content h2{font-size:clamp(20px,2.5vw,26px);font-weight:800;color:var(--text);margin:48px 0 16px;line-height:1.3;letter-spacing:-0.02em;}
+    .article-content h3{font-size:20px;font-weight:700;color:var(--text);margin:32px 0 12px;line-height:1.35;}
+    .article-content h4{font-size:17px;font-weight:600;color:var(--text);margin:24px 0 10px;}
+    .article-content p{margin-bottom:26px;color:#C4C4DC;}
+    .article-content ul,.article-content ol{margin:0 0 20px 20px;}
+    .article-content li{margin-bottom:9px;color:#C4C4DC;}
+    .article-content ul li::marker{color:var(--v);}
+    .article-content strong,.article-content b{color:var(--text);font-weight:600;}
+    .article-content em{color:var(--vs);font-style:italic;}
+    .article-content a{color:var(--vs);text-decoration:underline;text-underline-offset:3px;}
+    .article-content a:hover{color:var(--c);}
+    .article-content blockquote{position:relative;border-left:3px solid var(--v);padding:20px 24px 20px 52px;background:rgba(124,58,237,0.05);border-radius:0 12px 12px 0;margin:36px 0;font-style:italic;color:#C4C4DC;font-size:17px;}
+    .article-content blockquote::before{content:'"';position:absolute;left:14px;top:4px;font-size:56px;line-height:1;color:var(--v);opacity:0.3;font-family:Georgia,"Times New Roman",serif;pointer-events:none;}
+    .article-content blockquote strong{color:var(--vs);}
+    .article-content code{background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:5px;font-size:.88em;font-family:'SFMono-Regular',Consolas,monospace;color:var(--c);}
+    .article-content pre{background:var(--surf-3);border:1px solid var(--border);padding:20px;border-radius:12px;overflow-x:auto;margin:24px 0;}
+    .article-content pre code{background:none;padding:0;font-size:14px;color:var(--text-2);}
+    .article-content img{border-radius:12px;margin:24px 0;width:100%;}
+    .article-content table{width:100%;border-collapse:collapse;margin:24px 0;font-size:14px;}
+    .article-content th{background:var(--surf-2);padding:12px 16px;text-align:left;font-weight:600;color:var(--text);border-bottom:2px solid var(--border-2);}
+    .article-content td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text-2);}
+    .article-content tr:hover td{background:rgba(255,255,255,0.02);}
+
+    /* KEY TAKEAWAYS */
+    .key-takeaways{background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.1);border-left:3px solid var(--v);border-radius:0 var(--r-lg) var(--r-lg) 0;padding:22px 26px 18px;margin-bottom:40px;}
+    .kt-title{font-size:14px;font-weight:700;color:var(--vs);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .kt-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .kt-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#C4C4DC;line-height:1.55;}
+    .kt-dot{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.15);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+
+    /* CALLOUTS */
+    .callout{border-radius:10px;padding:18px 22px;margin:32px 0;font-size:15px;line-height:1.65;}
+    .callout-tip{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);color:var(--text-2);}
+    .callout-tip strong{color:var(--green);}
+    .callout-warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:var(--text-2);}
+    .callout-warn strong{color:var(--amber);}
+    .callout-info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:var(--text-2);}
+    .callout-info strong{color:var(--blue);}
+
+    /* INLINE CTA MID-ARTICLE — injecté par le générateur */
+    .article-inline-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.22);border-left:3px solid var(--v);border-radius:var(--r-lg);padding:18px 24px;margin:32px 0;flex-wrap:wrap;}
+    .aic-text{font-size:14px;color:var(--text-2);margin:0;flex:1;line-height:1.5;}
+    .aic-text strong{color:var(--text);}
+    .aic-btn{flex-shrink:0;padding:9px 20px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:13px;font-weight:700;white-space:nowrap;transition:all 200ms;}
+    .aic-btn:hover{opacity:.88;transform:translateY(-1px);}
+
+    /* CTA FIN D'ARTICLE — grand bloc contextuel */
+    .cta-icon-large{font-size:38px;margin-bottom:10px;}
+
+    /* STATS ROW — section pourquoi c'est important */
+    .why-matters{margin:36px 0;}
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0;}
+    .stat-block{border-left:2px solid var(--border-2);padding:12px 20px;text-align:left;}
+    .stat-num{display:block;font-size:34px;font-weight:900;color:var(--text);letter-spacing:-0.03em;line-height:1.1;}
+    .stat-lbl{display:block;font-size:12px;color:var(--text-3);margin-top:5px;line-height:1.4;}
+
+    /* USE CASES GRID */
+    .use-cases{margin:40px 0;}
+    .uc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:20px 0;}
+    .uc-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;transition:all 200ms var(--ease);}
+    .uc-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.4),0 0 0 1px rgba(124,58,237,0.08);}
+    /* AUTHOR MINI */
+    .author-mini{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .author-mini-avatar{width:36px;height:36px;border-radius:50%;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.22);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .author-mini-info{display:flex;flex-direction:column;gap:1px;}
+    .author-mini-name{font-size:13px;font-weight:600;color:var(--text);}
+    .author-mini-role{font-size:11px;color:var(--text-3);}
+    /* CTA PROOF */
+    .cta-proof-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;}
+    .cta-proof-item{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+    .cta-proof-item::before{content:'✓';color:var(--green);font-weight:700;font-size:14px;}
+    .uc-icon{font-size:26px;margin-bottom:10px;}
+    .uc-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3;}
+    .uc-desc{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:12px;}
+    .uc-result{font-size:12px;color:var(--green);font-weight:600;padding:6px 10px;background:rgba(16,185,129,0.08);border-radius:6px;display:inline-block;}
+
+    /* COMPARISON TABLE */
+    .comparison-section{margin:40px 0;}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r-lg);border:1px solid var(--border);}
+    .comp-table{width:100%;border-collapse:collapse;font-size:14px;}
+    .comp-table thead tr{background:var(--surf-2);}
+    .comp-table th{padding:14px 18px;text-align:left;font-weight:700;color:var(--text-2);font-size:12px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+    .comp-table th.best{background:rgba(124,58,237,0.12);color:var(--vs);}
+    .comp-table td{padding:12px 18px;border-top:1px solid var(--border);color:var(--text-2);vertical-align:middle;}
+    .comp-table td.best{color:var(--text);font-weight:500;}
+    .comp-table td:first-child{font-weight:600;color:var(--text);font-size:13px;}
+    .comp-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+    /* TAGS */
+    .tags-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:36px;padding-top:28px;border-top:1px solid var(--border);}
+    .tag-pill{padding:5px 13px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-3);transition:all 150ms;cursor:pointer;}
+    .tag-pill:hover{border-color:var(--border-2);color:var(--text-2);}
+
+    /* SHARE */
+    .share-row{display:flex;align-items:center;gap:10px;margin-top:28px;flex-wrap:wrap;}
+    .share-label{font-size:12px;color:var(--text-3);font-weight:500;}
+    .share-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:500;background:var(--surf-2);border:1px solid var(--border);transition:all 150ms;cursor:pointer;}
+    .share-btn:hover{background:var(--surf-3);border-color:var(--border-2);}
+
+    /* CTA BLOCK */
+    .article-cta{background:linear-gradient(135deg,rgba(124,58,237,0.14),rgba(6,182,212,0.07));border:1px solid rgba(124,58,237,0.3);border-radius:var(--r-xl);padding:44px 40px;text-align:center;margin-top:48px;position:relative;overflow:hidden;}
+    .article-cta::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.07),transparent 70%);pointer-events:none;}
+    .cta-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--vs);margin-bottom:12px;}
+    .article-cta h3{font-size:clamp(18px,2.5vw,26px);font-weight:800;margin-bottom:10px;letter-spacing:-0.02em;}
+    .article-cta p{color:var(--text-2);margin-bottom:28px;font-size:15px;max-width:480px;margin-left:auto;margin-right:auto;}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .cta-btn-primary{padding:12px 28px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all 200ms;display:inline-flex;align-items:center;gap:8px;}
+    .cta-btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--vg);}
+    .cta-btn-ghost{padding:12px 28px;background:rgba(255,255,255,0.04);color:var(--text-2);border-radius:999px;font-size:14px;font-weight:600;border:1px solid var(--border-2);cursor:pointer;transition:all 200ms;}
+    .cta-btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+
+    /* FAQ */
+    .faq-section{margin-top:52px;padding-top:40px;border-top:1px solid var(--border);}
+    .faq-title{font-size:20px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+    .faq-item{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:border-color 150ms;}
+    .faq-item.open{border-color:var(--border-2);}
+    .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;font-size:14px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;background:var(--surf);gap:12px;}
+    .faq-q:hover{background:var(--surf-2);}
+    .faq-icon{font-size:16px;transition:transform 200ms;flex-shrink:0;color:var(--text-3);}
+    .faq-item.open .faq-icon{transform:rotate(45deg);color:var(--vs);}
+    .faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height 250ms ease,padding 250ms ease;}
+    .faq-item.open .faq-a{max-height:400px;padding:4px 20px 18px;}
+    .faq-a p{font-size:14px;color:var(--text-2);line-height:1.7;}
+
+    /* PAA — People Also Ask */
+    .paa-section{margin:36px 0;padding:20px 24px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);}
+    .paa-header{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .paa-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-2);text-decoration:none;gap:12px;transition:color 150ms;}
+    .paa-item:last-child{border-bottom:none;padding-bottom:0;}
+    .paa-item:hover{color:var(--vs);}
+    .paa-icon{flex-shrink:0;opacity:.4;font-size:12px;}
+
+    /* RELATED */
+    .related-section{padding:52px 0 0;border-top:1px solid var(--border);margin-top:52px;}
+    .related-title{font-size:20px;font-weight:800;margin-bottom:24px;}
+    .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+    .related-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 220ms var(--ease);cursor:pointer;}
+    .related-card:hover{transform:translateY(-3px);border-color:var(--border-2);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+    .related-thumb{height:130px;display:flex;align-items:center;justify-content:center;font-size:40px;}
+    .related-body{padding:16px 18px;}
+    .related-body h4{font-size:14px;font-weight:700;line-height:1.4;margin:8px 0 6px;color:var(--text);}
+    .related-body p{font-size:12px;color:var(--text-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+    /* RIGHT SIDEBAR */
+    .right-sidebar{position:sticky;top:calc(var(--nav)+20px);display:flex;flex-direction:column;gap:20px;}
+    .sidebar-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+    .sidebar-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:14px;}
+    .nl-mini input{width:100%;background:var(--surf-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--f);margin-bottom:10px;}
+    .nl-mini input::placeholder{color:var(--text-3);}
+    .nl-mini input:focus{outline:none;border-color:rgba(124,58,237,0.4);}
+    .nl-mini-btn{width:100%;padding:10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all 200ms;}
+    .nl-mini-btn:hover{opacity:.9;}
+    .expert-cta-mini{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.06));border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-lg);padding:20px;text-align:center;}
+    .expert-cta-mini h4{font-size:14px;font-weight:700;margin-bottom:8px;}
+    .expert-cta-mini p{font-size:12px;color:var(--text-3);margin-bottom:14px;line-height:1.5;}
+    .expert-cta-mini a{display:block;padding:9px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:12px;font-weight:600;color:var(--vs);transition:all 150ms;}
+    .expert-cta-mini a:hover{background:rgba(124,58,237,0.25);}
+    .affil-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-top:20px;}
+    .affil-card-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+    .affil-card-title{font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:0.08em;}
+    .affil-card-badge{font-size:9px;font-weight:700;background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);border-radius:999px;padding:2px 7px;}
+    .affil-tool{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background 150ms;}
+    .affil-tool:last-child{border-bottom:none;}
+    .affil-tool:hover{background:rgba(255,255,255,0.03);}
+    .affil-tool-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
+    .affil-tool-info{flex:1;min-width:0;}
+    .affil-tool-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+    .affil-tool-desc{font-size:11px;color:var(--text-3);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .affil-tool-btn{font-size:10px;font-weight:600;color:var(--vs);white-space:nowrap;flex-shrink:0;padding:4px 8px;border-radius:6px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.15);transition:all 150ms;}
+    .affil-tool-btn:hover{background:rgba(124,58,237,0.18);}
+
+    /* SEO INTELLIGENCE SIDEBAR CARD */
+    .seo-intel-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+    .seo-chips{display:flex;flex-wrap:wrap;gap:5px;}
+    .seo-chip{padding:3px 9px;border-radius:999px;font-size:11px;font-weight:500;line-height:1.4;}
+    .seo-chip-sec{background:rgba(124,58,237,0.1);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+    .seo-chip-lt{background:rgba(6,182,212,0.08);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+    .seo-opp{font-size:11px;color:var(--text-2);padding:5px 0;border-bottom:1px solid var(--border);line-height:1.5;}
+    .seo-opp:last-child{border-bottom:none;padding-bottom:0;}
+    .seo-cluster{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:999px;font-size:11px;color:var(--green);font-weight:600;margin-bottom:12px;}
+
+    /* BACK TO TOP */
+    .back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all 200ms;z-index:400;opacity:0;pointer-events:none;}
+    .back-top.visible{opacity:1;pointer-events:all;}
+    .back-top:hover{background:var(--v);border-color:var(--v);transform:translateY(-2px);}
+
+    /* ARTICLE HERO IMAGE */
+    .article-hero-img{width:100%;overflow:hidden;background:var(--surf);border-bottom:1px solid var(--border);}
+    .article-hero-img img{width:100%;max-height:420px;object-fit:cover;display:block;}
+    .article-hero-img-placeholder{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:240px;}
+    .hero-img-pattern{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.018) 40px,rgba(255,255,255,0.018) 80px);}
+    .hero-img-emoji{font-size:80px;position:relative;z-index:1;filter:drop-shadow(0 4px 20px rgba(0,0,0,.6));}
+
+    /* INTRO FULL-WIDTH — visible immédiatement, avant la grid */
+    .article-intro{max-width:1240px;margin:0 auto;padding:32px 24px 0;}
+    .article-intro .article-content{max-width:860px;}
+    .article-intro .article-content p{font-size:18px;line-height:1.88;}
+    .article-intro .article-content p:first-child{font-size:19px;color:var(--text);font-weight:400;}
+
+    /* INLINE NEWSLETTER — scroll-triggered */
+    .inline-nl{background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-xl);padding:32px 36px;margin:44px 0;}
+    .inline-nl-icon{font-size:28px;margin-bottom:8px;}
+    .inline-nl-headline{font-size:19px;font-weight:800;margin-bottom:5px;letter-spacing:-0.02em;}
+    .inline-nl-sub{font-size:13px;color:var(--text-3);margin-bottom:18px;line-height:1.5;}
+    .inline-nl-row{display:flex;gap:10px;max-width:480px;}
+    .inline-nl-row input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border-2);border-radius:8px;padding:11px 16px;font-size:14px;color:var(--text);font-family:var(--f);outline:none;}
+    .inline-nl-row input:focus{border-color:rgba(124,58,237,0.5);}
+    .inline-nl-btn{padding:11px 24px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;white-space:nowrap;font-family:var(--f);}
+
+    /* MOBILE TOC STRIP — sticky sous la nav */
+    .mobile-toc-bar{display:none;position:sticky;top:var(--nav);z-index:200;background:rgba(4,4,10,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .mobile-toc-scroll{display:flex;align-items:center;gap:8px;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .mobile-toc-scroll::-webkit-scrollbar{display:none;}
+    .mobile-toc-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--text-3);white-space:nowrap;flex-shrink:0;}
+    .mobile-toc-pill{flex-shrink:0;padding:5px 12px;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--text-2);cursor:pointer;white-space:nowrap;font-family:var(--f);transition:all 150ms;}
+    .mobile-toc-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3);color:var(--vs);}
+    @media(max-width:1000px){.mobile-toc-bar{display:block;}}
+
+    /* KEY TAKEAWAYS ACCORDION */
+    .kt-toggle-btn{width:100%;background:none;border:none;padding:0;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .kt-chevron{font-size:11px;color:var(--text-3);display:none;transition:transform 200ms;flex-shrink:0;margin-left:auto;}
+
+    /* MOBILE NEWSLETTER INLINE */
+    .mobile-nl{display:none;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin:28px 0;}
+    .mobile-nl-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:12px;}
+    .mobile-nl input{width:100%;background:var(--surf-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--f);margin-bottom:10px;outline:none;display:block;}
+    .mobile-nl input:focus{border-color:rgba(124,58,237,0.4);}
+    .mobile-nl-btn{width:100%;padding:10px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:inherit;}
+
+    /* SKELETON */
+    .sk{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:400% 100%;animation:sh 1.5s infinite;border-radius:8px;}
+    @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* NOT FOUND */
+    .not-found{text-align:center;padding:120px 24px;padding-top:calc(var(--nav)+80px);}
+    .not-found h2{font-size:28px;font-weight:700;margin-bottom:12px;}
+
+    /* FOOTER */
+    .footer{background:var(--surf);border-top:1px solid var(--border);padding:40px 0;}
+    .footer-inner{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+    .footer-logo{font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .footer-links{display:flex;gap:20px;font-size:12px;color:var(--text-3);}
+    .footer-links a:hover{color:var(--text-2);}
+
+    @media(max-width:680px){
+      /* NAV */
+      .nav-links{display:none;}
+      .nav-actions .btn-ghost{display:none;}
+      /* HERO */
+      .article-hero{padding:calc(var(--nav)+18px) 0 18px;}
+      .hero-inner{padding:0 16px;}
+      .article-title{font-size:32px !important;letter-spacing:-0.02em;line-height:1.18;}
+      .article-subtitle{font-size:15px;margin-bottom:16px;}
+      .hero-meta{gap:8px;padding-top:12px;flex-wrap:wrap;}
+      .hero-meta-chip{font-size:11px;}
+      .seo-pill{font-size:10px;}
+      /* HERO IMAGE */
+      .article-hero-img-placeholder{min-height:160px;}
+      .hero-img-emoji{font-size:52px;}
+      /* LAYOUT */
+      .article-layout{padding:20px 16px 48px;}
+      /* CONTENT */
+      .article-content{font-size:16px;line-height:1.82;}
+      .article-content h2{font-size:24px !important;margin:32px 0 12px;}
+      .article-content h3{font-size:20px !important;margin:20px 0 10px;}
+      .article-content h4{font-size:17px !important;margin:16px 0 8px;}
+      .article-content blockquote{padding:12px 14px;margin:16px 0;font-size:15px;}
+      .article-content table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+      .article-content th,.article-content td{padding:9px 10px;}
+      .article-content ul,.article-content ol{margin-left:16px;}
+      /* KEY TAKEAWAYS ACCORDION */
+      .key-takeaways{padding:16px;}
+      .kt-chevron{display:block;}
+      .kt-list{display:none;margin-top:12px;}
+      .kt-list.kt-open{display:flex;}
+      /* CALLOUTS */
+      .callout{padding:12px 14px;font-size:13px;}
+      /* INLINE CTA MID-ARTICLE MOBILE */
+      .article-inline-cta{flex-direction:column;align-items:flex-start;padding:16px;}
+      .aic-btn{width:100%;text-align:center;}
+      /* INLINE NEWSLETTER MOBILE */
+      .inline-nl{padding:20px 16px;margin:28px 0;}
+      .inline-nl-row{flex-direction:column;}
+      .inline-nl-btn{width:100%;text-align:center;}
+      /* CTA */
+      .article-cta{padding:24px 16px;margin-top:28px;}
+      .article-cta::before{display:none;}
+      .article-cta h3{font-size:20px;}
+      .article-cta p{font-size:14px;margin-bottom:20px;}
+      .cta-btns{flex-direction:column;align-items:stretch;}
+      .cta-btn-primary,.cta-btn-ghost{text-align:center;justify-content:center;padding:13px 20px;}
+      /* FAQ */
+      .faq-section{margin-top:32px;padding-top:24px;}
+      .faq-title{font-size:17px;}
+      .faq-q{padding:14px 16px;font-size:13px;}
+      .faq-a p{font-size:13px;}
+      /* PAA */
+      .paa-section{padding:14px 16px;margin:20px 0;}
+      .paa-item{font-size:12px;}
+      /* TAGS */
+      .tags-row{margin-top:20px;padding-top:16px;gap:6px;}
+      .tag-pill{font-size:11px;padding:4px 10px;}
+      /* SHARE */
+      .share-row{gap:6px;margin-top:20px;flex-wrap:wrap;}
+      .share-btn{padding:6px 10px;font-size:11px;}
+      /* RELATED */
+      .related-section{padding:28px 0 0;margin-top:28px;}
+      .related-title{font-size:17px;margin-bottom:14px;}
+      .related-grid{grid-template-columns:1fr;gap:12px;}
+      .related-card{display:flex;flex-direction:row;}
+      .related-thumb{width:88px;min-width:88px;height:88px;font-size:28px;}
+      .related-body{padding:10px 12px;}
+      .related-body h4{font-size:13px;margin:4px 0;}
+      .related-body p{font-size:11px;}
+      /* STATS ROW MOBILE */
+      .stats-row{grid-template-columns:1fr 1fr;}
+      .stat-num{font-size:28px;}
+      /* USE CASES MOBILE */
+      .uc-grid{grid-template-columns:1fr;}
+      /* COMPARISON TABLE MOBILE */
+      .comp-table th,.comp-table td{padding:10px 12px;font-size:12px;}
+      /* SEO INTEL HIDDEN ON MOBILE */
+      .seo-intel-block{display:none !important;}
+      /* FOOTER */
+      .footer-inner{flex-direction:column;text-align:center;gap:12px;}
+      .footer-links{flex-wrap:wrap;justify-content:center;gap:12px;}
+      /* BACK TO TOP */
+      .back-top{bottom:16px;right:16px;width:38px;height:38px;font-size:14px;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="rp" id="rp"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/index.html" class="logo">CreatorFlow Market</a>
+    <div class="nav-links">
+      <a href="/experts.html"    class="nav-link">Experts</a>
+      <a href="/brief.html"      class="nav-link">Publier un brief</a>
+      <a href="/academie.html"   class="nav-link">Académie</a>
+      <a href="/pricing.html"    class="nav-link">Tarifs</a>
+      <a href="/blog.html"       class="nav-link active">Blog IA</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/connexion.html"   class="btn btn-ghost">Connexion</a>
+      <a href="/inscription.html" class="btn btn-primary">Rejoindre →</a>
+    </div>
+  </div>
+</nav>
+
+<div id="root"></div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-logo">CreatorFlow Market</span>
+    <div class="footer-links">
+      <a href="/cgu">CGU</a>
+      <a href="/politique-confidentialite">Vie privée</a>
+      <a href="/blog">Blog IA</a>
+      <a href="/experts">Experts</a>
+      <a href="/academie">Academy</a>
+    </div>
+    <span style="font-size:12px;color:var(--text-3)">© 2026 CreatorFlow Market</span>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('rp');
+    const bt = document.getElementById('backTop');
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    if (el) el.style.width = pct + '%';
+    if (bt) bt.className = 'back-top' + (h.scrollTop > 400 ? ' visible' : '');
+  });
+</script>
+
+<script>
+const {
+  useState,
+  useEffect,
+  useRef,
+  useCallback
+} = React;
+const sb = supabase.createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const CAT_COLORS = {
+  'Actualités IA': '#F59E0B',
+  'Outils IA': '#06B6D4',
+  'Automatisation IA': '#10B981',
+  'Marketing IA': '#7C3AED',
+  'Création de Contenu IA': '#EF4444',
+  'Vente IA': '#8B5CF6',
+  'Support Client IA': '#EC4899',
+  'Tutoriels IA': '#3B82F6',
+  'Comparatifs IA': '#F97316',
+  'Guides IA': '#84CC16'
+};
+const CAT_ICONS = {
+  'Actualités IA': '🔥',
+  'Outils IA': '🛠',
+  'Automatisation IA': '⚡',
+  'Marketing IA': '📈',
+  'Création de Contenu IA': '🎬',
+  'Vente IA': '💰',
+  'Support Client IA': '🤝',
+  'Tutoriels IA': '📚',
+  'Comparatifs IA': '⚖️',
+  'Guides IA': '🗺️'
+};
+const CAT_GRAD = c => {
+  const map = {
+    'Actualités IA': 'rgba(245,158,11,0.18)',
+    'Outils IA': 'rgba(6,182,212,0.18)',
+    'Automatisation IA': 'rgba(16,185,129,0.18)',
+    'Marketing IA': 'rgba(124,58,237,0.18)',
+    'Création de Contenu IA': 'rgba(239,68,68,0.18)',
+    'Vente IA': 'rgba(139,92,246,0.18)',
+    'Support Client IA': 'rgba(236,72,153,0.18)',
+    'Tutoriels IA': 'rgba(59,130,246,0.18)',
+    'Comparatifs IA': 'rgba(249,115,22,0.18)',
+    'Guides IA': 'rgba(132,204,22,0.18)'
+  };
+  return `linear-gradient(135deg,${map[c] || 'rgba(124,58,237,0.18)'},rgba(4,4,10,0.3))`;
+};
+
+// CTA fin d'article — spécifique à chaque catégorie
+const ARTICLE_CTA = {
+  'Actualités IA': {
+    icon: '⚡',
+    headline: 'Prenez de l\'avance sur vos concurrents',
+    body: 'Nos experts IA implémentent ces innovations dans votre business avant que vos concurrents les découvrent.',
+    btn: 'Réserver un expert IA →',
+    sub: 'Voir l\'Academy IA',
+    subHref: '/academie'
+  },
+  'Outils IA': {
+    icon: '🛠',
+    headline: 'Configurez votre stack IA avec un expert',
+    body: 'Un expert CreatorFlow Market sélectionne et configure vos outils IA de A à Z — vous n\'avez plus qu\'à utiliser.',
+    btn: 'Trouver mon expert outils →',
+    sub: 'Formations outils IA',
+    subHref: '/academie'
+  },
+  'Automatisation IA': {
+    icon: '⚡',
+    headline: 'Automatisez votre business en 48h',
+    body: 'Nos experts n8n / Make construisent vos workflows IA sur mesure. Résultats concrets garantis.',
+    btn: 'Automatiser avec un expert →',
+    sub: 'Academy Automatisation',
+    subHref: '/academie'
+  },
+  'Marketing IA': {
+    icon: '📈',
+    headline: 'Multipliez vos résultats marketing avec l\'IA',
+    body: 'Nos experts IA construisent votre système marketing automatisé : contenu, leads, conversions.',
+    btn: 'Booster mon marketing IA →',
+    sub: 'Formations Marketing IA',
+    subHref: '/academie'
+  },
+  'Création de Contenu IA': {
+    icon: '🎬',
+    headline: 'Créez 10x plus de contenu en moins de temps',
+    body: 'Un expert CreatorFlow Market met en place votre pipeline de contenu IA clé en main.',
+    btn: 'Scaler mon contenu IA →',
+    sub: 'Academy Création de Contenu',
+    subHref: '/academie'
+  },
+  'Vente IA': {
+    icon: '💰',
+    headline: 'Augmentez vos ventes avec un système IA automatisé',
+    body: 'Nos experts construisent votre funnel de vente automatisé : prospection, nurturing, closing.',
+    btn: 'Construire mon système de vente →',
+    sub: 'Formations Vente IA',
+    subHref: '/academie'
+  },
+  'Support Client IA': {
+    icon: '🤝',
+    headline: 'Automatisez votre support client 24h/24',
+    body: 'Un expert déploie votre agent IA de support en 48h. Satisfaction client garantie.',
+    btn: 'Déployer mon IA support →',
+    sub: 'Voir les solutions support',
+    subHref: '/academie'
+  },
+  'Tutoriels IA': {
+    icon: '📚',
+    headline: 'Vous voulez qu\'un expert l\'implémente pour vous ?',
+    body: 'Gagnez du temps : nos experts certifiés implémentent ce tutoriel dans votre business en 48h.',
+    btn: 'Déléguer l\'implémentation →',
+    sub: 'Continuer à apprendre',
+    subHref: '/academie'
+  },
+  'Comparatifs IA': {
+    icon: '⚖️',
+    headline: 'Vous ne savez toujours pas quel outil choisir ?',
+    body: 'Un expert analyse votre situation et configure l\'outil parfait pour vous — en 30 minutes.',
+    btn: 'Parler à un expert →',
+    sub: 'Voir tous les comparatifs',
+    subHref: '/blog'
+  },
+  'Guides IA': {
+    icon: '🗺️',
+    headline: 'Passez de la théorie à l\'action dès demain',
+    body: 'Ce guide vous montre quoi faire. Nos experts le font pour vous — résultats concrets en 48h.',
+    btn: 'Passer à l\'action →',
+    sub: 'Continuer avec l\'Academy',
+    subHref: '/academie'
+  }
+};
+const DEFAULT_CTA = {
+  icon: '🚀',
+  headline: 'Passez à l\'action avec un expert IA',
+  body: 'Nos experts certifiés transforment ces stratégies en résultats concrets pour votre business, en 48h.',
+  btn: 'Explorer les experts IA →',
+  sub: 'Voir l\'Academy',
+  subHref: '/academie'
+};
+const splitContent = html => {
+  if (!html) return {
+    intro: '',
+    main: ''
+  };
+  const idx = html.indexOf('<h2');
+  if (idx <= 0) return {
+    intro: '',
+    main: html
+  };
+  return {
+    intro: html.slice(0, idx),
+    main: html.slice(idx)
+  };
+};
+
+// Reads slug from injected window var, /blog/SLUG path, or ?slug= query param
+const getSlug = () => {
+  if (typeof window.__BLOG_SLUG__ === 'string' && window.__BLOG_SLUG__) return window.__BLOG_SLUG__;
+  const qs = new URLSearchParams(window.location.search).get('slug');
+  if (qs) return qs;
+  const p = window.location.pathname;
+  if (p.startsWith('/blog/') && p.length > 6) return p.slice(6).replace(/\/$/, '');
+  return null;
+};
+function CatBadge({
+  cat
+}) {
+  const col = CAT_COLORS[cat] || '#7C3AED';
+  return /*#__PURE__*/React.createElement("span", {
+    className: "cat-badge",
+    style: {
+      background: `${col}20`,
+      color: col,
+      border: `1px solid ${col}40`
+    }
+  }, CAT_ICONS[cat] || '🤖', " ", cat);
+}
+function KeyTakeaways({
+  content,
+  takeaways
+}) {
+  const [open, setOpen] = useState(false);
+  const items = (() => {
+    if (takeaways && takeaways.length > 0) return takeaways;
+    try {
+      const doc = new DOMParser().parseFromString(content, 'text/html');
+      return Array.from(doc.querySelectorAll('h2')).slice(0, 5).map(h => {
+        const next = h.nextElementSibling;
+        if (next && next.tagName === 'P') {
+          const t = next.textContent.trim();
+          return t.length > 110 ? t.slice(0, 110) + '…' : t;
+        }
+        return h.textContent;
+      }).filter(Boolean);
+    } catch {
+      return [];
+    }
+  })();
+  if (!items.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "key-takeaways"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "kt-title kt-toggle-btn",
+    onClick: () => setOpen(!open)
+  }, /*#__PURE__*/React.createElement("span", null, "\u26A1 Ce qu'il faut retenir"), /*#__PURE__*/React.createElement("span", {
+    className: "kt-chevron",
+    style: {
+      transform: open ? 'rotate(180deg)' : 'none'
+    }
+  }, "\u25BC")), /*#__PURE__*/React.createElement("ul", {
+    className: `kt-list${open ? ' kt-open' : ''}`
+  }, items.map((item, i) => /*#__PURE__*/React.createElement("li", {
+    key: i,
+    className: "kt-item"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "kt-dot"
+  }, "\u2713"), /*#__PURE__*/React.createElement("span", null, item)))));
+}
+function HeroImage({
+  article
+}) {
+  if (!article || !article.featured_image) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "article-hero-img"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: article.featured_image,
+    alt: article.title,
+    loading: "lazy"
+  }));
+}
+function InlineNewsletter() {
+  const [visible, setVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState('');
+  const ref = useRef(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) setVisible(true);
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -5% 0px'
+    });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  const submit = async e => {
+    e.preventDefault();
+    if (!email) return;
+    setErr('');
+    const {
+      error
+    } = await sb.from('blog_subscribers').insert({
+      email,
+      source: 'article'
+    });
+    if (!error) {
+      setDone(true);
+    } else if (error.code === '23505') {
+      setErr('Cet email est déjà inscrit.');
+    } else {
+      setErr('Une erreur est survenue. Réessayez.');
+    }
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    className: "inline-nl",
+    style: {
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(24px)',
+      transition: 'opacity 700ms ease, transform 700ms ease'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-icon"
+  }, "\uD83D\uDCE8"), /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-headline"
+  }, "Cet article vous pla\xEEt ?"), /*#__PURE__*/React.createElement("div", {
+    className: "inline-nl-sub"
+  }, "Recevez les meilleurs articles IA chaque semaine, sans spam."), done ? /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--green)',
+      fontWeight: 600,
+      fontSize: 14
+    }
+  }, "\u2705 Inscription confirm\xE9e !") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
+    className: "inline-nl-row",
+    onSubmit: submit
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "email",
+    placeholder: "votre@email.com",
+    value: email,
+    onChange: e => {
+      setEmail(e.target.value);
+      setErr('');
+    },
+    required: true
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "inline-nl-btn"
+  }, "S'abonner \u2192")), err && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: '#F59E0B',
+      fontWeight: 600,
+      fontSize: 13,
+      marginTop: 8
+    }
+  }, err)), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginTop: 10
+    }
+  }, "Sans spam. D\xE9sabonnement en 1 clic."));
+}
+function TOC({
+  headings,
+  activeId
+}) {
+  if (!headings.length) return /*#__PURE__*/React.createElement("aside", {
+    className: "toc-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toc-title"
+  }, "Dans cet article"), [65, 50, 78, 44, 60].map((w, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "sk",
+    style: {
+      height: 10,
+      width: `${w}%`,
+      marginBottom: 10,
+      borderRadius: 4
+    }
+  })));
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "toc-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toc-title"
+  }, "Dans cet article"), /*#__PURE__*/React.createElement("ul", {
+    className: "toc-list"
+  }, headings.map(h => /*#__PURE__*/React.createElement("li", {
+    key: h.id
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `toc-item ${h.level === 3 ? 'h3' : ''} ${activeId === h.id ? 'active' : ''}`,
+    onClick: () => {
+      const el = document.getElementById(h.id);
+      if (el) el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, h.text)))));
+}
+function MobileTOCBar({
+  headings,
+  activeId
+}) {
+  const h2s = headings.filter(h => h.level === 2);
+  if (!h2s.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "mobile-toc-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mobile-toc-scroll"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mobile-toc-label"
+  }, "Chapitres"), h2s.map(h => /*#__PURE__*/React.createElement("button", {
+    key: h.id,
+    className: `mobile-toc-pill${activeId === h.id ? ' active' : ''}`,
+    onClick: () => {
+      const el = document.getElementById(h.id);
+      if (el) el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, h.text))));
+}
+function FAQSection({
+  faq
+}) {
+  const [open, setOpen] = useState(null);
+  if (!faq || !faq.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "faq-section"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "faq-title"
+  }, "\u2753 Questions fr\xE9quentes"), faq.map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `faq-item ${open === i ? 'open' : ''}`
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "faq-q",
+    onClick: () => setOpen(open === i ? null : i)
+  }, item.question || item.q, /*#__PURE__*/React.createElement("span", {
+    className: "faq-icon"
+  }, "+")), /*#__PURE__*/React.createElement("div", {
+    className: "faq-a"
+  }, /*#__PURE__*/React.createElement("p", null, item.answer || item.a)))));
+}
+function PAASection({
+  questions
+}) {
+  if (!questions || !questions.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "paa-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "paa-header"
+  }, "\uD83D\uDD0D Les gens demandent aussi"), questions.map((q, i) => /*#__PURE__*/React.createElement("a", {
+    key: i,
+    href: `https://www.google.com/search?q=${encodeURIComponent(q)}`,
+    target: "_blank",
+    rel: "noopener noreferrer",
+    className: "paa-item"
+  }, /*#__PURE__*/React.createElement("span", null, q), /*#__PURE__*/React.createElement("span", {
+    className: "paa-icon"
+  }, "\u2197"))));
+}
+function SEOIntelCard({
+  article
+}) {
+  const sec = article?.secondary_keywords || [];
+  const lt = article?.longtail_keywords || [];
+  const opps = article?.seo_opportunities || [];
+  const cluster = article?.topic_cluster || '';
+  if (!sec.length && !lt.length && !opps.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-card seo-intel-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-title"
+  }, "\uD83C\uDFAF SEO Intelligence"), cluster && /*#__PURE__*/React.createElement("div", {
+    className: "seo-cluster"
+  }, "\uD83D\uDDC2 ", cluster), sec.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Mots-cl\xE9s secondaires"), /*#__PURE__*/React.createElement("div", {
+    className: "seo-chips"
+  }, sec.map((kw, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "seo-chip seo-chip-sec"
+  }, kw)))), lt.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Longue tra\xEEne"), /*#__PURE__*/React.createElement("div", {
+    className: "seo-chips"
+  }, lt.slice(0, 6).map((kw, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "seo-chip seo-chip-lt"
+  }, kw)))), opps.length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "seo-intel-label"
+  }, "Opportunit\xE9s"), opps.map((o, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "seo-opp"
+  }, "\uD83D\uDCA1 ", o))));
+}
+function RelatedCard({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "related-card",
+    onClick: () => window.location.href = `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "related-thumb",
+    style: {
+      background: CAT_GRAD(article.category)
+    }
+  }, /*#__PURE__*/React.createElement("span", null, CAT_ICONS[article.category] || '🤖')), /*#__PURE__*/React.createElement("div", {
+    className: "related-body"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h4", null, article.title), /*#__PURE__*/React.createElement("p", null, article.excerpt)));
+}
+const AFFIL_TOOLS = {
+  'Automatisation IA': [{
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Automatise tes workflows sans code',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🔁',
+    name: 'n8n',
+    desc: 'Automatisation open-source puissante',
+    url: 'https://n8n.io/?ref=creatorflow',
+    bg: 'rgba(234,88,12,0.15)'
+  }, {
+    icon: '🤖',
+    name: 'Zapier',
+    desc: 'Connecte 6 000+ apps en quelques clics',
+    url: 'https://zapier.com/?utm_source=creatorflow',
+    bg: 'rgba(255,74,0,0.15)'
+  }],
+  'Marketing IA': [{
+    icon: '📈',
+    name: 'Surfer SEO',
+    desc: 'Optimise ton contenu pour Google',
+    url: 'https://surferseo.com/?fpr=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🎯',
+    name: 'Semrush',
+    desc: 'Analyse SEO et concurrence complète',
+    url: 'https://www.semrush.com/analytics/overview/?ref=creatorflow',
+    bg: 'rgba(255,122,0,0.15)'
+  }, {
+    icon: '✍️',
+    name: 'Jasper',
+    desc: 'Rédaction IA pour le marketing',
+    url: 'https://www.jasper.ai/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }],
+  'Outils IA': [{
+    icon: '📝',
+    name: 'Notion AI',
+    desc: 'Workspace IA tout-en-un',
+    url: 'https://affiliate.notion.so/creatorflow',
+    bg: 'rgba(255,255,255,0.08)'
+  }, {
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Voix IA ultra-réalistes en français',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🖼️',
+    name: 'Leonardo AI',
+    desc: 'Génération d\'images IA pro',
+    url: 'https://leonardo.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }],
+  'Création de Contenu IA': [{
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Voix-off IA en français parfait',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '🎨',
+    name: 'Canva Pro',
+    desc: 'Designs pro avec IA intégrée',
+    url: 'https://www.canva.com/affiliates/creatorflow',
+    bg: 'rgba(0,196,204,0.15)'
+  }, {
+    icon: '🎬',
+    name: 'Runway',
+    desc: 'Vidéo IA de niveau cinématographique',
+    url: 'https://runwayml.com/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }],
+  'Vente IA': [{
+    icon: '💼',
+    name: 'HubSpot',
+    desc: 'CRM avec IA pour les ventes',
+    url: 'https://hubspot.com/?ref=creatorflow',
+    bg: 'rgba(255,122,0,0.15)'
+  }, {
+    icon: '📧',
+    name: 'Instantly',
+    desc: 'Prospection email IA à grande échelle',
+    url: 'https://instantly.ai/?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🤝',
+    name: 'Clay',
+    desc: 'Enrichissement de leads par IA',
+    url: 'https://clay.com/?ref=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }],
+  'Support Client IA': [{
+    icon: '💬',
+    name: 'Crisp',
+    desc: 'Chat IA pour le support client',
+    url: 'https://crisp.chat/?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🤖',
+    name: 'Tidio',
+    desc: 'Chatbot IA pour e-commerce',
+    url: 'https://www.tidio.com/?ref=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '📞',
+    name: 'Intercom',
+    desc: 'Support client IA enterprise',
+    url: 'https://www.intercom.com/?ref=creatorflow',
+    bg: 'rgba(6,182,212,0.15)'
+  }],
+  'Tutoriels IA': [{
+    icon: '🎓',
+    name: 'Coursera',
+    desc: 'Certifications IA reconnues',
+    url: 'https://www.coursera.org/?ref=creatorflow',
+    bg: 'rgba(0,86,210,0.15)'
+  }, {
+    icon: '📚',
+    name: 'Udemy',
+    desc: 'Cours IA pratiques à prix réduit',
+    url: 'https://www.udemy.com/?ref=creatorflow',
+    bg: 'rgba(164,69,190,0.15)'
+  }, {
+    icon: '🧠',
+    name: 'DeepLearning.AI',
+    desc: 'Formation IA par Andrew Ng',
+    url: 'https://www.deeplearning.ai/?ref=creatorflow',
+    bg: 'rgba(6,182,212,0.15)'
+  }],
+  'Comparatifs IA': [{
+    icon: '🤖',
+    name: 'Claude',
+    desc: 'L\'IA la plus capable en 2026',
+    url: 'https://claude.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }, {
+    icon: '💡',
+    name: 'ChatGPT Plus',
+    desc: 'GPT-4o pour les pros',
+    url: 'https://openai.com/chatgpt?ref=creatorflow',
+    bg: 'rgba(16,185,129,0.15)'
+  }, {
+    icon: '🔮',
+    name: 'Gemini Advanced',
+    desc: 'IA Google multimodale',
+    url: 'https://gemini.google.com/?ref=creatorflow',
+    bg: 'rgba(66,133,244,0.15)'
+  }],
+  'Guides IA': [{
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Guide : automatise en 30 min',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }, {
+    icon: '📝',
+    name: 'Notion AI',
+    desc: 'Organise ton business avec l\'IA',
+    url: 'https://affiliate.notion.so/creatorflow',
+    bg: 'rgba(255,255,255,0.08)'
+  }, {
+    icon: '🎙️',
+    name: 'ElevenLabs',
+    desc: 'Crée ta voix IA personnalisée',
+    url: 'https://elevenlabs.io/?from=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }],
+  'Actualités IA': [{
+    icon: '🤖',
+    name: 'Claude',
+    desc: 'Teste les dernières capacités IA',
+    url: 'https://claude.ai/?ref=creatorflow',
+    bg: 'rgba(245,158,11,0.15)'
+  }, {
+    icon: '📰',
+    name: 'The Rundown AI',
+    desc: 'Newsletter IA #1 en anglais',
+    url: 'https://www.therundown.ai/?ref=creatorflow',
+    bg: 'rgba(124,58,237,0.15)'
+  }, {
+    icon: '⚡',
+    name: 'Make',
+    desc: 'Automatise ta veille IA',
+    url: 'https://www.make.com/en/register?pc=creatorflow',
+    bg: 'rgba(99,102,241,0.15)'
+  }]
+};
+const DEFAULT_AFFIL = [{
+  icon: '🤖',
+  name: 'Claude',
+  desc: 'L\'assistant IA le plus puissant',
+  url: 'https://claude.ai/?ref=creatorflow',
+  bg: 'rgba(245,158,11,0.15)'
+}, {
+  icon: '⚡',
+  name: 'Make',
+  desc: 'Automatise tes tâches répétitives',
+  url: 'https://www.make.com/en/register?pc=creatorflow',
+  bg: 'rgba(99,102,241,0.15)'
+}, {
+  icon: '📝',
+  name: 'Notion AI',
+  desc: 'Workspace IA tout-en-un',
+  url: 'https://affiliate.notion.so/creatorflow',
+  bg: 'rgba(255,255,255,0.08)'
+}];
+function AffiliateToolsCard({
+  category
+}) {
+  const tools = AFFIL_TOOLS[category] || DEFAULT_AFFIL;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "affil-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-card-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "affil-card-title"
+  }, "Outils recommand\xE9s"), /*#__PURE__*/React.createElement("span", {
+    className: "affil-card-badge"
+  }, "Sponsoris\xE9")), tools.map((t, i) => /*#__PURE__*/React.createElement("a", {
+    key: i,
+    href: t.url,
+    target: "_blank",
+    rel: "noopener sponsored",
+    className: "affil-tool"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-icon",
+    style: {
+      background: t.bg
+    }
+  }, t.icon), /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-name"
+  }, t.name), /*#__PURE__*/React.createElement("div", {
+    className: "affil-tool-desc"
+  }, t.desc)), /*#__PURE__*/React.createElement("span", {
+    className: "affil-tool-btn"
+  }, "Essayer \u2192"))));
+}
+function RightSidebar() {
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "right-sidebar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-cta-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("h4", null, "Besoin d'un expert IA ?"), /*#__PURE__*/React.createElement("p", null, "Nos experts certifi\xE9s peuvent impl\xE9menter ces strat\xE9gies pour vous."), /*#__PURE__*/React.createElement("a", {
+    href: "/experts"
+  }, "Voir les experts \u2192")));
+}
+const DASHBOARD_METRICS = {
+  'Automatisation IA': {
+    m: [['+340%', 'Leads'], ['11h', 'Économies'], ['3.8x', 'ROI']],
+    bars: [72, 85, 91, 78, 94]
+  },
+  'Marketing IA': {
+    m: [['+280%', 'Trafic'], ['5x', 'Engage.'], ['68%', 'Conv.']],
+    bars: [68, 79, 88, 82, 91]
+  },
+  'Outils IA': {
+    m: [['1,200', 'Outils'], ['4.2★', 'Score'], ['Free', 'Trial']],
+    bars: [80, 72, 86, 90, 77]
+  },
+  'Création de Contenu IA': {
+    m: [['10x', 'Rapide'], ['90%', 'Qualité'], ['24/7', 'Actif']],
+    bars: [88, 76, 92, 85, 79]
+  },
+  'Vente IA': {
+    m: [['+190%', 'Ventes'], ['3.2x', 'Pipeline'], ['48h', 'Setup']],
+    bars: [75, 84, 79, 93, 88]
+  },
+  'Actualités IA': {
+    m: [['Daily', 'Updates'], ['500+', 'Sources'], ['Live', 'Réel']],
+    bars: [91, 88, 85, 90, 87]
+  },
+  'Support Client IA': {
+    m: [['24/7', 'Dispo'], ['<2min', 'Réponse'], ['94%', 'Satisf.']],
+    bars: [89, 92, 87, 95, 91]
+  },
+  'Tutoriels IA': {
+    m: [['100+', 'Guides'], ['4.8★', 'Note'], ['FR', 'Langue']],
+    bars: [77, 83, 88, 74, 91]
+  },
+  'Comparatifs IA': {
+    m: [['50+', 'Outils'], ['2026', 'Data'], ['Expert', 'Analyse']],
+    bars: [82, 78, 90, 85, 88]
+  },
+  'Guides IA': {
+    m: [['A→Z', 'Complet'], ['Pratique', 'Guide'], ['2026', 'Actuel']],
+    bars: [85, 79, 88, 82, 91]
+  }
+};
+const DEFAULT_DASH = {
+  m: [['+73%', 'Performance'], ['3.8x', 'ROI'], ['48h', 'Délai']],
+  bars: [78, 85, 91, 82, 88]
+};
+function HeroDashboard({
+  article
+}) {
+  const catColor = CAT_COLORS[article.category] || '#7C3AED';
+  const d = DASHBOARD_METRICS[article.category] || DEFAULT_DASH;
+  const maxB = Math.max(...d.bars);
+  const days = ['L', 'M', 'M', 'J', 'V'];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "hero-dashboard",
+    style: {
+      boxShadow: `0 0 60px ${catColor}25,0 24px 64px rgba(0,0,0,0.28)`,
+      border: `1px solid ${catColor}22`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-dots"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#FF5F57'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#FFBD2E'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot",
+    style: {
+      background: '#28C840'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "hd-ttl"
+  }, "IA Analytics")), /*#__PURE__*/React.createElement("div", {
+    className: "hd-metrics"
+  }, d.m.map(([val, lbl], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "hd-m"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-m-val",
+    style: {
+      color: catColor
+    }
+  }, val), /*#__PURE__*/React.createElement("span", {
+    className: "hd-m-lbl"
+  }, lbl)))), /*#__PURE__*/React.createElement("div", {
+    className: "hd-chart"
+  }, d.bars.map((h, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "hd-bar-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hd-bar",
+    style: {
+      height: `${h / maxB * 100}%`,
+      background: h === maxB ? catColor : `${catColor}55`
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "hd-bar-day"
+  }, days[i])))), /*#__PURE__*/React.createElement("div", {
+    className: "hd-footer"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "hd-dot-live"
+  }), /*#__PURE__*/React.createElement("span", null, "Live \xB7 ", new Date().toLocaleDateString('fr-CA', {
+    day: 'numeric',
+    month: 'short'
+  }))));
+}
+function Skeleton() {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 'var(--nav)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 12,
+      width: '30%',
+      marginBottom: 20
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 14,
+      width: '15%',
+      borderRadius: 999,
+      marginBottom: 18
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 42,
+      width: '85%',
+      marginBottom: 12
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 42,
+      width: '70%',
+      marginBottom: 14
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 20,
+      width: '60%',
+      marginBottom: 28
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk",
+    style: {
+      height: 14,
+      width: '50%'
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "article-layout"
+  }, /*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("div", null, [1, 2, 3, 4, 5, 6, 7, 8].map(i => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "sk",
+    style: {
+      height: 14,
+      marginBottom: 12,
+      width: i % 3 === 0 ? '75%' : '100%'
+    }
+  })))));
+}
+function ArticlePage() {
+  const [article, setArticle] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [headings, setHeadings] = useState([]);
+  const [activeId, setActiveId] = useState('');
+  const [copied, setCopied] = useState(false);
+  const contentRef = useRef(null);
+  const slug = getSlug();
+  useEffect(() => {
+    if (!slug) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+    (async () => {
+      try {
+        const {
+          data,
+          error
+        } = await sb.from('blog_articles').select('*').eq('slug', slug).eq('status', 'published').single();
+        if (error || !data) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+        setArticle(data);
+
+        // Canonical URL (clean /blog/SLUG format)
+        const canonUrl = `https://creatorflowmarket.com/blog/${data.slug}`;
+        document.getElementById('page-canonical').href = canonUrl;
+        document.getElementById('og-url').setAttribute('content', canonUrl);
+
+        // Meta tags
+        document.getElementById('page-title').textContent = `${data.title} — CreatorFlow Market`;
+        document.getElementById('page-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        document.getElementById('og-title').setAttribute('content', data.title);
+        document.getElementById('og-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        document.getElementById('tw-title').setAttribute('content', data.title);
+        document.getElementById('tw-desc').setAttribute('content', data.meta_description || data.excerpt || '');
+        if (data.og_image) {
+          document.getElementById('og-img').setAttribute('content', data.og_image);
+          document.getElementById('tw-img').setAttribute('content', data.og_image);
+        }
+
+        // Schema.org injection
+        const orgSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'CreatorFlow Market',
+          url: 'https://creatorflowmarket.com',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://creatorflowmarket.com/og-image.jpg'
+          },
+          sameAs: ['https://twitter.com/creatorflowmkt']
+        };
+        const articleSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: data.title,
+          description: data.meta_description || data.excerpt,
+          author: {
+            '@type': 'Organization',
+            name: 'CreatorFlow Market'
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'CreatorFlow Market',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://creatorflowmarket.com/og-image.jpg'
+            },
+            url: 'https://creatorflowmarket.com'
+          },
+          datePublished: data.published_at,
+          dateModified: data.updated_at || data.published_at,
+          image: data.og_image || data.featured_image || 'https://creatorflowmarket.com/og-image.jpg',
+          url: canonUrl,
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': canonUrl
+          },
+          keywords: (data.tags || []).join(', '),
+          articleSection: data.category,
+          inLanguage: 'fr'
+        };
+        const faqSchemaData = data.faq && data.faq.length ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: (Array.isArray(data.faq) ? data.faq : JSON.parse(data.faq || '[]')).map(f => ({
+            '@type': 'Question',
+            name: f.question || f.q,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: f.answer || f.a
+            }
+          }))
+        } : null;
+        const breadcrumbSchema = {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [{
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Accueil',
+            item: 'https://creatorflowmarket.com'
+          }, {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blog IA',
+            item: 'https://creatorflowmarket.com/blog'
+          }, {
+            '@type': 'ListItem',
+            position: 3,
+            name: data.category,
+            item: `https://creatorflowmarket.com/blog?cat=${encodeURIComponent(data.category)}`
+          }, {
+            '@type': 'ListItem',
+            position: 4,
+            name: data.title,
+            item: canonUrl
+          }]
+        };
+        [orgSchema, articleSchema, faqSchemaData, breadcrumbSchema].filter(Boolean).forEach(s => {
+          const sc = document.createElement('script');
+          sc.type = 'application/ld+json';
+          sc.text = JSON.stringify(s);
+          document.head.appendChild(sc);
+        });
+
+        // Views
+        sb.rpc('increment_blog_views', {
+          article_slug: slug
+        }).then(null, () => {});
+
+        // Related articles: tags-based first, fallback to category
+        let relData = null;
+        if (data.tags?.length) {
+          const {
+            data: byTags
+          } = await sb.from('blog_articles').select('id,slug,title,excerpt,category').eq('status', 'published').neq('slug', slug).overlaps('tags', data.tags).limit(3);
+          relData = byTags;
+        }
+        if (!relData?.length) {
+          const {
+            data: byCat
+          } = await sb.from('blog_articles').select('id,slug,title,excerpt,category').eq('status', 'published').eq('category', data.category).neq('slug', slug).limit(3);
+          relData = byCat;
+        }
+        setRelated(relData || []);
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [slug]);
+
+  // Build TOC after content renders
+  useEffect(() => {
+    if (!article?.content || !contentRef.current) return;
+    const els = contentRef.current.querySelectorAll('h2, h3');
+    const items = [];
+    els.forEach((el, i) => {
+      const id = `heading-${i}`;
+      el.id = id;
+      el.style.scrollMarginTop = '80px';
+      items.push({
+        id,
+        level: parseInt(el.tagName[1]),
+        text: el.textContent
+      });
+    });
+    setHeadings(items);
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) setActiveId(e.target.id);
+      });
+    }, {
+      rootMargin: '-64px 0px -70% 0px',
+      threshold: 0
+    });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, [article]);
+  const copyLink = () => {
+    const url = `https://creatorflowmarket.com/blog/${article.slug}`;
+    navigator.clipboard?.writeText(url).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  if (loading) return /*#__PURE__*/React.createElement(Skeleton, null);
+  if (notFound) return /*#__PURE__*/React.createElement("div", {
+    className: "not-found"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 56,
+      marginBottom: 20
+    }
+  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("h2", null, "Article introuvable"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: 'var(--text-2)',
+      marginBottom: 28
+    }
+  }, "Cet article n'existe pas ou a \xE9t\xE9 supprim\xE9."), /*#__PURE__*/React.createElement("a", {
+    href: "/blog",
+    className: "btn btn-primary"
+  }, "\u2190 Retour au Blog"));
+  const url = `https://creatorflowmarket.com/blog/${article.slug}`;
+  const catColor = CAT_COLORS[article.category] || '#7C3AED';
+  const pubDate = article.published_at ? new Date(article.published_at).toLocaleDateString('fr-CA', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  }) : '';
+  const faqData = (() => {
+    try {
+      return Array.isArray(article.faq) ? article.faq : article.faq ? JSON.parse(article.faq) : [];
+    } catch {
+      return [];
+    }
+  })();
+  const paaData = Array.isArray(article.paa_questions) ? article.paa_questions : [];
+  const {
+    intro,
+    main: mainContent
+  } = splitContent(article.content || '');
+  const cta = ARTICLE_CTA[article.category] || DEFAULT_CTA;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 'var(--nav)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-hero",
+    style: {
+      background: `linear-gradient(150deg,${catColor}1A 0%,${catColor}07 55%,transparent 100%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-main-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "\u203A"), /*#__PURE__*/React.createElement("a", {
+    href: "/blog"
+  }, "Blog IA"), /*#__PURE__*/React.createElement("span", {
+    className: "bc-sep"
+  }, "\u203A"), /*#__PURE__*/React.createElement("a", {
+    href: `/blog?cat=${encodeURIComponent(article.category)}`
+  }, article.category)), /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h1", {
+    className: "article-title"
+  }, article.title), article.subtitle && /*#__PURE__*/React.createElement("p", {
+    className: "article-subtitle"
+  }, article.subtitle), /*#__PURE__*/React.createElement("div", {
+    className: "hero-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "author-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "author-mini-avatar"
+  }, CAT_ICONS[article.category] || '🤖'), /*#__PURE__*/React.createElement("div", {
+    className: "author-mini-info"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "author-mini-name"
+  }, article.author || 'CreatorFlow AI'), /*#__PURE__*/React.createElement("span", {
+    className: "author-mini-role"
+  }, "Expert IA \xB7 CreatorFlow Market"))), article.reading_time > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDCD6 ", article.reading_time, " min de lecture"), article.views > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDC41 ", article.views.toLocaleString('fr'), " vues"), pubDate && /*#__PURE__*/React.createElement("span", {
+    className: "hero-meta-chip"
+  }, "\uD83D\uDCC5 ", pubDate), article.seo_score > 0 && /*#__PURE__*/React.createElement("span", {
+    className: `seo-pill ${article.seo_score >= 80 ? 'seo-good' : 'seo-mid'}`
+  }, "SEO ", article.seo_score, "/100"))), /*#__PURE__*/React.createElement(HeroDashboard, {
+    article: article
+  }))), /*#__PURE__*/React.createElement(HeroImage, {
+    article: article
+  }), intro && /*#__PURE__*/React.createElement("div", {
+    className: "article-intro"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-content",
+    dangerouslySetInnerHTML: {
+      __html: intro
+    }
+  })), /*#__PURE__*/React.createElement(MobileTOCBar, {
+    headings: headings,
+    activeId: activeId
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-content-wrap"
+  }, /*#__PURE__*/React.createElement(KeyTakeaways, {
+    content: article.content || '',
+    takeaways: article.key_takeaways
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-content",
+    ref: contentRef,
+    dangerouslySetInnerHTML: {
+      __html: mainContent || article.content || ''
+    }
+  }), /*#__PURE__*/React.createElement(InlineNewsletter, null), /*#__PURE__*/React.createElement(FAQSection, {
+    faq: faqData
+  }), paaData.length > 0 && /*#__PURE__*/React.createElement(PAASection, {
+    questions: paaData
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-cta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-label"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-icon-large"
+  }, cta.icon), /*#__PURE__*/React.createElement("h3", null, cta.headline), /*#__PURE__*/React.createElement("p", null, cta.body), /*#__PURE__*/React.createElement("div", {
+    className: "cta-proof-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Audit gratuit"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Experts certifi\xE9s"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "R\xE9sultats en 48h")), /*#__PURE__*/React.createElement("div", {
+    className: "cta-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "cta-btn-primary"
+  }, cta.btn), /*#__PURE__*/React.createElement("a", {
+    href: cta.subHref,
+    className: "cta-btn-ghost"
+  }, cta.sub))), article.tags?.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "tags-row"
+  }, article.tags.map(tag => /*#__PURE__*/React.createElement("a", {
+    key: tag,
+    href: `/blog?q=${encodeURIComponent(tag)}`,
+    className: "tag-pill"
+  }, "#", tag))), /*#__PURE__*/React.createElement("div", {
+    className: "share-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "share-label"
+  }, "Partager :"), /*#__PURE__*/React.createElement("a", {
+    href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "\uD835\uDD4F Twitter"), /*#__PURE__*/React.createElement("a", {
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "LinkedIn"), /*#__PURE__*/React.createElement("a", {
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+    target: "_blank",
+    rel: "noopener",
+    className: "share-btn"
+  }, "Facebook"), /*#__PURE__*/React.createElement("button", {
+    className: "share-btn",
+    onClick: copyLink
+  }, copied ? '✅ Copié !' : '🔗 Copier le lien')), related.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "related-section"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "related-title"
+  }, "Articles connexes"), /*#__PURE__*/React.createElement("div", {
+    className: "related-grid"
+  }, related.map(a => /*#__PURE__*/React.createElement(RelatedCard, {
+    key: a.id,
+    article: a
+  }))))), /*#__PURE__*/React.createElement("aside", {
+    className: "right-sidebar"
+  }, /*#__PURE__*/React.createElement(TOC, {
+    headings: headings,
+    activeId: activeId
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "expert-cta-mini"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("h4", null, "Besoin d'un expert IA ?"), /*#__PURE__*/React.createElement("p", null, "Nos experts certifi\xE9s peuvent impl\xE9menter ces strat\xE9gies pour vous."), /*#__PURE__*/React.createElement("a", {
+    href: "/experts"
+  }, "Voir les experts \u2192")), /*#__PURE__*/React.createElement(AffiliateToolsCard, {
+    category: article.category
+  }))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(ArticlePage, null));
+</script>
+<script src="/analytics.js"></script>
+<script src="/cookie-banner.js"></script>
+</body>
+</html>

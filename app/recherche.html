@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Recherche Experts — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--f-display:'Plus Jakarta Sans',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-outline{background:transparent;border:1px solid var(--border-2);color:var(--text-2);}
+.btn-outline:hover{border-color:rgba(255,255,255,0.2);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+
+/* HERO SEARCH */
+.search-hero{background:linear-gradient(180deg,rgba(124,58,237,0.08) 0%,transparent 100%);border-bottom:1px solid var(--border);padding:32px 0 24px;}
+.search-hero-inner{max-width:1280px;margin:0 auto;padding:0 28px;}
+.search-title{font-family:var(--f-display);font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:16px;}
+.search-title em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-lg);padding:6px 8px 6px 18px;transition:border-color 200ms,box-shadow 200ms;}
+.search-bar:focus-within{border-color:rgba(124,58,237,0.5);box-shadow:0 0 0 3px rgba(124,58,237,0.10);}
+.search-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px;font-family:var(--f);padding:6px 0;}
+.search-input::placeholder{color:var(--text-3);}
+
+/* CATS PILLS */
+.cats-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-top:16px;scrollbar-width:none;}
+.cats-row::-webkit-scrollbar{display:none;}
+.cat-pill{padding:7px 16px;background:var(--surf);border:1px solid var(--border-2);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);cursor:pointer;transition:all 180ms;white-space:nowrap;}
+.cat-pill:hover{color:var(--text-2);}
+.cat-pill.active{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.4);color:var(--vs);}
+
+/* LAYOUT */
+.layout{display:flex;max-width:1280px;margin:0 auto;padding:0 28px;gap:24px;padding-top:24px;padding-bottom:60px;}
+
+/* SIDEBAR FILTERS */
+.filters{width:250px;flex-shrink:0;}
+.filter-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:16px;}
+.filter-title{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--text-2);}
+.filter-group{margin-bottom:16px;}
+.filter-group:last-child{margin-bottom:0;}
+.filter-label{font-size:12px;font-weight:600;color:var(--text-3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em;}
+.checkbox-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;}
+.checkbox{width:16px;height:16px;border:2px solid var(--border-2);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 150ms;}
+.checkbox.checked{background:var(--v);border-color:var(--v);}
+.checkbox-label{font-size:13px;color:var(--text-2);}
+.checkbox-count{margin-left:auto;font-size:11px;color:var(--text-3);}
+.range-row{display:flex;gap:8px;align-items:center;}
+.range-input{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:8px;color:var(--text);font-size:13px;font-family:var(--f);padding:8px 10px;outline:none;width:0;}
+.range-input:focus{border-color:rgba(124,58,237,0.5);}
+.range-sep{font-size:12px;color:var(--text-3);}
+.filter-reset{width:100%;padding:8px;font-size:13px;color:var(--text-3);text-align:center;border:1px solid var(--border);border-radius:999px;transition:all 150ms;}
+.filter-reset:hover{color:var(--text-2);border-color:var(--border-2);}
+
+/* RESULTS */
+.results{flex:1;min-width:0;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.results-count{font-size:14px;color:var(--text-2);}
+.results-count strong{color:var(--text);}
+.sort-select{background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);font-size:13px;font-family:var(--f);padding:7px 12px;border-radius:999px;outline:none;cursor:pointer;}
+.sort-select:focus{border-color:rgba(124,58,237,0.5);}
+
+/* EXPERT CARD */
+.expert-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:14px;transition:border-color 220ms,transform 220ms;display:flex;gap:18px;}
+.expert-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-2px);}
+.expert-card.featured{border-color:rgba(124,58,237,0.35);background:linear-gradient(135deg,rgba(124,58,237,0.05),var(--surf));}
+.expert-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0;border:2px solid var(--border-2);}
+.online-wrap{position:relative;flex-shrink:0;}
+.online-dot{position:absolute;bottom:3px;right:3px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--surf);}
+.expert-body{flex:1;min-width:0;}
+.expert-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.expert-name{font-size:15px;font-weight:800;letter-spacing:-0.01em;}
+.expert-spec{font-size:13px;color:var(--text-2);margin-bottom:8px;}
+.expert-rating{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.expert-about{font-size:13px;color:var(--text-3);line-height:1.6;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.expert-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.etag{padding:4px 10px;background:rgba(124,58,237,0.10);border:1px solid rgba(124,58,237,0.20);border-radius:999px;font-size:11px;font-weight:600;color:var(--vs);}
+.expert-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.expert-meta{display:flex;gap:14px;}
+.emeta-item{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:4px;}
+.expert-price{text-align:right;}
+.price-val{font-size:18px;font-weight:800;color:var(--vs);}
+.price-unit{font-size:12px;color:var(--text-3);}
+.featured-badge{padding:3px 10px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:999px;font-size:11px;font-weight:700;color:#fff;}
+.dispo-badge{padding:3px 10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:999px;font-size:11px;font-weight:600;color:var(--green);}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px;}
+.empty-emoji{font-size:40px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--text-3);}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;}
+.page-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;border:1px solid var(--border-2);color:var(--text-3);transition:all 150ms;cursor:pointer;}
+.page-btn:hover{color:var(--text-2);border-color:rgba(255,255,255,0.2);}
+.page-btn.active{background:var(--v);border-color:var(--v);color:#fff;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 400ms var(--ease) both;}
+@media(max-width:768px){
+  .search-hero-inner{padding:0 16px;}
+  .layout{flex-direction:column;padding:16px 16px 40px;gap:16px;}
+  .filters{width:100%;}
+  .filter-card{padding:16px;}
+  .expert-card{gap:12px;}
+  .expert-footer{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:480px){
+  .nav-inner{padding:0 12px;}
+  .nav-right .btn-primary{display:none;}
+  .nav-right .btn-ghost{font-size:12px;padding:7px 12px;}
+  .search-title{font-size:18px;}
+  .expert-card{padding:16px;}
+  .search-bar{flex-wrap:wrap;padding:10px 12px;gap:8px;}
+  .search-bar .btn-primary{width:100%;justify-content:center;}
+  .search-input{min-width:0;width:100%;}
+}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useMemo
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Location: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "10",
+    r: "3"
+  })),
+  Clock: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "12 6 12 12 16 14"
+  })),
+  Briefcase: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "7",
+    width: "20",
+    height: "14",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Filter: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  }))
+};
+const COLORS = ['#7C3AED', '#2563EB', '#0891B2', '#059669', '#D97706', '#DB2777', '#0284C7', '#65A30D'];
+const EXPERTS_DEMO = [{
+  id: 'd1',
+  name: 'Amélie Chen',
+  initials: 'AC',
+  color: '#7C3AED',
+  spec: 'Experte IA & Automatisation',
+  about: 'Spécialiste en chatbots GPT et automatisation de processus métier. +60 missions réussies, taux de succès 100%.',
+  tags: ['ChatGPT', 'Make.com', 'LangChain', 'Python'],
+  rating: 4.9,
+  reviews: 47,
+  missions: 62,
+  response: '< 2h',
+  location: 'Montréal',
+  available: true,
+  featured: true,
+  rate: 120,
+  category: 'Chatbot & IA'
+}, {
+  id: 'd2',
+  name: 'Lucas Bernard',
+  initials: 'LB',
+  color: '#2563EB',
+  spec: 'Expert Automatisation No-Code',
+  about: 'Spécialiste Make.com et Zapier, je connecte vos outils et automatise vos workflows sans une ligne de code.',
+  tags: ['Make.com', 'Zapier', 'Airtable', 'Notion'],
+  rating: 4.8,
+  reviews: 31,
+  missions: 38,
+  response: '< 4h',
+  location: 'Québec',
+  available: true,
+  featured: false,
+  rate: 95,
+  category: 'Automatisation'
+}, {
+  id: 'd3',
+  name: 'Sofia Martins',
+  initials: 'SM',
+  color: '#0891B2',
+  spec: 'Data Scientist & ML Engineer',
+  about: 'Machine learning, analyse prédictive et dashboards BI. Je transforme vos données brutes en décisions stratégiques.',
+  tags: ['Python', 'Pandas', 'Power BI', 'Tableau'],
+  rating: 5.0,
+  reviews: 24,
+  missions: 29,
+  response: '< 6h',
+  location: 'Toronto',
+  available: false,
+  featured: true,
+  rate: 130,
+  category: 'Data & Analytics'
+}];
+const CATS = ['Tous', 'Chatbot & IA', 'Automatisation', 'Data & Analytics', 'Contenu IA', 'Image & Vidéo', 'Intégrations'];
+function CheckRow({
+  label,
+  count,
+  checked,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "checkbox-row",
+    onClick: onChange
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `checkbox ${checked ? 'checked' : ''}`
+  }, checked && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "checkbox-label"
+  }, label), count != null && /*#__PURE__*/React.createElement("span", {
+    className: "checkbox-count"
+  }, count));
+}
+function Stars({
+  rating
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 2
+    }
+  }, [1, 2, 3, 4, 5].map(i => /*#__PURE__*/React.createElement("svg", {
+    key: i,
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: i <= Math.round(rating) ? 'var(--orange)' : 'var(--surf-3)'
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))));
+}
+function App() {
+  const [query, setQuery] = useState('');
+  const [cat, setCat] = useState('Tous');
+  const [onlyAvailable, setOnlyAvailable] = useState(false);
+  const [onlyFeatured, setOnlyFeatured] = useState(false);
+  const [minRating, setMinRating] = useState(null);
+  const [sort, setSort] = useState('pertinence');
+  const [page, setPage] = useState(1);
+  const [allExperts, setAllExperts] = useState(EXPERTS_DEMO);
+  const [loading, setLoading] = useState(true);
+  const PER_PAGE = 5;
+  useEffect(() => {
+    (async () => {
+      const {
+        data: expertsList
+      } = await sb.from('experts').select('*').eq('statut', 'approved');
+      if (expertsList?.length) {
+        const ids = expertsList.map(e => e.id);
+        const {
+          data: profilesList
+        } = await sb.from('profiles').select('id, prenom, nom').in('id', ids);
+        const pm = {};
+        profilesList?.forEach(p => pm[p.id] = p);
+        const mapped = expertsList.map((exp, i) => {
+          const p = pm[exp.id] || {};
+          const prenom = p.prenom || '';
+          const nom = p.nom || '';
+          const fullName = `${prenom} ${nom}`.trim() || 'Expert';
+          const initials = ((prenom[0] || '?') + (nom[0] || '?')).toUpperCase();
+          return {
+            id: exp.id,
+            name: fullName,
+            initials,
+            color: COLORS[i % COLORS.length],
+            spec: exp.specialite ? `Expert ${exp.specialite}` : 'Expert IA',
+            about: exp.bio || 'Expert disponible sur CreatorFlow Market.',
+            tags: exp.competences || (exp.specialite ? [exp.specialite] : []),
+            rating: exp.note_moyenne || null,
+            reviews: exp.nb_avis || 0,
+            missions: 0,
+            response: '< 24h',
+            location: 'Montréal',
+            available: exp.disponible ?? true,
+            featured: false,
+            rate: exp.tarif_heure || 0,
+            category: exp.specialite || 'IA Généraliste'
+          };
+        });
+        setAllExperts(mapped);
+      }
+      setLoading(false);
+    })();
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
+  const filtered = useMemo(() => {
+    let list = allExperts;
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter(e => e.name.toLowerCase().includes(q) || e.spec.toLowerCase().includes(q) || e.about.toLowerCase().includes(q) || e.tags.some(t => t.toLowerCase().includes(q)));
+    }
+    if (cat !== 'Tous') list = list.filter(e => e.category === cat);
+    if (onlyAvailable) list = list.filter(e => e.available);
+    if (onlyFeatured) list = list.filter(e => e.featured);
+    if (minRating) list = list.filter(e => e.rating >= minRating);
+    if (sort === 'note') list = [...list].sort((a, b) => b.rating - a.rating);else if (sort === 'missions') list = [...list].sort((a, b) => b.missions - a.missions);else if (sort === 'prix_asc') list = [...list].sort((a, b) => a.rate - b.rate);else if (sort === 'prix_desc') list = [...list].sort((a, b) => b.rate - a.rate);else list = [...list].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    return list;
+  }, [query, cat, onlyAvailable, onlyFeatured, minRating, sort, allExperts]);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const resetFilters = () => {
+    setOnlyAvailable(false);
+    setOnlyFeatured(false);
+    setMinRating(null);
+    setCat('Tous');
+    setQuery('');
+  };
+  const hasFilters = onlyAvailable || onlyFeatured || minRating || cat !== 'Tous' || query;
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard"), /*#__PURE__*/React.createElement("a", {
+    href: "nouveau-brief.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Poster un brief")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-title"
+  }, "Trouvez votre expert ", /*#__PURE__*/React.createElement("em", null, "IA")), /*#__PURE__*/React.createElement("div", {
+    className: "search-bar"
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "search-input",
+    placeholder: "Chatbot, automatisation, Make.com, Python\u2026",
+    value: query,
+    onChange: e => {
+      setQuery(e.target.value);
+      setPage(1);
+    }
+  }), query && /*#__PURE__*/React.createElement("button", {
+    style: {
+      color: 'var(--text-3)',
+      padding: '4px 8px'
+    },
+    onClick: () => setQuery('')
+  }, /*#__PURE__*/React.createElement(Ic.X, null)), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '8px 18px',
+      fontSize: 13,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      width: 13,
+      height: 13
+    }
+  }), "Rechercher")), /*#__PURE__*/React.createElement("div", {
+    className: "cats-row"
+  }, CATS.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c,
+    className: `cat-pill ${cat === c ? 'active' : ''}`,
+    onClick: () => {
+      setCat(c);
+      setPage(1);
+    }
+  }, c))))), /*#__PURE__*/React.createElement("div", {
+    className: "layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filters"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-title"
+  }, "Filtres"), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement(CheckRow, {
+    label: "Disponible maintenant",
+    checked: onlyAvailable,
+    onChange: () => {
+      setOnlyAvailable(v => !v);
+      setPage(1);
+    }
+  }), /*#__PURE__*/React.createElement(CheckRow, {
+    label: "Expert certifi\xE9",
+    checked: onlyFeatured,
+    onChange: () => {
+      setOnlyFeatured(v => !v);
+      setPage(1);
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Note minimale"), [4.5, 4.0, 3.5].map(r => /*#__PURE__*/React.createElement(CheckRow, {
+    key: r,
+    label: `${r}★ et plus`,
+    checked: minRating === r,
+    onChange: () => {
+      setMinRating(minRating === r ? null : r);
+      setPage(1);
+    }
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "filter-group",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "filter-label"
+  }, "Tarif journalier"), /*#__PURE__*/React.createElement("div", {
+    className: "range-row"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "range-input",
+    placeholder: "Min",
+    type: "number"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "range-sep"
+  }, "\u2013"), /*#__PURE__*/React.createElement("input", {
+    className: "range-input",
+    placeholder: "Max",
+    type: "number"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "$/h")))), hasFilters && /*#__PURE__*/React.createElement("button", {
+    className: "filter-reset",
+    onClick: resetFilters
+  }, "R\xE9initialiser les filtres")), /*#__PURE__*/React.createElement("div", {
+    className: "results fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-count"
+  }, /*#__PURE__*/React.createElement("strong", null, filtered.length), " expert", filtered.length !== 1 ? 's' : '', " trouv\xE9", filtered.length !== 1 ? 's' : ''), /*#__PURE__*/React.createElement("select", {
+    className: "sort-select",
+    value: sort,
+    onChange: e => setSort(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "pertinence"
+  }, "Pertinence"), /*#__PURE__*/React.createElement("option", {
+    value: "note"
+  }, "Meilleure note"), /*#__PURE__*/React.createElement("option", {
+    value: "missions"
+  }, "Plus de missions"), /*#__PURE__*/React.createElement("option", {
+    value: "prix_asc"
+  }, "Prix croissant"), /*#__PURE__*/React.createElement("option", {
+    value: "prix_desc"
+  }, "Prix d\xE9croissant"))), paginated.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Aucun expert trouv\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-sub"
+  }, "Essayez avec d'autres mots-cl\xE9s ou r\xE9initialisez les filtres."), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      margin: '16px auto 0',
+      display: 'flex'
+    },
+    onClick: resetFilters
+  }, "R\xE9initialiser")) : /*#__PURE__*/React.createElement(React.Fragment, null, paginated.map(e => /*#__PURE__*/React.createElement("div", {
+    key: e.id,
+    className: `expert-card ${e.featured ? 'featured' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "online-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-avatar",
+    style: {
+      background: e.color
+    }
+  }, e.initials), e.available && /*#__PURE__*/React.createElement("div", {
+    className: "online-dot"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "expert-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-name"
+  }, e.name), e.featured && /*#__PURE__*/React.createElement("span", {
+    className: "featured-badge"
+  }, "Expert certifi\xE9"), e.available && /*#__PURE__*/React.createElement("span", {
+    className: "dispo-badge"
+  }, "Disponible")), /*#__PURE__*/React.createElement("div", {
+    className: "expert-spec"
+  }, e.spec)), /*#__PURE__*/React.createElement("div", {
+    className: "expert-price"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "price-val"
+  }, e.rate, /*#__PURE__*/React.createElement("span", {
+    className: "price-unit"
+  }, "$/h")))), /*#__PURE__*/React.createElement("div", {
+    className: "expert-rating"
+  }, /*#__PURE__*/React.createElement(Stars, {
+    rating: e.rating
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, e.rating), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "(", e.reviews, " avis)")), /*#__PURE__*/React.createElement("div", {
+    className: "expert-about"
+  }, e.about), /*#__PURE__*/React.createElement("div", {
+    className: "expert-tags"
+  }, e.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "etag"
+  }, t))), /*#__PURE__*/React.createElement("div", {
+    className: "expert-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "expert-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Location, null), e.location), /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Clock, null), e.response), /*#__PURE__*/React.createElement("div", {
+    className: "emeta-item"
+  }, /*#__PURE__*/React.createElement(Ic.Briefcase, null), e.missions, " missions")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "messages.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12
+    }
+  }, "Contacter"), /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '7px 16px',
+      fontSize: 12
+    }
+  }, "Voir le profil ", /*#__PURE__*/React.createElement(Ic.Arrow, null))))))), totalPages > 1 && /*#__PURE__*/React.createElement("div", {
+    className: "pagination"
+  }, Array.from({
+    length: totalPages
+  }, (_, i) => i + 1).map(p => /*#__PURE__*/React.createElement("div", {
+    key: p,
+    className: `page-btn ${page === p ? 'active' : ''}`,
+    onClick: () => setPage(p)
+  }, p))))))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Employés IA — CreatorFlow Market</title>
+  <meta name="description" content="Confiez vos missions à nos agents IA spécialisés : Marketing, Contenu, Prospection, Support. Résultats en minutes, validés par notre équipe avant livraison."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,600;0,14..32,700;0,14..32,800&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.18);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 24px;}
+.brand{display:flex;align-items:center;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-link{font-size:13px;font-weight:500;color:var(--text-2);padding:7px 12px;border-radius:8px;transition:all 160ms;}
+.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.btn-outline{font-size:13px;font-weight:600;color:var(--text-2);padding:8px 18px;border-radius:99px;border:1px solid var(--border-2);transition:all 160ms;}
+.btn-outline:hover{color:var(--text);border-color:var(--border-3);}
+.btn-cta{font-size:13px;font-weight:700;color:#fff;padding:8px 20px;border-radius:99px;background:linear-gradient(135deg,#9333EA,var(--v));border:none;transition:all 160ms;}
+.btn-cta:hover{filter:brightness(1.1);}
+
+/* HERO */
+.hero{padding:calc(var(--nav) + 72px) 24px 64px;text-align:center;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--vs);background:var(--vg);border:1px solid rgba(124,58,237,0.25);padding:5px 14px;border-radius:99px;margin-bottom:24px;}
+.hero-title{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:18px;}
+.hero-title span{background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:17px;color:var(--text-2);line-height:1.7;max-width:600px;margin:0 auto 36px;}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.btn-hero{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:#fff;padding:13px 28px;border-radius:99px;background:linear-gradient(135deg,#9333EA,var(--v));transition:all 200ms;}
+.btn-hero:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--text-2);padding:13px 24px;border-radius:99px;border:1px solid var(--border-2);transition:all 200ms;}
+.btn-ghost:hover{color:var(--text);border-color:var(--border-3);}
+.trust-row{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:40px;padding-top:40px;border-top:1px solid var(--border);}
+.trust-item{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text-3);}
+.trust-dot{width:6px;height:6px;border-radius:50%;}
+
+/* AGENTS GRID */
+.section{max-width:1200px;margin:0 auto;padding:80px 24px;}
+.section-label{font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--vs);margin-bottom:12px;}
+.section-title{font-size:clamp(24px,3.5vw,36px);font-weight:800;letter-spacing:-0.025em;margin-bottom:8px;}
+.section-sub{font-size:15px;color:var(--text-2);max-width:560px;}
+.agents-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:48px;}
+.agent-card{background:var(--surf);border:1px solid var(--border);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:0;transition:border-color 240ms,transform 240ms;}
+.agent-card:hover{border-color:rgba(124,58,237,0.35);transform:translateY(-2px);}
+.agent-card-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;}
+.agent-icon-wrap{width:52px;height:52px;border-radius:14px;background:var(--vg);border:1px solid rgba(124,58,237,0.2);display:grid;place-items:center;font-size:24px;flex-shrink:0;}
+.agent-name{font-size:17px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.agent-tagline{font-size:13px;color:var(--text-2);}
+.agent-desc{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:20px;}
+.agent-tasks{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;flex:1;}
+.agent-task{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-2);}
+.agent-task-dot{width:5px;height:5px;border-radius:50%;background:var(--vs);flex-shrink:0;margin-top:7px;}
+.agent-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:10px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,rgba(124,58,237,0.8),rgba(109,40,217,0.8));border:1px solid rgba(124,58,237,0.3);transition:all 180ms;}
+.agent-cta:hover{background:linear-gradient(135deg,var(--v),var(--v2));border-color:var(--v);}
+.agent-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--green);background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:3px 8px;border-radius:99px;margin-bottom:14px;width:fit-content;}
+
+/* HOW IT WORKS */
+.how-section{background:var(--surf);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 24px;}
+.how-inner{max-width:1000px;margin:0 auto;}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:48px;position:relative;}
+.steps::before{content:'';position:absolute;top:28px;left:calc(12.5% + 20px);right:calc(12.5% + 20px);height:1px;background:linear-gradient(90deg,var(--v),var(--c));opacity:0.3;pointer-events:none;}
+.step{text-align:center;padding:24px 16px;}
+.step-num{width:56px;height:56px;border-radius:50%;background:var(--vg);border:1px solid rgba(124,58,237,0.25);display:grid;place-items:center;font-size:20px;margin:0 auto 16px;}
+.step-title{font-size:14px;font-weight:700;margin-bottom:6px;}
+.step-desc{font-size:12px;color:var(--text-3);line-height:1.6;}
+
+/* CTA SECTION */
+.cta-section{max-width:700px;margin:0 auto;padding:80px 24px;text-align:center;}
+.cta-box{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.06));border:1px solid rgba(124,58,237,0.2);border-radius:24px;padding:56px 40px;}
+.cta-title{font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.025em;margin-bottom:14px;}
+.cta-sub{font-size:15px;color:var(--text-2);margin-bottom:32px;line-height:1.7;}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:12px;color:var(--text-3);}
+.footer-links{display:flex;gap:16px;}
+.footer-links a{font-size:12px;color:var(--text-3);}
+.footer-links a:hover{color:var(--text-2);}
+
+@media(max-width:768px){
+  .agents-grid{grid-template-columns:1fr;}
+  .steps{grid-template-columns:repeat(2,1fr);}
+  .steps::before{display:none;}
+  .nav-links{display:none;}
+  .cta-box{padding:36px 24px;}
+  .footer-inner{justify-content:center;}
+}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-logo"></div>
+      <span>CreatorFlow Market</span>
+    </a>
+    <div class="nav-links">
+      <a href="experts.html" class="nav-link">Experts humains</a>
+      <a href="agents-ia.html" class="nav-link active">Employés IA</a>
+      <a href="blog.html" class="nav-link">Blog IA</a>
+      <a href="academie.html" class="nav-link">Académie</a>
+    </div>
+    <div class="nav-actions">
+      <a href="connexion.html" class="btn-outline">Se connecter</a>
+      <a href="inscription.html" class="btn-cta">Démarrer →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">🤖 Nouveau — Employés IA</div>
+  <h1 class="hero-title">Des agents IA qui travaillent<br><span>pour vous, maintenant</span></h1>
+  <p class="hero-sub">Confiez vos missions à nos agents spécialisés. Ils analysent votre besoin, créent un plan d'action et livrent un résultat concret — validé par notre équipe avant de vous être remis.</p>
+  <div class="hero-actions">
+    <a href="employes-ia.html" class="btn-hero">Commander une mission →</a>
+    <a href="experts.html" class="btn-ghost">Voir les experts humains</a>
+  </div>
+  <div class="trust-row">
+    <div class="trust-item"><div class="trust-dot" style="background:var(--green)"></div>4 agents actifs</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--vs)"></div>Résultat validé avant livraison</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--c)"></div>Livrable utilisable immédiatement</div>
+    <div class="trust-item"><div class="trust-dot" style="background:var(--amber)"></div>Disponible 24h/24</div>
+  </div>
+</div>
+
+<!-- AGENTS GRID -->
+<div class="section">
+  <div class="section-label">Notre équipe IA</div>
+  <h2 class="section-title">4 agents spécialisés à votre service</h2>
+  <p class="section-sub">Chaque agent est entraîné sur un domaine précis. Décrivez votre besoin, l'agent s'en charge.</p>
+
+  <div class="agents-grid">
+
+    <!-- Marketing -->
+    <div class="agent-card">
+      <div class="agent-card-top">
+        <div class="agent-icon-wrap">🎯</div>
+        <div>
+          <div class="agent-badge">● Actif</div>
+          <div class="agent-name">Marketing AI Agent</div>
+          <div class="agent-tagline">Stratégies, campagnes, funnels, acquisition</div>
+        </div>
+      </div>
+      <p class="agent-desc">Votre directeur marketing IA. Il analyse votre marché, conçoit des stratégies d'acquisition sur mesure et produit des livrables prêts à exécuter.</p>
+      <ul class="agent-tasks">
+        <li class="agent-task"><span class="agent-task-dot"></span>Stratégie de lancement produit complète</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Plan de campagne email (séquences + textes)</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Audit marketing + recommandations</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Funnel de conversion étape par étape</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Calendrier de contenu multicanal 30 jours</li>
+      </ul>
+      <a href="employes-ia.html" class="agent-cta">Confier une mission →</a>
+    </div>
+
+    <!-- Content -->
+    <div class="agent-card">
+      <div class="agent-card-top">
+        <div class="agent-icon-wrap">✍️</div>
+        <div>
+          <div class="agent-badge">● Actif</div>
+          <div class="agent-name">Content AI Agent</div>
+          <div class="agent-tagline">Articles, scripts, posts, newsletters</div>
+        </div>
+      </div>
+      <p class="agent-desc">Votre rédacteur IA disponible 24h/24. Il produit du contenu long ou court, optimisé SEO, adapté à votre ton et à votre audience.</p>
+      <ul class="agent-tasks">
+        <li class="agent-task"><span class="agent-task-dot"></span>Article de blog long format (1500-3000 mots)</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Script YouTube complet avec chapitres</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Série de posts LinkedIn ou Instagram</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Newsletter hebdomadaire prête à envoyer</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Textes de landing page persuasifs</li>
+      </ul>
+      <a href="employes-ia.html" class="agent-cta">Confier une mission →</a>
+    </div>
+
+    <!-- Prospecting -->
+    <div class="agent-card">
+      <div class="agent-card-top">
+        <div class="agent-icon-wrap">🔍</div>
+        <div>
+          <div class="agent-badge">● Actif</div>
+          <div class="agent-name">Prospecting AI Agent</div>
+          <div class="agent-tagline">Leads B2B, séquences d'approche, qualification</div>
+        </div>
+      </div>
+      <p class="agent-desc">Votre commercial IA. Il construit des profils de prospects, rédige des séquences d'approche personnalisées et planifie votre pipeline de vente.</p>
+      <ul class="agent-tasks">
+        <li class="agent-task"><span class="agent-task-dot"></span>Profil de client idéal (ICP) détaillé</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Séquence email de cold outreach (5 emails)</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Messages LinkedIn personnalisés par segment</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Plan de prospection 30/60/90 jours</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Script d'appel de découverte + objections</li>
+      </ul>
+      <a href="employes-ia.html" class="agent-cta">Confier une mission →</a>
+    </div>
+
+    <!-- Support -->
+    <div class="agent-card">
+      <div class="agent-card-top">
+        <div class="agent-icon-wrap">⚙️</div>
+        <div>
+          <div class="agent-badge">● Actif</div>
+          <div class="agent-name">Support AI Agent</div>
+          <div class="agent-tagline">FAQ, réponses clients, procédures, escalade</div>
+        </div>
+      </div>
+      <p class="agent-desc">Votre responsable support IA. Il rédige vos bases de connaissance, structure vos processus de réponse et améliore l'expérience client.</p>
+      <ul class="agent-tasks">
+        <li class="agent-task"><span class="agent-task-dot"></span>FAQ complète pour votre produit/service</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Templates de réponses pour 20 situations</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Procédure d'escalade et gestion de crise</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Base de connaissance structurée (Notion/doc)</li>
+        <li class="agent-task"><span class="agent-task-dot"></span>Politique de remboursement + scripts</li>
+      </ul>
+      <a href="employes-ia.html" class="agent-cta">Confier une mission →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="how-inner">
+    <div style="text-align:center;margin-bottom:0;">
+      <div class="section-label" style="display:inline-block;">Comment ça marche</div>
+      <h2 class="section-title" style="text-align:center;margin-top:12px;">De votre besoin au livrable en 4 étapes</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1️⃣</div>
+        <div class="step-title">Choisissez un agent</div>
+        <div class="step-desc">Sélectionnez l'agent correspondant à votre besoin : Marketing, Contenu, Prospection ou Support.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2️⃣</div>
+        <div class="step-title">Décrivez la mission</div>
+        <div class="step-desc">Expliquez votre besoin en détail. Plus vous êtes précis, plus le livrable sera adapté à votre situation.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3️⃣</div>
+        <div class="step-title">L'agent exécute</div>
+        <div class="step-desc">L'agent analyse, planifie et produit votre livrable. Notre équipe le vérifie avant validation.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4️⃣</div>
+        <div class="step-title">Vous recevez le résultat</div>
+        <div class="step-desc">Le livrable validé vous est remis directement dans votre espace. Prêt à utiliser, pas à reformater.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-box">
+    <h2 class="cta-title">Prêt à déléguer votre première mission ?</h2>
+    <p class="cta-sub">Créez votre compte gratuitement et confiez une mission à un agent IA en moins de 2 minutes.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="inscription.html" class="btn-hero">Créer mon compte gratuit →</a>
+      <a href="experts.html" class="btn-ghost">Voir aussi les experts humains</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-copy">© 2026 CreatorFlow Market</div>
+    <div class="footer-links">
+      <a href="index.html">Accueil</a>
+      <a href="experts.html">Experts</a>
+      <a href="blog.html">Blog</a>
+      <a href="cgu.html">CGU</a>
+      <a href="politique-confidentialite.html">Vie privée</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

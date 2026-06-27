@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Paramètres — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-danger{background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.25);color:var(--red);}
+.btn-danger:hover{background:rgba(239,68,68,0.18);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-5px);}40%,80%{transform:translateX(5px);}}
+.shake{animation:shake 350ms ease;}
+@keyframes saved-pop{0%{transform:scale(0.8);opacity:0;}60%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+.saved-chip{animation:saved-pop 300ms var(--ease) both;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+.layout{display:flex;max-width:1100px;margin:0 auto;padding:28px 24px 60px;gap:24px;}
+
+/* SIDEBAR NAV */
+.side-nav{width:220px;flex-shrink:0;}
+.side-nav-title{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;padding:0 12px;margin-bottom:8px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);font-size:13px;font-weight:600;color:var(--text-3);cursor:pointer;transition:all 160ms;margin-bottom:2px;}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text-2);}
+.nav-item.active{background:rgba(124,58,237,0.12);color:var(--vs);}
+.nav-item-icon{width:30px;height:30px;border-radius:8px;background:var(--surf-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nav-item.active .nav-item-icon{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.3);}
+.nav-divider{height:1px;background:var(--border);margin:12px 0;}
+
+/* CONTENT */
+.content{flex:1;min-width:0;}
+
+/* SECTION */
+.section{margin-bottom:24px;}
+.section-title{font-size:18px;font-weight:800;margin-bottom:4px;letter-spacing:-0.02em;}
+.section-sub{font-size:13px;color:var(--text-2);margin-bottom:24px;}
+
+/* CARD */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.card-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+
+/* FORM */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px;}
+.input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:11px 14px;outline:none;transition:border-color 180ms,box-shadow 180ms;}
+.input:focus{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.input:disabled{opacity:0.5;cursor:not-allowed;}
+.input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,0.10);}
+.error-msg{font-size:12px;color:var(--red);margin-top:5px;}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.hint{font-size:12px;color:var(--text-3);margin-top:5px;}
+.save-row{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:20px;padding-top:18px;border-top:1px solid var(--border);}
+
+/* AVATAR */
+.avatar-row{display:flex;align-items:center;gap:20px;padding:20px;background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;}
+.avatar-big{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;flex-shrink:0;overflow:hidden;}
+.avatar-big img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-info{flex:1;}
+.avatar-name{font-size:15px;font-weight:700;margin-bottom:2px;}
+.avatar-email{font-size:13px;color:var(--text-3);}
+.avatar-actions{display:flex;gap:8px;}
+
+/* TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border:none;padding-bottom:0;}
+.toggle-info{flex:1;}
+.toggle-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.toggle-desc{font-size:12px;color:var(--text-3);}
+.toggle{width:44px;height:24px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;position:relative;cursor:pointer;transition:background 200ms,border-color 200ms;}
+.toggle.on{background:var(--v);border-color:var(--v);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 200ms;}
+.toggle.on .toggle-knob{transform:translateX(20px);}
+
+/* PLAN CARD */
+.plan-card{background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(6,182,212,0.08));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-lg);padding:22px;display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.plan-badge{padding:4px 12px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:999px;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.plan-info{flex:1;}
+.plan-name{font-size:15px;font-weight:800;margin-bottom:2px;}
+.plan-desc{font-size:13px;color:var(--text-2);}
+
+/* PAYMENT METHODS */
+.pm-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);}
+.pm-row:last-child{border:none;padding-bottom:0;}
+.pm-icon{width:44px;height:28px;border:1px solid var(--border-2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.pm-info{flex:1;}
+.pm-name{font-size:13px;font-weight:600;}
+.pm-sub{font-size:12px;color:var(--text-3);}
+.pm-badge{padding:3px 8px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:999px;font-size:11px;font-weight:600;color:var(--green);}
+
+/* DANGER ZONE */
+.danger-card{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15);border-radius:var(--r-lg);padding:22px;}
+.danger-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(239,68,68,0.10);}
+.danger-row:last-child{border:none;padding-bottom:0;}
+.danger-label{font-size:14px;font-weight:600;color:var(--red);margin-bottom:2px;}
+.danger-desc{font-size:12px;color:var(--text-3);}
+
+/* SAVED TOAST */
+.toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);border-radius:999px;font-size:13px;font-weight:600;color:var(--green);display:flex;align-items:center;gap:8px;z-index:999;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 350ms var(--ease) both;}
+@keyframes toast-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes toast-out{from{opacity:1;}to{opacity:0;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  User: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "7",
+    r: "4"
+  })),
+  Shield: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })),
+  CreditCard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "1",
+    y: "4",
+    width: "22",
+    height: "16",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "1",
+    y1: "10",
+    x2: "23",
+    y2: "10"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Globe: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "2",
+    y1: "12",
+    x2: "22",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+  })),
+  Trash: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "3 6 5 6 21 6"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Edit: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+  })),
+  Eye: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  })),
+  EyeOff: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "1",
+    y1: "1",
+    x2: "23",
+    y2: "23"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  LogOut: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  }))
+};
+const NAV_ITEMS = [{
+  id: 'profil',
+  label: 'Profil',
+  icon: /*#__PURE__*/React.createElement(Ic.User, null)
+}, {
+  id: 'securite',
+  label: 'Sécurité',
+  icon: /*#__PURE__*/React.createElement(Ic.Shield, null)
+}, {
+  id: 'facturation',
+  label: 'Facturation',
+  icon: /*#__PURE__*/React.createElement(Ic.CreditCard, null)
+}, {
+  id: 'notifications',
+  label: 'Notifications',
+  icon: /*#__PURE__*/React.createElement(Ic.Bell, null)
+}, {
+  id: 'preferences',
+  label: 'Préférences',
+  icon: /*#__PURE__*/React.createElement(Ic.Globe, null)
+}];
+function Toggle({
+  on,
+  onChange
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${on ? 'on' : ''}`,
+    onClick: onChange
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }));
+}
+function App() {
+  const [section, setSection] = useState('profil');
+  const [toast, setToast] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+  const toastTimer = useRef(null);
+
+  // Profil state
+  const [profil, setProfil] = useState({
+    prenom: '',
+    nom: '',
+    email: '',
+    phone: '',
+    bio: '',
+    linkedin: '',
+    entreprise: ''
+  });
+  const [expertData, setExpertData] = useState({
+    specialite: '',
+    niveau: '',
+    tarif: '',
+    disponible: true
+  });
+  const [initials, setInitials] = useState('??');
+  const [role, setRole] = useState('client');
+
+  // Securite state
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [passError, setPassError] = useState('');
+
+  // Notifs state
+  const [notifSettings, setNotifSettings] = useState({
+    propositions: true,
+    messages: true,
+    missions: true,
+    payments: true,
+    reminders: true,
+    marketing: false
+  });
+
+  // Prefs state
+  const [prefs, setPrefs] = useState({
+    lang: 'fr',
+    currency: 'CAD',
+    timezone: 'America/Montreal'
+  });
+  useEffect(() => {
+    (async () => {
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
+      const u = session.user;
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      const {
+        data: exp
+      } = await sb.from('experts').select('*').eq('id', u.id).single();
+      if (profile) {
+        const p = profile.prenom || '';
+        const n = profile.nom || '';
+        setRole(profile.type_utilisateur || 'client');
+        setProfil(prev => ({
+          ...prev,
+          prenom: p,
+          nom: n,
+          email: profile.email || u.email || '',
+          linkedin: profile.linkedin || '',
+          entreprise: profile.entreprise || ''
+        }));
+        setInitials(((p[0] || '?') + (n[0] || '?')).toUpperCase());
+        setAvatarUrl(profile.avatar_url || '');
+      }
+      if (exp) {
+        setProfil(prev => ({
+          ...prev,
+          bio: exp.bio || ''
+        }));
+        setExpertData({
+          specialite: exp.specialite || '',
+          niveau: exp.niveau || '',
+          tarif: exp.tarif_heure || '',
+          disponible: exp.disponible ?? true
+        });
+      }
+    })();
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
+  const showToast = () => {
+    setToast(true);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(false), 3000);
+  };
+  const saveProfile = async () => {
+    setSaving(true);
+    try {
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) return;
+      const uid = session.user.id;
+      await sb.from('profiles').update({
+        prenom: profil.prenom,
+        nom: profil.nom,
+        linkedin: profil.linkedin,
+        entreprise: profil.entreprise
+      }).eq('id', uid);
+      if (role === 'expert') {
+        await sb.from('experts').update({
+          specialite: expertData.specialite,
+          niveau: expertData.niveau,
+          tarif_heure: parseInt(expertData.tarif) || null,
+          bio: profil.bio,
+          disponible: expertData.disponible
+        }).eq('id', uid);
+      }
+      setInitials(((profil.prenom[0] || '?') + (profil.nom[0] || '?')).toUpperCase());
+      showToast();
+    } catch (e) {
+      console.error(e);
+    }
+    setSaving(false);
+  };
+  const savePassword = async () => {
+    if (newPass.length < 8) {
+      setPassError('Le nouveau mot de passe doit faire au moins 8 caractères');
+      return;
+    }
+    if (newPass !== confirmPass) {
+      setPassError('Les mots de passe ne correspondent pas');
+      return;
+    }
+    setSaving(true);
+    try {
+      const {
+        error
+      } = await sb.auth.updateUser({
+        password: newPass
+      });
+      if (error) throw error;
+      setPassError('');
+      setNewPass('');
+      setConfirmPass('');
+      showToast();
+    } catch (e) {
+      setPassError(e.message || 'Erreur lors de la mise à jour');
+    }
+    setSaving(false);
+  };
+  const handleLogout = async () => {
+    await sb.auth.signOut();
+    window.location.href = 'connexion.html';
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-expert.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard"))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "layout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "side-nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: '12px 12px',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: '50%',
+      background: 'linear-gradient(135deg,var(--v),var(--c))',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 13,
+      fontWeight: 800,
+      color: '#fff',
+      flexShrink: 0
+    }
+  }, initials), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, profil.prenom, " ", profil.nom), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, "Plan Pro")))), /*#__PURE__*/React.createElement("div", {
+    className: "side-nav-title"
+  }, "Param\xE8tres"), NAV_ITEMS.map(item => /*#__PURE__*/React.createElement("div", {
+    key: item.id,
+    className: `nav-item ${section === item.id ? 'active' : ''}`,
+    onClick: () => setSection(item.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-item-icon"
+  }, item.icon), item.label)), /*#__PURE__*/React.createElement("div", {
+    className: "nav-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "nav-item",
+    style: {
+      color: 'var(--red)'
+    },
+    onClick: handleLogout
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-item-icon",
+    style: {
+      borderColor: 'rgba(239,68,68,0.2)',
+      background: 'rgba(239,68,68,0.08)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.LogOut, {
+    style: {
+      color: 'var(--red)'
+    }
+  })), "Se d\xE9connecter")), /*#__PURE__*/React.createElement("div", {
+    className: "content fade-up"
+  }, section === 'profil' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Profil"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "G\xE9rez vos informations personnelles et professionnelles."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-big"
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: "Photo de profil"}) : initials), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar-name"
+  }, profil.prenom, " ", profil.nom), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-email"
+  }, profil.email), /*#__PURE__*/React.createElement("div", {
+    className: "avatar-actions",
+    style: {marginTop: 10}
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost btn-sm",
+    disabled: uploading,
+    onClick: () => fileInputRef.current && fileInputRef.current.click()
+  }, uploading ? "Upload…" : "Changer la photo"), /*#__PURE__*/React.createElement("input", {
+    ref: fileInputRef,
+    type: "file",
+    accept: "image/jpeg,image/png,image/webp",
+    style: {display: 'none'},
+    onChange: async e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Photo trop lourde (max 5MB).'); return; }
+      setUploading(true);
+      try {
+        const { data: { session: s } } = await sb.auth.getSession();
+        if (!s) return;
+        const uid = s.user.id;
+        const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = uid + '/avatar.' + ext;
+        const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true, contentType: file.type });
+        if (upErr) throw upErr;
+        const { data: { publicUrl } } = sb.storage.from('avatars').getPublicUrl(path);
+        await sb.from('profiles').update({ avatar_url: publicUrl }).eq('id', uid);
+        setAvatarUrl(publicUrl + '?t=' + Date.now());
+        showToast();
+      } catch (err) { alert('Erreur upload : ' + err.message); }
+      finally { setUploading(false); e.target.value = ''; }
+    }
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    value: profil.prenom,
+    onChange: e => setProfil(p => ({
+      ...p,
+      prenom: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    value: profil.nom,
+    onChange: e => setProfil(p => ({
+      ...p,
+      nom: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Adresse email"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "email",
+    value: profil.email,
+    disabled: true
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "L'email ne peut pas \xEAtre modifi\xE9 ici.")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Bio ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(visible sur votre profil)")), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    rows: 4,
+    placeholder: "D\xE9crivez votre expertise, vos sp\xE9cialit\xE9s, ce qui vous diff\xE9rencie\u2026",
+    value: profil.bio,
+    onChange: e => setProfil(p => ({
+      ...p,
+      bio: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Enregistrement…' : 'Enregistrer'))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Profil Expert"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Sp\xE9cialit\xE9 principale"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "ex: Automatisation IA, Chatbots\u2026",
+    value: expertData.specialite,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      specialite: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Niveau"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: expertData.niveau,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      niveau: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "S\xE9lectionner\u2026"), /*#__PURE__*/React.createElement("option", {
+    value: "Junior"
+  }, "Junior"), /*#__PURE__*/React.createElement("option", {
+    value: "Interm\xE9diaire"
+  }, "Interm\xE9diaire"), /*#__PURE__*/React.createElement("option", {
+    value: "Senior"
+  }, "Senior"), /*#__PURE__*/React.createElement("option", {
+    value: "Expert"
+  }, "Expert")))), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Tarif horaire ($)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    min: "0",
+    placeholder: "ex: 80",
+    value: expertData.tarif,
+    onChange: e => setExpertData(p => ({
+      ...p,
+      tarif: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "LinkedIn ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "https://linkedin.com/in/\u2026",
+    value: profil.linkedin,
+    onChange: e => setProfil(p => ({
+      ...p,
+      linkedin: e.target.value
+    }))
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row",
+    style: {
+      padding: '14px 0 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "Disponible pour de nouvelles missions"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Visible dans les recherches clients")), /*#__PURE__*/React.createElement(Toggle, {
+    on: expertData.disponible,
+    onChange: () => setExpertData(p => ({
+      ...p,
+      disponible: !p.disponible
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Enregistrement…' : 'Enregistrer')))), section === 'securite' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "S\xE9curit\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Prot\xE9gez votre compte avec un mot de passe fort et la double authentification."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Changer le mot de passe"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nouveau mot de passe"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: showPass ? 'text' : 'password',
+    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+    value: newPass,
+    onChange: e => {
+      setNewPass(e.target.value);
+      setPassError('');
+    },
+    style: {
+      paddingRight: 44
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    style: {
+      position: 'absolute',
+      right: 12,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      color: 'var(--text-3)'
+    },
+    onClick: () => setShowPass(v => !v)
+  }, showPass ? /*#__PURE__*/React.createElement(Ic.EyeOff, null) : /*#__PURE__*/React.createElement(Ic.Eye, null))), /*#__PURE__*/React.createElement("div", {
+    className: "hint"
+  }, "Minimum 8 caract\xE8res")), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Confirmer le mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: `input ${passError && newPass && newPass !== confirmPass ? 'error' : ''}`,
+    type: "password",
+    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+    value: confirmPass,
+    onChange: e => {
+      setConfirmPass(e.target.value);
+      setPassError('');
+    }
+  }))), newPass.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginBottom: 6
+    }
+  }, "Force du mot de passe"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 4,
+      background: 'var(--surf-2)',
+      borderRadius: 999,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      borderRadius: 999,
+      transition: 'width 300ms,background 300ms',
+      width: newPass.length < 6 ? '25%' : newPass.length < 10 ? '55%' : '90%',
+      background: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: newPass.length < 6 ? 'var(--red)' : newPass.length < 10 ? 'var(--orange)' : 'var(--green)',
+      marginTop: 4
+    }
+  }, newPass.length < 6 ? 'Faible' : newPass.length < 10 ? 'Moyen' : 'Fort')), passError && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginBottom: 12
+    }
+  }, passError), /*#__PURE__*/React.createElement("div", {
+    className: "save-row",
+    style: {
+      borderTop: 'none',
+      paddingTop: 0,
+      marginTop: 0
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: savePassword,
+    disabled: saving
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), saving ? 'Mise à jour…' : 'Mettre à jour'))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Double authentification (2FA)"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "Application d'authentification"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Google Authenticator, Authy, etc.")), /*#__PURE__*/React.createElement(Toggle, {
+    on: false,
+    onChange: () => {}
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, "SMS de v\xE9rification"), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-desc"
+  }, "Code envoy\xE9 \xE0 ", profil.phone)), /*#__PURE__*/React.createElement(Toggle, {
+    on: true,
+    onChange: () => {}
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Sessions actives"), /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--red)',
+      padding: '4px 10px',
+      border: '1px solid rgba(239,68,68,0.25)',
+      borderRadius: 999
+    }
+  }, "Tout d\xE9connecter")), [{
+    device: 'Chrome sur Windows 11',
+    location: 'Paris, France',
+    current: true,
+    time: 'Maintenant'
+  }, {
+    device: 'Safari sur iPhone 15',
+    location: 'Paris, France',
+    current: false,
+    time: 'Il y a 2h'
+  }, {
+    device: 'Firefox sur macOS',
+    location: 'Lyon, France',
+    current: false,
+    time: 'Il y a 3 jours'
+  }].map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 0',
+      borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, s.device, s.current && /*#__PURE__*/React.createElement("span", {
+    style: {
+      padding: '2px 8px',
+      background: 'rgba(16,185,129,0.12)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 700,
+      color: 'var(--green)'
+    }
+  }, "Actuelle")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 2
+    }
+  }, s.location, " \xB7 ", s.time)), !s.current && /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      padding: '4px 10px',
+      border: '1px solid var(--border-2)',
+      borderRadius: 999,
+      transition: 'color 150ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.color = 'var(--red)',
+    onMouseLeave: e => e.currentTarget.style.color = 'var(--text-3)'
+  }, "R\xE9voquer"))))), section === 'facturation' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Facturation"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "G\xE9rez votre abonnement, vos moyens de paiement et vos factures."), /*#__PURE__*/React.createElement("div", {
+    className: "plan-card"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-badge"
+  }, "Plan Pro"), /*#__PURE__*/React.createElement("div", {
+    className: "plan-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-name"
+  }, "CreatorFlow Market Pro"), /*#__PURE__*/React.createElement("div", {
+    className: "plan-desc"
+  }, "49 $/mois \xB7 Renouvellement le 26 juin 2026")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Changer de plan")), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Moyens de paiement"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '6px 12px',
+      fontSize: 12
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Plus, null), "Ajouter")), [{
+    brand: 'VISA',
+    number: '•••• •••• •••• 4242',
+    exp: '12/27',
+    primary: true
+  }, {
+    brand: 'MC',
+    number: '•••• •••• •••• 5555',
+    exp: '08/26',
+    primary: false
+  }].map((pm, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "pm-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pm-icon",
+    style: {
+      background: pm.brand === 'VISA' ? 'rgba(66,133,244,0.1)' : 'rgba(235,0,27,0.08)'
+    }
+  }, pm.brand), /*#__PURE__*/React.createElement("div", {
+    className: "pm-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pm-name"
+  }, pm.number), /*#__PURE__*/React.createElement("div", {
+    className: "pm-sub"
+  }, "Expire ", pm.exp)), pm.primary && /*#__PURE__*/React.createElement("span", {
+    className: "pm-badge"
+  }, "Principal"), !pm.primary && /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      padding: '4px 10px',
+      border: '1px solid var(--border-2)',
+      borderRadius: 999
+    }
+  }, "D\xE9finir principal")))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Informations de facturation"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom / Raison sociale"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    defaultValue: "Richard Consulting"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Num\xE9ro de TVA"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "FR00000000000"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Adresse de facturation"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    defaultValue: "12 Rue de la Paix, 75001 Paris"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer"))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      margin: 0
+    }
+  }, "Historique des factures")), [{
+    ref: 'FAC-0049',
+    date: '26 mai 2026',
+    amount: '49 $',
+    status: 'Payée'
+  }, {
+    ref: 'FAC-0041',
+    date: '26 avr. 2026',
+    amount: '49 $',
+    status: 'Payée'
+  }, {
+    ref: 'FAC-0033',
+    date: '26 mar. 2026',
+    amount: '49 $',
+    status: 'Payée'
+  }].map((f, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '12px 0',
+      borderBottom: i < 2 ? '1px solid var(--border)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, f.ref), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, f.date)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, f.amount), /*#__PURE__*/React.createElement("span", {
+    style: {
+      padding: '3px 10px',
+      background: 'rgba(16,185,129,0.10)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 999,
+      fontSize: 11,
+      fontWeight: 600,
+      color: 'var(--green)'
+    }
+  }, f.status), /*#__PURE__*/React.createElement("button", {
+    style: {
+      fontSize: 12,
+      color: 'var(--vs)',
+      padding: '4px 10px',
+      border: '1px solid rgba(124,58,237,0.25)',
+      borderRadius: 999
+    }
+  }, "T\xE9l\xE9charger")))))), section === 'notifications' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Notifications"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Choisissez comment et quand vous souhaitez \xEAtre alert\xE9."), ['Email', 'Push'].map(channel => /*#__PURE__*/React.createElement("div", {
+    key: channel,
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Notifications ", channel), Object.entries({
+    propositions: 'Nouvelles propositions d\'experts',
+    messages: 'Nouveaux messages',
+    missions: 'Mises à jour de missions',
+    payments: 'Confirmations de paiement',
+    reminders: 'Rappels et délais',
+    marketing: 'Newsletters et promotions'
+  }).map(([key, label]) => /*#__PURE__*/React.createElement("div", {
+    key: key,
+    className: "toggle-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-name"
+  }, label)), /*#__PURE__*/React.createElement(Toggle, {
+    on: notifSettings[key],
+    onChange: () => setNotifSettings(s => ({
+      ...s,
+      [key]: !s[key]
+    }))
+  }))))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer les pr\xE9f\xE9rences")), section === 'preferences' && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "Pr\xE9f\xE9rences"), /*#__PURE__*/React.createElement("div", {
+    className: "section-sub"
+  }, "Personnalisez votre exp\xE9rience sur la plateforme."), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Langue & R\xE9gion"), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Langue"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.lang,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      lang: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "fr"
+  }, "Fran\xE7ais"), /*#__PURE__*/React.createElement("option", {
+    value: "en"
+  }, "English"), /*#__PURE__*/React.createElement("option", {
+    value: "es"
+  }, "Espa\xF1ol"))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Devise"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.currency,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      currency: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "CAD"
+  }, "CAD ($)"), /*#__PURE__*/React.createElement("option", {
+    value: "USD"
+  }, "USD ($)"), /*#__PURE__*/React.createElement("option", {
+    value: "GBP"
+  }, "GBP (\xA3)")))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Fuseau horaire"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: prefs.timezone,
+    onChange: e => setPrefs(p => ({
+      ...p,
+      timezone: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "Europe/Paris"
+  }, "Europe/Paris (UTC+2)"), /*#__PURE__*/React.createElement("option", {
+    value: "America/New_York"
+  }, "America/New_York (UTC-4)"), /*#__PURE__*/React.createElement("option", {
+    value: "America/Montreal"
+  }, "America/Montreal (UTC-4)"), /*#__PURE__*/React.createElement("option", {
+    value: "Asia/Tokyo"
+  }, "Asia/Tokyo (UTC+9)"))), /*#__PURE__*/React.createElement("div", {
+    className: "save-row"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: 13
+    },
+    onClick: saveProfile
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer"))), /*#__PURE__*/React.createElement("div", {
+    className: "danger-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title",
+    style: {
+      color: 'var(--red)',
+      marginBottom: 16
+    }
+  }, "Zone de danger"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "danger-label"
+  }, "Exporter mes donn\xE9es"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-desc"
+  }, "T\xE9l\xE9chargez une copie de toutes vos donn\xE9es personnelles.")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "Exporter")), /*#__PURE__*/React.createElement("div", {
+    className: "danger-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "danger-label"
+  }, "Supprimer mon compte"), /*#__PURE__*/React.createElement("div", {
+    className: "danger-desc"
+  }, "Action irr\xE9versible. Toutes vos donn\xE9es seront effac\xE9es.")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-danger",
+    style: {
+      padding: '7px 14px',
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Trash, null), "Supprimer"))))))), toast && /*#__PURE__*/React.createElement("div", {
+    className: "toast saved-chip"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Modifications enregistr\xE9es"));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

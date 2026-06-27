@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Politique de confidentialité — CreatorFlow Market</title>
+  <meta name="description" content="Politique de confidentialité de CreatorFlow Market. Comment nous collectons, utilisons et protégeons vos données personnelles, conformément à la Loi 25 du Québec." />
+  <link rel="canonical" href="https://creatorflowmarket.com/politique-confidentialite.html"/>
+  <meta name="robots" content="noindex, follow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap" rel="stylesheet"></noscript>
+  <style>
+:root {
+  --bg:#04040A; --bg-2:#07070F; --surf:#0C0C18; --surf-2:#101020;
+  --border:rgba(255,255,255,0.055); --border-2:rgba(255,255,255,0.10);
+  --text:#F4F4FF; --text-2:#9898B8; --text-3:#55557A;
+  --v:#7C3AED; --v2:#6D28D9; --vs:#A78BFA; --vg:rgba(124,58,237,0.35);
+  --c:#06B6D4; --green:#10B981;
+  --r:14px; --r-lg:20px;
+  --f:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7;}
+a{color:var(--vs);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.wrap{width:100%;max-width:860px;margin:0 auto;padding:0 28px;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.brand{display:flex;align-items:center;font-size:16px;font-weight:700;letter-spacing:-0.025em;color:var(--text);}
+.brand-logo{width:48px;height:48px;background:url('/creatorflow-logo.png') center/contain no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{margin-left:-14px;}
+.nav-back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-2);padding:7px 14px;border-radius:8px;transition:all 180ms;}
+.nav-back:hover{color:var(--text);background:rgba(255,255,255,0.05);text-decoration:none;}
+
+/* CONTENT */
+.legal-page{padding:104px 0 100px;}
+.legal-header{padding-bottom:48px;border-bottom:1px solid var(--border);margin-bottom:48px;}
+.legal-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--vs);margin-bottom:16px;}
+.legal-label::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);}
+.legal-title{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:16px;}
+.legal-meta{font-size:13px;color:var(--text-3);}
+.legal-meta span{color:var(--text-2);}
+
+/* BADGE LOI 25 */
+.loi25-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.25);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600;color:#10B981;margin-top:16px;}
+.loi25-badge svg{flex-shrink:0;}
+
+/* TOC */
+.toc{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 32px;margin-bottom:48px;}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:16px;}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.toc-list a{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:8px;transition:color 160ms;}
+.toc-list a::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--border-2);flex-shrink:0;}
+.toc-list a:hover{color:var(--vs);text-decoration:none;}
+.toc-list a:hover::before{background:var(--vs);}
+
+/* SECTIONS */
+.legal-section{margin-bottom:52px;scroll-margin-top:80px;}
+.legal-section h2{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);color:var(--text);}
+.legal-section h3{font-size:15px;font-weight:600;color:var(--text);margin:24px 0 10px;}
+.legal-section p{font-size:14px;color:var(--text-2);margin-bottom:14px;line-height:1.75;}
+.legal-section ul,.legal-section ol{padding-left:20px;margin-bottom:14px;}
+.legal-section li{font-size:14px;color:var(--text-2);margin-bottom:8px;line-height:1.75;}
+.legal-section strong{color:var(--text);font-weight:600;}
+.legal-highlight{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:18px 20px;margin:20px 0;}
+.legal-highlight p{margin:0;font-size:13px;color:var(--text-2);}
+.legal-highlight.green{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.2);}
+
+/* DROITS TABLE */
+.droits-grid{display:grid;grid-template-columns:1fr 2fr;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:20px 0;}
+.droits-row{display:contents;}
+.droits-cell{padding:14px 18px;font-size:13px;border-bottom:1px solid var(--border);line-height:1.6;}
+.droits-cell:nth-child(odd){color:var(--text);font-weight:600;background:rgba(255,255,255,0.02);}
+.droits-cell:nth-child(even){color:var(--text-2);}
+.droits-cell:nth-last-child(-n+2){border-bottom:none;}
+
+/* FOOTER */
+.footer-legal{border-top:1px solid var(--border);padding:36px 0;margin-top:80px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-legal-copy{font-size:12px;color:var(--text-3);}
+.footer-legal-links{display:flex;gap:20px;}
+.footer-legal-links a{font-size:12px;color:var(--text-3);transition:color 160ms;}
+.footer-legal-links a:hover{color:var(--text-2);text-decoration:none;}
+
+@media(max-width:640px){
+  .wrap{padding:0 18px;}
+  .legal-page{padding:88px 0 72px;}
+  .toc{padding:20px;}
+  .droits-grid{grid-template-columns:1fr;}
+  .droits-cell:nth-child(odd){border-bottom:none;padding-bottom:4px;}
+  .footer-legal{flex-direction:column;text-align:center;}
+  .footer-legal-links{justify-content:center;}
+}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-logo"></div>
+        <span>CreatorFlow Market</span>
+      </a>
+      <a href="index.html" class="nav-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Retour
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main class="legal-page">
+  <div class="wrap">
+
+    <div class="legal-header">
+      <div class="legal-label">Confidentialité</div>
+      <h1 class="legal-title">Politique de confidentialité</h1>
+      <p class="legal-meta">Dernière mise à jour&nbsp;: <span>11 juin 2026</span>&nbsp;&nbsp;·&nbsp;&nbsp;Version&nbsp;<span>1.0</span></p>
+      <div class="loi25-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Conforme à la Loi 25 du Québec
+      </div>
+    </div>
+
+    <nav class="toc" aria-label="Table des matières">
+      <div class="toc-title">Table des matières</div>
+      <ol class="toc-list">
+        <li><a href="#responsable">1. Responsable du traitement</a></li>
+        <li><a href="#donnees">2. Données personnelles collectées</a></li>
+        <li><a href="#finalites">3. Finalités et base légale</a></li>
+        <li><a href="#conservation">4. Durée de conservation</a></li>
+        <li><a href="#partage">5. Partage et sous-traitants</a></li>
+        <li><a href="#droits">6. Vos droits (Loi 25)</a></li>
+        <li><a href="#securite">7. Sécurité des données</a></li>
+        <li><a href="#cookies">8. Cookies et traceurs</a></li>
+        <li><a href="#mineurs">9. Mineurs</a></li>
+        <li><a href="#incidents">10. Incidents de confidentialité</a></li>
+        <li><a href="#modifications">11. Modifications</a></li>
+        <li><a href="#contact">12. Contact et plaintes</a></li>
+      </ol>
+    </nav>
+
+    <section id="responsable" class="legal-section">
+      <h2>1. Responsable du traitement</h2>
+      <p>La présente Politique de confidentialité décrit comment <strong>CreatorFlow Market</strong> (ci-après «&nbsp;nous&nbsp;», «&nbsp;notre&nbsp;», «&nbsp;la Plateforme&nbsp;») collecte, utilise, conserve et protège vos renseignements personnels, conformément à la <strong>Loi sur la protection des renseignements personnels dans le secteur privé</strong> (LPRPSP), telle que modifiée par la Loi 25.</p>
+      <div class="legal-highlight">
+        <p><strong>Responsable de la protection des renseignements personnels&nbsp;:</strong><br>
+        CreatorFlow Market — <a href="mailto:privacy@creatorflowmarket.com">privacy@creatorflowmarket.com</a><br>
+        Montréal, Québec, Canada</p>
+      </div>
+    </section>
+
+    <section id="donnees" class="legal-section">
+      <h2>2. Données personnelles collectées</h2>
+      <h3>2.1 Données fournies directement</h3>
+      <ul>
+        <li><strong>Compte :</strong> prénom, nom, adresse email, mot de passe (haché), rôle (client/expert)</li>
+        <li><strong>Profil Expert :</strong> spécialité, niveau d'expérience, biographie, lien LinkedIn, compétences, tarif horaire, photo de profil</li>
+        <li><strong>Briefs :</strong> titre, description du projet, budget, délai, informations de l'entreprise</li>
+        <li><strong>Messages :</strong> contenu des échanges entre Clients et Experts via la messagerie</li>
+        <li><strong>Paiements :</strong> données de facturation transmises à Stripe (nous ne stockons pas les numéros de carte)</li>
+        <li><strong>Évaluations :</strong> notes et commentaires laissés après une Mission</li>
+      </ul>
+      <h3>2.2 Données collectées automatiquement</h3>
+      <ul>
+        <li>Adresse IP et informations de connexion (via Supabase Auth)</li>
+        <li>Pages consultées, durée de visite, clics (via Google Analytics 4 avec Consent Mode v2)</li>
+        <li>Type de navigateur, appareil, système d'exploitation</li>
+        <li>Cookies de session et de fonctionnement (voir section 8)</li>
+      </ul>
+      <h3>2.3 Données des tiers</h3>
+      <p>Si vous vous connectez via un service tiers (ex&nbsp;: Google OAuth), nous recevons les informations de base de profil autorisées par ce service (nom, email). Nous ne collectons jamais plus d'informations que ce qui est nécessaire.</p>
+    </section>
+
+    <section id="finalites" class="legal-section">
+      <h2>3. Finalités et base légale</h2>
+      <div class="droits-grid">
+        <div class="droits-cell">Finalité</div>
+        <div class="droits-cell">Base légale</div>
+        <div class="droits-cell">Fourniture du service</div>
+        <div class="droits-cell">Exécution du contrat — nécessaire pour créer votre compte, traiter les Missions et les paiements</div>
+        <div class="droits-cell">Communications transactionnelles</div>
+        <div class="droits-cell">Exécution du contrat — emails de confirmation, notifications de Mission, alertes de sécurité</div>
+        <div class="droits-cell">Amélioration de la Plateforme</div>
+        <div class="droits-cell">Intérêt légitime — analyse anonymisée de l'usage pour améliorer les fonctionnalités</div>
+        <div class="droits-cell">Communications marketing</div>
+        <div class="droits-cell">Consentement — newsletters et offres promotionnelles, uniquement si vous avez accepté</div>
+        <div class="droits-cell">Obligations légales</div>
+        <div class="droits-cell">Obligation légale — conservation des données de facturation, réponse aux demandes des autorités</div>
+      </div>
+    </section>
+
+    <section id="conservation" class="legal-section">
+      <h2>4. Durée de conservation</h2>
+      <ul>
+        <li><strong>Données de compte&nbsp;:</strong> conservées pendant toute la durée de votre inscription, puis supprimées dans les 90 jours suivant la fermeture du compte</li>
+        <li><strong>Données de facturation&nbsp;:</strong> conservées 7 ans conformément aux obligations fiscales canadiennes</li>
+        <li><strong>Messages&nbsp;:</strong> conservés pendant la durée de la Mission + 2 ans</li>
+        <li><strong>Logs de connexion&nbsp;:</strong> conservés 12 mois pour des raisons de sécurité</li>
+        <li><strong>Données analytiques&nbsp;:</strong> anonymisées après 14 mois (paramètre Google Analytics)</li>
+        <li><strong>Cookies de consentement&nbsp;:</strong> valides 13 mois maximum</li>
+      </ul>
+    </section>
+
+    <section id="partage" class="legal-section">
+      <h2>5. Partage et sous-traitants</h2>
+      <p>Nous ne vendons jamais vos données personnelles à des tiers. Nous faisons appel aux sous-traitants suivants, liés par des obligations contractuelles de confidentialité :</p>
+      <ul>
+        <li><strong>Supabase</strong> (infrastructure base de données et authentification) — hébergé sur AWS us-east-1</li>
+        <li><strong>Stripe</strong> (traitement des paiements) — certifié PCI-DSS niveau 1</li>
+        <li><strong>Cloudflare</strong> (CDN, hébergement, sécurité) — protection DDoS et certificats SSL</li>
+        <li><strong>Google Analytics 4</strong> (mesure d'audience) — activé uniquement avec votre consentement via Consent Mode v2</li>
+        <li><strong>Resend / Postmark</strong> (emails transactionnels) — uniquement pour les notifications de service</li>
+      </ul>
+      <p>Certains de ces sous-traitants traitent des données en dehors du Canada (notamment aux États-Unis). Ces transferts sont encadrés par des clauses contractuelles types assurant un niveau de protection équivalent.</p>
+    </section>
+
+    <section id="droits" class="legal-section">
+      <h2>6. Vos droits (Loi 25)</h2>
+      <p>Conformément à la <em>Loi sur la protection des renseignements personnels dans le secteur privé</em> (Loi 25), vous disposez des droits suivants :</p>
+      <div class="droits-grid">
+        <div class="droits-cell">Droit d'accès</div>
+        <div class="droits-cell">Obtenir une copie des renseignements personnels que nous détenons à votre sujet</div>
+        <div class="droits-cell">Droit de rectification</div>
+        <div class="droits-cell">Faire corriger toute information inexacte ou incomplète</div>
+        <div class="droits-cell">Droit de retrait du consentement</div>
+        <div class="droits-cell">Retirer votre consentement aux communications marketing à tout moment</div>
+        <div class="droits-cell">Droit à la portabilité</div>
+        <div class="droits-cell">Recevoir vos données dans un format technologique structuré et couramment utilisé</div>
+        <div class="droits-cell">Droit à l'effacement</div>
+        <div class="droits-cell">Demander la suppression de vos données personnelles, sous réserve des obligations légales de conservation</div>
+        <div class="droits-cell">Droit de désinformation (désindexation)</div>
+        <div class="droits-cell">Demander la cessation de diffusion ou la désindexation de renseignements vous concernant</div>
+      </div>
+      <div class="legal-highlight green" style="margin-top:24px;">
+        <p>Pour exercer vos droits, envoyez votre demande à <a href="mailto:privacy@creatorflowmarket.com">privacy@creatorflowmarket.com</a>. Nous répondons dans un délai de <strong>30 jours</strong>. Votre identité peut être vérifiée avant de traiter la demande.</p>
+      </div>
+    </section>
+
+    <section id="securite" class="legal-section">
+      <h2>7. Sécurité des données</h2>
+      <p>Nous mettons en place des mesures techniques et organisationnelles appropriées pour protéger vos renseignements personnels :</p>
+      <ul>
+        <li>Chiffrement des données en transit via HTTPS/TLS 1.3</li>
+        <li>Chiffrement des données au repos dans la base Supabase</li>
+        <li>Mots de passe hachés (bcrypt) — jamais stockés en clair</li>
+        <li>Row Level Security (RLS) Supabase — chaque utilisateur n'accède qu'à ses propres données</li>
+        <li>Authentification à deux facteurs disponible pour les comptes Experts</li>
+        <li>En-têtes de sécurité HTTP (CSP, HSTS, X-Frame-Options) via Cloudflare</li>
+        <li>Accès aux données restreint aux employés qui en ont besoin dans le cadre de leur mission</li>
+      </ul>
+    </section>
+
+    <section id="cookies" class="legal-section">
+      <h2>8. Cookies et traceurs</h2>
+      <p>Nous utilisons les types de cookies suivants :</p>
+      <h3>Cookies strictement nécessaires (pas de consentement requis)</h3>
+      <ul>
+        <li><strong>sb-access-token / sb-refresh-token&nbsp;:</strong> session Supabase Auth — nécessaires pour maintenir votre connexion</li>
+        <li><strong>Cloudflare cookies&nbsp;:</strong> protection contre les bots et sécurité de navigation</li>
+      </ul>
+      <h3>Cookies analytiques (consentement requis)</h3>
+      <ul>
+        <li><strong>_ga, _ga_*&nbsp;:</strong> Google Analytics 4 — mesure d'audience anonymisée. Activés uniquement si vous avez accepté via notre bannière de consentement (Consent Mode v2).</li>
+      </ul>
+      <p>Vous pouvez modifier vos préférences de cookies à tout moment en cliquant sur «&nbsp;Gestion des cookies&nbsp;» en bas de chaque page. Le refus des cookies analytiques n'affecte pas le fonctionnement de la Plateforme.</p>
+    </section>
+
+    <section id="mineurs" class="legal-section">
+      <h2>9. Mineurs</h2>
+      <p>CreatorFlow Market est réservé aux personnes majeures (18 ans et plus). Nous ne collectons sciemment aucune donnée personnelle de mineurs. Si vous pensez qu'un mineur a créé un compte, contactez-nous à <a href="mailto:privacy@creatorflowmarket.com">privacy@creatorflowmarket.com</a> pour suppression immédiate.</p>
+    </section>
+
+    <section id="incidents" class="legal-section">
+      <h2>10. Incidents de confidentialité</h2>
+      <p>En cas d'incident impliquant vos renseignements personnels (accès non autorisé, vol, perte), nous nous engageons à :</p>
+      <ul>
+        <li>Évaluer le risque préjudiciable sérieux dans les meilleurs délais</li>
+        <li>Aviser la Commission d'accès à l'information du Québec (CAI) dans les 72 heures si le risque est sérieux</li>
+        <li>Vous notifier directement si l'incident vous concerne et présente un risque sérieux pour vous</li>
+        <li>Consigner l'incident dans le registre des incidents de confidentialité</li>
+      </ul>
+    </section>
+
+    <section id="modifications" class="legal-section">
+      <h2>11. Modifications</h2>
+      <p>Nous pouvons mettre à jour la présente Politique à tout moment pour refléter des changements dans nos pratiques ou dans la législation applicable. Les modifications importantes vous sont notifiées par email au moins 15 jours avant leur entrée en vigueur.</p>
+      <p>La version en vigueur est toujours disponible à l'adresse <a href="https://creatorflowmarket.com/politique-confidentialite.html">creatorflowmarket.com/politique-confidentialite.html</a>.</p>
+    </section>
+
+    <section id="contact" class="legal-section">
+      <h2>12. Contact et plaintes</h2>
+      <p>Pour toute question relative à la présente Politique ou à vos données personnelles :</p>
+      <ul>
+        <li><strong>Responsable de la protection des renseignements personnels&nbsp;:</strong><br>
+          Email&nbsp;: <a href="mailto:privacy@creatorflowmarket.com">privacy@creatorflowmarket.com</a><br>
+          Adresse&nbsp;: Montréal, Québec, Canada</li>
+      </ul>
+      <p style="margin-top:20px;">Si vous estimez que vos droits n'ont pas été respectés après nous avoir contactés, vous pouvez déposer une plainte auprès de la <strong>Commission d'accès à l'information du Québec (CAI)</strong>&nbsp;:</p>
+      <ul>
+        <li>Site web&nbsp;: <a href="https://www.cai.gouv.qc.ca" target="_blank" rel="noopener noreferrer">cai.gouv.qc.ca</a></li>
+        <li>Téléphone&nbsp;: 1 888 528-7741</li>
+        <li>Adresse&nbsp;: 525, boul. René-Lévesque Est, Bureau 2.36, Québec (Québec) G1R 5S9</li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-legal">
+      <span class="footer-legal-copy">© 2026 CreatorFlow Market — Tous droits réservés</span>
+      <div class="footer-legal-links">
+        <a href="cgu.html">CGU</a>
+        <a href="politique-confidentialite.html">Vie privée</a>
+        <a href="index.html">Accueil</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

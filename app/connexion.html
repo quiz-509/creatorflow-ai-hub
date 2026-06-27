@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Connexion — CreatorFlow Market</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--f-display:'Plus Jakarta Sans',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;height:100vh;display:flex;flex-direction:column;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-primary:disabled{opacity:0.6;transform:none;cursor:not-allowed;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+.login-page{flex:1;display:flex;align-items:center;justify-content:center;padding:80px 20px 40px;position:relative;}
+.login-page::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 700px 500px at 50% 40%,rgba(124,58,237,0.10),transparent 70%);pointer-events:none;}
+@keyframes fade-up{from{opacity:0;transform:translateY(24px);filter:blur(4px);}to{opacity:1;transform:none;filter:blur(0);}}
+.login-card{width:100%;max-width:420px;position:relative;animation:fade-up 600ms var(--ease) 80ms both;}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo-text{font-family:var(--f-display);font-size:20px;font-weight:800;letter-spacing:-0.025em;}
+.login-logo-text em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.login-logo-sub{font-size:13px;color:var(--text-3);margin-top:4px;}
+.form-box{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:36px;position:relative;overflow:hidden;}
+.form-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
+.form-title{font-family:var(--f-display);font-size:22px;font-weight:800;letter-spacing:-0.025em;margin-bottom:4px;}
+.form-sub{font-size:13px;color:var(--text-2);margin-bottom:28px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px;}
+.form-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.form-label-row a{font-size:12px;color:var(--vs);transition:color 160ms;}
+.form-label-row a:hover{color:#fff;}
+.form-input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:11px 14px;outline:none;transition:border-color 180ms ease,box-shadow 180ms ease;}
+.form-input:focus{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.form-submit{width:100%;justify-content:center;padding:14px 20px;font-size:15px;margin-top:4px;}
+.form-footer{text-align:center;margin-top:22px;font-size:13px;color:var(--text-3);}
+.form-footer a{color:var(--vs);transition:color 160ms;}
+.form-footer a:hover{color:#fff;}
+.tab-row{display:flex;background:var(--surf-2);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:28px;}
+.tab-btn{flex:1;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);transition:all 200ms var(--ease);text-align:center;cursor:pointer;}
+.tab-btn.active{background:var(--v);color:#fff;box-shadow:0 0 16px var(--vg);}
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Eye: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  })),
+  EyeOff: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "1",
+    y1: "1",
+    x2: "23",
+    y2: "23"
+  }))
+};
+function App() {
+  const [tab, setTab] = useState('expert');
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+  const [showPwd, setShowPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
+  const isRecovery = window.location.hash.includes('type=recovery');
+  const [showPasswordUpdate, setShowPasswordUpdate] = useState(isRecovery);
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [updateDone, setUpdateDone] = useState(false);
+  useEffect(() => {
+    document.getElementById('cfm-loader')?.remove();
+  }, []);
+  useEffect(() => {
+    const { data: authListener } = sb.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setShowPasswordUpdate(true);
+    });
+    return () => authListener.subscription.unsubscribe();
+  }, []);
+  useEffect(() => {
+    if (isRecovery) return;
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
+      if (data.session) {
+        const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+        if (redirectParam) { window.location.href = redirectParam; return; }
+        const {
+          data: profile
+        } = await sb.from('profiles').select('type_utilisateur').eq('id', data.session.user.id).single();
+        window.location.href = profile?.type_utilisateur === 'client' ? 'dashboard-client.html' : 'dashboard-expert.html';
+      }
+    });
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
+  const handleLogin = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const {
+        data,
+        error: loginError
+      } = await sb.auth.signInWithPassword({
+        email,
+        password: pass
+      });
+      if (loginError) throw loginError;
+      const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+      if (redirectParam) { window.location.href = redirectParam; return; }
+      const {
+        data: profile
+      } = await sb.from('profiles').select('type_utilisateur').eq('id', data.user.id).single();
+      window.location.href = profile?.type_utilisateur === 'client' ? 'dashboard-client.html' : 'dashboard-expert.html';
+    } catch (err) {
+      const msgs = {
+        'Invalid login credentials': 'Email ou mot de passe incorrect.',
+        'Email not confirmed': 'Veuillez confirmer votre email avant de vous connecter.'
+      };
+      setError(msgs[err.message] || 'Erreur : ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleUpdatePassword = async e => {
+    e.preventDefault();
+    if (newPass.length < 8) { setError('Le mot de passe doit contenir au moins 8 caractères.'); return; }
+    if (newPass !== confirmPass) { setError('Les mots de passe ne correspondent pas.'); return; }
+    setLoading(true);
+    setError('');
+    const { error: updateError } = await sb.auth.updateUser({ password: newPass });
+    setLoading(false);
+    if (updateError) setError('Erreur : ' + updateError.message);
+    else { setUpdateDone(true); setTimeout(() => { window.location.href = 'connexion.html'; }, 2500); }
+  };
+  const handleReset = async e => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    const {
+      error: resetError
+    } = await sb.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: window.location.origin + '/connexion.html'
+    });
+    setLoading(false);
+    if (!resetError) setResetSent(true);else setError('Erreur : ' + resetError.message);
+  };
+  if (showPasswordUpdate) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")))), /*#__PURE__*/React.createElement("div", {
+    className: "login-page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-text"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-sub"
+  }, "Nouveau mot de passe")), /*#__PURE__*/React.createElement("div", {
+    className: "form-box"
+  }, !updateDone ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "D\xE9finir votre mot de passe"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "Choisissez un nouveau mot de passe s\xE9curis\xE9 pour votre compte."), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleUpdatePassword
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Nouveau mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: "8 caract\xE8res minimum",
+    value: newPass,
+    onChange: e => setNewPass(e.target.value),
+    required: true,
+    minLength: 8
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Confirmer le mot de passe"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: "Confirmez votre mot de passe",
+    value: confirmPass,
+    onChange: e => setConfirmPass(e.target.value),
+    required: true
+  })), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#EF4444',
+      fontSize: 13,
+      marginBottom: 12,
+      padding: '10px 14px',
+      background: 'rgba(239,68,68,0.08)',
+      borderRadius: 8
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary form-submit",
+    disabled: loading
+  }, loading ? 'Mise \xE0 jour…' : 'Mettre \xE0 jour le mot de passe'))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '20px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "✅"), /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Mot de passe mis \xE0 jour\xA0!"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginTop: 8
+    }
+  }, "Vous allez \xEAtre redirig\xE9 vers la connexion…"))))));
+  if (showReset) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")))), /*#__PURE__*/React.createElement("div", {
+    className: "login-page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-text"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-sub"
+  }, "R\xE9initialisation du mot de passe")), /*#__PURE__*/React.createElement("div", {
+    className: "form-box"
+  }, !resetSent ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Mot de passe oubli\xE9"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, "Entrez votre email et nous vous enverrons un lien de r\xE9initialisation."), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleReset
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Adresse email"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "email",
+    placeholder: "votre@email.com",
+    value: resetEmail,
+    onChange: e => setResetEmail(e.target.value),
+    required: true
+  })), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#EF4444',
+      fontSize: 13,
+      marginBottom: 12,
+      padding: '10px 14px',
+      background: 'rgba(239,68,68,0.08)',
+      borderRadius: 8
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary form-submit",
+    disabled: loading
+  }, loading ? 'Envoi…' : 'Envoyer le lien')), /*#__PURE__*/React.createElement("div", {
+    className: "form-footer"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    onClick: e => {
+      e.preventDefault();
+      setShowReset(false);
+    }
+  }, "Retour \xE0 la connexion"))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '20px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 16
+    }
+  }, "\uD83D\uDCE7"), /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Email envoy\xE9 !"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-2)',
+      marginTop: 8,
+      marginBottom: 24
+    }
+  }, "V\xE9rifiez votre bo\xEEte mail et cliquez sur le lien pour r\xE9initialiser votre mot de passe."), /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-ghost",
+    style: {
+      margin: '0 auto'
+    }
+  }, "Retour \xE0 la connexion"))))));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("a", {
+    href: `inscription.html?role=${tab}`,
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Cr\xE9er un compte"))), /*#__PURE__*/React.createElement("div", {
+    className: "login-page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-text"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-sub"
+  }, "Bienvenue")), /*#__PURE__*/React.createElement("div", {
+    className: "form-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tab-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `tab-btn ${tab === 'client' ? 'active' : ''}`,
+    onClick: () => setTab('client')
+  }, "Je suis client"), /*#__PURE__*/React.createElement("div", {
+    className: `tab-btn ${tab === 'expert' ? 'active' : ''}`,
+    onClick: () => setTab('expert')
+  }, "Je suis expert")), /*#__PURE__*/React.createElement("h2", {
+    className: "form-title"
+  }, "Se connecter"), /*#__PURE__*/React.createElement("p", {
+    className: "form-sub"
+  }, tab === 'client' ? 'Accédez à vos briefs et missions en cours.' : 'Gérez vos missions et votre profil expert.'), /*#__PURE__*/React.createElement("form", {
+    onSubmit: handleLogin
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Adresse email"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "email",
+    placeholder: "votre@email.com",
+    value: email,
+    onChange: e => setEmail(e.target.value),
+    required: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-label-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "form-label",
+    style: {
+      margin: 0
+    }
+  }, "Mot de passe"), /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    onClick: e => {
+      e.preventDefault();
+      setShowReset(true);
+      setResetEmail(email);
+    }
+  }, "Mot de passe oubli\xE9 ?")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: showPwd ? 'text' : 'password',
+    placeholder: "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022",
+    value: pass,
+    onChange: e => setPass(e.target.value),
+    required: true,
+    style: {
+      paddingRight: 44
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => setShowPwd(s => !s),
+    style: {
+      position: 'absolute',
+      right: 12,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      color: 'var(--text-3)',
+      display: 'flex',
+      alignItems: 'center'
+    }
+  }, showPwd ? /*#__PURE__*/React.createElement(Ic.EyeOff, null) : /*#__PURE__*/React.createElement(Ic.Eye, null)))), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: '#EF4444',
+      fontSize: 13,
+      marginBottom: 12,
+      padding: '10px 14px',
+      background: 'rgba(239,68,68,0.08)',
+      borderRadius: 8,
+      border: '1px solid rgba(239,68,68,0.2)'
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: "btn btn-primary form-submit",
+    disabled: loading
+  }, loading ? 'Connexion…' : /*#__PURE__*/React.createElement(React.Fragment, null, "Se connecter ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), /*#__PURE__*/React.createElement("div", {
+    className: "form-footer"
+  }, "Pas encore de compte ?", ' ', /*#__PURE__*/React.createElement("a", {
+    href: `inscription.html?role=${tab}`
+  }, tab === 'expert' ? 'Devenir expert' : "S'inscrire gratuitement"))))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

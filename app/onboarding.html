@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Bienvenue — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-primary:disabled{opacity:0.45;transform:none;cursor:not-allowed;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* LAYOUT */
+.onboarding{flex:1;display:flex;flex-direction:column;}
+.top-bar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid var(--border);}
+.logo{font-size:16px;font-weight:700;letter-spacing:-0.02em;}
+.logo em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.skip{font-size:13px;color:var(--text-3);transition:color 150ms;}
+.skip:hover{color:var(--text-2);}
+
+/* PROGRESS */
+.prog-bar{height:3px;background:var(--border);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--v),var(--c));transition:width 500ms var(--ease);}
+
+/* CONTENT */
+.ob-content{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;}
+.ob-card{width:100%;max-width:560px;}
+.step-tag{font-size:12px;font-weight:700;color:var(--text-3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;}
+.ob-title{font-size:26px;font-weight:800;letter-spacing:-0.03em;margin-bottom:8px;line-height:1.2;}
+.ob-title em{font-style:normal;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.ob-sub{font-size:14px;color:var(--text-2);margin-bottom:32px;line-height:1.65;}
+
+/* OPTION CARDS */
+.option-grid{display:grid;gap:12px;margin-bottom:28px;}
+.option-grid-2{grid-template-columns:1fr 1fr;}
+.option-card{background:var(--surf);border:2px solid var(--border);border-radius:var(--r-lg);padding:20px;cursor:pointer;transition:all 200ms;text-align:center;}
+.option-card:hover{border-color:var(--border-2);}
+.option-card.selected{border-color:var(--v);background:rgba(124,58,237,0.10);}
+.option-emoji{font-size:28px;margin-bottom:10px;}
+.option-name{font-size:14px;font-weight:800;margin-bottom:4px;}
+.option-desc{font-size:12px;color:var(--text-3);line-height:1.55;}
+.option-check{width:20px;height:20px;border-radius:50%;background:var(--v);display:flex;align-items:center;justify-content:center;margin:10px auto 0;}
+
+/* CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.check-item{display:flex;gap:12px;padding:14px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 180ms;}
+.check-item:hover{border-color:var(--border-2);}
+.check-item.selected{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.07);}
+.check-box{width:20px;height:20px;border-radius:5px;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 150px;}
+.check-item.selected .check-box{background:var(--v);border-color:var(--v);}
+.check-label{font-size:14px;font-weight:600;}
+.check-sub{font-size:12px;color:var(--text-3);margin-top:2px;}
+
+/* CHIPS (expert) */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.chip{padding:7px 14px;border-radius:999px;border:1.5px solid var(--border-2);font-size:12px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 200ms;}
+.chip:hover{border-color:var(--vs);color:var(--vs);}
+.chip.selected{border-color:var(--v);color:var(--vs);background:rgba(124,58,237,0.1);}
+
+/* FIELD */
+.field{margin-bottom:16px;}
+.label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px;}
+.input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:11px 14px;outline:none;transition:border-color 180ms;}
+.input:focus{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.input::placeholder{color:var(--text-3);}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+textarea.input{resize:vertical;min-height:80px;line-height:1.5;}
+select.input{appearance:none;cursor:pointer;}
+
+/* NAV FOOTER */
+.ob-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;}
+.steps-dots{display:flex;gap:6px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--border-2);transition:all 200ms;}
+.dot.active{background:var(--v);width:20px;border-radius:999px;}
+.dot.done{background:var(--green);}
+
+/* SUCCESS */
+@keyframes pop-in{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+.success-ring{width:80px;height:80px;border-radius:50%;background:rgba(124,58,237,0.12);border:2px solid var(--v);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;animation:pop-in 600ms var(--ease) both;font-size:32px;}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 450ms var(--ease) both;}
+
+/* LOADER */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:36px;height:36px;border:3px solid var(--border-2);border-top-color:var(--v);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  ArrowLeft: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M11 19l-7-7 7-7"
+  })),
+  Dashboard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))
+};
+
+// --- Données ---
+const PROFILES_CLIENT = [{
+  id: 'solo',
+  emoji: '🧑‍💼',
+  name: 'Indépendant / Freelance',
+  desc: 'Gérer mes projets perso et automatiser mon activité'
+}, {
+  id: 'tpe',
+  emoji: '🏢',
+  name: 'TPE / PME',
+  desc: 'Équipe de moins de 50 personnes'
+}, {
+  id: 'startup',
+  emoji: '🚀',
+  name: 'Startup / Scale-up',
+  desc: 'Croissance rapide, besoins tech avancés'
+}, {
+  id: 'grand',
+  emoji: '🏗️',
+  name: 'Grande entreprise',
+  desc: '+500 employés, besoins d\'intégration complexes'
+}];
+const NEEDS_CLIENT = [{
+  id: 'chatbot',
+  emoji: '🤖',
+  label: 'Créer un chatbot IA',
+  sub: 'Service client, support interne, FAQ'
+}, {
+  id: 'auto',
+  emoji: '⚡',
+  label: 'Automatiser des tâches',
+  sub: 'Workflows, CRM, email, reporting'
+}, {
+  id: 'data',
+  emoji: '📊',
+  label: 'Analyser mes données',
+  sub: 'Dashboards, prédictions, BI'
+}, {
+  id: 'content',
+  emoji: '✍️',
+  label: 'Générer du contenu',
+  sub: 'Textes, images, vidéos par IA'
+}, {
+  id: 'api',
+  emoji: '🔗',
+  label: 'Connecter mes outils',
+  sub: 'API, intégrations, ERP, CRM'
+}, {
+  id: 'train',
+  emoji: '🎓',
+  label: 'Former mon équipe',
+  sub: 'Ateliers, guides, audit IA'
+}];
+const BUDGETS = [{
+  id: 'xs',
+  label: 'Moins de 500 $',
+  desc: 'Micro-projet'
+}, {
+  id: 'sm',
+  label: '500 à 2 000 $',
+  desc: 'Projet standard'
+}, {
+  id: 'md',
+  label: '2 000 à 10 000 $',
+  desc: 'Projet moyen'
+}, {
+  id: 'lg',
+  label: 'Plus de 10 000 $',
+  desc: 'Projet stratégique'
+}];
+const SPECIALITES = ['Agents IA', 'Automatisation', 'Chatbots', 'Développement IA', 'Prompt Engineering', 'Montage vidéo IA', 'Branding IA', 'Formation IA'];
+const NIVEAUX = [{
+  id: 'junior',
+  label: 'Junior',
+  desc: '0-2 ans d\'expérience IA'
+}, {
+  id: 'confirme',
+  label: 'Confirmé',
+  desc: '2-5 ans'
+}, {
+  id: 'senior',
+  label: 'Senior',
+  desc: '5+ ans, références vérifiées'
+}];
+function App() {
+  const [authLoading, setAuthLoading] = useState(true);
+  const [role, setRole] = useState('client');
+  const [userId, setUserId] = useState(null);
+  const [step, setStep] = useState(0);
+  const [saving, setSaving] = useState(false);
+
+  // Client fields
+  const [profil, setProfil] = useState('');
+  const [needs, setNeeds] = useState([]);
+  const [budget, setBudget] = useState('');
+
+  // Expert fields
+  const [specialites, setSpecialites] = useState([]);
+  const [niveau, setNiveau] = useState('');
+  const [tarif, setTarif] = useState('');
+  const [disponible, setDisponible] = useState('oui');
+  const [bio, setBio] = useState('');
+  const [linkedin, setLinkedin] = useState('');
+
+  // Common
+  const [prenom, setPrenom] = useState('');
+  const [nom, setNom] = useState('');
+  const [entreprise, setEntreprise] = useState('');
+  useEffect(() => {
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+  useEffect(() => {
+    (async () => {
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
+      const uid = session.user.id;
+      setUserId(uid);
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', uid).single();
+      if (profile) {
+        setRole(profile.type_utilisateur || 'client');
+        setPrenom(profile.prenom || '');
+        setNom(profile.nom || '');
+        setEntreprise(profile.entreprise || '');
+        setBio(profile.bio || '');
+        setLinkedin(profile.linkedin || '');
+      }
+      setAuthLoading(false);
+    })();
+  }, []);
+  const totalSteps = role === 'expert' ? 4 : 4; // bienvenue → profil → domaine → terminé
+
+  const toggleArr = (arr, setArr, val) => setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
+  const canNext = () => {
+    if (role === 'client') {
+      if (step === 0) return !!profil;
+      if (step === 1) return needs.length > 0;
+      if (step === 2) return !!budget;
+      return true;
+    } else {
+      if (step === 0) return prenom.trim() && nom.trim();
+      if (step === 1) return specialites.length > 0;
+      if (step === 2) return !!niveau;
+      return true;
+    }
+  };
+  async function finish() {
+    setSaving(true);
+    try {
+      // Mise à jour profil
+      const updates = {
+        prenom,
+        nom,
+        entreprise
+      };
+      if (role === 'expert') {
+        updates.bio = bio;
+        updates.linkedin = linkedin;
+      }
+      await sb.from('profiles').update(updates).eq('id', userId);
+
+      // Pour les experts : upsert dans la table experts
+      if (role === 'expert' && specialites.length > 0) {
+        const expertData = {
+          specialite: specialites[0],
+          competences: specialites,
+          bio,
+          tarif_heure: tarif ? parseInt(tarif) : null,
+          disponible: disponible === 'oui'
+        };
+        const {
+          data: existing
+        } = await sb.from('experts').select('id').eq('id', userId).single();
+        if (existing) {
+          await sb.from('experts').update(expertData).eq('id', userId);
+        } else {
+          await sb.from('experts').insert({
+            id: userId,
+            ...expertData
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setSaving(false);
+    setStep(totalSteps);
+  }
+  const next = () => {
+    if (canNext()) {
+      if (step === totalSteps - 1) finish();else setStep(s => s + 1);
+    }
+  };
+  const back = () => setStep(s => s - 1);
+  const skip = () => {
+    window.location.href = role === 'expert' ? 'dashboard-expert.html' : 'dashboard-client.html';
+  };
+  const progress = step / totalSteps * 100;
+  if (authLoading) return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      flexDirection: 'column',
+      gap: 12,
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "spinner"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13
+    }
+  }, "Chargement..."));
+
+  // ──────────────────────────────────────
+  // ÉTAPE FINALE — Succès
+  // ──────────────────────────────────────
+  if (step === totalSteps) return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: '100%'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, "\uD83C\uDF89"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Bienvenue, ", /*#__PURE__*/React.createElement("em", null, prenom || 'cher utilisateur'), " !"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, role === 'expert' ? 'Votre profil expert est configuré. Vous pouvez maintenant recevoir des missions IA.' : 'Votre profil est prêt. Trouvez votre expert IA parfait dès maintenant.'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surf)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r-lg)',
+      padding: 20,
+      marginBottom: 24,
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginBottom: 12,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: '0.06em'
+    }
+  }, "Votre profil en r\xE9sum\xE9"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gap: 8
+    }
+  }, (role === 'client' ? [['Profil', PROFILES_CLIENT.find(p => p.id === profil)?.name || ''], ['Besoins', needs.map(n => NEEDS_CLIENT.find(x => x.id === n)?.label).filter(Boolean).join(', ')], ['Budget', BUDGETS.find(b => b.id === budget)?.label || '']] : [['Spécialités', specialites.slice(0, 3).join(', ')], ['Niveau', NIVEAUX.find(n => n.id === niveau)?.label || ''], ['Tarif', tarif ? `${tarif} $/h` : 'Non renseigné']]).map(([k, v]) => v ? /*#__PURE__*/React.createElement("div", {
+    key: k,
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: 13,
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }, k), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 600,
+      textAlign: 'right'
+    }
+  }, v)) : null))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10
+    }
+  }, role === 'expert' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-expert.html",
+    className: "btn btn-primary",
+    style: {
+      justifyContent: 'center',
+      padding: '14px 20px',
+      fontSize: 15
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard expert"), /*#__PURE__*/React.createElement("a", {
+    href: "profil-expert.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Star, null), "Voir mon profil public")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-primary",
+    style: {
+      justifyContent: 'center',
+      padding: '14px 20px',
+      fontSize: 15
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Search, null), "Voir les experts recommand\xE9s"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Plus, null), "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard"))))));
+
+  // ──────────────────────────────────────
+  // FLOW CLIENT
+  // ──────────────────────────────────────
+  if (role === 'client') return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("span", {
+    className: "skip",
+    onClick: skip,
+    style: {
+      cursor: 'pointer'
+    }
+  }, "Passer \u2192")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    key: step
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-tag"
+  }, "\xC9tape ", step + 1, " sur ", totalSteps), step === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vous \xEAtes ", /*#__PURE__*/React.createElement("em", null, "qui"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Cela nous aide \xE0 personnaliser votre exp\xE9rience et \xE0 recommander les bons experts."), /*#__PURE__*/React.createElement("div", {
+    className: "option-grid option-grid-2"
+  }, PROFILES_CLIENT.map(p => /*#__PURE__*/React.createElement("div", {
+    key: p.id,
+    className: `option-card ${profil === p.id ? 'selected' : ''}`,
+    onClick: () => setProfil(p.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "option-emoji"
+  }, p.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "option-name"
+  }, p.name), /*#__PURE__*/React.createElement("div", {
+    className: "option-desc"
+  }, p.desc), profil === p.id && /*#__PURE__*/React.createElement("div", {
+    className: "option-check"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })))))), step === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Quels sont vos ", /*#__PURE__*/React.createElement("em", null, "besoins"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "S\xE9lectionnez tout ce qui vous int\xE9resse. Vous pouvez choisir plusieurs options."), /*#__PURE__*/React.createElement("div", {
+    className: "option-grid option-grid-2"
+  }, NEEDS_CLIENT.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `option-card ${needs.includes(n.id) ? 'selected' : ''}`,
+    onClick: () => toggleArr(needs, setNeeds, n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "option-emoji"
+  }, n.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "option-name"
+  }, n.label), /*#__PURE__*/React.createElement("div", {
+    className: "option-desc"
+  }, n.sub), needs.includes(n.id) && /*#__PURE__*/React.createElement("div", {
+    className: "option-check"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })))))), step === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Quel est votre ", /*#__PURE__*/React.createElement("em", null, "budget"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Une estimation suffit. Cela aide les experts \xE0 vous faire des propositions adapt\xE9es."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist"
+  }, BUDGETS.map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.id,
+    className: `check-item ${budget === b.id ? 'selected' : ''}`,
+    onClick: () => setBudget(b.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "check-box"
+  }, budget === b.id && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, b.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, b.desc)))))), step === 3 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vos ", /*#__PURE__*/React.createElement("em", null, "informations")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Quelques informations pour personnaliser votre espace."), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Jean",
+    value: prenom,
+    onChange: e => setPrenom(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Dupont",
+    value: nom,
+    onChange: e => setNom(e.target.value)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Entreprise ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Votre entreprise",
+    value: entreprise,
+    onChange: e => setEntreprise(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 14,
+      background: 'rgba(16,185,129,0.07)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 'var(--r)',
+      fontSize: 13,
+      color: 'var(--text-2)',
+      display: 'flex',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\uD83D\uDD12"), "Vos informations ne sont jamais partag\xE9es sans votre accord.")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "steps-dots"
+  }, Array.from({
+    length: totalSteps
+  }, (_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '9px 16px',
+      fontSize: 13
+    },
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13,
+      opacity: canNext() ? 1 : 0.5
+    },
+    onClick: next,
+    disabled: saving
+  }, saving ? 'Sauvegarde...' : step === totalSteps - 1 ? 'Terminer' : 'Continuer', " ", !saving && /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
+
+  // ──────────────────────────────────────
+  // FLOW EXPERT
+  // ──────────────────────────────────────
+  return /*#__PURE__*/React.createElement("div", {
+    className: "onboarding"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "top-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "logo"
+  }, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market")), /*#__PURE__*/React.createElement("span", {
+    className: "skip",
+    onClick: skip,
+    style: {
+      cursor: 'pointer'
+    }
+  }, "Passer \u2192")), /*#__PURE__*/React.createElement("div", {
+    className: "prog-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "prog-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "ob-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ob-card fade-up",
+    key: step
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-tag"
+  }, "\xC9tape ", step + 1, " sur ", totalSteps), step === 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Votre ", /*#__PURE__*/React.createElement("em", null, "profil"), " expert"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Ces informations seront visibles par les clients sur votre profil public."), /*#__PURE__*/React.createElement("div", {
+    className: "input-grid",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Pr\xE9nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Marie",
+    value: prenom,
+    onChange: e => setPrenom(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Nom *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Chen",
+    value: nom,
+    onChange: e => setNom(e.target.value)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Entreprise / Freelance"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "Ind\xE9pendant, Mon Agence...",
+    value: entreprise,
+    onChange: e => setEntreprise(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "LinkedIn"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "https://linkedin.com/in/...",
+    value: linkedin,
+    onChange: e => setLinkedin(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Bio courte"), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    placeholder: "Expert IA sp\xE9cialis\xE9 dans...",
+    value: bio,
+    onChange: e => setBio(e.target.value)
+  }))), step === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Vos ", /*#__PURE__*/React.createElement("em", null, "sp\xE9cialit\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "S\xE9lectionnez vos domaines d'expertise IA. Vous pouvez en choisir plusieurs."), /*#__PURE__*/React.createElement("div", {
+    className: "chips"
+  }, SPECIALITES.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s,
+    className: `chip ${specialites.includes(s) ? 'selected' : ''}`,
+    onClick: () => toggleArr(specialites, setSpecialites, s)
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Tarif horaire ($ CAD)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    placeholder: "ex. 120",
+    value: tarif,
+    onChange: e => setTarif(e.target.value),
+    style: {
+      maxWidth: 200
+    }
+  }))), step === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Votre ", /*#__PURE__*/React.createElement("em", null, "niveau")), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Votre exp\xE9rience en IA aide les clients \xE0 choisir le bon expert."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist"
+  }, NIVEAUX.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `check-item ${niveau === n.id ? 'selected' : ''}`,
+    onClick: () => setNiveau(n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "check-box"
+  }, niveau === n.id && /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: '#fff'
+    }
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, n.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, n.desc))))), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Disponibilit\xE9"), /*#__PURE__*/React.createElement("select", {
+    className: "input",
+    value: disponible,
+    onChange: e => setDisponible(e.target.value),
+    style: {
+      maxWidth: 240
+    }
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "oui"
+  }, "Disponible imm\xE9diatement"), /*#__PURE__*/React.createElement("option", {
+    value: "partiel"
+  }, "Partiellement disponible"), /*#__PURE__*/React.createElement("option", {
+    value: "non"
+  }, "Pas disponible actuellement")))), step === 3 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ob-title"
+  }, "Pr\xEAt \xE0 ", /*#__PURE__*/React.createElement("em", null, "d\xE9marrer"), " ?"), /*#__PURE__*/React.createElement("div", {
+    className: "ob-sub"
+  }, "Voici ce qui vous attend sur CreatorFlow Market en tant qu'expert."), /*#__PURE__*/React.createElement("div", {
+    className: "checklist",
+    style: {
+      marginBottom: 28
+    }
+  }, [{
+    emoji: '📥',
+    label: 'Recevez des briefs clients',
+    sub: 'Projets matchés à vos compétences'
+  }, {
+    emoji: '💬',
+    label: 'Messagerie intégrée',
+    sub: 'Échangez directement avec les clients'
+  }, {
+    emoji: '💰',
+    label: 'Paiement sécurisé',
+    sub: 'Libéré à la validation du client'
+  }, {
+    emoji: '⭐',
+    label: 'Construisez votre réputation',
+    sub: 'Avis vérifiés, badge certifié'
+  }].map((item, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "check-item selected",
+    style: {
+      cursor: 'default'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 20
+    }
+  }, item.emoji), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "check-label"
+  }, item.label), /*#__PURE__*/React.createElement("div", {
+    className: "check-sub"
+  }, item.sub)))))), /*#__PURE__*/React.createElement("div", {
+    className: "ob-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "steps-dots"
+  }, Array.from({
+    length: totalSteps
+  }, (_, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10
+    }
+  }, step > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '9px 16px',
+      fontSize: 13
+    },
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 20px',
+      fontSize: 13,
+      opacity: canNext() ? 1 : 0.5
+    },
+    onClick: next,
+    disabled: saving
+  }, saving ? 'Sauvegarde...' : step === totalSteps - 1 ? 'Terminer' : 'Continuer', " ", !saving && /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "cfm-build-scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@babel/core": "^7.27.0",
+    "@babel/preset-react": "^7.27.0"
+  }
+}

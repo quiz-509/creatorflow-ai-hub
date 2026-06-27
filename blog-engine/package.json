@@ -1,0 +1,45 @@
+{
+  "name": "creatorflow-ai-news-engine",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "generate": "node scripts/generate-article.js",
+    "monitor": "node scripts/news-monitor.js"
+  },
+  "dependencies": {
+    "next": "14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@supabase/supabase-js": "^2.44.0",
+    "@prisma/client": "^5.15.0",
+    "@anthropic-ai/sdk": "^0.24.0",
+    "openai": "^4.52.0",
+    "@google/generative-ai": "^0.15.0",
+    "tailwindcss": "^3.4.4",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "@shadcn/ui": "latest",
+    "rss-parser": "^3.13.0",
+    "cheerio": "^1.0.0",
+    "slugify": "^1.6.6",
+    "date-fns": "^3.6.0",
+    "reading-time": "^1.5.0",
+    "marked": "^12.0.0",
+    "sharp": "^0.33.4",
+    "node-cron": "^3.0.3",
+    "axios": "^1.7.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5",
+    "prisma": "^5.15.0"
+  }
+}

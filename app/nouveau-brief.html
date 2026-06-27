@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Nouveau Brief — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-primary:disabled{opacity:0.5;pointer-events:none;}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+.container{max-width:900px;margin:0 auto;padding:0 24px;}
+
+/* STEPPER */
+.stepper-wrap{padding:32px 0 0;}
+.stepper{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:40px;}
+.step{display:flex;align-items:center;gap:0;}
+.step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--border-2);color:var(--text-3);background:var(--surf);transition:all 300ms var(--ease);flex-shrink:0;}
+.step-dot.active{border-color:var(--v);color:var(--vs);background:rgba(124,58,237,0.15);box-shadow:0 0 0 4px rgba(124,58,237,0.12);}
+.step-dot.done{border-color:var(--green);background:rgba(16,185,129,0.15);color:var(--green);}
+.step-label{font-size:12px;color:var(--text-3);margin-left:8px;margin-right:0;white-space:nowrap;transition:color 200ms;}
+.step-label.active{color:var(--vs);}
+.step-line{width:48px;height:1px;background:var(--border-2);margin:0 8px;transition:background 300ms;}
+.step-line.done{background:var(--green);}
+
+/* CARD */
+.form-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-xl);padding:36px;position:relative;overflow:hidden;margin-bottom:20px;}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--v),var(--c));}
+.card-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.card-sub{font-size:13px;color:var(--text-2);margin-bottom:28px;}
+
+/* FIELDS */
+.field{margin-bottom:20px;}
+.label{display:block;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px;}
+.label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.label-hint{font-size:12px;color:var(--text-3);}
+.input{width:100%;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-family:var(--f);font-size:14px;padding:11px 14px;outline:none;transition:border-color 180ms,box-shadow 180ms;resize:none;}
+.input:focus{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.input.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,0.10);}
+.error-msg{font-size:12px;color:var(--red);margin-top:5px;}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.cat-card{padding:16px;background:var(--surf-2);border:2px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 200ms var(--ease);text-align:center;}
+.cat-card:hover{border-color:var(--border-2);}
+.cat-card.selected{border-color:var(--v);background:rgba(124,58,237,0.10);}
+.cat-emoji{font-size:24px;margin-bottom:8px;}
+.cat-name{font-size:13px;font-weight:700;}
+.cat-desc{font-size:11px;color:var(--text-3);margin-top:3px;}
+
+/* BUDGET SLIDER */
+.budget-row{display:flex;gap:10px;}
+.budget-opt{flex:1;padding:14px;background:var(--surf-2);border:2px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 200ms;text-align:center;}
+.budget-opt:hover{border-color:var(--border-2);}
+.budget-opt.selected{border-color:var(--v);background:rgba(124,58,237,0.10);}
+.budget-range{font-size:15px;font-weight:800;color:var(--vs);}
+.budget-label{font-size:11px;color:var(--text-3);margin-top:3px;}
+
+/* TAGS INPUT */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;min-height:46px;cursor:text;}
+.tags-wrap:focus-within{border-color:rgba(124,58,237,0.6);box-shadow:0 0 0 3px rgba(124,58,237,0.12);}
+.tag-item{display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:999px;font-size:12px;font-weight:600;color:var(--vs);}
+.tag-remove{cursor:pointer;opacity:0.7;font-size:14px;line-height:1;}
+.tag-remove:hover{opacity:1;}
+.tags-input{background:none;border:none;outline:none;color:var(--text);font-size:13px;font-family:var(--f);min-width:120px;}
+.tag-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.tag-sug{padding:4px 12px;background:var(--surf-3);border:1px solid var(--border-2);border-radius:999px;font-size:12px;color:var(--text-3);cursor:pointer;transition:all 150ms;}
+.tag-sug:hover{color:var(--vs);border-color:rgba(124,58,237,0.3);}
+
+/* TIMELINE OPTS */
+.timeline-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.tl-opt{padding:14px 10px;background:var(--surf-2);border:2px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all 200ms;text-align:center;}
+.tl-opt:hover{border-color:var(--border-2);}
+.tl-opt.selected{border-color:var(--v);background:rgba(124,58,237,0.10);}
+.tl-val{font-size:14px;font-weight:800;color:var(--vs);}
+.tl-lbl{font-size:11px;color:var(--text-3);margin-top:3px;}
+
+/* SUMMARY */
+.summary-grid{display:grid;gap:12px;}
+.sum-row{display:flex;justify-content:space-between;align-items:flex-start;padding:14px;background:var(--surf-2);border:1px solid var(--border);border-radius:var(--r);}
+.sum-key{font-size:13px;color:var(--text-3);}
+.sum-val{font-size:13px;font-weight:600;text-align:right;max-width:55%;}
+.sum-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;}
+.sum-tag{padding:3px 10px;background:rgba(124,58,237,0.12);border-radius:999px;font-size:11px;color:var(--vs);}
+
+/* SUCCESS */
+@keyframes pop-in{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+.success-wrap{text-align:center;padding:40px 0;}
+.success-ring{width:80px;height:80px;border-radius:50%;background:rgba(16,185,129,0.12);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pop-in 600ms var(--ease) both;}
+.success-title{font-size:24px;font-weight:800;margin-bottom:8px;}
+.success-sub{font-size:14px;color:var(--text-2);line-height:1.6;}
+.success-actions{display:flex;gap:12px;justify-content:center;margin-top:28px;}
+
+/* NAV FOOTER */
+.form-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;}
+
+/* PROGRESS */
+.progress-bar{height:3px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:32px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--v),var(--c));border-radius:999px;transition:width 400ms var(--ease);}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 400ms var(--ease) both;}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useRef,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "28",
+    height: "28",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  SmCheck: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  ArrowLeft: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 12H5M11 19l-7-7 7-7"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "10",
+    height: "10",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "3",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  Upload: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "20",
+    height: "20",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 16 12 12 8 16"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "12",
+    x2: "12",
+    y2: "21"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"
+  })),
+  Dashboard: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "21",
+    x2: "16.65",
+    y2: "16.65"
+  }))
+};
+const categories = [{
+  emoji: '🤖',
+  name: 'Chatbot & IA',
+  desc: 'Agents, chatbots, GPT'
+}, {
+  emoji: '⚡',
+  name: 'Automatisation',
+  desc: 'Make, Zapier, n8n'
+}, {
+  emoji: '📊',
+  name: 'Data & Analytics',
+  desc: 'Tableaux de bord, BI'
+}, {
+  emoji: '✍️',
+  name: 'Contenu IA',
+  desc: 'Génération, copywriting'
+}, {
+  emoji: '🎨',
+  name: 'Image & Vidéo',
+  desc: 'Midjourney, Runway'
+}, {
+  emoji: '🔗',
+  name: 'Intégrations',
+  desc: 'API, CRM, ERP'
+}];
+const budgets = [{
+  range: '< 500 $',
+  label: 'Micro projet',
+  key: 'xs'
+}, {
+  range: '500–2k $',
+  label: 'Projet standard',
+  key: 'sm'
+}, {
+  range: '2k–5k $',
+  label: 'Projet moyen',
+  key: 'md'
+}, {
+  range: '5k $ +',
+  label: 'Grand projet',
+  key: 'lg'
+}];
+const timelines = [{
+  val: '< 1 sem.',
+  lbl: 'Express',
+  key: 'xs'
+}, {
+  val: '1–2 sem.',
+  lbl: 'Rapide',
+  key: 'sm'
+}, {
+  val: '1 mois',
+  lbl: 'Standard',
+  key: 'md'
+}, {
+  val: '2 mois +',
+  lbl: 'Long terme',
+  key: 'lg'
+}];
+const suggestedTags = ['ChatGPT', 'Make.com', 'Python', 'LangChain', 'Zapier', 'n8n', 'Notion', 'Airtable', 'Slack', 'API REST'];
+const steps = ['Catégorie', 'Détails', 'Budget', 'Récapitulatif'];
+function TagsInput({
+  tags,
+  setTags
+}) {
+  const [val, setVal] = useState('');
+  const inputRef = useRef();
+  const addTag = t => {
+    const clean = t.trim();
+    if (clean && !tags.includes(clean) && tags.length < 8) {
+      setTags([...tags, clean]);
+      setVal('');
+    }
+  };
+  const handleKey = e => {
+    if ((e.key === 'Enter' || e.key === ',') && val) {
+      e.preventDefault();
+      addTag(val);
+    }
+    if (e.key === 'Backspace' && !val && tags.length) setTags(tags.slice(0, -1));
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "tags-wrap",
+    onClick: () => inputRef.current.focus()
+  }, tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "tag-item"
+  }, t, /*#__PURE__*/React.createElement("span", {
+    className: "tag-remove",
+    onClick: () => setTags(tags.filter(x => x !== t))
+  }, /*#__PURE__*/React.createElement(Ic.X, null)))), /*#__PURE__*/React.createElement("input", {
+    ref: inputRef,
+    className: "tags-input",
+    placeholder: tags.length === 0 ? 'Tapez une technologie et appuyez sur Entrée…' : '',
+    value: val,
+    onChange: e => setVal(e.target.value),
+    onKeyDown: handleKey
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "tag-suggestions"
+  }, suggestedTags.filter(s => !tags.includes(s)).slice(0, 6).map(s => /*#__PURE__*/React.createElement("button", {
+    key: s,
+    className: "tag-sug",
+    onClick: () => addTag(s)
+  }, /*#__PURE__*/React.createElement(Ic.Plus, {
+    style: {
+      width: 9,
+      height: 9
+    }
+  }), " ", s))));
+}
+function App() {
+  const targetExpertId = new URLSearchParams(window.location.search).get('expert_id') || null;
+  const [step, setStep] = useState(0);
+  const [done, setDone] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [user, setUser] = useState(null);
+  const [targetExpert, setTargetExpert] = useState(null);
+  const [form, setForm] = useState({
+    category: '',
+    title: '',
+    description: '',
+    context: '',
+    budget: '',
+    timeline: '',
+    tags: [],
+    files: []
+  });
+  useEffect(() => {
+    if (targetExpertId) {
+      sb.from('profiles').select('prenom, nom').eq('id', targetExpertId).single()
+        .then(({ data }) => { if (data) setTargetExpert(data); });
+    }
+    sb.auth.getSession().then(({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
+      setUser(data.session.user);
+    });
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
+  const set = (k, v) => setForm(f => ({
+    ...f,
+    [k]: v
+  }));
+  const clearErr = k => setErrors(e => {
+    const n = {
+      ...e
+    };
+    delete n[k];
+    return n;
+  });
+  const validate = () => {
+    const e = {};
+    if (step === 0 && !form.category) e.category = 'Sélectionnez une catégorie';
+    if (step === 1) {
+      if (!form.title.trim()) e.title = 'Le titre est requis';else if (form.title.length < 10) e.title = 'Minimum 10 caractères';
+      if (!form.description.trim()) e.description = 'La description est requise';else if (form.description.length < 50) e.description = 'Minimum 50 caractères (actuellement ' + form.description.length + ')';
+    }
+    if (step === 2) {
+      if (!form.budget) e.budget = 'Sélectionnez un budget';
+      if (!form.timeline) e.timeline = 'Sélectionnez un délai';
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+  const next = () => {
+    if (validate()) setStep(s => s + 1);
+  };
+  const back = () => {
+    setStep(s => s - 1);
+    setErrors({});
+  };
+  const submit = async () => {
+    if (!user) return;
+    setSubmitting(true);
+    const {
+      data: profile
+    } = await sb.from('profiles').select('prenom,nom').eq('id', user.id).single();
+    const budgetLabel = budgets.find(b => b.key === form.budget)?.range || form.budget;
+    const delaiLabel = timelines.find(t => t.key === form.timeline)?.val || form.timeline;
+    const fullDesc = [form.title, form.description, form.context ? 'Contexte : ' + form.context : ''].filter(Boolean).join('\n\n');
+    const {
+      error
+    } = await sb.from('briefs').insert({
+      user_id: user.id,
+      categorie: form.category,
+      budget: budgetLabel,
+      delai: delaiLabel,
+      description: fullDesc,
+      nom_contact: `${profile?.prenom || ''} ${profile?.nom || ''}`.trim(),
+      email_contact: user.email,
+      statut: 'ouvert'
+    });
+    setSubmitting(false);
+    if (!error) setDone(true);
+  };
+  const progress = (step + (done ? 1 : 0)) / steps.length * 100;
+  if (done) return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card",
+    style: {
+      marginTop: 40
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-wrap fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "success-ring"
+  }, /*#__PURE__*/React.createElement(Ic.Check, {
+    style: {
+      color: 'var(--green)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "success-title"
+  }, "Brief publi\xE9 avec succ\xE8s !"), /*#__PURE__*/React.createElement("div", {
+    className: "success-sub"
+  }, "Votre brief ", /*#__PURE__*/React.createElement("strong", null, "\"", form.title, "\""), " est maintenant visible par les experts de la plateforme.", /*#__PURE__*/React.createElement("br", null), "Vous recevrez des propositions d'experts dans les prochaines 24\u201348h."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 24,
+      padding: 20,
+      background: 'var(--surf-2)',
+      borderRadius: 'var(--r)',
+      border: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 12,
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "R\xE9f\xE9rence brief"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--vs)'
+    }
+  }, "#BRF-", Math.floor(Math.random() * 9000 + 1000))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600
+    }
+  }, form.category)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "Budget"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: 'var(--green)'
+    }
+  }, budgets.find(b => b.key === form.budget)?.range)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)',
+      marginBottom: 3
+    }
+  }, "D\xE9lai"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600
+    }
+  }, timelines.find(t => t.key === form.timeline)?.val)))), /*#__PURE__*/React.createElement("div", {
+    className: "success-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Dashboard, null), "Mon dashboard"), /*#__PURE__*/React.createElement("a", {
+    href: "recherche.html",
+    className: "btn btn-ghost"
+  }, /*#__PURE__*/React.createElement(Ic.Search, null), "Chercher un expert")))))));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Annuler"))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, targetExpert && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: '10px 16px',
+      background: 'rgba(124,58,237,0.08)',
+      border: '1px solid rgba(124,58,237,0.20)',
+      borderRadius: 'var(--r)',
+      marginBottom: 20,
+      fontSize: 13,
+      color: 'var(--vs)'
+    }
+  }, "👤 Brief destin\xE9 \xE0\xA0", /*#__PURE__*/React.createElement("strong", null, ((targetExpert.prenom || '') + ' ' + (targetExpert.nom || '')).trim())), /*#__PURE__*/React.createElement("div", {
+    className: "stepper-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-fill",
+    style: {
+      width: `${progress}%`
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "stepper"
+  }, steps.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "step"
+  }, i > 0 && /*#__PURE__*/React.createElement("div", {
+    className: `step-line ${i <= step ? 'done' : ''}`
+  }), /*#__PURE__*/React.createElement("div", {
+    className: `step-dot ${i === step ? 'active' : i < step ? 'done' : ''}`
+  }, i < step ? /*#__PURE__*/React.createElement(Ic.SmCheck, {
+    style: {
+      color: 'var(--green)',
+      width: 14,
+      height: 14
+    }
+  }) : i + 1), /*#__PURE__*/React.createElement("div", {
+    className: `step-label ${i === step ? 'active' : ''}`
+  }, s)))), step === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Quelle est votre besoin ?"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "S\xE9lectionnez la cat\xE9gorie qui correspond le mieux \xE0 votre projet."), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, categories.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.name,
+    className: `cat-card ${form.category === c.name ? 'selected' : ''}`,
+    onClick: () => {
+      set('category', c.name);
+      clearErr('category');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-emoji"
+  }, c.emoji), /*#__PURE__*/React.createElement("div", {
+    className: "cat-name"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "cat-desc"
+  }, c.desc)))), errors.category && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 12
+    }
+  }, errors.category)), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("div", null), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 1 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "D\xE9crivez votre projet"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Plus votre brief est d\xE9taill\xE9, plus les propositions seront pertinentes."), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label-row"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label",
+    style: {
+      margin: 0
+    }
+  }, "Titre du brief"), /*#__PURE__*/React.createElement("span", {
+    className: "label-hint"
+  }, form.title.length, "/80")), /*#__PURE__*/React.createElement("input", {
+    className: `input ${errors.title ? 'error' : ''}`,
+    placeholder: "Ex : Cr\xE9er un chatbot IA pour notre service client e-commerce",
+    maxLength: 80,
+    value: form.title,
+    onChange: e => {
+      set('title', e.target.value);
+      clearErr('title');
+    }
+  }), errors.title && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg"
+  }, errors.title)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label-row"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label",
+    style: {
+      margin: 0
+    }
+  }, "Description du projet"), /*#__PURE__*/React.createElement("span", {
+    className: "label-hint"
+  }, form.description.length, "/1000")), /*#__PURE__*/React.createElement("textarea", {
+    className: `input ${errors.description ? 'error' : ''}`,
+    rows: 5,
+    placeholder: "D\xE9crivez votre besoin : contexte, objectifs, r\xE9sultats attendus, contraintes techniques\u2026",
+    maxLength: 1000,
+    value: form.description,
+    onChange: e => {
+      set('description', e.target.value);
+      clearErr('description');
+    }
+  }), errors.description && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg"
+  }, errors.description)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Contexte / Entreprise ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("textarea", {
+    className: "input",
+    rows: 3,
+    placeholder: "Secteur d'activit\xE9, taille de l'\xE9quipe, stack technique existant\u2026",
+    value: form.context,
+    onChange: e => set('context', e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Technologies souhait\xE9es"), /*#__PURE__*/React.createElement(TagsInput, {
+    tags: form.tags,
+    setTags: v => set('tags', v)
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Continuer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 2 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "Budget & d\xE9lai"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "Aidez les experts \xE0 vous faire des propositions adapt\xE9es."), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Budget estim\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "budget-row"
+  }, budgets.map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.key,
+    className: `budget-opt ${form.budget === b.key ? 'selected' : ''}`,
+    onClick: () => {
+      set('budget', b.key);
+      clearErr('budget');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "budget-range"
+  }, b.range), /*#__PURE__*/React.createElement("div", {
+    className: "budget-label"
+  }, b.label)))), errors.budget && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 8
+    }
+  }, errors.budget)), /*#__PURE__*/React.createElement("div", {
+    className: "field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "D\xE9lai souhait\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "timeline-grid"
+  }, timelines.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.key,
+    className: `tl-opt ${form.timeline === t.key ? 'selected' : ''}`,
+    onClick: () => {
+      set('timeline', t.key);
+      clearErr('timeline');
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "tl-val"
+  }, t.val), /*#__PURE__*/React.createElement("div", {
+    className: "tl-lbl"
+  }, t.lbl)))), errors.timeline && /*#__PURE__*/React.createElement("div", {
+    className: "error-msg",
+    style: {
+      marginTop: 8
+    }
+  }, errors.timeline)), /*#__PURE__*/React.createElement("div", {
+    className: "field",
+    style: {
+      marginBottom: 0
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "Documents joints ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-3)',
+      fontWeight: 400
+    }
+  }, "(optionnel)")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: '2px dashed var(--border-2)',
+      borderRadius: 'var(--r)',
+      padding: '24px',
+      textAlign: 'center',
+      cursor: 'pointer',
+      transition: 'border-color 200ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.borderColor = 'rgba(124,58,237,0.4)',
+    onMouseLeave: e => e.currentTarget.style.borderColor = 'var(--border-2)'
+  }, /*#__PURE__*/React.createElement(Ic.Upload, {
+    style: {
+      color: 'var(--text-3)',
+      margin: '0 auto 8px',
+      display: 'block'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      fontWeight: 600
+    }
+  }, "Glissez vos fichiers ici"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)',
+      marginTop: 4
+    }
+  }, "PDF, images, docs \u2014 max 10 Mo par fichier")))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Retour"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: next
+  }, "Voir le r\xE9capitulatif ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), step === 3 && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "form-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "R\xE9capitulatif de votre brief"), /*#__PURE__*/React.createElement("div", {
+    className: "card-sub"
+  }, "V\xE9rifiez les informations avant de publier."), /*#__PURE__*/React.createElement("div", {
+    className: "summary-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Cat\xE9gorie"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, form.category)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Titre"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, form.title)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row",
+    style: {
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Description"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      lineHeight: 1.65
+    }
+  }, form.description)), form.context && /*#__PURE__*/React.createElement("div", {
+    className: "sum-row",
+    style: {
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Contexte"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)',
+      lineHeight: 1.65
+    }
+  }, form.context)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Budget"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val",
+    style: {
+      color: 'var(--green)',
+      fontWeight: 700
+    }
+  }, budgets.find(b => b.key === form.budget)?.range)), /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "D\xE9lai"), /*#__PURE__*/React.createElement("span", {
+    className: "sum-val"
+  }, timelines.find(t => t.key === form.timeline)?.val)), form.tags.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "sum-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sum-key"
+  }, "Technologies"), /*#__PURE__*/React.createElement("div", {
+    className: "sum-tags"
+  }, form.tags.map(t => /*#__PURE__*/React.createElement("span", {
+    key: t,
+    className: "sum-tag"
+  }, t))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      padding: 14,
+      background: 'rgba(16,185,129,0.07)',
+      border: '1px solid rgba(16,185,129,0.2)',
+      borderRadius: 'var(--r)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "var(--green)",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-2)'
+    }
+  }, "Votre brief sera visible uniquement par des experts v\xE9rifi\xE9s sur CreatorFlow Market."))), /*#__PURE__*/React.createElement("div", {
+    className: "form-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: back
+  }, /*#__PURE__*/React.createElement(Ic.ArrowLeft, null), "Modifier"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: submit,
+    disabled: submitting
+  }, submitting ? 'Publication…' : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", null, "Publier le brief"), " ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))))))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

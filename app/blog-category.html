@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Blog IA — CreatorFlow Market</title>
+  <meta name="description" content="Articles IA pour créateurs et entrepreneurs.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="robots" content="index, follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+  <style>
+    :root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--nav:64px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:var(--f);background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;}
+    a{color:inherit;text-decoration:none;}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+    img{max-width:100%;display:block;}
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    .nav-inner{max-width:1280px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:32px;}
+    .logo{font-size:17px;font-weight:800;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;flex-shrink:0;}
+    .nav-links{display:flex;align-items:center;gap:4px;flex:1;}
+    .nav-link{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--text-2);transition:all 150ms;}
+    .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.06);color:var(--text);}
+    .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto;}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);cursor:pointer;white-space:nowrap;}
+    .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+    .btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+    .btn-primary{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border:none;}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
+    .page{padding-top:var(--nav);}
+    .container{max-width:1280px;margin:0 auto;padding:0 24px;}
+
+    /* Hero */
+    .cat-hero{padding:64px 0 52px;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .cat-hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,0.025) 1px,transparent 0);background-size:32px 32px;pointer-events:none;}
+    .breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-3);margin-bottom:20px;position:relative;z-index:1;}
+    .breadcrumb a{transition:color 150ms;}
+    .breadcrumb a:hover{color:var(--text-2);}
+    .breadcrumb-sep{opacity:0.4;}
+    .cat-hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:center;}
+    .cat-hero-left{}
+    .cat-icon-wrap{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px;border:1px solid;}
+    .cat-hero h1{font-size:clamp(24px,3.5vw,40px);font-weight:900;line-height:1.12;letter-spacing:-0.03em;margin-bottom:10px;}
+    .cat-hero-desc{font-size:15px;color:var(--text-2);line-height:1.65;margin-bottom:18px;}
+    .cat-hero-stats{display:flex;gap:20px;flex-wrap:wrap;}
+    .cat-stat{font-size:12px;color:var(--text-3);}
+    .cat-stat strong{font-weight:600;color:var(--text-2);}
+    /* Newsletter mini */
+    .hero-nl-card{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:24px;}
+    .hero-nl-title{font-size:14px;font-weight:700;margin-bottom:4px;}
+    .hero-nl-sub{font-size:12px;color:var(--text-3);margin-bottom:14px;}
+    .hero-nl-form{display:flex;gap:8px;}
+    .hero-nl-input{flex:1;background:var(--surf-2);border:1px solid var(--border-2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);font-family:var(--f);min-width:0;}
+    .hero-nl-input::placeholder{color:var(--text-3);}
+    .hero-nl-input:focus{outline:none;border-color:rgba(124,58,237,0.5);}
+    .hero-nl-btn{padding:9px 14px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:8px;font-size:14px;font-weight:700;border:none;cursor:pointer;flex-shrink:0;transition:opacity 150ms;}
+    .hero-nl-btn:hover{opacity:0.9;}
+    .hero-nl-proof{font-size:11px;color:var(--text-3);margin-top:10px;text-align:center;}
+    .hero-nl-done{font-size:13px;color:var(--green);font-weight:600;padding:8px 0;}
+
+    /* Articles */
+    .articles-section{padding:40px 0 64px;}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;}
+    .section-title{font-size:20px;font-weight:700;letter-spacing:-0.02em;}
+    .sort-select{background:var(--surf-2);border:1px solid var(--border-2);border-radius:10px;padding:10px 18px;font-size:14px;font-weight:500;color:var(--text);font-family:var(--f);cursor:pointer;min-width:160px;}
+    .sort-select:focus{outline:none;border-color:var(--border-3);}
+    .sort-select option{background:var(--surf-2);color:var(--text);}
+    .articles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:28px;}
+    .article-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 200ms var(--ease);display:flex;flex-direction:column;cursor:pointer;}
+    .article-card:hover{border-color:var(--border-2);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+    /* Generative covers — tout en inline JSX */
+    .article-cover{position:relative;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+
+    /* Featured article */
+    .featured-article{margin-bottom:8px;}
+    .featured-label-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    .featured-badge{font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);}
+    .fc{display:grid;grid-template-columns:55% 45%;gap:0;background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);overflow:hidden;transition:border-color 200ms,box-shadow 200ms;}
+    .fc:hover{border-color:var(--border-3);box-shadow:0 20px 48px rgba(0,0,0,0.4);}
+    .fc-cover{height:360px;overflow:hidden;flex-shrink:0;}
+    .fc-body{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;}
+    .fc-body h2{font-size:clamp(18px,2.2vw,26px);font-weight:800;line-height:1.25;letter-spacing:-0.02em;margin:12px 0 14px;color:var(--text);}
+    .fc-excerpt{font-size:15px;color:var(--text-2);line-height:1.7;margin-bottom:18px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+    .fc-meta{display:flex;gap:14px;font-size:12px;color:var(--text-3);margin-bottom:22px;}
+    .fc-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);border-radius:999px;font-size:13px;font-weight:600;color:var(--vs);transition:all 200ms;width:fit-content;}
+    .fc-btn:hover{background:rgba(124,58,237,0.25);transform:translateX(3px);}
+
+    /* Conversion banner */
+    .conv-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 28px;background:rgba(124,58,237,0.05);border:1px solid rgba(124,58,237,0.14);border-radius:var(--r-lg);margin-bottom:36px;flex-wrap:wrap;}
+    .conv-banner-text{font-size:15px;font-weight:600;color:var(--text);}
+    .conv-banner-sub{font-size:13px;color:var(--text-2);margin-top:3px;}
+    .conv-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap;transition:all 200ms;flex-shrink:0;}
+    .conv-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--vg);}
+    .article-body{padding:20px;display:flex;flex-direction:column;flex:1;gap:8px;}
+    .cat-badge{display:inline-block;border-radius:999px;padding:2px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;}
+    .article-title{font-size:15px;font-weight:700;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+    .article-title:hover{color:var(--vs);}
+    .article-excerpt{font-size:13px;color:var(--text-2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+    .article-footer{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-3);padding-top:12px;border-top:1px solid var(--border);margin-top:auto;}
+    .af-left{display:flex;gap:12px;}
+    .load-more-wrap{display:flex;justify-content:center;padding:32px 0 0;}
+    .load-more-btn{padding:12px 32px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;font-size:14px;font-weight:600;color:var(--text-2);transition:all 200ms;cursor:pointer;}
+    .load-more-btn:hover{color:var(--text);border-color:var(--border-3);}
+    .skeleton{background:linear-gradient(90deg,var(--surf) 25%,var(--surf-2) 50%,var(--surf) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:8px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+    .sk-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+    .sk-thumb{height:180px;}
+    .sk-body{padding:20px;display:flex;flex-direction:column;gap:10px;}
+    .empty-state{text-align:center;padding:80px 20px;grid-column:1/-1;}
+    .empty-state p{color:var(--text-2);}
+
+    /* SEO Content */
+    .seo-section{padding:64px 0;border-top:1px solid var(--border);}
+    .seo-grid{display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start;}
+    .seo-main h2{font-size:clamp(20px,2.5vw,28px);font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;}
+    .seo-main p{font-size:16px;color:var(--text-2);line-height:1.8;margin-bottom:20px;}
+    .benefits-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+    .benefit-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#C4C4DC;line-height:1.5;}
+    .benefit-check{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.15);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+    .seo-aside{background:var(--surf);border:1px solid var(--border-2);border-radius:var(--r-xl);padding:20px;}
+    .seo-aside h3{font-size:13px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);}
+    .other-cats{display:flex;flex-direction:column;gap:3px;}
+    .other-cat-link{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:transparent;border:none;font-size:12px;color:var(--text-2);transition:all 150ms;}
+    .other-cat-link:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+
+    /* FAQ */
+    .faq-section{padding:64px 0;border-top:1px solid var(--border);}
+    .faq-section h2{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+    .faq-subtitle{font-size:15px;color:var(--text-2);margin-bottom:36px;}
+    .faq-list{display:flex;flex-direction:column;gap:12px;max-width:820px;}
+    .faq-item{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:border-color 200ms;}
+    .faq-item.open{border-color:var(--border-2);}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;gap:16px;}
+    .faq-q-text{font-size:15px;font-weight:600;line-height:1.4;}
+    .faq-chevron{font-size:13px;color:var(--text-3);transition:transform 250ms;flex-shrink:0;}
+    .faq-item.open .faq-chevron{transform:rotate(180deg);}
+    .faq-a{padding:0 22px 18px;font-size:14px;color:var(--text-2);line-height:1.75;}
+
+    /* CTA */
+    .cta-section{padding:80px 0;border-top:1px solid var(--border);}
+    .cta-card{background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.05));border:1px solid rgba(124,58,237,0.22);border-radius:var(--r-xl);padding:60px;text-align:center;position:relative;overflow:hidden;}
+    .cta-card::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,0.07),transparent 70%);pointer-events:none;}
+    .cta-card h2{font-size:clamp(22px,3vw,36px);font-weight:900;letter-spacing:-0.02em;margin-bottom:12px;position:relative;}
+    .cta-card p{font-size:16px;color:var(--text-2);margin-bottom:28px;position:relative;}
+    .cta-proof-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;position:relative;}
+    .cta-proof-item{font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+    .cta-proof-item::before{content:'✓';color:var(--green);font-weight:700;font-size:14px;}
+    .cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;border-radius:999px;font-size:15px;font-weight:700;transition:all 220ms;position:relative;}
+    .cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px var(--vg);}
+
+    /* Footer */
+    .footer{border-top:1px solid var(--border);padding:40px 0 32px;}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+    .footer-logo{font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--vs),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .footer-links{display:flex;gap:20px;flex-wrap:wrap;}
+    .footer-link{font-size:12px;color:var(--text-3);transition:color 150ms;}
+    .footer-link:hover{color:var(--text-2);}
+
+    @media(max-width:1024px){.seo-grid{grid-template-columns:1fr;}}
+    @media(max-width:900px){.cat-hero-inner{grid-template-columns:1fr;}.hero-nl-card{display:none;}}
+    @media(max-width:768px){.fc{grid-template-columns:1fr;}.fc-cover{height:220px;}.fc-body{padding:24px;}}
+    @media(max-width:680px){
+      .nav-links{display:none;}
+      .btn-ghost{display:none;}
+      .btn-primary{padding:8px 14px;font-size:12px;}
+      .articles-grid{grid-template-columns:1fr;}
+      .cta-card{padding:36px 20px;}
+      .seo-section{padding:40px 0;}
+      .faq-section{padding:40px 0;}
+      .cat-hero{padding:40px 0 32px;}
+      .section-header{flex-direction:column;align-items:flex-start;}
+      .sort-select{width:100%;}
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const CAT_DATA = {
+  'Actualités IA': {
+    color: '#F59E0B',
+    icon: '🔥',
+    slug: 'actualites-ia',
+    heroImage: 'https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Les dernières innovations IA décryptées pour entrepreneurs et professionnels",
+    desc: "Restez à la pointe de l'IA avec nos analyses des dernières innovations : nouveaux modèles, mises à jour majeures et impacts business concrets. Chaque article transforme l'actualité technique en décisions actionnables.",
+    benefits: ["Analyses exclusives des nouveaux modèles IA", "Impact business concret de chaque innovation", "Veille hebdomadaire filtrée pour non-techniciens", "Comparatifs honnêtes sans jargon inutile"],
+    faq: [{
+      q: "Quelle est la différence entre GPT-5 et Claude 4 ?",
+      a: "GPT-5 d'OpenAI excelle en coding et multimodal, Claude 4 d'Anthropic est supérieur en raisonnement long et rédaction nuancée. Pour le business francophone, les deux offrent des résultats de haut niveau avec des pricing différents selon les volumes d'usage."
+    }, {
+      q: "Comment suivre les actualités IA sans être dépassé ?",
+      a: "Focalisez-vous sur 3 sources fiables maximum et filtrez selon vos cas d'usage : marketing, automatisation ou création de contenu. Notre blog fait cette curation pour vous en gardant uniquement ce qui a un impact business réel."
+    }, {
+      q: "L'IA générative va-t-elle remplacer les créateurs de contenu ?",
+      a: "Non, elle amplifie les créateurs qui l'adoptent. Les professionnels qui utilisent l'IA produisent 5 à 10x plus de contenu avec la même équipe, sans perdre leur voix ni leur créativité."
+    }, {
+      q: "Quels modèles IA sont les plus fiables pour les entreprises en 2026 ?",
+      a: "Claude 4, GPT-5, Gemini Ultra et Llama 4 dominent le marché. Pour la production francophone professionnelle, Claude et GPT-5 ont l'avantage en qualité linguistique et nuance culturelle."
+    }, {
+      q: "Comment évaluer si une innovation IA est vraiment utile pour mon business ?",
+      a: "Posez-vous deux questions : est-ce que ça réduit un temps de tâche répétitif de plus de 2h par semaine, ou est-ce que ça améliore la qualité d'un livrable client ? Si non aux deux, ce n'est pas prioritaire."
+    }]
+  },
+  'Outils IA': {
+    color: '#06B6D4',
+    icon: '🛠',
+    slug: 'outils-ia',
+    heroImage: 'https://images.unsplash.com/photo-1735825764485-93a381fd5779?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Les meilleurs outils IA sélectionnés et testés pour entrepreneurs et professionnels",
+    desc: "On teste, compare et décrypte les outils IA qui méritent vraiment votre temps et votre budget. Des recommandations concrètes pour choisir sans se perdre dans une offre pléthorique.",
+    benefits: ["Tests terrain avec cas d'usage réels", "Comparatifs prix et fonctionnalités à jour", "Guides de prise en main step-by-step", "Alertes nouvelles fonctionnalités majeures"],
+    faq: [{
+      q: "Quels sont les meilleurs outils IA gratuits pour débuter en 2026 ?",
+      a: "ChatGPT (plan gratuit), Claude.ai (plan gratuit), Perplexity AI, Bing AI, Gamma pour les présentations et Canva IA pour les visuels. Ces 6 outils couvrent 80% des besoins de base sans débourser un centime."
+    }, {
+      q: "Comment choisir entre les dizaines d'outils IA disponibles ?",
+      a: "Identifiez d'abord votre cas d'usage principal (rédaction, image, automatisation, analyse). Ensuite testez maximum 2 outils sur la même tâche pendant une semaine et gardez celui qui produit les meilleurs résultats avec le moins de friction."
+    }, {
+      q: "Les outils IA no-code valent-ils vraiment l'investissement ?",
+      a: "Oui pour la majorité des PME. Make.com, n8n et Zapier permettent d'automatiser des workflows qui économisent en moyenne 8 à 15h par semaine pour une équipe de 3-5 personnes, pour moins de 100€ par mois."
+    }, {
+      q: "Quelle est la différence entre Midjourney et DALL-E pour les visuels marketing ?",
+      a: "Midjourney produit des images plus artistiques et stylisées, idéales pour contenu créatif. DALL-E 3 est plus précis sur les instructions textuelles et s'intègre nativement dans ChatGPT. Pour le marketing produit, Midjourney a généralement le dessus en qualité visuelle."
+    }, {
+      q: "Faut-il payer pour les outils IA ou les versions gratuites suffisent ?",
+      a: "Les versions gratuites suffisent pour tester et les tâches occasionnelles. Dès que vous utilisez un outil plus de 30 min par jour, le plan payant devient rentable : rapidité, limites supprimées et fonctionnalités avancées compensent largement le coût."
+    }]
+  },
+  'Automatisation IA': {
+    color: '#10B981',
+    icon: '⚡',
+    slug: 'automatisation-ia',
+    heroImage: 'https://images.unsplash.com/photo-1647427060118-4911c9821b82?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Automatiser son business avec l'IA : workflows, n8n, Make et stratégies avancées",
+    desc: "De la prospection au service client, découvrez comment construire des systèmes IA qui travaillent pendant que vous dormez. Tutoriels pratiques, workflows prêts à l'emploi et retours d'expérience terrain.",
+    benefits: ["Workflows prêts à déployer en moins d'une heure", "ROI moyen 3 à 8x sur les automatisations bien configurées", "Économies de 10 à 20h de travail manuel par semaine", "Intégrations testées avec les outils les plus populaires"],
+    faq: [{
+      q: "Comment automatiser sa prospection commerciale avec l'IA en 2026 ?",
+      a: "La stack la plus efficace : Clay pour l'enrichissement de données, Apollo ou Instantly pour les séquences email, et un LLM (Claude ou GPT-5) pour personnaliser les messages à l'échelle. Cette configuration génère en moyenne 3 à 5x plus de réponses que la prospection manuelle."
+    }, {
+      q: "Quelle est la différence entre n8n, Make et Zapier ?",
+      a: "Zapier est le plus simple mais le plus coûteux à l'échelle. Make offre un bon équilibre visuels et puissance. n8n est open-source, auto-hébergeable et illimité, idéal si vous avez des volumes élevés ou des besoins de personnalisation avancés."
+    }, {
+      q: "Combien de temps faut-il pour construire son premier workflow d'automatisation IA ?",
+      a: "Comptez 2 à 4h pour un premier workflow simple (ex : alerte email → résumé IA → Slack). Avec Make.com ou n8n et un bon tutoriel, vous pouvez avoir quelque chose en production le jour même."
+    }, {
+      q: "Quels workflows d'automatisation IA donnent le meilleur ROI ?",
+      a: "Par ordre de ROI décroissant : automatisation de la prospection outbound, génération et publication de contenu réseaux sociaux, réponses automatiques SAV (premier niveau), et rapports analytics hebdomadaires. Ces 4 cas couvrent 70% du gain de productivité accessible."
+    }, {
+      q: "Peut-on automatiser sans savoir coder ?",
+      a: "Oui complètement. Make.com, n8n (interface visuelle) et Zapier sont 100% no-code. Les outils IA actuels comprennent même des instructions en langage naturel pour configurer des workflows complexes sans une seule ligne de code."
+    }]
+  },
+  'Marketing IA': {
+    color: '#7C3AED',
+    icon: '📈',
+    slug: 'marketing-ia',
+    heroImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Stratégies marketing IA pour générer plus de leads, de trafic et de revenus en 2026",
+    desc: "Le marketing IA ne se limite pas à ChatGPT pour écrire des posts. Découvrez les stratégies que les meilleurs growth hackers utilisent pour dominer leur marché avec une fraction du budget traditionnel.",
+    benefits: ["Stratégies testées avec résultats mesurables", "SEO IA : dominer Google avec moins d'efforts", "Email marketing IA à taux d'ouverture 40%+", "Social media automation sans perdre l'authenticité"],
+    faq: [{
+      q: "Comment créer une stratégie de contenu IA qui génère des leads en continu ?",
+      a: "La méthode en 3 étapes : définir 5 sujets piliers autour de votre expertise, générer 3 à 5 articles SEO par semaine ciblant des mots-clés longue traîne, et distribuer chaque article en 10 formats (LinkedIn, newsletter, short-form video). L'IA réduit le temps de production de 70%."
+    }, {
+      q: "L'IA peut-elle vraiment améliorer le SEO d'un site en 2026 ?",
+      a: "Oui, à condition de l'utiliser correctement. L'IA accélère la recherche de mots-clés, la création de contenu optimisé et l'analyse des SERPs. Les sites qui publient 3 à 5 articles IA par semaine voient leur trafic organique croître en moyenne de 180% sur 6 mois."
+    }, {
+      q: "Comment utiliser l'IA pour améliorer ses campagnes email marketing ?",
+      a: "Testez 5 objets d'email différents générés par IA sur des micro-segments, personnalisez le contenu selon le comportement passé, et automatisez les séquences de nurturing. Les campagnes email optimisées par IA atteignent des taux d'ouverture de 35 à 50% vs 22% en moyenne sectorielle."
+    }, {
+      q: "Quelle est la meilleure stratégie social media IA pour entrepreneurs en 2026 ?",
+      a: "Contenus piliers : 2 articles longs forme par semaine. Distribution IA : chaque article décliné en 5 posts LinkedIn, 3 threads X, 2 scripts courts vidéo. Automatisation : scheduling via Buffer ou Metricool. Résultat : présence quotidienne sur 3 plateformes avec 4h de travail hebdomadaire."
+    }, {
+      q: "Peut-on faire du marketing IA authentique sans paraître robotique ?",
+      a: "Oui : utilisez l'IA pour la structure, les données et la distribution, mais gardez votre voix sur les insights personnels, les opinions et les histoires vécues. Le lecteur perçoit l'authenticité dans la perspective unique, pas dans la syntaxe."
+    }]
+  },
+  'Création de Contenu IA': {
+    color: '#14B8A6',
+    icon: '🎬',
+    slug: 'creation-contenu-ia',
+    heroImage: 'https://images.unsplash.com/photo-1611241893603-3c359704e0ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Créer du contenu vidéo, texte et visuel avec l'IA : guides, outils et stratégies 2026",
+    desc: "Vidéos YouTube, posts Instagram, podcasts, newsletters : l'IA transforme chaque format de contenu. Apprenez à produire 10x plus sans sacrifier la qualité ni votre style personnel.",
+    benefits: ["Workflows vidéo IA de l'idée au montage", "Scripts optimisés pour YouTube et TikTok", "Visuels professionnels avec Midjourney et Flux", "Newsletter IA avec taux d'ouverture 40%+"],
+    faq: [{
+      q: "Comment créer des vidéos YouTube avec l'IA de A à Z ?",
+      a: "Workflow complet : recherche sujet (Perplexity + Google Trends) → script IA (Claude ou ChatGPT) → voix-off (ElevenLabs) → visuels et B-roll (Pika, Runway) → montage assisté (CapCut IA, Descript) → miniature (Midjourney + Canva) → titre et description SEO (ChatGPT). Temps total : 3 à 5h par vidéo 10 min."
+    }, {
+      q: "L'IA peut-elle vraiment créer du contenu dans mon style personnel ?",
+      a: "Après 10 à 15 exemples de votre contenu existant en prompt, les modèles actuels capturent 80% de votre style. Pour les 20% restants : revoyez le ton, ajoutez vos anecdotes personnelles et vos opinions tranchées. L'authenticité vient de la perspective, pas de la syntaxe."
+    }, {
+      q: "Quels outils IA pour créer des visuels pour les réseaux sociaux ?",
+      a: "Midjourney pour les visuels artistiques et lifestyle, DALL-E 3 pour les illustrations précises, Canva IA pour les templates et les posts formatés, Adobe Firefly pour les retouches et l'intégration Creative Cloud. Pour débutants : Canva IA suffit pour 90% des besoins."
+    }, {
+      q: "Comment produire 30 posts LinkedIn par mois avec l'IA en moins de 5 heures ?",
+      a: "Méthode batch : 1h de brainstorming pour 10 angles différents, 1h pour générer 30 posts avec Claude (3 variantes par angle), 2h pour éditer et personnaliser, 1h pour programmer via Buffer. Le secret : travaillez par lots mensuels, pas au jour le jour."
+    }, {
+      q: "Quelle est la meilleure IA pour rédiger une newsletter professionnelle ?",
+      a: "Claude pour les newsletters longues avec nuance et raisonnement, ChatGPT pour les newsletters courtes et punchy, Jasper pour les templates marketing. Structure recommandée : 1 insight fort (personnel) + 3 ressources commentées (IA) + 1 appel à l'action = newsletter 5 min lue à 40%+."
+    }]
+  },
+  'Vente IA': {
+    color: '#8B5CF6',
+    icon: '💰',
+    slug: 'vente-ia',
+    heroImage: 'https://images.unsplash.com/photo-1730382624709-81e52dd294d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Automatiser et optimiser son processus de vente avec l'intelligence artificielle",
+    desc: "IA de qualification de leads, séquences de closing automatisées, analyse prédictive des prospects : la vente IA n'est plus réservée aux grandes entreprises. Voici comment l'implémenter dans votre business dès cette semaine.",
+    benefits: ["Qualification automatique des leads entrants", "Séquences de nurturing personnalisées à l'échelle", "Prédiction du meilleur moment pour relancer", "Réduction du cycle de vente de 40% en moyenne"],
+    faq: [{
+      q: "Comment automatiser la qualification de leads avec l'IA ?",
+      a: "Configurez un formulaire intelligent qui collecte 5 à 7 signaux clés (budget, timeline, decision maker, use case, company size). L'IA score chaque lead de 0 à 100 et déclenche automatiquement la séquence adaptée : outreach commercial pour score 70+, nurturing pour 40-69, disqualification pour <40."
+    }, {
+      q: "Quels outils IA utiliser pour booster ses ventes en 2026 ?",
+      a: "Pour la prospection : Clay + Instantly. Pour le CRM intelligent : HubSpot IA ou Salesforce Einstein. Pour le closing : Gong.io pour analyser les appels, Crystal Knows pour adapter le pitch au profil. Pour l'onboarding : Intercom IA ou Drift pour accompagner les nouveaux clients."
+    }, {
+      q: "L'IA peut-elle vraiment remplacer un commercial ?",
+      a: "Non pour les deals complexes, oui pour la qualification et le nurturing de masse. L'IA traite efficacement les 80% de prospects qui ne sont pas encore prêts à acheter, libérant les commerciaux pour les 20% à fort potentiel. Résultat : même équipe, pipeline 3x plus large."
+    }, {
+      q: "Comment utiliser l'IA pour améliorer son taux de closing ?",
+      a: "Analysez vos appels de vente avec Gong ou Chorus pour identifier les patterns des deals gagnés vs perdus. Utilisez l'IA pour préparer chaque appel (recherche prospect, objections probables, arguments différenciants). Envoyez des follow-ups personnalisés dans l'heure suivant l'appel. Ces 3 actions augmentent le taux de closing de 25 à 40%."
+    }, {
+      q: "Comment créer un funnel de vente entièrement automatisé par l'IA ?",
+      a: "Architecture en 4 étapes : trafic SEO/paid → lead magnet (guide, outil gratuit) → séquence email IA 7 jours → call automatisé avec IA de qualification → handoff au commercial pour close. Ce funnel fonctionne 24h/24 et pré-qualifie 60 à 80% des leads avant qu'un humain intervienne."
+    }]
+  },
+  'Support Client IA': {
+    color: '#EC4899',
+    icon: '🤝',
+    slug: 'support-client-ia',
+    heroImage: 'https://images.unsplash.com/photo-1626863905121-3b0c0ed7b94c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Déployer un support client IA disponible 24h/24 qui réduit les coûts et améliore la satisfaction",
+    desc: "Les chatbots IA de 2026 ne sont plus des IVR frustrantes. Ils comprennent le contexte, s'adaptent au ton du client et résolvent 70% des tickets sans intervention humaine. Voici comment les déployer.",
+    benefits: ["Réduction de 60 à 70% des tickets de premier niveau", "Disponibilité 24h/24 en français et multilingue", "Intégration en 48h avec Intercom, Zendesk, WhatsApp", "CSAT client amélioré de 15 à 25% en moyenne"],
+    faq: [{
+      q: "Comment déployer un chatbot IA pour son service client en 48 heures ?",
+      a: "Avec Intercom Fin, Tidio IA ou Crisp : créez une base de connaissances (FAQ, procédures), connectez-la au LLM, configurez les escalades humaines pour les cas complexes, et testez sur 20 scénarios réels. La majorité des solutions proposent un déploiement guidé sans code en moins de 2 jours."
+    }, {
+      q: "Quel est le ROI d'un chatbot IA pour le support client ?",
+      a: "En moyenne : réduction de 65% des tickets de niveau 1, économie de 8 à 12h d'équipe par semaine pour 100 tickets mensuels, et CSAT en hausse de 15 à 20% grâce aux réponses instantanées 24h/24. Le ROI est positif dès le premier mois pour les équipes qui reçoivent plus de 50 tickets par semaine."
+    }, {
+      q: "Quelle est la différence entre Intercom IA, Zendesk IA et Freshdesk IA ?",
+      a: "Intercom Fin (GPT-4 natif) est le plus naturel et le mieux intégré pour le SaaS. Zendesk IA est plus puissant pour les grandes équipes avec des workflows complexes. Freshdesk IA est la solution la plus accessible en termes de prix pour les PME. Testez les 3 avec votre base de connaissances existante avant de choisir."
+    }, {
+      q: "Comment éviter que le chatbot IA donne de mauvaises réponses ?",
+      a: "Trois garde-fous essentiels : alimentez-le uniquement avec des sources vérifiées (pas de web crawling libre), configurez une escalade automatique pour tout ce qu'il ne sait pas répondre avec >85% de confiance, et revoyez chaque semaine les conversations escaladées pour améliorer la base de connaissances."
+    }, {
+      q: "Peut-on déployer un support client IA sans budget important ?",
+      a: "Oui. Tidio (plan gratuit jusqu'à 50 conversations/mois), Crisp (29€/mois), ou un agent GPT-4o via l'API OpenAI (pay-as-you-go) suffisent pour démarrer. Le coût moyen d'un ticket géré par IA est de 0,02 à 0,10€ vs 5 à 15€ pour un agent humain."
+    }]
+  },
+  'Tutoriels IA': {
+    color: '#3B82F6',
+    icon: '📚',
+    slug: 'tutoriels-ia',
+    heroImage: 'https://images.unsplash.com/photo-1673515334386-2b24073bb22f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Tutoriels IA step-by-step pour entrepreneurs, créateurs et professionnels",
+    desc: "Des guides pratiques qui vont droit au but. Chaque tutoriel est conçu pour être exécutable en moins d'une journée, avec des captures d'écran, des templates et des workflows prêts à copier.",
+    benefits: ["Instructions step-by-step testées et vérifiées", "Templates et prompts copiables directement", "Résultats mesurables en moins de 24h", "Niveau débutant à avancé clairement indiqué"],
+    faq: [{
+      q: "Comment apprendre l'IA rapidement en partant de zéro ?",
+      a: "Commencez par maîtriser un seul outil (ChatGPT ou Claude) pendant 30 jours, en l'appliquant à une tâche répétitive de votre quotidien. Lisez un article pratique par jour. Évitez de papillonner entre 10 outils différents au début : la profondeur beat la largeur."
+    }, {
+      q: "Quels sont les meilleurs tutoriels n8n pour débutants en français ?",
+      a: "Notre série de tutoriels n8n couvre : installation locale et cloud, premiers nœuds (HTTP, Email, Slack), connexion aux APIs IA (OpenAI, Anthropic), et 5 workflows prêts à l'emploi. Comptez 4 à 6h pour être autonome avec les automatisations de base."
+    }, {
+      q: "Comment utiliser l'API Claude ou GPT dans ses propres outils ?",
+      a: "Prérequis : un compte API, 20 lignes de JavaScript/Python pour l'appel de base, et une clé API sécurisée. Notre tutoriel couvre l'authentification, la gestion des tokens, les prompts système, et les bonnes pratiques de coût. Aucun background de développeur requis."
+    }, {
+      q: "Combien de temps faut-il pour maîtriser Make.com ?",
+      a: "Comptez 2h pour créer votre premier workflow fonctionnel, 1 semaine pour être à l'aise avec les scénarios multi-étapes, et 1 mois pour exploiter les fonctionnalités avancées (itérateurs, agrégateurs, gestion d'erreurs). Make.com a la courbe d'apprentissage la plus douce des outils d'automatisation."
+    }, {
+      q: "Où trouver des templates d'automatisation IA prêts à l'emploi ?",
+      a: "Make.com et n8n ont leurs propres bibliothèques de templates officiels. CreatorFlow Market publie des workflows clés-en-main dans cette section Tutoriels. Vous pouvez aussi rejoindre les communautés Discord n8n et Make pour accéder à des centaines de templates partagés par la communauté."
+    }]
+  },
+  'Comparatifs IA': {
+    color: '#F97316',
+    icon: '⚖️',
+    slug: 'comparatifs-ia',
+    heroImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Comparatifs IA honnêtes et indépendants pour choisir les meilleurs outils en 2026",
+    desc: "On teste vraiment les outils avant d'en parler. Nos comparatifs incluent des benchmarks concrets, des prix à jour et des recommandations selon votre profil, pas des listes sponsorisées.",
+    benefits: ["Tests terrain sur cas d'usage réels", "Pricing et limites comparés précisément", "Recommandations selon votre profil et budget", "Mises à jour régulières quand les outils évoluent"],
+    faq: [{
+      q: "Quel est le meilleur outil de copywriting IA en 2026 ?",
+      a: "Pour la qualité brute : Claude. Pour les templates marketing prêts à l'emploi : Jasper. Pour le rapport qualité/prix : ChatGPT Plus. Pour la longue traîne SEO en volume : Copy.ai avec ses workflows. Notre recommandation : commencez avec Claude ou ChatGPT, passez à Jasper si vous avez besoin de workflows structurés."
+    }, {
+      q: "n8n ou Make.com : lequel choisir pour son business ?",
+      a: "n8n si vous voulez héberger vous-même, avez des volumes élevés ou des besoins custom. Make.com si vous voulez une interface plus visuelle, un support réactif et une adoption rapide par une équipe non-technique. Budget serré : n8n cloud est moins cher à l'échelle."
+    }, {
+      q: "Quelle différence entre les plans gratuits et payants des LLMs ?",
+      a: "Plans gratuits : limites de tokens par jour, pas d'accès aux derniers modèles, pas d'API. Plans payants : priorité de traitement, modèles les plus récents, API incluse ou accessible, historique plus long. Pour un usage professionnel quotidien, le plan payant est rentabilisé dès 30 min d'utilisation par jour."
+    }, {
+      q: "Comment évaluer objectivement un outil IA avant de l'acheter ?",
+      a: "Méthode en 4 étapes : (1) testez le plan gratuit sur votre cas d'usage exact, (2) mesurez le temps économisé sur une semaine, (3) comparez avec 1 à 2 alternatives sur la même tâche, (4) calculez le coût par heure économisée. Si < 30€ de l'heure, c'est rentable."
+    }, {
+      q: "Midjourney vaut-il vraiment son abonnement en 2026 ?",
+      a: "Pour la qualité visuelle pure : oui, Midjourney v7 reste le leader. Pour les usages business (product mockups, ads créatives, contenu social) : le plan Basic à 10 $/mois est rentabilisé dès la 3e utilisation professionnelle. Alternative sérieuse : Flux.1 Pro via API, moins cher à l'échelle."
+    }]
+  },
+  'Guides IA': {
+    color: '#84CC16',
+    icon: '🗺️',
+    slug: 'guides-ia',
+    heroImage: 'https://images.unsplash.com/photo-1740313498441-68da0e01df37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    subtitle: "Guides complets pour intégrer l'IA dans son business et sa vie professionnelle en 2026",
+    desc: "Des guides structurés qui couvrent un sujet de A à Z, avec stratégie, outils, pièges à éviter et plan d'action. Conçus pour les entrepreneurs qui veulent passer de la curiosité à l'implémentation.",
+    benefits: ["Guides complets de 2 000 à 5 000 mots", "Plans d'action concrets avec jalons mesurables", "Pièges courants documentés pour gagner du temps", "Applicable dès le lendemain de la lecture"],
+    faq: [{
+      q: "Par où commencer quand on veut intégrer l'IA dans son business ?",
+      a: "Étape 1 : Identifiez vos 3 tâches les plus chronophages et répétitives. Étape 2 : testez un outil IA sur chacune pendant une semaine. Étape 3 : chiffrez le gain de temps. Étape 4 : standardisez les workflows gagnants. Évitez de tout transformer en même temps : l'adoption IA doit être progressive pour être durable."
+    }, {
+      q: "Comment passer de 0 à des revenus en ligne avec l'IA en 2026 ?",
+      a: "Les modèles les plus accessibles : agence de contenu IA (1 000 à 5 000€/client/mois), automatisation de workflows pour PME (500 à 2 000€ par projet), création de produits digitaux assistés par IA (cours, templates, outils SaaS no-code). Le point commun : une expertise sectorielle + des outils IA = une offre de valeur unique."
+    }, {
+      q: "Combien de temps faut-il pour voir des résultats avec l'IA dans son business ?",
+      a: "Pour l'automatisation : résultats visibles en 1 à 2 semaines. Pour le SEO IA : 2 à 4 mois pour les premiers gains de trafic. Pour la création de contenu : impact mesurable sur l'engagement en 30 jours. Pour les ventes : premier cycle complet à mesurer sur 60 à 90 jours."
+    }, {
+      q: "Quelles compétences faut-il pour utiliser l'IA professionnellement ?",
+      a: "Aucune compétence technique requise pour les outils no-code. Ce qui compte vraiment : savoir formuler des problèmes clairement (prompt engineering), avoir un esprit critique pour évaluer les outputs, et être à l'aise pour tester et itérer rapidement. Ces compétences s'acquièrent en quelques semaines de pratique."
+    }, {
+      q: "Comment construire une stratégie IA cohérente pour son entreprise ?",
+      a: "Trois piliers : (1) Automatisation des opérations internes (support, reporting, admin), (2) Amplification du marketing (contenu, SEO, social), (3) Différenciation produit (fonctionnalités IA dans votre offre). Priorisez dans cet ordre, avec un projet pilote de 30 jours par pilier avant de déployer à grande échelle."
+    }]
+  }
+};
+const ALL_CATS = Object.keys(CAT_DATA);
+const CAT_ICONS = Object.fromEntries(ALL_CATS.map(k => [k, CAT_DATA[k].icon]));
+const CAT_COLORS = Object.fromEntries(ALL_CATS.map(k => [k, CAT_DATA[k].color]));
+const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric'
+}) : '';
+function CatBadge({
+  cat
+}) {
+  const color = CAT_COLORS[cat] || '#7C3AED';
+  const icon = CAT_ICONS[cat] || '🤖';
+  return /*#__PURE__*/React.createElement("span", {
+    className: "cat-badge",
+    style: {
+      background: `${color}20`,
+      color,
+      border: `1px solid ${color}40`
+    }
+  }, icon, " ", cat);
+}
+function slugHash(slug) {
+  return (slug || '').split('').reduce((a, c) => (a * 31 + c.charCodeAt(0) | 0) >>> 0, 0x811c9dc5);
+}
+function ArticleCover({
+  article,
+  height,
+  featured
+}) {
+  const color = CAT_COLORS[article.category] || '#7C3AED';
+  const h = height || 190;
+  if (article.featured_image) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "article-cover",
+      style: {
+        height: h,
+        background: '#0C0C18'
+      }
+    }, /*#__PURE__*/React.createElement("img", {
+      src: article.featured_image,
+      alt: article.title,
+      style: {
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        objectPosition: 'center'
+      },
+      loading: "lazy"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'absolute',
+        inset: 0,
+        background: `linear-gradient(to top, rgba(4,4,10,0.72) 0%, transparent 55%)`
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: 'absolute',
+        inset: 0,
+        background: `${color}12`
+      }
+    }));
+  }
+
+  // Fallback: CSS generative cover
+  const icon = CAT_ICONS[article.category] || '🤖';
+  const sh = slugHash(article.slug);
+  const angle = 125 + sh % 8 * 7;
+  const rx = 15 + sh % 35;
+  const iconSize = featured ? '80px' : '56px';
+  const ringSize = featured ? 220 : 160;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "article-cover",
+    style: {
+      height: h,
+      background: `linear-gradient(${angle}deg, ${color}50 0%, ${color}22 45%, rgba(4,4,10,0.92) 100%)`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      backgroundImage: 'radial-gradient(circle at 1px 1px,rgba(255,255,255,0.1) 1px,transparent 0)',
+      backgroundSize: '20px 20px'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      width: ringSize,
+      height: ringSize,
+      borderRadius: '50%',
+      border: `1px solid ${color}35`,
+      left: `${rx}%`,
+      top: '50%',
+      transform: 'translateY(-50%)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      width: ringSize * .65,
+      height: ringSize * .65,
+      borderRadius: '50%',
+      border: `1px solid ${color}20`,
+      left: `${rx}%`,
+      top: '50%',
+      transform: 'translateY(-50%)'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      width: ringSize * .9,
+      height: ringSize * .9,
+      borderRadius: '50%',
+      background: `${color}1E`,
+      filter: 'blur(32px)',
+      left: `${rx}%`,
+      top: '50%',
+      transform: 'translateY(-50%)'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'relative',
+      zIndex: 2,
+      fontSize: iconSize,
+      lineHeight: 1,
+      filter: `drop-shadow(0 0 32px ${color}) drop-shadow(0 0 12px ${color}90)`
+    }
+  }, icon));
+}
+function HeroNewsletter({
+  catName
+}) {
+  const [email, setEmail] = useState('');
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState('');
+  const submit = async e => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setErr('');
+    const {
+      error
+    } = await sb.from('blog_subscribers').insert({
+      email,
+      source: 'category'
+    });
+    if (!error) {
+      setDone(true);
+    } else if (error.code === '23505') {
+      setErr('Cet email est déjà inscrit.');
+    } else {
+      setErr('Une erreur est survenue. Réessayez.');
+    }
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "hero-nl-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-nl-title"
+  }, "Recevoir les guides ", catName), /*#__PURE__*/React.createElement("div", {
+    className: "hero-nl-sub"
+  }, "+2 400 abonn\xE9s \xB7 1 email/semaine \xB7 0 spam"), done ? /*#__PURE__*/React.createElement("p", {
+    className: "hero-nl-done"
+  }, "\u2713 Inscription confirm\xE9e !") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
+    className: "hero-nl-form",
+    onSubmit: submit
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "hero-nl-input",
+    type: "email",
+    placeholder: "votre@email.com",
+    value: email,
+    onChange: e => {
+      setEmail(e.target.value);
+      setErr('');
+    },
+    required: true
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "hero-nl-btn",
+    type: "submit"
+  }, "\u2192")), err && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: '#F59E0B',
+      fontSize: 12,
+      fontWeight: 600,
+      marginTop: 6
+    }
+  }, err)), /*#__PURE__*/React.createElement("div", {
+    className: "hero-nl-proof"
+  }, "Audit gratuit inclus \xE0 l'inscription"));
+}
+function FeaturedCard({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "featured-article"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "featured-label-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "featured-badge"
+  }, "\u2726 Article vedette")), /*#__PURE__*/React.createElement("a", {
+    href: `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fc"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fc-cover"
+  }, /*#__PURE__*/React.createElement(ArticleCover, {
+    article: article,
+    height: 300,
+    featured: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "fc-body"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("h2", null, article.title), /*#__PURE__*/React.createElement("p", {
+    className: "fc-excerpt"
+  }, article.excerpt), /*#__PURE__*/React.createElement("div", {
+    className: "fc-meta"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCD6 ", article.reading_time || 5, " min de lecture"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCC5 ", fmtDate(article.published_at))), /*#__PURE__*/React.createElement("div", {
+    className: "fc-btn"
+  }, "Lire l'article \u2192")))));
+}
+function DiscoverSection({
+  catName
+}) {
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    sb.from('blog_articles').select('id,slug,title,excerpt,category,author,reading_time,views,published_at,featured_image').eq('status', 'published').neq('category', catName).order('views', {
+      ascending: false
+    }).limit(6).then(({
+      data: rows
+    }) => setItems(rows || []));
+  }, [catName]);
+  if (!items.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: '1px solid var(--border)',
+      paddingTop: '52px',
+      marginTop: '16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-header",
+    style: {
+      marginBottom: 28
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "D\xE9couvrir aussi sur CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "articles-grid"
+  }, items.map(a => /*#__PURE__*/React.createElement(ArticleCard, {
+    key: a.id,
+    article: a
+  }))));
+}
+function ConversionBanner({
+  catName,
+  icon
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "conv-banner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "conv-banner-text"
+  }, "Besoin d'aide pour mettre en place ces strat\xE9gies ?"), /*#__PURE__*/React.createElement("div", {
+    className: "conv-banner-sub"
+  }, "Nos experts certifi\xE9s impl\xE9mentent ces m\xE9thodes dans votre business en moins de 48h.")), /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "conv-btn"
+  }, "Parler \xE0 un expert ", icon, " \u2192"));
+}
+function ArticleCard({
+  article
+}) {
+  return /*#__PURE__*/React.createElement("a", {
+    href: `/blog/${article.slug}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "article-card"
+  }, /*#__PURE__*/React.createElement(ArticleCover, {
+    article: article,
+    height: 230
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-body"
+  }, /*#__PURE__*/React.createElement(CatBadge, {
+    cat: article.category
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "article-title"
+  }, article.title), /*#__PURE__*/React.createElement("div", {
+    className: "article-excerpt"
+  }, article.excerpt), /*#__PURE__*/React.createElement("div", {
+    className: "article-footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "af-left"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCD6 ", article.reading_time || 5, " min"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC41 ", (article.views || 0).toLocaleString())), /*#__PURE__*/React.createElement("span", null, fmtDate(article.published_at))))));
+}
+function SkeletonCard() {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sk-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sk-thumb skeleton"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sk-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 20,
+      width: '60%'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 14,
+      width: '90%'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 14,
+      width: '80%'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "skeleton",
+    style: {
+      height: 14,
+      width: '50%'
+    }
+  })));
+}
+function FAQItem({
+  item
+}) {
+  const [open, setOpen] = useState(false);
+  return /*#__PURE__*/React.createElement("div", {
+    className: `faq-item${open ? ' open' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "faq-q",
+    onClick: () => setOpen(o => !o)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "faq-q-text"
+  }, item.q), /*#__PURE__*/React.createElement("span", {
+    className: "faq-chevron"
+  }, "\u25BC")), open && /*#__PURE__*/React.createElement("div", {
+    className: "faq-a"
+  }, item.a));
+}
+function CategoryPage({
+  catName,
+  data
+}) {
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [sort, setSort] = useState('recent');
+  const PER = 9;
+  const load = useCallback(async (p, s) => {
+    if (p === 1) setLoading(true);
+    try {
+      const orderCol = s === 'popular' ? 'views' : 'published_at';
+      const {
+        data: rows,
+        count,
+        error
+      } = await sb.from('blog_articles').select('id,slug,title,excerpt,category,author,reading_time,views,published_at,featured_image', {
+        count: 'exact'
+      }).eq('status', 'published').eq('category', catName).order(orderCol, {
+        ascending: false
+      }).range((p - 1) * PER, p * PER - 1);
+      if (error) throw error;
+      if (p === 1) setArticles(rows || []);else setArticles(prev => [...prev, ...(rows || [])]);
+      setTotal(count || 0);
+      setHasMore((count || 0) > p * PER);
+    } catch {
+      setArticles([]);
+      setTotal(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [catName]);
+  useEffect(() => {
+    setPage(1);
+    load(1, sort);
+  }, [sort, load]);
+  const loadMore = () => {
+    const np = page + 1;
+    setPage(np);
+    load(np, sort);
+  };
+  const color = data.color;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "logo"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "nav-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "nav-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "/brief",
+    className: "nav-link"
+  }, "Publier un brief"), /*#__PURE__*/React.createElement("a", {
+    href: "/academie",
+    className: "nav-link"
+  }, "Academy"), /*#__PURE__*/React.createElement("a", {
+    href: "/pricing",
+    className: "nav-link"
+  }, "Tarifs"), /*#__PURE__*/React.createElement("a", {
+    href: "/blog",
+    className: "nav-link active"
+  }, "Blog IA")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/connexion",
+    className: "btn btn-ghost"
+  }, "Connexion"), /*#__PURE__*/React.createElement("a", {
+    href: "/inscription",
+    className: "btn btn-primary"
+  }, "Rejoindre \u2192")))), /*#__PURE__*/React.createElement("section", {
+    className: "cat-hero",
+    style: data.heroImage ? {
+      backgroundImage: `url(${data.heroImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    } : {
+      background: `linear-gradient(150deg,${color}18 0%,${color}07 55%,transparent 100%)`
+    }
+  }, data.heroImage && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(100deg,rgba(4,4,10,0.90) 0%,rgba(4,4,10,0.68) 45%,rgba(4,4,10,0.18) 100%)',
+      zIndex: 0
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      background: `${color}14`,
+      zIndex: 0
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "breadcrumb"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/"
+  }, "Accueil"), /*#__PURE__*/React.createElement("span", {
+    className: "breadcrumb-sep"
+  }, "/"), /*#__PURE__*/React.createElement("a", {
+    href: "/blog"
+  }, "Blog IA"), /*#__PURE__*/React.createElement("span", {
+    className: "breadcrumb-sep"
+  }, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color
+    }
+  }, catName)), /*#__PURE__*/React.createElement("div", {
+    className: "cat-hero-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-hero-left"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-icon-wrap",
+    style: {
+      background: `${color}18`,
+      borderColor: `${color}30`,
+      color
+    }
+  }, data.icon), /*#__PURE__*/React.createElement("h1", null, catName), /*#__PURE__*/React.createElement("p", {
+    className: "cat-hero-desc"
+  }, data.subtitle), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 20,
+      flexWrap: 'wrap',
+      marginBottom: 16,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18,
+      fontWeight: 900,
+      color
+    }
+  }, "+400"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "abonn\xE9s newsletter")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--border-3)',
+      fontSize: 14
+    }
+  }, "\xB7"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18,
+      fontWeight: 900,
+      color
+    }
+  }, "+25"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "guides publi\xE9s")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--border-3)',
+      fontSize: 14
+    }
+  }, "\xB7"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18,
+      fontWeight: 900,
+      color
+    }
+  }, "+10"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, "experts IA"))), /*#__PURE__*/React.createElement("div", {
+    className: "cat-hero-stats"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cat-stat"
+  }, "Mis \xE0 jour ", /*#__PURE__*/React.createElement("strong", null, "juin 2026")), /*#__PURE__*/React.createElement("span", {
+    className: "cat-stat"
+  }, "Par ", /*#__PURE__*/React.createElement("strong", null, "CreatorFlow AI")))), /*#__PURE__*/React.createElement(HeroNewsletter, {
+    catName: catName
+  })))), /*#__PURE__*/React.createElement("section", {
+    className: "articles-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, !loading && articles.length > 0 && /*#__PURE__*/React.createElement(FeaturedCard, {
+    article: articles[0]
+  }), loading && /*#__PURE__*/React.createElement("div", {
+    className: "sk-card",
+    style: {
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sk-thumb skeleton",
+    style: {
+      height: 300
+    }
+  })), (loading || articles.length > 1) && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "section-header",
+    style: {
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "\xC0 lire aussi"), /*#__PURE__*/React.createElement("select", {
+    className: "sort-select",
+    value: sort,
+    onChange: e => setSort(e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "recent"
+  }, "Plus r\xE9cents"), /*#__PURE__*/React.createElement("option", {
+    value: "popular"
+  }, "Plus populaires"))), /*#__PURE__*/React.createElement("div", {
+    className: "articles-grid"
+  }, loading ? Array.from({
+    length: 6
+  }).map((_, i) => /*#__PURE__*/React.createElement(SkeletonCard, {
+    key: i
+  })) : articles.slice(1).map((a, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: a.id
+  }, /*#__PURE__*/React.createElement(ArticleCard, {
+    article: a
+  }), i === 2 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      gridColumn: '1/-1'
+    }
+  }, /*#__PURE__*/React.createElement(ConversionBanner, {
+    catName: catName,
+    icon: data.icon
+  })))))), !loading && articles.length === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("p", null, "Aucun article publi\xE9 pour le moment. Revenez bient\xF4t !")), hasMore && !loading && /*#__PURE__*/React.createElement("div", {
+    className: "load-more-wrap"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "load-more-btn",
+    onClick: loadMore
+  }, "Charger plus d'articles")), /*#__PURE__*/React.createElement(DiscoverSection, {
+    catName: catName
+  }))), /*#__PURE__*/React.createElement("section", {
+    className: "seo-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "seo-main"
+  }, /*#__PURE__*/React.createElement("h2", null, "Pourquoi suivre les guides ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color
+    }
+  }, catName), " ?"), /*#__PURE__*/React.createElement("p", null, data.desc), /*#__PURE__*/React.createElement("div", {
+    className: "benefits-list"
+  }, data.benefits.map((b, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "benefit-item"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "benefit-check"
+  }, "\u2713"), /*#__PURE__*/React.createElement("span", null, b)))), articles.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 32,
+      paddingTop: 28,
+      borderTop: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      color: 'var(--text-3)',
+      marginBottom: 16
+    }
+  }, "Derniers guides publi\xE9s"), articles.slice(0, 4).map(a => /*#__PURE__*/React.createElement("a", {
+    key: a.id,
+    href: `/blog/${a.slug}`,
+    style: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 12,
+      padding: '12px 0',
+      borderBottom: '1px solid var(--border)',
+      textDecoration: 'none'
+    }
+  }, a.featured_image && /*#__PURE__*/React.createElement("img", {
+    src: a.featured_image,
+    alt: "",
+    style: {
+      width: 56,
+      height: 40,
+      objectFit: 'cover',
+      borderRadius: 6,
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 600,
+      color: 'var(--text)',
+      lineHeight: 1.35,
+      marginBottom: 3,
+      display: '-webkit-box',
+      WebkitLineClamp: 2,
+      WebkitBoxOrient: 'vertical',
+      overflow: 'hidden'
+    }
+  }, a.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text-3)'
+    }
+  }, a.reading_time || 5, " min \xB7 ", new Date(a.published_at).toLocaleDateString('fr-CA', {
+    day: 'numeric',
+    month: 'short'
+  }))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14,
+      color: 'var(--text-3)',
+      flexShrink: 0,
+      marginTop: 2
+    }
+  }, "\u2192"))))), /*#__PURE__*/React.createElement("div", {
+    className: "seo-aside"
+  }, /*#__PURE__*/React.createElement("h3", null, "Explorer d'autres cat\xE9gories"), /*#__PURE__*/React.createElement("div", {
+    className: "other-cats"
+  }, ALL_CATS.filter(c => c !== catName).map(c => /*#__PURE__*/React.createElement("a", {
+    key: c,
+    href: `/blog/categorie/${CAT_DATA[c].slug}`,
+    className: "other-cat-link"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18
+    }
+  }, CAT_DATA[c].icon), /*#__PURE__*/React.createElement("span", null, c)))))))), /*#__PURE__*/React.createElement("section", {
+    className: "faq-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("h2", null, "Questions fr\xE9quentes sur ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color
+    }
+  }, catName)), /*#__PURE__*/React.createElement("p", {
+    className: "faq-subtitle"
+  }, "Tout ce que vous voulez savoir pour bien d\xE9marrer."), /*#__PURE__*/React.createElement("div", {
+    className: "faq-list"
+  }, data.faq.map((item, i) => /*#__PURE__*/React.createElement(FAQItem, {
+    key: i,
+    item: item
+  }))))), /*#__PURE__*/React.createElement("section", {
+    className: "cta-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-card"
+  }, /*#__PURE__*/React.createElement("h2", null, "Besoin d'un expert en ", catName, " ?"), /*#__PURE__*/React.createElement("p", null, "Nos experts certifi\xE9s peuvent impl\xE9menter ces strat\xE9gies dans votre business d\xE8s cette semaine."), /*#__PURE__*/React.createElement("div", {
+    className: "cta-proof-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Audit gratuit"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "Experts certifi\xE9s"), /*#__PURE__*/React.createElement("span", {
+    className: "cta-proof-item"
+  }, "R\xE9sultats en 48h")), /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "cta-btn"
+  }, "Trouver un expert ", data.icon, " \u2192")))), /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-inner"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "footer-logo"
+  }, "CreatorFlow Market"), /*#__PURE__*/React.createElement("div", {
+    className: "footer-links"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/blog",
+    className: "footer-link"
+  }, "Blog IA"), /*#__PURE__*/React.createElement("a", {
+    href: "/experts",
+    className: "footer-link"
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    href: "/academie",
+    className: "footer-link"
+  }, "Academy"), /*#__PURE__*/React.createElement("a", {
+    href: "/cgu",
+    className: "footer-link"
+  }, "CGU"), /*#__PURE__*/React.createElement("a", {
+    href: "/politique-confidentialite",
+    className: "footer-link"
+  }, "Confidentialit\xE9"))))));
+}
+function App() {
+  const cat = new URLSearchParams(window.location.search).get('cat') || '';
+  const data = CAT_DATA[cat];
+  useEffect(() => {
+    if (data) {
+      document.title = `${cat} : Guides, Outils et Stratégies 2026 | CreatorFlow Market`;
+      const desc = document.querySelector('meta[name="description"]');
+      if (desc) desc.setAttribute('content', data.subtitle + ' — CreatorFlow Market.');
+      const canon = document.querySelector('link[rel="canonical"]') || document.createElement('link');
+      canon.rel = 'canonical';
+      canon.href = `https://creatorflowmarket.com/blog/categorie/${data.slug}`;
+      document.head.appendChild(canon);
+
+      // Schema FAQPage
+      const faqSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: data.faq.map(f => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.a
+          }
+        }))
+      };
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.text = JSON.stringify(faqSchema);
+      document.head.appendChild(s);
+
+      // Schema CollectionPage
+      const colSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: `${cat} — Blog IA CreatorFlow Market`,
+        url: `https://creatorflowmarket.com/blog/categorie/${data.slug}`,
+        description: data.subtitle,
+        inLanguage: 'fr',
+        breadcrumb: {
+          '@type': 'BreadcrumbList',
+          itemListElement: [{
+            position: 1,
+            name: 'Accueil',
+            item: 'https://creatorflowmarket.com'
+          }, {
+            position: 2,
+            name: 'Blog IA',
+            item: 'https://creatorflowmarket.com/blog'
+          }, {
+            position: 3,
+            name: cat,
+            item: `https://creatorflowmarket.com/blog/categorie/${data.slug}`
+          }]
+        }
+      };
+      const s2 = document.createElement('script');
+      s2.type = 'application/ld+json';
+      s2.text = JSON.stringify(colSchema);
+      document.head.appendChild(s2);
+    }
+  }, [cat]);
+  if (!data) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "page",
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        gap: 16
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 48
+      }
+    }, "\uD83D\uDD0D"), /*#__PURE__*/React.createElement("h1", {
+      style: {
+        fontSize: 24,
+        fontWeight: 700
+      }
+    }, "Cat\xE9gorie introuvable"), /*#__PURE__*/React.createElement("a", {
+      href: "/blog",
+      style: {
+        color: 'var(--vs)'
+      }
+    }, "\u2190 Retour au blog"));
+  }
+  return /*#__PURE__*/React.createElement(CategoryPage, {
+    catName: cat,
+    data: data
+  });
+}
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(/*#__PURE__*/React.createElement(App, null));
+</script>
+<script src="/analytics.js"></script>
+<script src="/cookie-banner.js"></script>
+</body>
+</html>

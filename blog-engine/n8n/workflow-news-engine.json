@@ -1,0 +1,133 @@
+{
+  "name": "CreatorFlow AI News Engine",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "hours", "hoursInterval": 6 }] } },
+      "id": "schedule-trigger",
+      "name": "Toutes les 6h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://openai.com/blog/rss.xml",
+        "options": { "timeout": 10000 }
+      },
+      "id": "rss-openai",
+      "name": "RSS OpenAI",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [480, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://www.anthropic.com/rss.xml",
+        "options": { "timeout": 10000 }
+      },
+      "id": "rss-anthropic",
+      "name": "RSS Anthropic",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [480, 320]
+    },
+    {
+      "parameters": {
+        "url": "https://ai.googleblog.com/feeds/posts/default",
+        "options": { "timeout": 10000 }
+      },
+      "id": "rss-google",
+      "name": "RSS Google AI",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [480, 440]
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM $input.all() ORDER BY isoDate DESC LIMIT 30"
+      },
+      "id": "merge-feeds",
+      "name": "Fusionner les feeds",
+      "type": "n8n-nodes-base.merge",
+      "position": [720, 320]
+    },
+    {
+      "parameters": {
+        "functionCode": "const AI_KEYWORDS = ['ai','gpt','claude','llm','model','agent','automation','chatbot','openai','anthropic','gemini','mistral'];\nconst items = [];\nfor (const item of $input.all()) {\n  const text = ((item.json.title||'')+(item.json.contentSnippet||'')).toLowerCase();\n  const score = AI_KEYWORDS.filter(k => text.includes(k)).length * 12 + 30;\n  if (score >= 50) items.push({ json: { ...item.json, relevance_score: Math.min(score, 100) } });\n}\nreturn items.sort((a,b) => b.json.relevance_score - a.json.relevance_score).slice(0, 5);"
+      },
+      "id": "score-filter",
+      "name": "Scorer et filtrer (top 5)",
+      "type": "n8n-nodes-base.function",
+      "position": [960, 320]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.anthropic.com/v1/messages",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "bodyParametersJson": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 4096,\n  \"system\": \"Tu es un expert IA et rédacteur SEO francophone pour CreatorFlow Market. Génère un article de blog complet en JSON : {title, meta_description, excerpt, content (HTML 1200+ mots), tags, seo_score}.\",\n  \"messages\": [{\"role\": \"user\", \"content\": \"Génère un article SEO sur : {{ $json.title }}\\n\\nContexte : {{ $json.contentSnippet }}\\n\\nSource : {{ $json.link }}\"}]\n}",
+        "headerParametersJson": "={\"x-api-key\": \"{{ $credentials.apiKey }}\", \"anthropic-version\": \"2023-06-01\", \"content-type\": \"application/json\"}"
+      },
+      "id": "generate-article",
+      "name": "Générer article (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1200, 320]
+    },
+    {
+      "parameters": {
+        "functionCode": "const response = JSON.parse($json.body || '{}');\nconst text = response.content?.[0]?.text || '{}';\ntry {\n  const clean = text.replace(/^```json\\n?/, '').replace(/\\n?```$/, '');\n  const article = JSON.parse(clean);\n  const slug = article.title.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');\n  return [{ json: { ...article, slug: slug + '-' + Date.now(), status: 'published', ai_generated: true, author: 'CreatorFlow AI', published_at: new Date().toISOString(), source_url: $('Score et filtrer').item.json.link }}];\n} catch { return []; }"
+      },
+      "id": "parse-article",
+      "name": "Parser la réponse",
+      "type": "n8n-nodes-base.function",
+      "position": [1440, 320]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "blog_articles",
+        "columns": "slug,title,meta_description,excerpt,content,category,tags,author,status,ai_generated,source_url,published_at,seo_score",
+        "additionalFields": {}
+      },
+      "id": "save-supabase",
+      "name": "Sauvegarder dans Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "position": [1680, 320]
+    },
+    {
+      "parameters": {
+        "functionCode": "const a = $json;\nconst url = `https://creatorflowmarket.com/blog/${a.slug}`;\nreturn [{\n  json: {\n    linkedin: `🚀 Nouvel article : ${a.title}\\n\\n${a.excerpt}\\n\\n🔗 ${url}\\n\\n#IA #IntelligenceArtificielle #CreatorFlow`,\n    twitter:  `🤖 ${a.title.substring(0,100)}... ${url} #IA`,\n    facebook: `📖 ${a.title}\\n\\n${a.excerpt}\\n\\n👉 ${url}`,\n    article_url: url,\n    article_title: a.title\n  }\n}];"
+      },
+      "id": "prepare-social",
+      "name": "Préparer posts sociaux",
+      "type": "n8n-nodes-base.function",
+      "position": [1920, 320]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "blog_social_posts",
+        "columns": "article_id,platform,content,status"
+      },
+      "id": "save-social",
+      "name": "Sauvegarder posts sociaux",
+      "type": "n8n-nodes-base.supabase",
+      "position": [2160, 320]
+    }
+  ],
+  "connections": {
+    "Toutes les 6h":           { "main": [[{ "node": "RSS OpenAI", "type": "main", "index": 0 }, { "node": "RSS Anthropic", "type": "main", "index": 0 }, { "node": "RSS Google AI", "type": "main", "index": 0 }]] },
+    "RSS OpenAI":              { "main": [[{ "node": "Fusionner les feeds", "type": "main", "index": 0 }]] },
+    "RSS Anthropic":           { "main": [[{ "node": "Fusionner les feeds", "type": "main", "index": 1 }]] },
+    "RSS Google AI":           { "main": [[{ "node": "Fusionner les feeds", "type": "main", "index": 2 }]] },
+    "Fusionner les feeds":     { "main": [[{ "node": "Scorer et filtrer (top 5)", "type": "main", "index": 0 }]] },
+    "Scorer et filtrer (top 5)":{ "main": [[{ "node": "Générer article (Claude)", "type": "main", "index": 0 }]] },
+    "Générer article (Claude)":{ "main": [[{ "node": "Parser la réponse", "type": "main", "index": 0 }]] },
+    "Parser la réponse":       { "main": [[{ "node": "Sauvegarder dans Supabase", "type": "main", "index": 0 }]] },
+    "Sauvegarder dans Supabase":{ "main": [[{ "node": "Préparer posts sociaux", "type": "main", "index": 0 }]] },
+    "Préparer posts sociaux":  { "main": [[{ "node": "Sauvegarder posts sociaux", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "CreatorFlow AI Blog" }]
+}

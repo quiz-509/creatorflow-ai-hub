@@ -1,0 +1,2745 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-site-verification" content="nboNjkJ7SUkYP40Q0rQjsH3WmCkmg8uVrJQJWXFJzLc" />
+  <title>CreatorFlow Market — Trouvez l'expert IA qu'il vous faut</title>
+  <meta name="description" content="La marketplace premium qui connecte les entreprises avec des experts certifiés en intelligence artificielle." />
+  <link rel="canonical" href="https://creatorflowmarket.com/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://creatorflowmarket.com/"/>
+  <meta property="og:title" content="CreatorFlow Market — Trouvez l'expert IA qu'il vous faut"/>
+  <meta property="og:description" content="La marketplace premium qui connecte les entreprises avec des experts certifiés en intelligence artificielle. Matching garanti sous 24h."/>
+  <meta property="og:site_name" content="CreatorFlow Market"/>
+  <meta property="og:locale" content="fr_CA"/>
+  <meta property="og:image" content="https://creatorflowmarket.com/og-image.jpg"/>
+  <meta property="og:image:width" content="1729"/>
+  <meta property="og:image:height" content="910"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://creatorflowmarket.com/og-image.jpg"/>
+  <meta name="twitter:title" content="CreatorFlow Market — Marketplace d'experts IA"/>
+  <meta name="twitter:description" content="Trouvez l'expert IA certifié qu'il vous faut. Matching garanti sous 24h, paiement sécurisé."/>
+  <meta name="robots" content="index, follow"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"CreatorFlow Market","url":"https://creatorflowmarket.com","description":"Marketplace connectant entreprises et experts IA certifiés","potentialAction":{"@type":"SearchAction","target":"https://creatorflowmarket.com/experts.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,800&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400;1,14..32,500;1,14..32,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,800&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400;1,14..32,500;1,14..32,600&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+/* ─── TOKENS ─────────────────────────────────────────────────────── */
+:root {
+  --bg:        #04040A;
+  --bg-2:      #07070F;
+  --surf:      #0C0C18;
+  --surf-2:    #101020;
+  --surf-3:    #14142A;
+  --glass:     rgba(12,12,24,0.72);
+  --border:    rgba(255,255,255,0.07);
+  --border-2:  rgba(255,255,255,0.12);
+  --border-3:  rgba(255,255,255,0.20);
+  --text:      #F4F4FF;
+  --text-2:    #9898B8;
+  --text-3:    #55557A;
+  --v:         #7C3AED;
+  --v2:        #6D28D9;
+  --v3:        #5B21B6;
+  --vs:        #A78BFA;
+  --vg:        rgba(124,58,237,0.35);
+  --c:         #06B6D4;
+  --cs:        #67E8F9;
+  --cg:        rgba(6,182,212,0.25);
+  --green:     #10B981;
+  --amber:     #F59E0B;
+
+  --r-xs: 6px; --r-sm: 10px; --r: 14px; --r-lg: 20px; --r-xl: 28px; --r-2xl: 40px;
+  --f: 'Inter', system-ui, sans-serif;
+  --f-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --ease: cubic-bezier(0.16,1,0.3,1);
+  --ease-in: cubic-bezier(0.4,0,1,1);
+  --ease-out: cubic-bezier(0,0,0.2,1);
+}
+
+/* ─── RESET ──────────────────────────────────────────────────────── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; font-size:16px; overflow-x:hidden; }
+body {
+  font-family:var(--f);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  line-height:1.6;
+  background-image:
+    radial-gradient(ellipse 1000px 600px at 70% -5%, rgba(124,58,237,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 700px 500px at -5% 15%, rgba(6,182,212,0.08) 0%, transparent 60%);
+}
+a { color:inherit; text-decoration:none; }
+button { font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+img,svg { display:block; max-width:100%; }
+
+/* ─── LAYOUT ─────────────────────────────────────────────────────── */
+.wrap { width:100%; max-width:1200px; margin:0 auto; padding:0 28px; }
+section { position:relative; }
+.pad { padding:120px 0; }
+.pad-sm { padding:80px 0; }
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────────────── */
+h1,h2 { font-family:var(--f-display); font-weight:800; letter-spacing:-0.035em; text-wrap:balance; line-height:1.10; }
+h3,h4,h5 { font-family:var(--f); font-weight:700; letter-spacing:-0.025em; text-wrap:balance; line-height:1.20; }
+.eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--vs);
+}
+.eyebrow::before { content:''; width:5px; height:5px; border-radius:50%; background:var(--c); box-shadow:0 0 10px var(--c); animation:eyebrow-glow 2.4s ease-in-out infinite; }
+
+/* ─── BUTTONS ────────────────────────────────────────────────────── */
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px; border-radius:999px; font-size:14px; font-weight:600;
+  transition:all 220ms var(--ease); white-space:nowrap; position:relative; overflow:hidden;
+}
+.btn::after {
+  content:''; position:absolute; inset:0; border-radius:inherit;
+  background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
+  transform:translateX(-100%); transition:transform 500ms var(--ease);
+}
+.btn:hover::after { transform:translateX(100%); }
+.btn-primary {
+  background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));
+  color:#fff;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset, 0 6px 20px -6px var(--vg), 0 0 40px -12px var(--vg);
+}
+.btn-primary:hover {
+  transform:translateY(-2px);
+  box-shadow:0 0 0 1px rgba(255,255,255,0.14) inset, 0 12px 32px -6px rgba(124,58,237,0.7), 0 0 60px -12px var(--vg);
+}
+.btn-ghost {
+  background:rgba(255,255,255,0.04); border:1px solid var(--border-2);
+  color:var(--text-2);
+  backdrop-filter:blur(8px);
+}
+.btn-ghost:hover { background:rgba(255,255,255,0.08); border-color:var(--border-3); color:var(--text); }
+.btn-outline { border:1px solid var(--border-2); color:var(--text-2); }
+.btn-outline:hover { border-color:var(--border-3); color:var(--text); background:rgba(255,255,255,0.04); }
+.btn-lg { padding:16px 30px; font-size:15px; }
+.btn .ico { transition:transform 220ms var(--ease); }
+.btn:hover .ico { transform:translateX(3px); }
+
+/* ─── NAV ────────────────────────────────────────────────────────── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  transition:background 300ms ease, border-color 300ms ease, backdrop-filter 300ms ease;
+  border-bottom:1px solid transparent;
+}
+.nav.stuck {
+  background:var(--glass); backdrop-filter:blur(20px) saturate(1.5);
+  -webkit-backdrop-filter:blur(20px) saturate(1.5);
+  border-bottom-color:var(--border);
+}
+.nav-inner { display:flex; align-items:center; height:66px; gap:36px; }
+.brand { display:flex; align-items:center; gap:0; font-size:16px; font-weight:700; letter-spacing:-0.025em; flex-shrink:0; }
+.brand span { display:none; }
+.brand-logo { width:240px; height:56px; background:url('/creatorflow-logo.png') center/140% no-repeat; mix-blend-mode:screen; filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6)); }
+.brand span em { font-style:normal; color:var(--vs); }
+
+.nav-menu { display:flex; align-items:center; gap:4px; flex:1; }
+.nav-item { position:relative; }
+.nav-link {
+  display:flex; align-items:center; gap:5px;
+  padding:8px 12px; border-radius:var(--r-sm); font-size:14px; font-weight:500; color:var(--text-2);
+  transition:all 180ms ease; cursor:pointer; background:none; border:none; font-family:inherit;
+}
+.nav-link:hover, .nav-link.open { color:var(--text); background:rgba(255,255,255,0.05); }
+.nav-link .chevron { transition:transform 220ms var(--ease); }
+.nav-link.open .chevron { transform:rotate(180deg); }
+
+/* Mega-menu */
+.mega {
+  position:absolute; top:calc(100% + 12px); left:50%; transform:translateX(-50%);
+  width:580px; background:var(--surf); border:1px solid var(--border-2); border-radius:var(--r-lg);
+  box-shadow:0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  padding:8px; display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:0;
+  opacity:0; pointer-events:none; transform:translateX(-50%) translateY(-8px);
+  transition:opacity 220ms var(--ease), transform 220ms var(--ease);
+  backdrop-filter:blur(20px);
+}
+.mega.open { opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+.mega-col { padding:16px; }
+.mega-col + .mega-col { border-left:1px solid var(--border); }
+.mega-col-title { font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:10px; }
+.mega-item {
+  display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--r-sm);
+  font-size:13px; color:var(--text-2); transition:all 160ms ease; cursor:pointer; text-decoration:none;
+}
+.mega-item:hover { background:rgba(124,58,237,0.10); color:var(--text); }
+.mega-item-icon { width:28px; height:28px; border-radius:7px; background:rgba(255,255,255,0.04); border:1px solid var(--border); display:grid; place-items:center; flex-shrink:0; color:var(--vs); }
+.mega-item-text { font-size:13px; font-weight:500; }
+.mega-item-sub { font-size:11px; color:var(--text-3); }
+.mega-featured { background:linear-gradient(135deg,rgba(124,58,237,0.10),rgba(6,182,212,0.06)); border:1px solid rgba(124,58,237,0.2); border-radius:var(--r); padding:16px; }
+.mega-featured-badge { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--vs); background:rgba(124,58,237,0.15); padding:3px 8px; border-radius:999px; display:inline-block; margin-bottom:10px; }
+.mega-featured-title { font-size:14px; font-weight:700; margin-bottom:6px; }
+.mega-featured-text { font-size:12px; color:var(--text-2); line-height:1.5; margin-bottom:12px; }
+.mega-featured-link { font-size:12px; font-weight:600; color:var(--vs); display:flex; align-items:center; gap:4px; }
+
+.nav-actions { display:flex; align-items:center; gap:10px; margin-left:auto; }
+.mobile-toggle { display:none; width:38px; height:38px; border-radius:var(--r-sm); border:1px solid var(--border-2); background:rgba(255,255,255,0.04); align-items:center; justify-content:center; }
+
+/* ─── HERO V2 ───────────────────────────────────────────────────── */
+.hero { padding:150px 0 0; min-height:680px; position:relative; overflow:hidden; }
+
+/* Full-bleed background video zone */
+.hero-bg {
+  position:absolute; inset:0; z-index:0;
+  background:#050510;
+}
+
+/* YouTube background */
+.hero-yt-wrap { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.hero-yt-wrap iframe { position:absolute; top:50%; left:50%; width:100vw; height:56.25vw; min-height:100%; min-width:177.78vh; transform:translate(-50%,-50%); border:none; opacity:0.55; }
+.hero-bg-grid {
+  position:absolute; inset:0; pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(ellipse 90% 80% at 70% 40%,black,transparent);
+  -webkit-mask-image:radial-gradient(ellipse 90% 80% at 70% 40%,black,transparent);
+}
+.hero-bg-orb { position:absolute; border-radius:50%; filter:blur(120px); pointer-events:none; }
+.hero-bg-orb.a { width:600px; height:600px; background:var(--v); top:-200px; right:5%; opacity:0.30; animation:drift-a 20s ease-in-out infinite; }
+.hero-bg-orb.b { width:440px; height:440px; background:var(--c); bottom:-80px; right:30%; opacity:0.16; animation:drift-b 25s ease-in-out infinite; }
+@keyframes drift-a { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-50px,40px) scale(1.07);} }
+@keyframes drift-b { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(60px,-35px) scale(1.1);} }
+
+/* Left-to-right gradient so text stays readable */
+.hero-bg-fade { position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, var(--bg) 0%, var(--bg) 28%, rgba(4,4,10,0.82) 48%, rgba(4,4,10,0.38) 68%, rgba(4,4,10,0.10) 100%); }
+
+/* Play button centered on right side */
+.hero-play { position:absolute; top:50%; right:26%; transform:translate(50%,-50%); width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.10); border:1.5px solid rgba(255,255,255,0.28); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:grid; place-items:center; cursor:pointer; transition:all 280ms var(--ease); z-index:10; box-shadow:0 0 60px -10px rgba(124,58,237,0.5); }
+.hero-play:hover { background:rgba(255,255,255,0.20); transform:translate(50%,-50%) scale(1.1); box-shadow:0 0 80px -8px rgba(124,58,237,0.7); }
+.hero-play-label { position:absolute; top:calc(50% + 52px); right:26%; transform:translateX(50%); font-size:12px; font-weight:600; color:rgba(255,255,255,0.45); white-space:nowrap; letter-spacing:0.06em; z-index:10; }
+
+/* Floating cards */
+.hero-vid-card { position:absolute; z-index:10; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); background:rgba(10,10,26,0.92); border:1px solid var(--border-2); border-radius:14px; padding:12px 14px; box-shadow:0 16px 40px rgba(0,0,0,0.6); min-width:190px; }
+.hero-vid-card.c1 { top:22%; right:8%; animation:float 5s ease-in-out infinite; }
+.hero-vid-card.c2 { bottom:22%; right:4%; animation:float 5s ease-in-out 1.8s infinite; }
+.hvc-label { font-size:9px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:7px; }
+.hvc-row { display:flex; align-items:flex-start; gap:8px; }
+.hvc-dot { width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); animation:pulse-green 1.6s ease-in-out infinite; flex-shrink:0; margin-top:3px; }
+.hvc-text { font-size:13px; font-weight:700; }
+.hvc-sub { font-size:11px; color:var(--text-2); margin-top:2px; }
+.hvc-bar { height:3px; border-radius:999px; background:var(--surf-3); margin-top:10px; overflow:hidden; }
+.hvc-bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--v),var(--c)); width:72%; }
+
+/* Text overlaid on hero */
+.hero-content {
+  position:relative; z-index:5; max-width:580px; padding-bottom:80px;
+}
+.hero-pill {
+  display:inline-flex; align-items:center; gap:8px; padding:5px 14px 5px 5px;
+  border-radius:999px; border:1px solid var(--border-2); background:rgba(255,255,255,0.04);
+  font-size:12px; color:var(--text-2); margin-bottom:28px; backdrop-filter:blur(8px);
+}
+.hero-pill-tag { padding:3px 9px; border-radius:999px; background:linear-gradient(135deg,var(--v),var(--v2)); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+h1.hero-title { font-family:var(--f-display); font-size:clamp(48px,5.8vw,80px); font-weight:800; letter-spacing:-0.045em; margin-bottom:22px; line-height:1.05; }
+.hero-title .grad {
+  background:linear-gradient(135deg,#C084FC,#7C3AED,#06B6D4,#A78BFA,#C084FC);
+  background-size:300% 300%;
+  -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; font-weight:700;
+  animation:grad-shift 5s ease-in-out infinite;
+}
+.hero-sub { font-size:clamp(15px,1.3vw,18px); color:var(--text-2); margin-bottom:38px; line-height:1.65; font-weight:400; max-width:480px; }
+.hero-ctas { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:44px; }
+.hero-trust { display:flex; gap:20px; flex-wrap:wrap; }
+.hero-trust-item { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-2); font-weight:500; }
+.hero-trust-item svg { color:var(--green); flex-shrink:0; }
+.hero-trust-item strong { color:var(--text); }
+
+/* Stats row below hero */
+.hero-stats-row { display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:5; border:1px solid var(--border-2); border-radius:var(--r-xl); background:rgba(12,12,24,0.6); backdrop-filter:blur(16px); overflow:hidden; }
+.hero-stat { padding:28px 20px; text-align:center; position:relative; }
+.hero-stat+.hero-stat::before { content:''; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--border); }
+.hero-stat-n { font-size:36px; font-weight:800; letter-spacing:-0.04em; background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.6) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.hero-stat-l { font-size:12px; color:var(--text-2); font-weight:500; margin-top:4px; }
+/* Legacy stat classes */
+.stat { padding:28px 20px; text-align:center; position:relative; }
+.stat+.stat::before { content:''; position:absolute; left:0; top:18%; bottom:18%; width:1px; background:var(--border); }
+.stat-n { font-size:40px; font-weight:800; letter-spacing:-0.04em; background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,0.6) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.stat-l { font-size:12px; color:var(--text-2); font-weight:500; margin-top:4px; }
+
+/* Marquee */
+.marquee { margin-top:72px; padding:20px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); overflow:hidden; background:rgba(4,4,10,0.5); }
+.marquee-track { display:flex; gap:44px; animation:marquee 36s linear infinite; width:max-content; }
+.marquee-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-3); white-space:nowrap; font-weight:500; letter-spacing:0.02em; }
+.marquee-item .dot { width:3px; height:3px; border-radius:50%; background:var(--v); box-shadow:0 0 6px var(--v); }
+@keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+/* ─── SECTION HEADERS ────────────────────────────────────────────── */
+.sh { margin-bottom:60px; }
+.sh.c { text-align:center; max-width:680px; margin-left:auto; margin-right:auto; }
+.sh-title { font-family:var(--f-display); font-size:clamp(32px,3.8vw,52px); font-weight:800; letter-spacing:-0.035em; line-height:1.10; margin:14px 0 18px; }
+.sh-title em { font-style:italic; font-weight:500; color:var(--text-2); }
+.sh-sub { font-size:17px; color:var(--text-2); line-height:1.65; }
+
+/* ─── PLATFORM PREVIEW ───────────────────────────────────────────── */
+.preview { padding:40px 0 100px; }
+.preview-shell {
+  position:relative; max-width:1060px; margin:0 auto; padding:0 28px;
+}
+.preview-frame {
+  border:1px solid var(--border-2); border-radius:20px; overflow:hidden;
+  background:linear-gradient(180deg,var(--surf) 0%,var(--bg-2) 100%);
+  box-shadow:0 40px 120px -30px rgba(0,0,0,0.8), 0 0 80px -20px var(--vg);
+  position:relative;
+}
+.preview-frame > *:not(.preview-overlay) { pointer-events:none; user-select:none; }
+.preview-overlay {
+  position:absolute; inset:0; z-index:20; border-radius:20px; cursor:default;
+  background:linear-gradient(180deg, transparent 55%, rgba(4,4,10,0.55) 100%);
+}
+.preview-overlay-badge {
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:7px; padding:8px 18px;
+  background:rgba(10,10,22,0.88); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.10); border-radius:999px;
+  font-size:12px; font-weight:500; color:var(--text-3); white-space:nowrap;
+}
+.preview-bar { display:flex; align-items:center; gap:10px; padding:13px 18px; border-bottom:1px solid var(--border); background:rgba(12,12,24,0.5); }
+.pbar-dots { display:flex; gap:6px; }
+.pbar-dots span { width:11px; height:11px; border-radius:50%; background:var(--surf-3); }
+.pbar-url { flex:1; text-align:center; font-size:12px; color:var(--text-3); padding:5px 14px; background:var(--surf-2); border:1px solid var(--border); border-radius:8px; max-width:340px; margin:0 auto; font-weight:500; }
+.preview-body { display:grid; grid-template-columns:220px 1fr; min-height:460px; }
+.preview-side { border-right:1px solid var(--border); padding:18px 14px; }
+.side-section { font-size:9px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-3); margin:18px 10px 8px; }
+.side-item { display:flex; align-items:center; gap:9px; padding:8px 10px; border-radius:8px; font-size:12px; color:var(--text-2); margin-bottom:2px; transition:all 180ms ease; }
+.side-item .d { width:5px; height:5px; border-radius:50%; background:var(--text-3); }
+.side-item.on { background:rgba(124,58,237,0.12); color:var(--text); border:1px solid rgba(124,58,237,0.22); }
+.side-item.on .d { background:var(--v); box-shadow:0 0 8px var(--v); }
+.preview-main { padding:26px 30px; position:relative; }
+.preview-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+.preview-title { font-size:17px; font-weight:700; letter-spacing:-0.02em; display:flex; align-items:center; gap:10px; }
+.live-badge { font-size:10px; font-weight:600; padding:3px 8px; border-radius:999px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.28); color:var(--green); display:flex; align-items:center; gap:5px; }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse-green 1.6s ease-in-out infinite; }
+@keyframes pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.5);} 50%{box-shadow:0 0 0 7px rgba(16,185,129,0);} }
+.preview-search { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surf-2); border:1px solid var(--border-2); border-radius:10px; font-size:13px; color:var(--text-2); margin-bottom:18px; }
+.caret { display:inline-block; width:1px; height:13px; background:var(--vs); animation:blink 1s steps(2) infinite; margin-left:1px; vertical-align:middle; }
+@keyframes blink { 50%{opacity:0;} }
+.p-results { display:flex; flex-direction:column; gap:8px; }
+.p-result { display:grid; grid-template-columns:38px 1fr auto auto; align-items:center; gap:12px; padding:11px 12px; background:var(--surf-2); border:1px solid var(--border); border-radius:10px; opacity:0; transform:translateY(6px); animation:slide-in 600ms var(--ease) forwards; }
+.p-result:nth-child(1){animation-delay:.3s;}
+.p-result:nth-child(2){animation-delay:.55s;}
+.p-result:nth-child(3){animation-delay:.8s;}
+@keyframes slide-in { to{opacity:1;transform:translateY(0);} }
+.p-avt { width:36px; height:36px; border-radius:50%; overflow:hidden; background:var(--surf-3); }
+.p-avt img { width:100%; height:100%; object-fit:cover; }
+.p-name { font-size:13px; font-weight:600; }
+.p-role { font-size:11px; color:var(--text-2); }
+.p-match { font-size:11px; padding:3px 8px; border-radius:999px; background:rgba(124,58,237,0.12); border:1px solid rgba(124,58,237,0.28); color:var(--vs); font-weight:600; }
+.p-rate { font-size:14px; font-weight:700; }
+.p-rate small { font-size:10px; color:var(--text-2); font-weight:400; }
+
+.preview-notif {
+  position:absolute; top:70px; right:-36px; width:250px;
+  background:rgba(12,12,24,0.95); backdrop-filter:blur(16px);
+  border:1px solid var(--border-2); border-radius:14px; padding:13px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.7); display:flex; gap:10px;
+  animation:notif-in 700ms var(--ease) 1.4s both, float 4s ease-in-out 2.2s infinite;
+}
+@keyframes notif-in { from{opacity:0;transform:translateX(36px);} to{opacity:1;transform:translateX(0);} }
+@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+.notif-icon { width:34px; height:34px; border-radius:9px; background:linear-gradient(135deg,var(--v),var(--v2)); display:grid; place-items:center; flex-shrink:0; box-shadow:0 0 18px var(--vg); }
+.notif-title { font-size:12px; font-weight:700; margin-bottom:2px; }
+.notif-text { font-size:11px; color:var(--text-2); line-height:1.4; }
+
+.preview-orbits { position:absolute; inset:-40px; pointer-events:none; }
+.o-avatar { position:absolute; width:48px; height:48px; border-radius:50%; overflow:hidden; border:2px solid var(--bg); box-shadow:0 8px 20px rgba(0,0,0,0.6); animation:float 5s ease-in-out infinite; }
+.o-avatar img { width:100%; height:100%; object-fit:cover; }
+.o-avatar.o1 { top:-8px; left:-10px; animation-delay:0s; }
+.o-avatar.o2 { bottom:60px; left:-24px; width:40px; height:40px; animation-delay:1.4s; }
+.o-avatar.o3 { top:180px; right:-12px; animation-delay:2.8s; }
+
+/* ─── HOW IT WORKS ───────────────────────────────────────────────── */
+.toggle-wrap { display:flex; justify-content:center; margin-bottom:52px; }
+.toggle { display:inline-flex; background:var(--surf); border:1px solid var(--border); border-radius:999px; padding:4px; }
+.toggle button { padding:9px 22px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-2); transition:all 200ms ease; }
+.toggle button.on { background:linear-gradient(135deg,var(--v),var(--v2)); color:#fff; box-shadow:0 4px 20px -4px var(--vg); }
+.steps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.step {
+  padding:30px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg);
+  transition:all 260ms var(--ease); position:relative; overflow:hidden;
+}
+.step::before { content:''; position:absolute; inset:0; background:radial-gradient(400px at var(--mx,50%) var(--my,50%),rgba(124,58,237,0.08),transparent 60%); opacity:0; transition:opacity 260ms ease; pointer-events:none; }
+.step:hover::before { opacity:1; }
+.step:hover { border-color:rgba(124,58,237,0.3); transform:translateY(-4px); }
+.step-num { font-size:10px; font-weight:700; letter-spacing:0.18em; color:var(--text-3); margin-bottom:22px; }
+.step-icon { width:48px; height:48px; border-radius:13px; display:grid; place-items:center; margin-bottom:22px; background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.08)); border:1px solid rgba(124,58,237,0.28); color:var(--vs); }
+.step h3 { font-size:20px; margin-bottom:10px; }
+.step p { font-size:14px; color:var(--text-2); line-height:1.65; }
+
+/* ─── EXPERTISE ──────────────────────────────────────────────────── */
+.exp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.exp-card {
+  padding:26px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r);
+  transition:all 260ms var(--ease); cursor:pointer; min-height:210px;
+  display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;
+}
+.exp-card::before { content:''; position:absolute; inset:0; background:radial-gradient(350px at var(--mx,50%) var(--my,50%),rgba(124,58,237,0.10),transparent 55%); opacity:0; transition:opacity 260ms; pointer-events:none; }
+.exp-card:hover::before { opacity:1; }
+.exp-card:hover { border-color:rgba(124,58,237,0.32); transform:translateY(-3px); box-shadow:0 20px 60px -20px rgba(0,0,0,0.5); }
+.exp-card.feat { grid-column:span 2; background:linear-gradient(135deg,rgba(124,58,237,0.10),rgba(6,182,212,0.05)); border-color:rgba(124,58,237,0.25); }
+.exp-icon { width:42px; height:42px; border-radius:11px; display:grid; place-items:center; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--cs); margin-bottom:22px; }
+.exp-card h3 { font-size:18px; margin-bottom:8px; }
+.exp-card p { font-size:13px; color:var(--text-2); line-height:1.6; }
+.tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:16px; }
+.tag { font-size:11px; padding:3px 9px; border-radius:999px; background:rgba(255,255,255,0.04); border:1px solid var(--border); color:var(--text-2); font-weight:500; cursor:pointer; transition:all 160ms var(--ease); }
+.tag:hover { background:rgba(124,58,237,0.14); border-color:rgba(124,58,237,0.4); color:var(--vs); transform:scale(1.07) translateY(-1px); }
+
+/* ─── EXPERTS ────────────────────────────────────────────────────── */
+.experts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.expert-card {
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:26px; transition:all 260ms var(--ease); position:relative; overflow:hidden;
+}
+.expert-card::after { content:''; position:absolute; inset:-1px; border-radius:inherit; background:linear-gradient(135deg,rgba(124,58,237,0.4),rgba(6,182,212,0.2)); opacity:0; transition:opacity 260ms; pointer-events:none; z-index:0; }
+.expert-card > * { position:relative; z-index:1; }
+.expert-card:hover { transform:translateY(-4px); box-shadow:0 28px 70px -20px rgba(0,0,0,0.6); }
+.expert-card:hover::after { opacity:1; }
+.expert-card:hover { background:var(--surf-2); border-color:rgba(124,58,237,0.3); }
+.cert-badge { position:absolute; top:14px; right:14px; display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:999px; background:rgba(124,58,237,0.12); border:1px solid rgba(124,58,237,0.28); color:var(--vs); font-size:10px; font-weight:600; letter-spacing:0.06em; z-index:2; }
+.exp-head { display:flex; align-items:center; gap:13px; margin-bottom:18px; }
+.exp-avt { width:52px; height:52px; border-radius:50%; overflow:hidden; background:var(--surf-3); flex-shrink:0; border:2px solid var(--border-2); }
+.exp-avt img { width:100%; height:100%; object-fit:cover; }
+.exp-name { font-size:15px; font-weight:700; letter-spacing:-0.01em; margin-bottom:2px; }
+.exp-role { font-size:12px; color:var(--text-2); font-weight:500; }
+.exp-bio { font-size:13px; color:var(--text-2); line-height:1.6; margin-bottom:16px; }
+.exp-foot { display:flex; align-items:center; justify-content:space-between; padding-top:16px; border-top:1px solid var(--border); }
+.exp-rate { font-size:17px; font-weight:800; letter-spacing:-0.02em; }
+.exp-rate small { font-size:11px; color:var(--text-2); font-weight:400; }
+.exp-stars { display:flex; align-items:center; gap:5px; font-size:13px; color:var(--text-2); }
+.exp-stars .s { color:#FBBF24; }
+.exp-stars .cnt { font-size:11px; color:var(--text-3); }
+.experts-cta { display:flex; justify-content:center; margin-top:40px; }
+
+/* ─── TESTIMONIALS ───────────────────────────────────────────────── */
+/* Old testi classes kept for backward compat */
+.testi-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:18px; }
+.testi { padding:30px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg); display:flex; flex-direction:column; transition:all 240ms var(--ease); }
+.testi:hover { border-color:var(--border-2); transform:translateY(-3px); }
+.testi.feat { background:linear-gradient(150deg,rgba(124,58,237,0.12),rgba(6,182,212,0.04) 60%,transparent); border-color:rgba(124,58,237,0.25); }
+.testi-quote { font-size:18px; line-height:1.5; font-weight:400; letter-spacing:-0.01em; margin-bottom:26px; flex:1; }
+.testi.feat .testi-quote { font-size:22px; }
+.testi-quote::before { content:'\201C'; font-size:72px; line-height:0.75; color:var(--v); display:block; margin-bottom:8px; opacity:0.5; font-weight:800; }
+.testi-by { display:flex; align-items:center; gap:11px; }
+.testi-avt { width:40px; height:40px; border-radius:50%; overflow:hidden; background:var(--surf-3); flex-shrink:0; }
+.testi-avt img { width:100%; height:100%; object-fit:cover; }
+.testi-name { font-size:14px; font-weight:700; }
+.testi-role { font-size:12px; color:var(--text-2); }
+
+/* Results section */
+.results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.result-card { padding:36px 32px; background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg); transition:all 260ms var(--ease); position:relative; overflow:hidden; }
+.result-card::before { content:''; position:absolute; inset:0; background:radial-gradient(350px at var(--mx,50%) var(--my,50%),rgba(124,58,237,0.08),transparent 55%); opacity:0; transition:opacity 260ms; pointer-events:none; }
+.result-card:hover::before { opacity:1; }
+.result-card:hover { border-color:rgba(124,58,237,0.28); transform:translateY(-3px); box-shadow:0 24px 60px -20px rgba(0,0,0,0.5); }
+.result-card.feat { background:linear-gradient(145deg,rgba(124,58,237,0.10),rgba(6,182,212,0.05)); border-color:rgba(124,58,237,0.22); }
+.result-metric { font-family:var(--f-display); font-size:64px; font-weight:800; letter-spacing:-0.05em; line-height:1; margin-bottom:12px; background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.result-metric.accent { background:linear-gradient(135deg,#C084FC,#7C3AED,#06B6D4); -webkit-background-clip:text; background-clip:text; }
+.result-title { font-size:16px; font-weight:700; letter-spacing:-0.02em; margin-bottom:8px; }
+.result-desc { font-size:14px; color:var(--text-2); line-height:1.65; margin-bottom:22px; }
+.result-tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; padding:4px 10px; border-radius:999px; background:rgba(124,58,237,0.10); border:1px solid rgba(124,58,237,0.22); color:var(--vs); letter-spacing:0.04em; }
+.result-quote { font-size:14px; color:var(--text-2); line-height:1.6; font-style:italic; border-left:2px solid rgba(124,58,237,0.4); padding-left:14px; margin-top:18px; }
+
+
+/* ─── ACADEMY ────────────────────────────────────────────────────── */
+.academy-wrap {
+  position:relative; border:1px solid var(--border-2); border-radius:var(--r-2xl);
+  padding:80px 56px; overflow:hidden; background:linear-gradient(135deg,var(--surf) 0%,var(--bg-2) 100%);
+}
+.academy-wrap::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; background:var(--v); filter:blur(150px); opacity:0.25; top:-200px; left:-80px; pointer-events:none; }
+.academy-wrap::after { content:''; position:absolute; width:400px; height:400px; border-radius:50%; background:var(--c); filter:blur(150px); opacity:0.14; bottom:-200px; right:-80px; pointer-events:none; }
+.academy-grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px); background-size:48px 48px; mask-image:radial-gradient(ellipse at 30% 50%,black,transparent 70%); pointer-events:none; }
+.academy-inner { position:relative; display:grid; grid-template-columns:1.3fr 1fr; gap:60px; align-items:center; }
+.academy-inner h2 { font-size:clamp(30px,3.5vw,44px); margin:14px 0 16px; }
+.academy-inner p { font-size:16px; color:var(--text-2); line-height:1.65; margin-bottom:30px; max-width:460px; }
+.academy-btns { display:flex; gap:12px; flex-wrap:wrap; }
+.academy-vis { position:relative; height:270px; display:grid; place-items:center; }
+.cert-card {
+  position:relative; width:230px; padding:20px; background:rgba(12,12,24,0.9);
+  backdrop-filter:blur(20px); border:1px solid var(--border-2); border-radius:var(--r);
+  transform:rotate(-5deg); box-shadow:0 24px 70px -20px rgba(0,0,0,0.8);
+  animation:float 5s ease-in-out infinite;
+}
+.cert-seal { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--v),var(--c)); display:grid; place-items:center; margin-bottom:14px; box-shadow:0 0 22px var(--vg); }
+.cert-seal-inner { width:30px; height:30px; border-radius:50%; background:var(--bg); display:grid; place-items:center; color:var(--vs); }
+.cert-lbl { font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3); margin-bottom:3px; }
+.cert-name { font-size:16px; font-weight:800; letter-spacing:-0.02em; margin-bottom:11px; }
+.cert-meta { display:flex; justify-content:space-between; padding-top:11px; border-top:1px solid var(--border); font-size:9px; color:var(--text-2); font-weight:600; letter-spacing:0.04em; }
+.cert-stamp { position:absolute; top:-16px; right:-18px; width:76px; height:76px; border-radius:50%; background:rgba(12,12,24,0.95); border:1px solid var(--border-2); display:grid; place-items:center; font-size:9px; text-align:center; color:var(--cs); letter-spacing:0.08em; text-transform:uppercase; padding:10px; line-height:1.3; animation:spin 22s linear infinite; box-shadow:0 8px 22px rgba(0,0,0,0.6); font-weight:600; }
+@keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+/* ─── FOOTER ─────────────────────────────────────────────────────── */
+.footer { border-top:1px solid var(--border); padding:72px 0 36px; margin-top:80px; }
+.footer-grid { display:grid; grid-template-columns:1.5fr repeat(3,1fr); gap:44px; margin-bottom:56px; }
+.footer-brand p { font-size:13px; color:var(--text-2); margin:16px 0 22px; max-width:300px; line-height:1.65; }
+.socials { display:flex; gap:9px; }
+.social-btn { width:36px; height:36px; border-radius:50%; background:var(--surf); border:1px solid var(--border); display:grid; place-items:center; color:var(--text-2); transition:all 180ms ease; }
+.social-btn:hover { color:var(--text); border-color:var(--border-2); transform:translateY(-2px); }
+.footer-col h4 { font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-3); margin-bottom:16px; }
+.footer-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-col a { font-size:13px; color:var(--text-2); transition:color 160ms ease; }
+.footer-col a:hover { color:var(--text); }
+.footer-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:24px; border-top:1px solid var(--border); font-size:12px; color:var(--text-3); }
+.footer-powered { display:flex; align-items:center; gap:7px; }
+
+/* ─── REVEAL ─────────────────────────────────────────────────────── */
+.rv { opacity:0; transform:translateY(28px) scale(0.97); filter:blur(4px); transition:opacity 750ms var(--ease), transform 800ms var(--ease), filter 700ms var(--ease); }
+.rv.in { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+
+/* ─── CATEGORIES ─────────────────────────────────────────────────── */
+.cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.cat-card {
+  position:relative; padding:28px 24px 22px;
+  background:var(--surf); border:1px solid var(--border); border-radius:var(--r-lg);
+  cursor:pointer; overflow:hidden;
+  transition:transform 260ms var(--ease), border-color 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+.cat-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--cat-a,var(--v)), var(--cat-b,var(--c)));
+}
+.cat-card::after {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(360px at var(--mx,50%) var(--my,50%), rgba(124,58,237,0.08), transparent 60%);
+  opacity:0; transition:opacity 280ms; pointer-events:none;
+}
+.cat-card:hover { border-color:var(--cat-a,var(--v)); transform:translateY(-4px); box-shadow:0 24px 64px -18px rgba(0,0,0,0.55); }
+.cat-card:hover::after { opacity:1; }
+.cat-ico {
+  width:46px; height:46px; border-radius:12px; display:grid; place-items:center;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  color:var(--cat-a,var(--vs)); margin-bottom:18px; position:relative; z-index:1;
+  transition:background 260ms, border-color 260ms;
+}
+.cat-card:hover .cat-ico { background:rgba(255,255,255,0.07); border-color:var(--cat-a,var(--v)); }
+.cat-name { font-size:15px; font-weight:700; margin-bottom:5px; color:var(--text); position:relative; z-index:1; }
+.cat-count { font-size:12px; color:var(--text-3); font-weight:500; position:relative; z-index:1; }
+.cat-arr {
+  position:absolute; bottom:20px; right:20px; color:var(--cat-a,var(--vs));
+  opacity:0; transform:translateX(-6px) translateY(6px);
+  transition:all 240ms var(--ease); z-index:1;
+}
+.cat-card:hover .cat-arr { opacity:1; transform:none; }
+
+/* ─── ENHANCED ANIMATIONS ────────────────────────────────────────── */
+@keyframes hero-fade-up { from{opacity:0;transform:translateY(32px);filter:blur(6px);} to{opacity:1;transform:none;filter:blur(0);} }
+@keyframes grad-shift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+@keyframes eyebrow-glow { 0%,100%{box-shadow:0 0 0 0 rgba(6,182,212,0.7);} 60%{box-shadow:0 0 0 7px rgba(6,182,212,0);} }
+@keyframes btn-ripple { to{transform:scale(4);opacity:0;} }
+@keyframes subtle-breathe { 0%,100%{opacity:0.34;} 50%{opacity:0.48;} }
+
+.hero-pill  { animation:hero-fade-up 700ms var(--ease)  80ms both; }
+.hero-title { animation:hero-fade-up 900ms var(--ease) 230ms both; }
+.hero-sub   { animation:hero-fade-up 700ms var(--ease) 420ms both; }
+.hero-ctas  { animation:hero-fade-up 700ms var(--ease) 580ms both; }
+.hero-stats { animation:hero-fade-up 700ms var(--ease) 740ms both; }
+
+.hero-orb.a { animation:drift-a 20s ease-in-out infinite, subtle-breathe 8s ease-in-out infinite; }
+.hero-orb.b { animation:drift-b 25s ease-in-out infinite, subtle-breathe 10s ease-in-out 2s infinite; }
+
+#cursor-glow {
+  position:fixed; pointer-events:none; z-index:9998;
+  width:600px; height:600px; border-radius:50%;
+  background:radial-gradient(circle, rgba(124,58,237,0.055) 0%, rgba(6,182,212,0.018) 45%, transparent 70%);
+  transform:translate(-50%,-50%); left:-999px; top:-999px; will-change:left,top;
+  transition:left 90ms linear, top 90ms linear;
+}
+.btn-ripple-el {
+  position:absolute; border-radius:50%;
+  background:rgba(255,255,255,0.22); transform:scale(0);
+  animation:btn-ripple 650ms ease-out forwards; pointer-events:none;
+}
+
+/* ─── MOBILE DRAWER ──────────────────────────────────────────────── */
+.mobile-drawer {
+  position:fixed; top:66px; left:0; right:0; bottom:0; z-index:199;
+  background:rgba(4,4,10,0.97); backdrop-filter:blur(20px) saturate(1.3);
+  -webkit-backdrop-filter:blur(20px) saturate(1.3);
+  border-top:1px solid var(--border-2);
+  padding:28px 20px; display:flex; flex-direction:column; gap:4px;
+  transform:translateY(-8px); opacity:0; pointer-events:none;
+  transition:transform 280ms var(--ease), opacity 280ms var(--ease);
+}
+.mobile-drawer.open { transform:translateY(0); opacity:1; pointer-events:auto; }
+.mob-link {
+  display:block; padding:14px 16px; border-radius:var(--r-sm);
+  font-size:16px; font-weight:500; color:var(--text-2);
+  transition:background 180ms ease, color 180ms ease; text-decoration:none;
+}
+.mob-link:hover { background:rgba(255,255,255,0.05); color:var(--text); }
+.mob-divider { height:1px; background:var(--border); margin:20px 0; flex-shrink:0; }
+.mob-ctas { display:flex; flex-direction:column; gap:10px; }
+.mob-ctas .btn { width:100%; justify-content:center; padding:14px 20px !important; font-size:15px !important; border-radius:999px !important; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media(max-width:980px) {
+  .nav-menu { display:none; }
+  .mobile-toggle { display:flex; }
+  .nav-actions .btn { display:none; }
+  .mega { display:none; }
+  .preview-body { grid-template-columns:1fr; }
+  .preview-side { display:none; }
+  .preview-notif,.preview-orbits { display:none; }
+  .steps,.exp-grid,.experts-grid,.testi-grid,.results-grid,.footer-grid { grid-template-columns:1fr; }
+  .cat-grid { grid-template-columns:repeat(2,1fr); }
+  .exp-card.feat { grid-column:span 1; }
+  .academy-wrap { padding:48px 28px; }
+  .academy-inner { grid-template-columns:1fr; gap:36px; }
+
+
+  .stat+.stat::before { display:none; }
+  .stat { border-top:1px solid var(--border); }
+  .stat:first-child { border-top:none; }
+  .footer-bottom { flex-direction:column; gap:12px; }
+  .hero { padding:100px 0 0; min-height:auto; }
+  .hero-bg-fade { background:linear-gradient(180deg, var(--bg) 0%, rgba(4,4,10,0.6) 100%); }
+  .hero-content { max-width:100%; padding-bottom:60px; }
+  .hero-trust { gap:14px; }
+  .hero-play,.hero-play-label { display:none; }
+  .hero-vid-card { display:none; }
+  .hero-stats-row { grid-template-columns:repeat(2,1fr); }
+  .hero-stat+.hero-stat::before { display:none; }
+  .hero-stat:nth-child(3),.hero-stat:nth-child(4) { border-top:1px solid var(--border); }
+  .pad { padding:72px 0; }
+  .pad-sm { padding:52px 0; }
+  .cta-banner { padding:72px 0; }
+  .hero-sub { max-width:100%; }
+  .sh-sub { font-size:15px; }
+  .result-card { padding:28px 24px; }
+  .result-metric { font-size:52px; }
+  .cta-banner-sub { font-size:15px; }
+  .footer-grid { gap:32px; }
+}
+@media(max-width:640px) {
+  .wrap { padding:0 18px; }
+  .pad { padding:56px 0; }
+  .pad-sm { padding:40px 0; }
+  .cta-banner { padding:56px 0; }
+  h1.hero-title { font-size:clamp(36px,9.5vw,52px); }
+  .sh-title { font-size:clamp(26px,7.5vw,36px); }
+  .cta-banner h2 { font-size:clamp(28px,8vw,40px); }
+  .hero-ctas .btn { width:100%; justify-content:center; }
+  .hero-yt-wrap iframe { top:0; transform:translate(-65%, 0); }
+  .result-metric { font-size:44px; }
+  .result-card { padding:24px 20px; }
+  .cat-grid { grid-template-columns:1fr; }
+  .cta-banner-sub,.sh-sub { font-size:14px; }
+  .guar-strip { gap:14px; padding:20px 18px; }
+  .guar-item { font-size:12px; }
+  .footer-bottom { text-align:center; font-size:12px; }
+}
+
+/* ─── PROOF BAR (hero) ────────────────────────────────────────────── */
+.proof-bar { display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:56px; flex-wrap:wrap; }
+.proof-avatars { display:flex; }
+.proof-avatar { width:32px; height:32px; border-radius:50%; overflow:hidden; border:2px solid var(--bg); flex-shrink:0; }
+.proof-avatar + .proof-avatar { margin-left:-9px; }
+.proof-avatar img { width:100%; height:100%; object-fit:cover; }
+.proof-text { font-size:13px; color:var(--text-2); line-height:1.4; }
+.proof-text strong { color:var(--text); font-weight:600; }
+.proof-sep { width:1px; height:20px; background:var(--border-2); }
+.proof-badge { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--vs); font-weight:600; padding:5px 12px; border-radius:999px; background:rgba(124,58,237,0.08); border:1px solid rgba(124,58,237,0.18); }
+
+/* ─── TRUSTED BY ─────────────────────────────────────────────────── */
+.trust-bar { padding:40px 0; border-bottom:1px solid var(--border); background:rgba(12,12,24,0.4); }
+.trust-label { font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-3); text-align:center; margin-bottom:22px; }
+.trust-logos { display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; max-width:860px; margin:0 auto; }
+.trust-pill { display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border-radius:999px; background:var(--surf); border:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text-2); transition:all 200ms ease; cursor:default; text-decoration:none; }
+.trust-pill:hover { border-color:var(--border-2); color:var(--text); background:var(--surf-2); }
+a.trust-pill { cursor:pointer; }
+a.trust-pill:hover { border-color:rgba(124,58,237,0.4); color:var(--vs); }
+.trust-pill-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+
+/* ─── GUARANTEE STRIP ────────────────────────────────────────────── */
+.guar-strip { display:flex; align-items:center; justify-content:center; gap:32px; padding:28px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.guar-item { display:flex; align-items:center; gap:9px; font-size:13px; color:var(--text-2); font-weight:500; }
+.guar-item svg { color:var(--green); flex-shrink:0; }
+.guar-item strong { color:var(--text); }
+
+/* ─── CTA BANNER ─────────────────────────────────────────────────── */
+.cta-banner { position:relative; overflow:hidden; padding:110px 0; background:var(--bg-2); border-top:1px solid var(--border); }
+.cta-banner::before { content:''; position:absolute; width:900px; height:900px; border-radius:50%; background:var(--v); filter:blur(200px); opacity:0.15; top:-400px; left:50%; transform:translateX(-50%); pointer-events:none; }
+.cta-banner-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px); background-size:56px 56px; mask-image:radial-gradient(ellipse 70% 80% at 50% 50%,black,transparent); -webkit-mask-image:radial-gradient(ellipse 70% 80% at 50% 50%,black,transparent); pointer-events:none; }
+.cta-banner-inner { position:relative; text-align:center; max-width:700px; margin:0 auto; }
+.cta-banner h2 { font-size:clamp(34px,4.5vw,60px); font-weight:800; letter-spacing:-0.04em; margin-bottom:18px; }
+.cta-banner h2 em { font-style:italic; color:var(--vs); }
+.cta-banner-sub { font-size:17px; color:var(--text-2); line-height:1.65; margin-bottom:46px; }
+.cta-banner-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:32px; }
+.cta-guarantees { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+.cta-guar { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-3); font-weight:500; }
+.cta-guar svg { color:var(--green); flex-shrink:0; }
+@media(max-width:640px) {
+  .guar-strip { gap:18px; }
+  .cta-guarantees { gap:16px; }
+}
+@media(max-width:480px) {
+  .btn-lg { padding:13px 20px; font-size:14px; }
+  .hero-ctas { flex-direction:column; gap:10px; }
+  .hero-ctas .btn { max-width:360px; margin:0 auto; }
+  .cta-banner-btns { flex-direction:column; align-items:center; gap:10px; }
+  .cta-banner-btns .btn { width:100%; max-width:340px; justify-content:center; padding:13px 20px; }
+}
+  </style>
+</head>
+<body>
+<div id="root"><div id="cfm-loader" style="position:fixed;inset:0;background:#04040A;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;"><div style="font-size:16px;font-weight:700;letter-spacing:-0.02em;color:#F4F4FF;margin-bottom:24px;">CreatorFlow <span style="background:linear-gradient(135deg,#A78BFA,#06B6D4);-webkit-background-clip:text;background-clip:text;color:transparent;">Market</span></div><div style="width:28px;height:28px;border:2.5px solid rgba(255,255,255,0.08);border-top-color:#A78BFA;border-radius:50%;animation:cfm-spin .7s linear infinite;"></div><style>@keyframes cfm-spin{to{transform:rotate(360deg);}}</style></div></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const PHOTO = {
+  amelie: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=240&h=240&fit=crop&crop=faces&q=80',
+  julien: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=240&h=240&fit=crop&crop=faces&q=80',
+  sarah: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=240&h=240&fit=crop&crop=faces&q=80',
+  camille: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&h=160&fit=crop&crop=faces&q=80',
+  romain: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces&q=80',
+  nadia: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra1: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra2: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=160&h=160&fit=crop&crop=faces&q=80',
+  extra3: 'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=160&h=160&fit=crop&crop=faces&q=80'
+};
+
+/* ── Icons ── */
+const Ic = {
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    className: (p.className || '') + ' ico',
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Chevron: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    className: (p.className || '') + ' chevron',
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "6 9 12 15 18 9"
+  })),
+  Sparkle: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"
+  })),
+  Search: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "7"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m20 20-3.5-3.5"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  })),
+  Menu: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "6",
+    x2: "21",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "12",
+    x2: "21",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "18",
+    x2: "21",
+    y2: "18"
+  })),
+  X: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+  })),
+  Bot: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "8",
+    width: "18",
+    height: "12",
+    rx: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "15",
+    cy: "14",
+    r: "1.2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3v5M8 3h8"
+  })),
+  Grad: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M22 10 12 5 2 10l10 5 10-5z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M6 12v5c3 2 9 2 12 0v-5"
+  })),
+  Compass: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+  })),
+  Pen: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 19l7-7 3 3-7 7-3-3z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M2 2l7.586 7.586"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "11",
+    cy: "11",
+    r: "2"
+  })),
+  Chart: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M3 3v18h18"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 16V12M12 16V8M17 16v-6"
+  })),
+  Layers: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 2 7 12 12 22 7 12 2"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 17 12 22 22 17"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "2 12 12 17 22 12"
+  })),
+  Match: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "6",
+    cy: "8",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "18",
+    cy: "16",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 8h6a3 3 0 0 1 0 6h-6"
+  })),
+  Rocket: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"
+  })),
+  User: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "8",
+    r: "4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 21a8 8 0 0 1 16 0"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M10.3 21a1.94 1.94 0 0 0 3.4 0"
+  })),
+  TrendUp: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "22 7 13.5 15.5 8.5 10.5 2 17"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 7 22 7 22 13"
+  }))
+};
+const Social = {
+  YT: () => /*#__PURE__*/React.createElement("svg", {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M23 7.5s-.2-1.6-.9-2.3c-.8-.9-1.8-.9-2.2-1C16.7 4 12 4 12 4s-4.7 0-7.9.2c-.4.1-1.3.1-2.2 1-.7.7-.9 2.3-.9 2.3S.8 9.4.8 11.3v1.8c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.2 7.6.2s4.7 0 7.9-.2c.4-.1 1.4-.1 2.2-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8v-1.8c0-1.9-.2-3.8-.2-3.8zM9.7 15.2V8.4l6.1 3.4-6.1 3.4z"
+  })),
+  TK: () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M19.6 6.3c-1.6 0-3-1.4-3-3V3h-3.2v13.2c0 1.5-1.2 2.7-2.7 2.7s-2.7-1.2-2.7-2.7 1.2-2.7 2.7-2.7c.3 0 .6.1.9.2v-3.3c-.3 0-.6-.1-.9-.1-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6V9.7c1.2.9 2.7 1.4 4.2 1.4V7.9c-.5 0-.8-.4-1.3-.4z"
+  })),
+  IG: () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "2",
+    width: "20",
+    height: "20",
+    rx: "5"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 11.4a4 4 0 1 1-7.9 1.1A4 4 0 0 1 16 11.4z"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "17.5",
+    y1: "6.5",
+    x2: "17.5",
+    y2: "6.5"
+  })),
+  FB: () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3V22c4.6-.8 8.4-4.8 8.4-9.9z"
+  }))
+};
+
+/* ── Cursor glow ── */
+function CursorGlow() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    id: "cursor-glow"
+  });
+}
+
+/* ── 3D tilt helpers ── */
+function onTilt(e) {
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  const x = e.clientX - r.left,
+    y = e.clientY - r.top;
+  const cx = r.width / 2,
+    cy = r.height / 2;
+  const rx = (y - cy) / cy * -6,
+    ry = (x - cx) / cx * 6;
+  el.style.setProperty('--mx', x + 'px');
+  el.style.setProperty('--my', y + 'px');
+  el.style.transform = `translateY(-4px) perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+}
+function offTilt(e) {
+  e.currentTarget.style.transform = '';
+}
+
+/* ── Reveal wrapper ── */
+function Rv({
+  children,
+  delay = 0,
+  className = '',
+  ...rest
+}) {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(() => setShown(true), delay);
+          obs.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.1
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+  return /*#__PURE__*/React.createElement("div", _extends({
+    ref: ref,
+    className: `rv ${shown ? 'in' : ''} ${className}`
+  }, rest), children);
+}
+
+/* ── Animated counter ── */
+function StatCount({
+  to,
+  suffix
+}) {
+  const ref = useRef(null);
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const start = performance.now();
+          const dur = 1800;
+          const step = now => {
+            const t = Math.min(1, (now - start) / dur);
+            const eased = 1 - Math.pow(1 - t, 3);
+            setVal(Math.round(to * eased));
+            if (t < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          obs.unobserve(el);
+        }
+      });
+    }, {
+      threshold: 0.5
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [to]);
+  return /*#__PURE__*/React.createElement("span", {
+    ref: ref
+  }, val, suffix);
+}
+
+/* ── Nav ── */
+function Nav() {
+  const [stuck, setStuck] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => {
+    const fn = () => setStuck(window.scrollY > 24);
+    window.addEventListener('scroll', fn);
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+  const menus = {
+    plateforme: {
+      cols: [{
+        title: 'Pour les entreprises',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Search, null),
+          label: 'Trouver un expert',
+          sub: 'Parcourez nos experts certifiés',
+          href: 'experts.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+          label: 'Déposer un brief',
+          sub: 'Recevez des candidatures sous 24h',
+          href: 'brief.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+          label: 'Comment ça marche',
+          sub: 'Trois étapes, aucune friction',
+          href: '#how'
+        }]
+      }, {
+        title: 'Pour les experts',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.User, null),
+          label: 'Créer mon profil',
+          sub: 'Validé par l\'académie en 48h',
+          href: 'inscription.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+          label: 'Voir les missions',
+          sub: 'Opportunités ciblées par l\'IA',
+          href: 'dashboard-expert.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.TrendUp, null),
+          label: 'Programme Academy',
+          sub: 'Formation certifiante CreatorFlow Market',
+          href: 'academie.html'
+        }]
+      }],
+      featured: {
+        badge: 'Nouveau',
+        title: 'Hub 2.0 disponible',
+        text: 'Matching IA amélioré, nouveaux profils et tableau de bord repensé.',
+        link: 'Découvrir →',
+        href: 'inscription.html'
+      }
+    },
+    ressources: {
+      cols: [{
+        title: 'Apprendre',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+          label: 'Blog',
+          sub: 'Actualités IA et stratégie',
+          href: 'blog.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+          label: 'Guides pratiques',
+          sub: 'Tutoriels et cas d\'usage',
+          href: 'blog.html'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Layers, null),
+          label: 'Études de cas',
+          sub: 'Résultats clients réels',
+          href: 'blog.html'
+        }]
+      }, {
+        title: 'Support',
+        items: [{
+          icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+          label: 'Centre d\'aide',
+          sub: 'FAQ et documentation',
+          href: '#'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Compass, null),
+          label: 'Communauté',
+          sub: 'Forum des experts',
+          href: '#'
+        }, {
+          icon: /*#__PURE__*/React.createElement(Ic.Chart, null),
+          label: 'Changelog',
+          sub: 'Nouveautés de la plateforme',
+          href: '#'
+        }]
+      }],
+      featured: {
+        badge: 'Guide',
+        title: 'Recruter un expert IA',
+        text: 'Tout ce qu\'il faut savoir pour lancer votre premier projet IA.',
+        link: 'Lire le guide →',
+        href: 'blog.html'
+      }
+    }
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: `nav ${stuck ? 'stuck' : ''}`,
+    onClick: e => {
+      if (e.target === e.currentTarget) setOpenMenu(null);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      backgroundImage: "url('/creatorflow-logo.png')"
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", null, "Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "nav-menu",
+    onMouseLeave: () => setOpenMenu(null)
+  }, ['plateforme', 'ressources'].map(key => /*#__PURE__*/React.createElement("div", {
+    className: "nav-item",
+    key: key,
+    onMouseEnter: () => setOpenMenu(key)
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `nav-link ${openMenu === key ? 'open' : ''}`
+  }, key.charAt(0).toUpperCase() + key.slice(1), " ", /*#__PURE__*/React.createElement(Ic.Chevron, null)), /*#__PURE__*/React.createElement("div", {
+    className: `mega ${openMenu === key ? 'open' : ''}`
+  }, menus[key].cols.map((col, ci) => /*#__PURE__*/React.createElement("div", {
+    className: "mega-col",
+    key: ci
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mega-col-title"
+  }, col.title), col.items.map((item, ii) => /*#__PURE__*/React.createElement("a", {
+    className: "mega-item",
+    href: item.href || '#',
+    key: ii,
+    onClick: () => setOpenMenu(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-icon"
+  }, item.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-text"
+  }, item.label), /*#__PURE__*/React.createElement("div", {
+    className: "mega-item-sub"
+  }, item.sub)))))), /*#__PURE__*/React.createElement("div", {
+    className: "mega-col"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "mega-featured",
+    href: menus[key].featured.href || '#',
+    onClick: () => setOpenMenu(null),
+    style: {
+      display: 'block',
+      textDecoration: 'none',
+      color: 'inherit'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "mega-featured-badge"
+  }, menus[key].featured.badge), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-title"
+  }, menus[key].featured.title), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-text"
+  }, menus[key].featured.text), /*#__PURE__*/React.createElement("div", {
+    className: "mega-featured-link"
+  }, menus[key].featured.link)))))), /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "experts.html",
+    onClick: () => setOpenMenu(null)
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "agents-ia.html",
+    onClick: () => setOpenMenu(null)
+  }, "Employ\xE9s IA"), /*#__PURE__*/React.createElement("a", {
+    className: "nav-link",
+    href: "academie.html",
+    onClick: () => setOpenMenu(null)
+  }, "Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-actions"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-outline",
+    style: {
+      padding: '9px 18px',
+      fontSize: '13px',
+      borderRadius: '999px'
+    }
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary",
+    style: {
+      padding: '9px 18px',
+      fontSize: '13px'
+    }
+  }, "D\xE9marrer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("button", {
+    className: "mobile-toggle",
+    onClick: () => setMobileOpen(o => !o)
+  }, mobileOpen ? /*#__PURE__*/React.createElement(Ic.X, null) : /*#__PURE__*/React.createElement(Ic.Menu, null))))), /*#__PURE__*/React.createElement("div", {
+    className: `mobile-drawer ${mobileOpen ? 'open' : ''}`
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "experts.html",
+    onClick: () => setMobileOpen(false)
+  }, "Experts"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "academie.html",
+    onClick: () => setMobileOpen(false)
+  }, "Acad\xE9mie"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "brief.html",
+    onClick: () => setMobileOpen(false)
+  }, "D\xE9poser un brief"), /*#__PURE__*/React.createElement("a", {
+    className: "mob-link",
+    href: "inscription.html",
+    onClick: () => setMobileOpen(false)
+  }, "Devenir expert"), /*#__PURE__*/React.createElement("div", {
+    className: "mob-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "mob-ctas"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "connexion.html",
+    className: "btn btn-outline",
+    onClick: () => setMobileOpen(false)
+  }, "Se connecter"), /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary",
+    onClick: () => setMobileOpen(false)
+  }, "D\xE9marrer ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
+}
+
+/* ── Hero ── */
+function Hero() {
+  const tickers = ['GPT-4 & Claude', 'LangChain', 'Automatisation', 'Chatbots', 'Agents IA', 'RAG', 'Vision par ordinateur', 'NLP', 'Fine-tuning', 'Vectorisation', 'Make & n8n', 'Voiceflow', 'Notion AI', 'Midjourney', 'Stable Diffusion'];
+  const [counts, setCounts] = useState({
+    experts: 0,
+    articles: 0
+  });
+  useEffect(() => {
+    Promise.all([sb.from('experts').select('*', {
+      count: 'exact',
+      head: true
+    }).eq('statut', 'approved'), sb.from('blog_articles').select('*', {
+      count: 'exact',
+      head: true
+    }).eq('status', 'published')]).then(([{
+      count: ec
+    }, {
+      count: ac
+    }]) => {
+      setCounts({
+        experts: ec ?? 0,
+        articles: ac ?? 0
+      });
+    }).catch(() => {});
+  }, []);
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  const IcThumb = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+  }));
+  const stats = [{
+    n: 24,
+    s: 'h',
+    l: 'Réponse garantie',
+    href: null
+  }, counts.articles > 0 ? {
+    n: counts.articles,
+    s: '+',
+    l: 'Articles publiés',
+    href: 'blog.html'
+  } : {
+    n: 28,
+    s: '+',
+    l: 'Articles publiés',
+    href: 'blog.html'
+  }, {
+    n: 100,
+    s: '%',
+    l: 'Experts vérifiés',
+    href: 'experts.html'
+  }, {
+    n: 3,
+    s: ' min',
+    l: 'Pour démarrer',
+    href: null
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("section", {
+    className: "hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-yt-wrap"
+  }, /*#__PURE__*/React.createElement("iframe", {
+    src: "https://www.youtube-nocookie.com/embed/aV2mzPdG3Y8?autoplay=1&mute=1&loop=1&playlist=aV2mzPdG3Y8&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1",
+    allow: "autoplay; encrypted-media",
+    allowFullScreen: true
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-orb a"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-orb b"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "hero-bg-fade"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-content"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "hero-title"
+  }, "L'expertise IA.", /*#__PURE__*/React.createElement("br", null), "Au service de", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("span", {
+    className: "grad"
+  }, "vos ambitions.")), /*#__PURE__*/React.createElement("p", {
+    className: "hero-sub"
+  }, "Trouvez l'expert id\xE9al pour transformer vos id\xE9es en r\xE9sultats concrets. Matching personnalis\xE9, paiement s\xE9curis\xE9."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-ctas"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg"
+  }, /*#__PURE__*/React.createElement(Ic.Rocket, null), "D\xE9poser mon projet", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "#how",
+    className: "btn btn-ghost btn-lg"
+  }, "Voir comment \xE7a marche")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcClock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "R\xE9ponse"), " sous 24h")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcShield, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Experts"), " v\xE9rifi\xE9s")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcLock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Paiement"), " s\xE9curis\xE9")), /*#__PURE__*/React.createElement("div", {
+    className: "hero-trust-item"
+  }, /*#__PURE__*/React.createElement(IcThumb, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Satisfait"), " ou rembours\xE9"))))), /*#__PURE__*/React.createElement("div", {
+    className: "marquee"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "marquee-track"
+  }, [...tickers, ...tickers].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: "marquee-item",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "dot"
+  }), t))))));
+}
+
+/* ── Trusted By ── */
+function TrustedBy() {
+  const tools = [{
+    dot: '#10B981',
+    name: 'OpenAI / GPT-4',
+    url: null
+  }, {
+    dot: '#7C3AED',
+    name: 'LangChain',
+    url: null
+  }, {
+    dot: '#06B6D4',
+    name: 'Make',
+    url: 'https://www.make.com/en/register?pc=creatorflow'
+  }, {
+    dot: '#F59E0B',
+    name: 'n8n',
+    url: null
+  }, {
+    dot: '#EC4899',
+    name: 'ElevenLabs',
+    url: 'https://try.elevenlabs.io/o65ftyg9a7x1'
+  }, {
+    dot: '#3B82F6',
+    name: 'HubSpot',
+    url: null
+  }, {
+    dot: '#6366F1',
+    name: 'Notion AI',
+    url: null
+  }, {
+    dot: '#F97316',
+    name: 'Midjourney',
+    url: null
+  }, {
+    dot: '#10B981',
+    name: 'Supabase',
+    url: null
+  }, {
+    dot: '#8B5CF6',
+    name: 'Anthropic Claude',
+    url: null
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "trust-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "trust-label"
+  }, "Nos experts ma\xEEtrisent les meilleurs outils du march\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "trust-logos"
+  }, tools.map((t, i) => t.url ? /*#__PURE__*/React.createElement("a", {
+    className: "trust-pill",
+    key: i,
+    href: t.url,
+    target: "_blank",
+    rel: "noopener noreferrer sponsored"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "trust-pill-dot",
+    style: {
+      background: t.dot
+    }
+  }), t.name) : /*#__PURE__*/React.createElement("div", {
+    className: "trust-pill",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "trust-pill-dot",
+    style: {
+      background: t.dot
+    }
+  }), t.name)))));
+}
+
+/* ── Guarantee Strip ── */
+function GuaranteeStrip() {
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  const IcThumb = () => /*#__PURE__*/React.createElement("svg", {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+  }));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "guar-strip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcShield, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Experts certifi\xE9s"), " \xB7 Valid\xE9s par l'Acad\xE9mie")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcClock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "R\xE9ponse sous 24h"), " \xB7 Garanti")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcLock, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Paiement s\xE9curis\xE9"), " \xB7 Stripe")), /*#__PURE__*/React.createElement("div", {
+    className: "guar-item"
+  }, /*#__PURE__*/React.createElement(IcThumb, null), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "Satisfait ou rembours\xE9"), " \xB7 Sans question")));
+}
+
+/* ── Platform Preview ── */
+function PlatformPreview() {
+  return /*#__PURE__*/React.createElement("section", {
+    className: "preview"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-shell"
+  }, /*#__PURE__*/React.createElement(Rv, null, /*#__PURE__*/React.createElement("div", {
+    className: "preview-frame"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pbar-dots"
+  }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null)), /*#__PURE__*/React.createElement("div", {
+    className: "pbar-url"
+  }, "app.creatorflow.ai/hub/match"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 44
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "preview-body"
+  }, /*#__PURE__*/React.createElement("aside", {
+    className: "preview-side"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "side-section"
+  }, "Mon espace"), ['Tableau de bord', 'Trouver un expert', 'Mes projets', 'Messages'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: `side-item ${i === 1 ? 'on' : ''}`,
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "d"
+  }), t)), /*#__PURE__*/React.createElement("div", {
+    className: "side-section"
+  }, "Outils"), ['Briefs', 'Contrats', 'Facturation'].map((t, i) => /*#__PURE__*/React.createElement("div", {
+    className: "side-item",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "d"
+  }), t))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-title"
+  }, "R\xE9sultats de matching", /*#__PURE__*/React.createElement("span", {
+    className: "live-badge"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "live-dot"
+  }), "En direct"))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-search"
+  }, /*#__PURE__*/React.createElement(Ic.Search, {
+    style: {
+      color: 'var(--text-3)',
+      flexShrink: 0
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "Agent IA pour service client e-commerce"), /*#__PURE__*/React.createElement("span", {
+    className: "caret"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "p-results"
+  }, [{
+    ph: PHOTO.amelie,
+    name: 'Expert Agents IA',
+    role: 'LangChain & RAG · Certifié',
+    match: '98%',
+    rate: '95 $'
+  }, {
+    ph: PHOTO.julien,
+    name: 'Expert Formation IA',
+    role: 'Formateur certifié · Certifié',
+    match: '94%',
+    rate: '120 $'
+  }, {
+    ph: PHOTO.sarah,
+    name: 'Consultante Stratégie IA',
+    role: 'Audit & Roadmap · Certifiée',
+    match: '91%',
+    rate: '180 $'
+  }].map((r, i) => /*#__PURE__*/React.createElement("div", {
+    className: "p-result",
+    key: i
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "p-avt"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: r.ph,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "p-name"
+  }, r.name), /*#__PURE__*/React.createElement("div", {
+    className: "p-role"
+  }, r.role)), /*#__PURE__*/React.createElement("div", {
+    className: "p-match"
+  }, r.match, " match"), /*#__PURE__*/React.createElement("div", {
+    className: "p-rate"
+  }, r.rate, /*#__PURE__*/React.createElement("small", null, "/h")))))))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-notif"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-icon"
+  }, /*#__PURE__*/React.createElement(Ic.Sparkle, null)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "notif-title"
+  }, "Nouveau match"), /*#__PURE__*/React.createElement("div", {
+    className: "notif-text"
+  }, "3 experts correspondent \xE0 votre brief. R\xE9ponse moy. : 4h."))), /*#__PURE__*/React.createElement("div", {
+    className: "preview-orbits"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o1"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra1,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o2"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra2,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "o-avatar o3"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: PHOTO.extra3,
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "preview-overlay"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "preview-overlay-badge"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  })), "Aper\xE7u de la plateforme \xB7 Non interactif"))))));
+}
+
+/* ── How it works ── */
+function HowItWorks() {
+  const [mode, setMode] = useState('entreprises');
+  const steps = {
+    entreprises: [{
+      icon: /*#__PURE__*/React.createElement(Ic.Search, null),
+      title: 'Décrivez votre besoin',
+      text: 'Briefing rapide en 3 minutes. Notre IA structure votre besoin et identifie les compétences requises.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+      title: 'Recevez des profils',
+      text: 'Sous 24h, 3 à 5 experts certifiés avec portfolios, tarifs et disponibilités. Comparez sereinement.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+      title: 'Lancez votre projet',
+      text: 'Échangez, choisissez, signez en ligne. Paiement sécurisé via la plateforme, satisfait ou remboursé.'
+    }],
+    experts: [{
+      icon: /*#__PURE__*/React.createElement(Ic.User, null),
+      title: 'Créez votre profil',
+      text: 'Compétences, projets, certifications CreatorFlow Market. Profil validé par notre équipe en 48h.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.Bell, null),
+      title: 'Recevez des missions',
+      text: 'Des opportunités ciblées arrivent dans votre espace. Candidatez en un clic, sans démarchage.'
+    }, {
+      icon: /*#__PURE__*/React.createElement(Ic.TrendUp, null),
+      title: 'Développez votre activité',
+      text: 'Facturation, contrats, suivi de mission. Concentrez-vous sur la valeur — on gère l\'administratif.'
+    }]
+  };
+  return /*#__PURE__*/React.createElement("section", {
+    id: "how",
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh c"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Comment \xE7a marche"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Trois \xE9tapes. ", /*#__PURE__*/React.createElement("em", null, "Aucune friction.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Que vous cherchiez un expert ou proposiez vos services, le parcours est con\xE7u pour aller \xE0 l'essentiel.")), /*#__PURE__*/React.createElement(Rv, {
+    style: {
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: mode === 'entreprises' ? 'on' : '',
+    onClick: () => setMode('entreprises')
+  }, "Pour les entreprises"), /*#__PURE__*/React.createElement("button", {
+    className: mode === 'experts' ? 'on' : '',
+    onClick: () => setMode('experts')
+  }, "Pour les experts"))), /*#__PURE__*/React.createElement("div", {
+    className: "steps",
+    style: {
+      marginTop: 8
+    }
+  }, steps[mode].map((s, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: `${mode}-${i}`,
+    delay: i * 90,
+    className: "step",
+    onMouseMove: e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "step-num"
+  }, "\xC9TAPE ", String(i + 1).padStart(2, '0')), /*#__PURE__*/React.createElement("div", {
+    className: "step-icon"
+  }, s.icon), /*#__PURE__*/React.createElement("h3", null, s.title), /*#__PURE__*/React.createElement("p", null, s.text))))));
+}
+
+/* ── Categories ── */
+function Categories() {
+  const IcVideo = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("polygon", {
+    points: "23 7 16 12 23 17 23 7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "1",
+    y: "5",
+    width: "15",
+    height: "14",
+    rx: "2"
+  }));
+  const IcCode = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("polyline", {
+    points: "16 18 22 12 16 6"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "8 6 2 12 8 18"
+  }));
+  const IcBrand = () => /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M8 12h8M12 8v8"
+  }));
+  const cats = [{
+    icon: /*#__PURE__*/React.createElement(Ic.Bot, null),
+    name: 'Agents IA',
+    a: '#7C3AED',
+    b: '#9333EA',
+    href: 'experts.html?cat=agents-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Rocket, null),
+    name: 'Automatisation',
+    a: '#06B6D4',
+    b: '#0891B2',
+    href: 'experts.html?cat=automatisation'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Match, null),
+    name: 'Chatbots',
+    a: '#10B981',
+    b: '#059669',
+    href: 'experts.html?cat=chatbots'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcCode, null),
+    name: 'Développement IA',
+    a: '#9333EA',
+    b: '#7C3AED',
+    href: 'experts.html?cat=developpement-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+    name: 'Prompt Engineering',
+    a: '#F59E0B',
+    b: '#D97706',
+    href: 'experts.html?cat=prompt-engineering'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcVideo, null),
+    name: 'Montage vidéo IA',
+    a: '#EC4899',
+    b: '#DB2777',
+    href: 'experts.html?cat=montage-video'
+  }, {
+    icon: /*#__PURE__*/React.createElement(IcBrand, null),
+    name: 'Branding IA',
+    a: '#F97316',
+    b: '#EA580C',
+    href: 'experts.html?cat=branding-ia'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+    name: 'Formation IA',
+    a: '#3B82F6',
+    b: '#2563EB',
+    href: 'academie.html'
+  }];
+  return /*#__PURE__*/React.createElement("section", {
+    className: "pad-sm"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Explorer les cat\xE9gories"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Trouvez l'expertise ", /*#__PURE__*/React.createElement("em", null, "qu'il vous faut.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "8 domaines d'expertise IA. Choisissez votre cat\xE9gorie et matchez en quelques minutes.")), /*#__PURE__*/React.createElement("div", {
+    className: "cat-grid"
+  }, cats.map((c, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: i,
+    delay: i * 50,
+    className: "cat-card",
+    style: {
+      '--cat-a': c.a,
+      '--cat-b': c.b
+    },
+    onMouseMove: onTilt,
+    onMouseLeave: offTilt,
+    onClick: () => window.location.href = c.href,
+    role: "link",
+    tabIndex: 0,
+    onKeyDown: e => e.key === 'Enter' && (window.location.href = c.href)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cat-ico"
+  }, c.icon), /*#__PURE__*/React.createElement("div", {
+    className: "cat-name"
+  }, c.name), /*#__PURE__*/React.createElement("div", {
+    className: "cat-arr"
+  }, /*#__PURE__*/React.createElement(Ic.Arrow, null)))))));
+}
+
+/* ── Expertise ── */
+function Expertise() {
+  const TAG_LINKS = {
+    'Make': {
+      href: 'https://www.make.com/en/register?pc=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'n8n': {
+      href: 'https://n8n.io/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'LangChain': {
+      href: 'https://python.langchain.com/docs/introduction/',
+      ext: true,
+      affil: false
+    },
+    'Workshops': {
+      href: 'academie.html',
+      ext: false,
+      affil: false
+    },
+    'Coaching': {
+      href: 'inscription.html',
+      ext: false,
+      affil: false
+    },
+    'Audit': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Roadmap': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Copy': {
+      href: 'https://www.jasper.ai/?fpr=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'Visuel': {
+      href: 'https://www.canva.com/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'Vidéo': {
+      href: 'https://www.descript.com/?ref=creatorflow',
+      ext: true,
+      affil: true
+    },
+    'ML': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Predictive': {
+      href: 'brief.html',
+      ext: false,
+      affil: false
+    },
+    'Santé': {
+      href: 'experts.html?secteur=sante',
+      ext: false,
+      affil: false
+    },
+    'Finance': {
+      href: 'experts.html?secteur=finance',
+      ext: false,
+      affil: false
+    },
+    'E-com': {
+      href: 'experts.html?secteur=ecommerce',
+      ext: false,
+      affil: false
+    },
+    '+27': {
+      href: 'experts.html',
+      ext: false,
+      affil: false
+    }
+  };
+  const cards = [{
+    icon: /*#__PURE__*/React.createElement(Ic.Bot, null),
+    title: "Implémentation d'outils IA",
+    text: 'Automatisation de workflows, chatbots conversationnels, agents autonomes intégrés à vos systèmes.',
+    tags: ['Make', 'n8n', 'LangChain'],
+    href: 'brief.html?domaine=implementation',
+    feat: true
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Grad, null),
+    title: 'Formation des équipes',
+    text: 'Programmes sur mesure pour faire monter vos collaborateurs en compétence sur les outils IA.',
+    tags: ['Workshops', 'Coaching'],
+    href: 'brief.html?domaine=formation'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Compass, null),
+    title: 'Stratégie & conseil',
+    text: 'Roadmap de transformation IA, audit des cas d\'usage, accompagnement au changement.',
+    tags: ['Audit', 'Roadmap'],
+    href: 'brief.html?domaine=strategie'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Pen, null),
+    title: 'Création de contenu IA',
+    text: 'Production à l\'échelle : copywriting, visuel, vidéo. Workflows IA pour équipes marketing.',
+    tags: ['Copy', 'Visuel', 'Vidéo'],
+    href: 'brief.html?domaine=contenu'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Chart, null),
+    title: 'Analyse de données & IA',
+    text: 'Modèles prédictifs, scoring, dashboards augmentés. Tirez parti de vos données avec l\'IA.',
+    tags: ['ML', 'Predictive'],
+    href: 'brief.html?domaine=data'
+  }, {
+    icon: /*#__PURE__*/React.createElement(Ic.Layers, null),
+    title: 'IA par secteur',
+    text: 'Solutions verticales pour santé, finance, e-commerce, RH, éducation et bien plus encore.',
+    tags: ['Santé', 'Finance', 'E-com', '+27'],
+    href: 'brief.html?domaine=secteur'
+  }];
+  return /*#__PURE__*/React.createElement("section", {
+    id: "domaines",
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Nos domaines d'expertise"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Couverture compl\xE8te, ", /*#__PURE__*/React.createElement("em", null, "de la strat\xE9gie \xE0 l'ex\xE9cution.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Six grands domaines, 30+ verticales. Nos experts couvrent l'ensemble du cycle de transformation IA.")), /*#__PURE__*/React.createElement("div", {
+    className: "exp-grid"
+  }, cards.map((c, i) => /*#__PURE__*/React.createElement(Rv, {
+    key: i,
+    delay: i * 55,
+    className: `exp-card ${c.feat ? 'feat' : ''}`,
+    onClick: () => window.location.href = c.href,
+    onMouseMove: e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "exp-icon"
+  }, c.icon), /*#__PURE__*/React.createElement("h3", null, c.title), /*#__PURE__*/React.createElement("p", null, c.text)), /*#__PURE__*/React.createElement("div", {
+    className: "tags"
+  }, c.tags.map(t => {
+    const info = TAG_LINKS[t];
+    if (!info) return /*#__PURE__*/React.createElement("span", {
+      className: "tag",
+      key: t
+    }, t);
+    return /*#__PURE__*/React.createElement("a", {
+      key: t,
+      href: info.href,
+      className: "tag",
+      target: info.ext ? '_blank' : '_self',
+      rel: info.affil ? 'noopener sponsored' : info.ext ? 'noopener noreferrer' : undefined,
+      onClick: e => e.stopPropagation()
+    }, t);
+  })))))));
+}
+
+/* ── Experts ── */
+function Experts() {
+  const FALLBACK = [{
+    ph: PHOTO.amelie,
+    name: 'Expert Agents IA',
+    role: 'Spécialiste LangChain & RAG',
+    bio: 'Conçoit des agents autonomes et pipelines RAG pour PME. Disponible pour missions courtes et longues.',
+    skills: ['LangChain', 'OpenAI', 'Pinecone', 'Python'],
+    rate: '95 $',
+    rating: null,
+    rev: null
+  }, {
+    ph: PHOTO.julien,
+    name: 'Expert Formation IA',
+    role: 'Formateur IA pour équipes',
+    bio: 'Accompagne les équipes marketing et opérations dans leur montée en compétences IA.',
+    skills: ['ChatGPT', 'Notion AI', 'Make', 'Pédagogie'],
+    rate: '120 $',
+    rating: null,
+    rev: null
+  }, {
+    ph: PHOTO.sarah,
+    name: 'Consultante Stratégie IA',
+    role: 'Audit & Roadmap IA',
+    bio: 'Audit, roadmap et conduite du changement IA. Certifiée CreatorFlow Market Advanced.',
+    skills: ['Audit', 'Roadmap', 'Change mgmt'],
+    rate: '180 $',
+    rating: null,
+    rev: null
+  }];
+  const [list, setList] = useState(FALLBACK);
+  useEffect(() => {
+    Promise.all([sb.from('experts').select('id,specialite,bio,competences,tarif_horaire,photo_url,note_moyenne,nb_avis').eq('statut', 'approved').limit(3), sb.from('profiles').select('id,prenom,nom,photo_url')]).then(([{
+      data: exps
+    }, {
+      data: profs
+    }]) => {
+      if (!exps || exps.length === 0) return;
+      const pm = {};
+      (profs || []).forEach(p => {
+        pm[p.id] = p;
+      });
+      setList(exps.map(e => {
+        const p = pm[e.id] || {};
+        const n = ((p.prenom || '') + ' ' + (p.nom || '')).trim();
+        return {
+          ph: e.photo_url || p.photo_url || PHOTO.extra1,
+          name: n || 'Expert IA',
+          role: e.specialite || 'Expert IA',
+          bio: (e.bio || '').slice(0, 140),
+          skills: (e.competences || []).slice(0, 4),
+          rate: e.tarif_horaire ? e.tarif_horaire + '$' : 'Sur devis',
+          rating: e.note_moyenne ? e.note_moyenne.toFixed(1) : null,
+          rev: e.nb_avis || null
+        };
+      }));
+    }).catch(() => {});
+  }, []);
+  return /*#__PURE__*/React.createElement("section", {
+    id: "experts",
+    className: "pad",
+    style: {
+      paddingTop: 80
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "Profils experts"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Des profils v\xE9rifi\xE9s, ", /*#__PURE__*/React.createElement("em", null, "pr\xEAts \xE0 d\xE9marrer.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Chaque expert est valid\xE9 par l'acad\xE9mie. Comp\xE9tences certifi\xE9es, r\xE9f\xE9rences v\xE9rifi\xE9es, disponibilit\xE9s \xE0 jour.")), /*#__PURE__*/React.createElement("div", {
+    className: "experts-grid"
+  }, list.map((e, i) => /*#__PURE__*/React.createElement(Rv, {
+    delay: i * 100,
+    className: "expert-card",
+    key: i,
+    onMouseMove: onTilt,
+    onMouseLeave: offTilt
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-badge"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Certifi\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "exp-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-avt"
+  }, /*#__PURE__*/React.createElement("img", {
+    src: e.ph,
+    alt: e.name
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "exp-name"
+  }, e.name), /*#__PURE__*/React.createElement("div", {
+    className: "exp-role"
+  }, e.role))), /*#__PURE__*/React.createElement("p", {
+    className: "exp-bio"
+  }, e.bio), /*#__PURE__*/React.createElement("div", {
+    className: "tags",
+    style: {
+      marginBottom: 18
+    }
+  }, e.skills.map(s => /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    key: s
+  }, s))), /*#__PURE__*/React.createElement("div", {
+    className: "exp-foot"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "exp-rate"
+  }, e.rate, /*#__PURE__*/React.createElement("small", null, "/heure")), e.rating && /*#__PURE__*/React.createElement("div", {
+    className: "exp-stars"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "s"
+  }, /*#__PURE__*/React.createElement(Ic.Star, null)), e.rating, e.rev && /*#__PURE__*/React.createElement("span", {
+    className: "cnt"
+  }, "(", e.rev, ")")))))), /*#__PURE__*/React.createElement(Rv, {
+    className: "experts-cta"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "experts.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Voir tous les experts", /*#__PURE__*/React.createElement(Ic.Arrow, null)))));
+}
+
+/* ── Testimonials ── */
+function Testimonials() {
+  const onM = e => {
+    const c = e.currentTarget;
+    const b = c.getBoundingClientRect();
+    c.style.setProperty('--mx', e.clientX - b.left + 'px');
+    c.style.setProperty('--my', e.clientY - b.top + 'px');
+  };
+  return /*#__PURE__*/React.createElement("section", {
+    className: "pad"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "sh c"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "R\xE9sultats mesurables"), /*#__PURE__*/React.createElement("h2", {
+    className: "sh-title"
+  }, "Ce que nos clients ", /*#__PURE__*/React.createElement("em", null, "obtiennent vraiment.")), /*#__PURE__*/React.createElement("p", {
+    className: "sh-sub"
+  }, "Chaque mission est suivie d'indicateurs cl\xE9s. Voici ce que les \xE9quipes qui ont travaill\xE9 avec nos experts ont mesur\xE9.")), /*#__PURE__*/React.createElement("div", {
+    className: "results-grid"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "result-card feat",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric accent"
+  }, "\xD74"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Gain de productivit\xE9 support"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Temps de traitement des tickets divis\xE9 par 4 en 6 semaines. Setup complet, \xE9quipe form\xE9e, documentation livr\xE9e."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "E-commerce \xB7 Support client IA"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "L'expert a tout setup, form\xE9 l'\xE9quipe et document\xE9 chaque \xE9tape. R\xE9sultat imm\xE9diat et durable.")), /*#__PURE__*/React.createElement(Rv, {
+    delay: 100,
+    className: "result-card",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric"
+  }, "5j"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Du brief \xE0 l'expert s\xE9lectionn\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Briefing le mardi, expert s\xE9lectionn\xE9 le jeudi, kick-off le lundi. Z\xE9ro friction dans le processus."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "Startup tech \xB7 Canada"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "Imbattable sur le d\xE9lai de mise en relation.")), /*#__PURE__*/React.createElement(Rv, {
+    delay: 200,
+    className: "result-card",
+    onMouseMove: onM,
+    onMouseLeave: e => e.currentTarget.style.cssText = ''
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "result-metric"
+  }, "Top 3%"), /*#__PURE__*/React.createElement("div", {
+    className: "result-title"
+  }, "Qualit\xE9 des profils propos\xE9s"), /*#__PURE__*/React.createElement("div", {
+    className: "result-desc"
+  }, "Seuls les experts ayant pass\xE9 la certification avanc\xE9e et valid\xE9 3+ missions r\xE9elles acc\xE8dent au Hub."), /*#__PURE__*/React.createElement("span", {
+    className: "result-tag"
+  }, "Scale-up Sant\xE9 \xB7 Qu\xE9bec"), /*#__PURE__*/React.createElement("div", {
+    className: "result-quote"
+  }, "La qualit\xE9 est nettement au-dessus de ce qu'on voit ailleurs. La certification fait la diff\xE9rence.")))));
+}
+
+/* ── Academy ── */
+function Academy() {
+  return /*#__PURE__*/React.createElement("section", {
+    id: "academy",
+    className: "pad-sm"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "academy-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "academy-grid-bg"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "academy-inner"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow"
+  }, "CreatorFlow Market AI Academy"), /*#__PURE__*/React.createElement("h2", null, "Devenez expert certifi\xE9.", /*#__PURE__*/React.createElement("br", null), "Rejoignez le Hub."), /*#__PURE__*/React.createElement("p", null, "L'acad\xE9mie CreatorFlow Market forme les futurs experts IA depuis 2023. \xC0 la sortie : acc\xE8s direct au Hub, mentoring et premi\xE8res missions garanties pour les dipl\xF4m\xE9s du programme Advanced."), /*#__PURE__*/React.createElement("div", {
+    className: "academy-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "academie.html",
+    className: "btn btn-primary btn-lg"
+  }, "D\xE9couvrir l'acad\xE9mie", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "pricing.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Programme & tarifs"))), /*#__PURE__*/React.createElement("div", {
+    className: "academy-vis"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-seal"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cert-seal-inner"
+  }, /*#__PURE__*/React.createElement(Ic.Sparkle, null))), /*#__PURE__*/React.createElement("div", {
+    className: "cert-lbl"
+  }, "Certificat d\xE9livr\xE9"), /*#__PURE__*/React.createElement("div", {
+    className: "cert-name"
+  }, "AI Practitioner", /*#__PURE__*/React.createElement("br", null), "Advanced"), /*#__PURE__*/React.createElement("div", {
+    className: "cert-meta"
+  }, /*#__PURE__*/React.createElement("span", null, "CFA-2026-0247"), /*#__PURE__*/React.createElement("span", null, "Mars 2026")), /*#__PURE__*/React.createElement("div", {
+    className: "cert-stamp"
+  }, "V\xE9rifi\xE9", /*#__PURE__*/React.createElement("br", null), "par le Hub")))))));
+}
+
+/* ── CTA Banner ── */
+function CtaBanner() {
+  const IcShield = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+  }));
+  const IcClock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "10"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 6v6l4 2"
+  }));
+  const IcLock = () => /*#__PURE__*/React.createElement("svg", {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "11",
+    width: "18",
+    height: "11",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M7 11V7a5 5 0 0 1 10 0v4"
+  }));
+  return /*#__PURE__*/React.createElement("section", {
+    className: "cta-banner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-banner-grid"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement(Rv, {
+    className: "cta-banner-inner"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "eyebrow",
+    style: {
+      justifyContent: 'center',
+      marginBottom: 24
+    }
+  }, "Passez \xE0 l'action"), /*#__PURE__*/React.createElement("h2", null, "Pr\xEAt \xE0 acc\xE9l\xE9rer avec", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, "l'intelligence artificielle\xA0?")), /*#__PURE__*/React.createElement("p", {
+    className: "cta-banner-sub"
+  }, "D\xE9posez votre brief en 3 minutes. Recevez des profils d'experts certifi\xE9s sous 24h. Aucun engagement avant de d\xE9marrer."), /*#__PURE__*/React.createElement("div", {
+    className: "cta-banner-btns"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "brief.html",
+    className: "btn btn-primary btn-lg"
+  }, /*#__PURE__*/React.createElement(Ic.Rocket, null), "D\xE9poser un brief gratuit", /*#__PURE__*/React.createElement(Ic.Arrow, null)), /*#__PURE__*/React.createElement("a", {
+    href: "inscription.html",
+    className: "btn btn-ghost btn-lg"
+  }, "Je suis expert, rejoindre")), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guarantees"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcShield, null), "Expert certifi\xE9 garanti"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcClock, null), "R\xE9ponse sous 24h"), /*#__PURE__*/React.createElement("div", {
+    className: "cta-guar"
+  }, /*#__PURE__*/React.createElement(IcLock, null), "Paiement 100% s\xE9curis\xE9")))));
+}
+
+/* ── Footer ── */
+function Footer() {
+  return /*#__PURE__*/React.createElement("footer", {
+    className: "footer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "footer-brand"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      backgroundImage: "url('/creatorflow-logo.png')"
+    }
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow ", /*#__PURE__*/React.createElement("em", {
+    style: {
+      fontStyle: 'normal',
+      color: 'var(--vs)'
+    }
+  }, "Market"))), /*#__PURE__*/React.createElement("p", null, "La marketplace qui connecte les entreprises aux meilleurs experts IA certifi\xE9s par CreatorFlow Market Academy."), /*#__PURE__*/React.createElement("div", {className:"fp-trust-badges",style:{margin:'16px 0'}},
+  /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("rect", {x:"3",y:"11",width:"18",height:"11",rx:"2",ry:"2"}), /*#__PURE__*/React.createElement("path", {d:"M7 11V7a5 5 0 0 1 10 0v4"})), "Paiements s\xE9curis\xE9s par Stripe"),
+  /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("path", {d:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"})), "Experts certifi\xE9s et v\xE9rifi\xE9s"),
+  /*#__PURE__*/React.createElement("div", {className:"fp-trust-badge"}, /*#__PURE__*/React.createElement("svg", {width:13,height:13,viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"}, /*#__PURE__*/React.createElement("circle", {cx:"12",cy:"12",r:"10"}), /*#__PURE__*/React.createElement("polyline", {points:"12 6 12 12 16 14"})), "R\xE9ponse garantie sous 24\xA0h")
+), /*#__PURE__*/React.createElement("div", {
+    className: "socials"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://youtube.com/@creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "YouTube"
+  }, /*#__PURE__*/React.createElement(Social.YT, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://tiktok.com/@creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "TikTok"
+  }, /*#__PURE__*/React.createElement(Social.TK, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://instagram.com/creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "Instagram"
+  }, /*#__PURE__*/React.createElement(Social.IG, null)), /*#__PURE__*/React.createElement("a", {
+    className: "social-btn",
+    href: "https://facebook.com/creatorflowmarket",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    "aria-label": "Facebook"
+  }, /*#__PURE__*/React.createElement(Social.FB, null)))), [{
+    h: 'Plateforme',
+    links: [{
+      l: 'Comment ça marche',
+      h: 'index.html#how'
+    }, {
+      l: 'Pour les experts',
+      h: 'inscription.html'
+    }, {
+      l: 'Pour les entreprises',
+      h: 'brief.html'
+    }, {
+      l: 'Tarifs',
+      h: 'pricing.html'
+    }]
+  }, {
+    h: 'Ressources',
+    links: [{
+      l: 'Blog IA',
+      h: 'blog.html'
+    }, {
+      l: 'Guides pratiques',
+      h: 'blog.html'
+    }, {
+      l: 'Études de cas',
+      h: 'blog.html'
+    }, {
+      l: 'Académie IA',
+      h: 'academie.html'
+    }]
+  }, {
+    h: 'Contact',
+    links: [{
+      l: 'Nous contacter',
+      h: 'mailto:contact@creatorflowmarket.com'
+    }, {
+      l: 'Devenir partenaire',
+      h: 'programme-parrainage.html'
+    }, {
+      l: 'Support',
+      h: 'mailto:support@creatorflowmarket.com'
+    }, {
+      l: 'Experts certifiés',
+      h: 'experts.html'
+    }]
+  }].map((col, i) => /*#__PURE__*/React.createElement("div", {
+    className: "footer-col",
+    key: i
+  }, /*#__PURE__*/React.createElement("h4", null, col.h), /*#__PURE__*/React.createElement("ul", null, col.links.map(l => {
+    const label = typeof l === 'string' ? l : l.l;
+    const href = typeof l === 'string' ? '#' : l.h;
+    return /*#__PURE__*/React.createElement("li", {
+      key: label
+    }, /*#__PURE__*/React.createElement("a", {
+      href: href
+    }, label));
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "footer-bottom"
+  }, /*#__PURE__*/React.createElement("div", null, "\xA9 2026 CreatorFlow Market \xB7 ", /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    style: {
+      color: 'inherit'
+    }
+  }, "CGU"), " \xB7 ", /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    style: {
+      color: 'inherit'
+    }
+  }, "Vie priv\xE9e")), /*#__PURE__*/React.createElement("div", {
+    className: "footer-powered"
+  }, "Propuls\xE9 par ", /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo",
+    style: {
+      width: 18,
+      height: 18,
+      backgroundImage: "url('/creatorflow-logo.png')"
+    }
+  }), " ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: 'var(--text)',
+      fontWeight: 600
+    }
+  }, "CreatorFlow AI Academy")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 18
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "cgu.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Mentions l\xE9gales"), /*#__PURE__*/React.createElement("a", {
+    href: "politique-confidentialite.html",
+    style: {
+      color: 'var(--text-3)'
+    }
+  }, "Confidentialit\xE9")))));
+}
+function App() {
+  useEffect(() => {
+    const loader = document.getElementById('cfm-loader');
+    if (loader) loader.remove();
+  }, []);
+  useEffect(() => {
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const el = document.createElement('span');
+      el.className = 'btn-ripple-el';
+      el.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(el);
+      setTimeout(() => el.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(CursorGlow, null), /*#__PURE__*/React.createElement(Nav, null), /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(TrustedBy, null), /*#__PURE__*/React.createElement(GuaranteeStrip, null), /*#__PURE__*/React.createElement(PlatformPreview, null), /*#__PURE__*/React.createElement(HowItWorks, null), /*#__PURE__*/React.createElement(Categories, null), /*#__PURE__*/React.createElement(Expertise, null), /*#__PURE__*/React.createElement(Experts, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Academy, null), /*#__PURE__*/React.createElement(CtaBanner, null), /*#__PURE__*/React.createElement(Footer, null));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+<script src="/analytics.js"></script>
+<script src="/cookie-banner.js"></script>
+</body>
+</html>

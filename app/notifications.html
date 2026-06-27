@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Notifications — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#13132A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--orange:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.85);backdrop-filter:blur(18px);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1200px;margin:0 auto;padding:0 28px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;position:relative;overflow:hidden;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px -6px rgba(124,58,237,0.7);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+@keyframes btn-ripple{to{transform:scale(4);opacity:0;}}
+.btn-ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.22);transform:scale(0);animation:btn-ripple 650ms ease-out forwards;pointer-events:none;}
+
+/* PAGE */
+.page{padding-top:64px;min-height:100vh;}
+.container{max-width:800px;margin:0 auto;padding:0 24px;}
+
+/* HEADER */
+.page-header{padding:32px 0 20px;display:flex;align-items:center;justify-content:space-between;}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-0.02em;}
+.unread-count{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;background:var(--v);border-radius:999px;font-size:12px;font-weight:700;color:#fff;margin-left:10px;}
+
+/* TABS */
+.tab-row{display:flex;gap:4px;background:var(--surf);border:1px solid var(--border);border-radius:999px;padding:3px;margin-bottom:24px;}
+.tab-btn{flex:1;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-3);transition:all 200ms var(--ease);text-align:center;cursor:pointer;}
+.tab-btn.active{background:var(--v);color:#fff;box-shadow:0 0 16px var(--vg);}
+
+/* NOTIF LIST */
+.notif-group{margin-bottom:28px;}
+.group-label{font-size:12px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+.notif-item{display:flex;gap:14px;padding:16px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:8px;transition:border-color 200ms,background 200ms;cursor:pointer;position:relative;}
+.notif-item:hover{border-color:var(--border-2);background:rgba(255,255,255,0.02);}
+.notif-item.unread{background:rgba(124,58,237,0.05);border-color:rgba(124,58,237,0.15);}
+.notif-item.unread:hover{border-color:rgba(124,58,237,0.3);}
+.unread-dot{position:absolute;top:18px;right:16px;width:8px;height:8px;border-radius:50%;background:var(--v);}
+.notif-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.icon-purple{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);}
+.icon-green{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);}
+.icon-cyan{background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.2);}
+.icon-orange{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);}
+.icon-red{background:rgba(239,68,68,0.10);border:1px solid rgba(239,68,68,0.2);}
+.notif-body{flex:1;min-width:0;}
+.notif-title{font-size:14px;font-weight:600;margin-bottom:3px;}
+.notif-title strong{color:var(--vs);}
+.notif-desc{font-size:13px;color:var(--text-2);line-height:1.55;margin-bottom:6px;}
+.notif-meta{display:flex;align-items:center;gap:10px;}
+.notif-time{font-size:12px;color:var(--text-3);}
+.notif-action{font-size:12px;color:var(--vs);font-weight:600;}
+.notif-action:hover{color:#fff;}
+.notif-badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-orange{background:rgba(245,158,11,0.12);color:var(--orange);border:1px solid rgba(245,158,11,0.2);}
+
+/* ACTIONS BAR */
+.actions-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:12px 16px;background:var(--surf);border:1px solid var(--border);border-radius:var(--r);}
+.actions-left{font-size:13px;color:var(--text-3);}
+.actions-right{display:flex;gap:8px;}
+.action-link{font-size:13px;color:var(--text-2);padding:5px 12px;border:1px solid var(--border-2);border-radius:999px;transition:all 150ms;}
+.action-link:hover{color:var(--text);border-color:rgba(255,255,255,0.2);}
+.action-link.danger:hover{color:var(--red);border-color:rgba(239,68,68,0.3);}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;}
+.empty-emoji{font-size:40px;margin-bottom:12px;}
+.empty-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--text-3);}
+
+/* SETTINGS CARD */
+.settings-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;}
+.settings-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+.setting-row:last-child{border:none;padding-bottom:0;}
+.setting-info{flex:1;}
+.setting-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.setting-desc{font-size:12px;color:var(--text-3);}
+.toggle{width:44px;height:24px;background:var(--surf-2);border:1px solid var(--border-2);border-radius:999px;position:relative;cursor:pointer;transition:background 200ms;}
+.toggle.on{background:var(--v);border-color:var(--v);}
+.toggle-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform 200ms;}
+.toggle.on .toggle-knob{transform:translateX(20px);}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 90ms linear,top 90ms linear;}
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.fade-up{animation:fade-up 400ms var(--ease) both;}
+@media(max-width:480px){.nav-inner{padding:0 12px;}.nav-right .btn-primary{display:none;}.nav-right .btn-ghost{font-size:12px;padding:7px 12px;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  CheckAll: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "15 3 9 17 4 12"
+  })),
+  Trash: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "3 6 5 6 21 6"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+  })),
+  Settings: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+  }))
+};
+function getGroup(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return "Aujourd'hui";
+  if (diffDays === 1) return 'Hier';
+  if (diffDays <= 7) return 'Cette semaine';
+  return 'Plus ancien';
+}
+function getTimeAgo(dateStr) {
+  const d = new Date(dateStr);
+  const diff = Math.floor((Date.now() - d) / 1000);
+  if (diff < 60) return "À l'instant";
+  if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
+  if (diff < 86400) return `Il y a ${Math.floor(diff / 3600)}h`;
+  if (diff < 172800) return `Hier, ${d.toLocaleTimeString('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
+  return d.toLocaleDateString('fr-FR', {
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+const SETTINGS_DATA = [{
+  name: 'Nouvelles propositions',
+  desc: 'Quand un expert répond à l\'un de vos briefs',
+  key: 'proposals',
+  default: true
+}, {
+  name: 'Messages',
+  desc: 'Nouveaux messages dans vos conversations',
+  key: 'messages',
+  default: true
+}, {
+  name: 'Mises à jour de mission',
+  desc: 'Jalons, livrables et changements de statut',
+  key: 'missions',
+  default: true
+}, {
+  name: 'Paiements',
+  desc: 'Confirmations, factures et remboursements',
+  key: 'payments',
+  default: true
+}, {
+  name: 'Rappels',
+  desc: 'Délais approchants et actions requises',
+  key: 'reminders',
+  default: true
+}, {
+  name: 'Newsletters & promos',
+  desc: 'Actualités et offres de CreatorFlow Market',
+  key: 'marketing',
+  default: false
+}];
+function App() {
+  const [tab, setTab] = useState('toutes');
+  const [notifs, setNotifs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [settings, setSettings] = useState(() => {
+    const s = {};
+    SETTINGS_DATA.forEach(x => s[x.key] = x.default);
+    return s;
+  });
+  useEffect(() => {
+    (async () => {
+      const {
+        data: {
+          session
+        }
+      } = await sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
+      const u = session.user;
+      const {
+        data: profile
+      } = await sb.from('profiles').select('prenom, nom').eq('id', u.id).single();
+      setUser({
+        ...u,
+        prenom: profile?.prenom || '',
+        nom: profile?.nom || ''
+      });
+      const {
+        data: rows
+      } = await sb.from('notifications').select('*').eq('user_id', u.id).order('created_at', {
+        ascending: false
+      });
+      if (rows) {
+        setNotifs(rows.map(n => ({
+          ...n,
+          unread: !n.read,
+          group: getGroup(n.created_at),
+          time: getTimeAgo(n.created_at),
+          iconClass: n.icon_class || 'icon-purple',
+          badgeClass: n.badge_class || 'badge-purple',
+          desc: n.description,
+          action: n.href ? 'Voir' : null
+        })));
+      }
+      setLoading(false);
+
+      const channel = sb.channel('notifs-' + u.id)
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: 'user_id=eq.' + u.id
+        }, payload => {
+          const n = payload.new;
+          setNotifs(prev => [{
+            ...n,
+            unread: true,
+            group: getGroup(n.created_at),
+            time: getTimeAgo(n.created_at),
+            iconClass: n.icon_class || 'icon-purple',
+            badgeClass: n.badge_class || 'badge-purple',
+            desc: n.description,
+            action: n.href ? 'Voir' : null
+          }, ...prev]);
+        })
+        .subscribe();
+
+      return () => { sb.removeChannel(channel); };
+    })();
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    const handler = e => {
+      const btn = e.target.closest('.btn');
+      if (!btn) return;
+      const r = btn.getBoundingClientRect();
+      const size = Math.max(r.width, r.height);
+      const span = document.createElement('span');
+      span.className = 'btn-ripple-el';
+      span.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      btn.appendChild(span);
+      setTimeout(() => span.remove(), 680);
+    };
+    document.addEventListener('click', handler);
+    return () => {
+      window.removeEventListener('mousemove', move);
+      document.removeEventListener('click', handler);
+    };
+  }, []);
+  const unreadCount = notifs.filter(n => n.unread).length;
+  const markRead = async id => {
+    setNotifs(n => n.map(x => x.id === id ? {
+      ...x,
+      unread: false,
+      read: true
+    } : x));
+    await sb.from('notifications').update({
+      read: true
+    }).eq('id', id);
+  };
+  const markAllRead = async () => {
+    if (!user) return;
+    setNotifs(n => n.map(x => ({
+      ...x,
+      unread: false,
+      read: true
+    })));
+    await sb.from('notifications').update({
+      read: true
+    }).eq('user_id', user.id);
+  };
+  const deleteNotif = async id => {
+    setNotifs(n => n.filter(x => x.id !== id));
+    await sb.from('notifications').delete().eq('id', id);
+  };
+  const clearAll = async () => {
+    if (!user) return;
+    setNotifs([]);
+    await sb.from('notifications').delete().eq('user_id', user.id);
+  };
+  const filtered = tab === 'non-lues' ? notifs.filter(n => n.unread) : tab === 'missions' ? notifs.filter(n => n.type === 'mission') : tab === 'paiements' ? notifs.filter(n => n.type === 'payment') : notifs;
+  const groups = [...new Set(filtered.map(n => n.group))];
+  const tabs = [{
+    id: 'toutes',
+    label: 'Toutes',
+    count: notifs.length
+  }, {
+    id: 'non-lues',
+    label: 'Non lues',
+    count: unreadCount
+  }, {
+    id: 'missions',
+    label: 'Missions',
+    count: notifs.filter(n => n.type === 'mission').length
+  }, {
+    id: 'paiements',
+    label: 'Paiements',
+    count: notifs.filter(n => n.type === 'payment').length
+  }];
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "dashboard-client.html",
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 16px',
+      fontSize: 13
+    }
+  }, "Dashboard")))), /*#__PURE__*/React.createElement("div", {
+    className: "page"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-title"
+  }, "Notifications"), unreadCount > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "unread-count"
+  }, unreadCount)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--text-3)',
+      marginTop: 4
+    }
+  }, "Toutes vos alertes et mises \xE0 jour en un seul endroit")), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '8px 14px',
+      fontSize: 13
+    },
+    onClick: () => setTab(t => t === 'settings' ? 'toutes' : 'settings')
+  }, /*#__PURE__*/React.createElement(Ic.Settings, null), "Pr\xE9f\xE9rences")), tab !== 'settings' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "tab-row"
+  }, tabs.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: `tab-btn ${tab === t.id ? 'active' : ''}`,
+    onClick: () => setTab(t.id)
+  }, t.label, t.count > 0 && tab !== t.id && /*#__PURE__*/React.createElement("span", {
+    style: {
+      marginLeft: 5,
+      opacity: 0.6,
+      fontSize: 11
+    }
+  }, "(", t.count, ")")))), /*#__PURE__*/React.createElement("div", {
+    className: "actions-bar fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "actions-left"
+  }, filtered.length, " notification", filtered.length !== 1 ? 's' : ''), /*#__PURE__*/React.createElement("div", {
+    className: "actions-right"
+  }, unreadCount > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "action-link",
+    onClick: markAllRead
+  }, /*#__PURE__*/React.createElement(Ic.CheckAll, {
+    style: {
+      display: 'inline',
+      verticalAlign: 'middle',
+      marginRight: 4
+    }
+  }), "Tout lire"), notifs.length > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "action-link danger",
+    onClick: clearAll
+  }, /*#__PURE__*/React.createElement(Ic.Trash, {
+    style: {
+      display: 'inline',
+      verticalAlign: 'middle',
+      marginRight: 4
+    }
+  }), "Tout effacer"))), /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, loading ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\u23F3"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Chargement\u2026")) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-emoji"
+  }, "\uD83D\uDD14"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "Aucune notification"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-sub"
+  }, tab === 'non-lues' ? 'Tout est à jour !' : 'Vous n\'avez pas encore de notifications.')) : groups.map(group => /*#__PURE__*/React.createElement("div", {
+    key: group,
+    className: "notif-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "group-label"
+  }, group), filtered.filter(n => n.group === group).map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `notif-item ${n.unread ? 'unread' : ''}`,
+    onClick: () => markRead(n.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `notif-icon ${n.iconClass}`
+  }, n.icon), /*#__PURE__*/React.createElement("div", {
+    className: "notif-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-title"
+  }, n.title), /*#__PURE__*/React.createElement("div", {
+    className: "notif-desc"
+  }, n.desc), /*#__PURE__*/React.createElement("div", {
+    className: "notif-meta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notif-time"
+  }, n.time), n.action && /*#__PURE__*/React.createElement("a", {
+    href: n.href,
+    className: "notif-action",
+    onClick: e => e.stopPropagation()
+  }, n.action, " \u2192"), n.badge && /*#__PURE__*/React.createElement("span", {
+    className: `notif-badge ${n.badgeClass}`
+  }, n.badge))), n.unread && /*#__PURE__*/React.createElement("div", {
+    className: "unread-dot"
+  }), /*#__PURE__*/React.createElement("button", {
+    style: {
+      padding: '4px 8px',
+      color: 'var(--text-3)',
+      flexShrink: 0,
+      fontSize: 12,
+      borderRadius: 999,
+      transition: 'color 150ms'
+    },
+    onMouseEnter: e => e.currentTarget.style.color = 'var(--red)',
+    onMouseLeave: e => e.currentTarget.style.color = 'var(--text-3)',
+    onClick: e => {
+      e.stopPropagation();
+      deleteNotif(n.id);
+    }
+  }, /*#__PURE__*/React.createElement(Ic.Trash, null)))))))), tab === 'settings' && /*#__PURE__*/React.createElement("div", {
+    className: "fade-up"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 20,
+      fontSize: 14,
+      color: 'var(--text-2)'
+    }
+  }, "Choisissez quelles notifications vous souhaitez recevoir."), /*#__PURE__*/React.createElement("div", {
+    className: "settings-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "settings-title"
+  }, "Notifications email"), SETTINGS_DATA.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.key,
+    className: "setting-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "setting-desc"
+  }, s.desc)), /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${settings[s.key] ? 'on' : ''}`,
+    onClick: () => setSettings(st => ({
+      ...st,
+      [s.key]: !st[s.key]
+    }))
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "settings-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "settings-title"
+  }, "Notifications push"), SETTINGS_DATA.slice(0, 4).map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.key + 'push',
+    className: "setting-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "setting-name"
+  }, s.name), /*#__PURE__*/React.createElement("div", {
+    className: "setting-desc"
+  }, s.desc)), /*#__PURE__*/React.createElement("div", {
+    className: `toggle ${settings[s.key + 'push'] ? 'on' : ''}`,
+    onClick: () => setSettings(st => ({
+      ...st,
+      [s.key + 'push']: !st[s.key + 'push']
+    }))
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "toggle-knob"
+  }))))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      marginBottom: 40
+    },
+    onClick: () => setTab('toutes')
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), "Enregistrer les pr\xE9f\xE9rences")))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>

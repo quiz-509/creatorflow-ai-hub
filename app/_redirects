@@ -1,0 +1,2 @@
+# /blog/:slug is handled exclusively by the Pages Function at functions/blog/[slug].js
+# Do NOT add a /blog/:slug rule here — Cloudflare strips query strings from _redirects destinations
