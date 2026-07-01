@@ -294,7 +294,7 @@ function CockpitTab() {
       sb.from('agent_missions').select('id,agent_id,title,objective,statut,priority,brief_id,created_at,updated_at').order('created_at',{ascending:false}).limit(50),
       sb.from('pending_approvals').select('id,type,data,created_at').eq('statut','pending').order('created_at',{ascending:false}).limit(10),
       sb.from('agent_reports').select('id,agent_slug,report_type,content,created_at').order('created_at',{ascending:false}).limit(6),
-      sb.from('ai_agents').select('id,name,slug,type'),
+      sb.from('ai_agents').select('id,name,slug'),
     ]);
     setBriefs(b.data || []);
     setAgentMissions(am.data || []);
@@ -341,8 +341,7 @@ function CockpitTab() {
   const missionsByEmployee = EMPLOYEES.map(e => {
     const matchingAgents = aiAgents.filter(a =>
       (a.slug && a.slug.toLowerCase().includes(e.slug)) ||
-      (a.name && a.name.toLowerCase().includes(e.slug)) ||
-      (a.type && a.type.toLowerCase().includes(e.slug))
+      (a.name && a.name.toLowerCase().includes(e.slug))
     ).map(a => a.id);
     return {
       ...e,
