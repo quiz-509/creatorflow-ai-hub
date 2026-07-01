@@ -305,14 +305,20 @@ function CockpitTab() {
   const assignBrief = async () => {
     if (!assigning) return;
     setSaving(true);
-    await sb.from('agent_missions').insert({
+    const payload = {
       agent_slug: assignForm.employee,
       titre: assigning.description?.slice(0,60) || 'Nouvelle mission',
       statut: 'assigned',
       priority: assignForm.priority,
       context: assignForm.context || assigning.description || '',
       brief_id: assigning.id,
-    });
+    };
+    const { error: insertErr } = await sb.from('agent_missions').insert(payload);
+    if (insertErr) {
+      alert('Erreur assignation: ' + insertErr.message);
+      setSaving(false);
+      return;
+    }
     await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
     setAssigning(null);
     setSaving(false);
