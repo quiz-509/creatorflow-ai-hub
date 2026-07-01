@@ -289,7 +289,7 @@ function CockpitTab() {
 
   const load = React.useCallback(async () => {
     const [b, am, ap, rp] = await Promise.all([
-      sb.from('briefs').select('id,titre,description,budget,categorie,created_at,user_id,statut').not('statut','eq','assigned').order('created_at',{ascending:false}).limit(20),
+      sb.from('briefs').select('id,titre,description,budget,categorie,created_at,user_id,statut').order('created_at',{ascending:false}).limit(20),
       sb.from('agent_missions').select('id,agent_slug,titre,statut,priority,context,created_at,updated_at,brief_id').neq('statut','done').order('updated_at',{ascending:false}),
       sb.from('pending_approvals').select('id,type,data,created_at').eq('statut','pending').order('created_at',{ascending:false}).limit(10),
       sb.from('agent_reports').select('id,agent_slug,report_type,content,created_at').order('created_at',{ascending:false}).limit(6),
