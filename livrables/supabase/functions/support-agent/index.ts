@@ -1,4 +1,3 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
 const cors = {
@@ -48,12 +47,12 @@ const FAQ_KB = `
 - Les agents IA ne remplacent pas les experts humains, ils les complètent.
 `;
 
-const TOOLS: Anthropic.Tool[] = [
+const TOOLS = [
   {
     name: 'get_client_context',
     description: 'Récupère le profil du client, ses tickets récents et ses missions. À appeler en premier pour personnaliser la réponse.',
     input_schema: {
-      type: 'object' as const,
+      type: 'object',
       properties: {
         user_id: { type: 'string', description: 'UUID du client authentifié' }
       },
@@ -64,7 +63,7 @@ const TOOLS: Anthropic.Tool[] = [
     name: 'search_faq',
     description: 'Recherche dans la base de connaissances CreatorFlow Market. Utiliser avant de répondre à une question technique.',
     input_schema: {
-      type: 'object' as const,
+      type: 'object',
       properties: {
         query: { type: 'string', description: 'Question ou sujet à rechercher' }
       },
@@ -75,7 +74,7 @@ const TOOLS: Anthropic.Tool[] = [
     name: 'create_support_ticket',
     description: 'Crée un ticket de support pour documenter et suivre le problème.',
     input_schema: {
-      type: 'object' as const,
+      type: 'object',
       properties: {
         subject: { type: 'string', description: 'Titre court du problème' },
         message: { type: 'string', description: 'Description détaillée du problème' },
@@ -86,25 +85,47 @@ const TOOLS: Anthropic.Tool[] = [
   },
   {
     name: 'escalate_to_human',
-    description: 'Escalade le problème à un agent humain quand la situation dépasse les capacités de l\'IA.',
+    description: "Escalade le problème à un agent humain quand la situation dépasse les capacités de l'IA.",
     input_schema: {
-      type: 'object' as const,
+      type: 'object',
       properties: {
-        reason: { type: 'string', description: 'Raison de l\'escalade' },
-        urgency: { type: 'string', enum: ['normal', 'urgent'], description: 'Niveau d\'urgence' }
+        reason: { type: 'string', description: "Raison de l'escalade" },
+        urgency: { type: 'string', enum: ['normal', 'urgent'], description: "Niveau d'urgence" }
       },
       required: ['reason', 'urgency']
     }
   }
 ];
 
+async function callAnthropic(messages: unknown[], apiKey: string): Promise<unknown> {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1024,
+      system: SYSTEM_PROMPT,
+      tools: TOOLS,
+      messages,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Anthropic API error ${res.status}: ${err}`);
+  }
+  return res.json();
+}
+
 async function executeTool(
   name: string,
   input: Record<string, string>,
-  ctx: { supabase: ReturnType<typeof createClient>; userId: string }
+  supabase: ReturnType<typeof createClient>,
+  userId: string
 ): Promise<Record<string, unknown>> {
-  const { supabase, userId } = ctx;
-
   if (name === 'get_client_context') {
     const [profileRes, ticketsRes, missionsRes] = await Promise.all([
       supabase.from('profiles').select('full_name, email, type_utilisateur, created_at').eq('id', userId).single(),
@@ -124,7 +145,7 @@ async function executeTool(
       s.toLowerCase().includes(query) ||
       query.split(' ').some((w: string) => w.length > 3 && s.toLowerCase().includes(w))
     );
-    return { results: sections.slice(0, 2).join('\n##') || 'Aucun résultat trouvé pour cette recherche.' };
+    return { results: sections.slice(0, 2).join('\n##') || 'Aucun résultat trouvé.' };
   }
 
   if (name === 'create_support_ticket') {
@@ -137,7 +158,7 @@ async function executeTool(
       ai_response: 'Ticket créé par Support AI Agent'
     }).select('id').single();
     if (error) return { error: error.message };
-    return { ticket_id: data?.id, message: `Ticket créé avec succès. Référence : ${data?.id?.slice(0, 8)}` };
+    return { ticket_id: data?.id, message: `Ticket créé. Référence : ${data?.id?.slice(0, 8)}` };
   }
 
   if (name === 'escalate_to_human') {
@@ -149,7 +170,7 @@ async function executeTool(
       status: 'open',
       ai_response: 'Escaladé à un agent humain par le Support AI Agent'
     });
-    return { escalated: true, message: 'Un agent humain prendra contact sous 24h (2h si urgent).' };
+    return { escalated: true, message: 'Un agent humain prendra contact sous 24h.' };
   }
 
   return { error: `Outil inconnu : ${name}` };
@@ -168,12 +189,14 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const apiKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
+    if (!apiKey) throw new Error('ANTHROPIC_API_KEY non configurée');
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Identifier l'utilisateur depuis le JWT
     const anonClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -182,56 +205,48 @@ Deno.serve(async (req: Request) => {
     const { data: { user } } = await anonClient.auth.getUser();
     const userId = user?.id ?? 'anonymous';
 
-    // Charger l'historique de conversation depuis agent_memory
+    // Charger historique
     const { data: memoryRow } = await supabase
       .from('agent_memory')
       .select('content')
       .eq('agent_slug', 'support')
       .eq('client_id', userId)
       .eq('context_type', 'conversation_history')
-      .single();
+      .maybeSingle();
 
-    let history: Anthropic.MessageParam[] = [];
-    try {
-      if (memoryRow?.content) history = JSON.parse(memoryRow.content);
-    } catch { history = []; }
-
-    // Limiter à 10 derniers échanges (20 messages) pour éviter dépassement tokens
+    let history: unknown[] = [];
+    try { if (memoryRow?.content) history = JSON.parse(memoryRow.content); } catch { history = []; }
     if (history.length > 20) history = history.slice(-20);
 
-    const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') ?? '' });
-    const ctx = { supabase, userId };
-
     // Boucle agentique
-    const messages: Anthropic.MessageParam[] = [...history, { role: 'user', content: message }];
+    const messages: unknown[] = [...history, { role: 'user', content: message }];
     let finalResponse = '';
     const toolsUsed: string[] = [];
     let iterations = 0;
-    const MAX_ITERATIONS = 5;
 
-    while (iterations < MAX_ITERATIONS) {
+    while (iterations < 5) {
       iterations++;
-      const response = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        tools: TOOLS,
-        messages
-      });
-
-      messages.push({ role: 'assistant', content: response.content });
+      const response = await callAnthropic(messages, apiKey) as Record<string, unknown>;
+      const content = response.content as Array<Record<string, unknown>>;
+      messages.push({ role: 'assistant', content });
 
       if (response.stop_reason === 'end_turn') {
-        finalResponse = (response.content.find(b => b.type === 'text') as Anthropic.TextBlock)?.text || '';
+        const textBlock = content.find(b => b.type === 'text');
+        finalResponse = (textBlock?.text as string) || '';
         break;
       }
 
       if (response.stop_reason === 'tool_use') {
-        const toolResults: Anthropic.ToolResultBlockParam[] = [];
-        for (const block of response.content) {
+        const toolResults = [];
+        for (const block of content) {
           if (block.type === 'tool_use') {
-            toolsUsed.push(block.name);
-            const result = await executeTool(block.name, block.input as Record<string, string>, ctx);
+            toolsUsed.push(block.name as string);
+            const result = await executeTool(
+              block.name as string,
+              block.input as Record<string, string>,
+              supabase,
+              userId
+            );
             toolResults.push({
               type: 'tool_result',
               tool_use_id: block.id,
@@ -245,10 +260,12 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Sauvegarder l'historique mis à jour (sans les tool_results pour garder propre)
-    const historyToSave = messages.filter(m =>
-      !(Array.isArray(m.content) && m.content.some((b: Anthropic.ContentBlock) => b.type === 'tool_result'))
-    );
+    // Sauvegarder historique (sans tool_results)
+    const historyToSave = messages.filter(m => {
+      const msg = m as Record<string, unknown>;
+      return !(Array.isArray(msg.content) && (msg.content as Array<Record<string, unknown>>).some(b => b.type === 'tool_result'));
+    });
+
     await supabase.from('agent_memory').upsert({
       agent_slug: 'support',
       client_id: userId,
@@ -257,20 +274,21 @@ Deno.serve(async (req: Request) => {
       updated_at: new Date().toISOString()
     }, { onConflict: 'agent_slug,client_id,context_type' });
 
-    // Log dans agent_actions_log
+    // Log
     await supabase.from('agent_actions_log').insert({
       agent_slug: 'support',
       action_type: 'support_chat',
       action_data: { message_preview: message.slice(0, 100), tools_used: toolsUsed },
       status: 'executed',
       result: { response_preview: finalResponse.slice(0, 200) }
-    });
+    }).throwOnError();
 
     return new Response(JSON.stringify({ response: finalResponse, tools_used: toolsUsed }), {
       headers: { ...cors, 'Content-Type': 'application/json' }
     });
 
   } catch (err) {
+    console.error('support-agent error:', (err as Error).message);
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500, headers: { ...cors, 'Content-Type': 'application/json' }
     });
