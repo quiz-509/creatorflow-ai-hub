@@ -267,6 +267,250 @@ const fmtDate = d => d ? new Date(d).toLocaleDateString('fr-CA', {
 const fmtMoney = n => n ? `${Number(n).toLocaleString('fr-CA')} $` : '0 $';
 
 /* ── SIDEBAR NAV ── */
+/* ── COCKPIT CEO ── */
+function CockpitTab() {
+  const [briefs, setBriefs] = React.useState(null);
+  const [agentMissions, setAgentMissions] = React.useState(null);
+  const [approvals, setApprovals] = React.useState(null);
+  const [reports, setReports] = React.useState(null);
+  const [assigning, setAssigning] = React.useState(null); // brief en cours d'assignation
+  const [assignForm, setAssignForm] = React.useState({ employee: 'marketing', priority: 'normal', context: '' });
+  const [saving, setSaving] = React.useState(false);
+
+  const EMPLOYEES = [
+    { slug: 'marketing', label: 'Marketing Director', color: '#7C3AED', icon: '📊' },
+    { slug: 'content', label: 'Content Employee', color: '#06B6D4', icon: '✍️' },
+    { slug: 'prospecting', label: 'Prospecting Employee', color: '#F59E0B', icon: '🎯' },
+    { slug: 'support', label: 'Support Employee', color: '#10B981', icon: '🛎️' },
+  ];
+  const PRIORITY_COLOR = { urgent:'badge-red', high:'badge-amber', normal:'badge-purple', low:'badge-gray' };
+  const STATUS_COLOR = { assigned:'badge-amber', in_progress:'badge-blue', blocked:'badge-red', awaiting_ceo:'badge-purple', done:'badge-green' };
+  const STATUS_LABEL = { assigned:'Assigné', in_progress:'En cours', blocked:'Bloqué', awaiting_ceo:'Attend CEO', done:'Terminé' };
+
+  const load = React.useCallback(async () => {
+    const [b, am, ap, rp] = await Promise.all([
+      sb.from('briefs').select('id,titre,description,budget,categorie,created_at,user_id').eq('statut','open').order('created_at',{ascending:false}).limit(20),
+      sb.from('agent_missions').select('id,agent_slug,titre,statut,priority,context,created_at,updated_at,brief_id').neq('statut','done').order('updated_at',{ascending:false}),
+      sb.from('pending_approvals').select('id,type,data,created_at').eq('statut','pending').order('created_at',{ascending:false}).limit(10),
+      sb.from('agent_reports').select('id,agent_slug,report_type,content,created_at').order('created_at',{ascending:false}).limit(6),
+    ]);
+    setBriefs(b.data || []);
+    setAgentMissions(am.data || []);
+    setApprovals(ap.data || []);
+    setReports(rp.data || []);
+  }, []);
+
+  React.useEffect(() => { load(); }, [load]);
+
+  const assignBrief = async () => {
+    if (!assigning) return;
+    setSaving(true);
+    await sb.from('agent_missions').insert({
+      agent_slug: assignForm.employee,
+      titre: assigning.titre || assigning.description?.slice(0,60) || 'Nouvelle mission',
+      statut: 'assigned',
+      priority: assignForm.priority,
+      context: assignForm.context || assigning.description || '',
+      brief_id: assigning.id,
+    });
+    await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
+    setAssigning(null);
+    setSaving(false);
+    load();
+  };
+
+  const approveAction = async (id, decision) => {
+    await sb.from('pending_approvals').update({ statut: decision }).eq('id', id);
+    load();
+  };
+
+  const updateMissionStatus = async (id, statut) => {
+    await sb.from('agent_missions').update({ statut, updated_at: new Date().toISOString() }).eq('id', id);
+    load();
+  };
+
+  const fmtDate = d => new Date(d).toLocaleString('fr-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  const loading = briefs === null || agentMissions === null;
+  if (loading) return React.createElement('div',{className:'loading-state'},React.createElement('div',{className:'spinner'}));
+
+  const missionsByEmployee = EMPLOYEES.map(e => ({
+    ...e,
+    missions: (agentMissions||[]).filter(m => m.agent_slug === e.slug)
+  }));
+
+  const awaitingCEO = (agentMissions||[]).filter(m => m.statut === 'awaiting_ceo');
+
+  return React.createElement('div',{className:'tab-content'},
+
+    /* ── HEADER ── */
+    React.createElement('div',{className:'section-header'},
+      React.createElement('div',null,
+        React.createElement('h2',{className:'section-title'},'Cockpit CEO'),
+        React.createElement('p',{className:'section-sub'},'Centre de commande de l\'AI Workforce')
+      ),
+      React.createElement('button',{className:'btn btn-ghost',onClick:load},'↻ Rafraîchir')
+    ),
+
+    /* ── KPI ROW ── */
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px',marginBottom:'28px'}},
+      [
+        {label:'Briefs à assigner', val: briefs.length, color:'#F59E0B'},
+        {label:'Missions actives', val: (agentMissions||[]).filter(m=>m.statut==='in_progress').length, color:'#06B6D4'},
+        {label:'Attente validation', val: awaitingCEO.length + (approvals||[]).length, color:'#7C3AED'},
+        {label:'Terminées (total)', val: 0, color:'#10B981'},
+      ].map(k => React.createElement('div',{key:k.label,style:{background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:'14px',padding:'18px 20px'}},
+        React.createElement('div',{style:{fontSize:'28px',fontWeight:'800',color:k.color}}, k.val),
+        React.createElement('div',{style:{fontSize:'12px',color:'var(--text-2)',marginTop:'4px'}}, k.label)
+      ))
+    ),
+
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px',marginBottom:'24px'}},
+
+      /* ── INBOX BRIEFS ── */
+      React.createElement('div',{style:{background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:'16px',padding:'20px'}},
+        React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}},
+          React.createElement('h3',{style:{fontSize:'14px',fontWeight:'700',color:'var(--text)'}},'📥 Inbox — Briefs à assigner'),
+          React.createElement('span',{className:'badge badge-amber'},briefs.length)
+        ),
+        briefs.length === 0
+          ? React.createElement('p',{style:{color:'var(--text-3)',fontSize:'13px',textAlign:'center',padding:'20px'}},'Aucun brief en attente')
+          : briefs.map(b => React.createElement('div',{key:b.id,style:{background:'var(--surf-3)',border:'1px solid var(--border)',borderRadius:'10px',padding:'12px 14px',marginBottom:'10px'}},
+              React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'8px'}},
+                React.createElement('div',{style:{flex:1}},
+                  React.createElement('div',{style:{fontWeight:'600',fontSize:'13px',color:'var(--text)',marginBottom:'4px'}}, b.titre || b.description?.slice(0,50) || 'Sans titre'),
+                  React.createElement('div',{style:{fontSize:'11px',color:'var(--text-3)'}}, b.budget || 'Budget non précisé', ' · ', fmtDate(b.created_at))
+                ),
+                React.createElement('button',{
+                  className:'btn btn-primary',
+                  style:{fontSize:'11px',padding:'5px 12px',flexShrink:0},
+                  onClick:()=>{ setAssigning(b); setAssignForm({employee:'marketing',priority:'normal',context:b.description||''}); }
+                },'Assigner →')
+              )
+            ))
+      ),
+
+      /* ── APPROBATIONS ── */
+      React.createElement('div',{style:{background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:'16px',padding:'20px'}},
+        React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'16px'}},
+          React.createElement('h3',{style:{fontSize:'14px',fontWeight:'700',color:'var(--text)'}},'⚡ File d\'approbation CEO'),
+          React.createElement('span',{className:'badge badge-purple'}, awaitingCEO.length + (approvals||[]).length)
+        ),
+        [...awaitingCEO.map(m=>({type:'mission',id:m.id,label:`[${(EMPLOYEES.find(e=>e.slug===m.agent_slug)||{icon:'🤖'}).icon}] ${m.titre}`,sub:'Mission en attente de validation'})),
+         ...(approvals||[]).map(a=>({type:'approval',id:a.id,label:a.type||'Action à valider',sub:JSON.stringify(a.data||{}).slice(0,60)}))
+        ].length === 0
+          ? React.createElement('p',{style:{color:'var(--text-3)',fontSize:'13px',textAlign:'center',padding:'20px'}},'Aucune action en attente')
+          : [...awaitingCEO.map(m=>({type:'mission',id:m.id,label:`${(EMPLOYEES.find(e=>e.slug===m.agent_slug)||{icon:'🤖'}).icon} ${m.titre}`,sub:'Mission attend votre validation'})),
+             ...(approvals||[]).map(a=>({type:'approval',id:a.id,label:a.type||'Action à valider',sub:JSON.stringify(a.data||{}).slice(0,60)}))
+            ].map(item => React.createElement('div',{key:item.id,style:{background:'rgba(124,58,237,0.08)',border:'1px solid rgba(124,58,237,0.2)',borderRadius:'10px',padding:'12px 14px',marginBottom:'10px'}},
+              React.createElement('div',{style:{fontWeight:'600',fontSize:'13px',color:'var(--text)',marginBottom:'4px'}}, item.label),
+              React.createElement('div',{style:{fontSize:'11px',color:'var(--text-3)',marginBottom:'10px'}}, item.sub),
+              React.createElement('div',{style:{display:'flex',gap:'8px'}},
+                React.createElement('button',{
+                  className:'btn btn-primary',style:{fontSize:'11px',padding:'4px 12px'},
+                  onClick:()=> item.type==='mission' ? updateMissionStatus(item.id,'in_progress') : approveAction(item.id,'approved')
+                },'✓ Valider'),
+                React.createElement('button',{
+                  className:'btn btn-ghost',style:{fontSize:'11px',padding:'4px 12px'},
+                  onClick:()=> item.type==='mission' ? updateMissionStatus(item.id,'blocked') : approveAction(item.id,'rejected')
+                },'✗ Rejeter')
+              )
+            ))
+      )
+    ),
+
+    /* ── EMPLOYEE BOARD ── */
+    React.createElement('div',{style:{marginBottom:'24px'}},
+      React.createElement('h3',{style:{fontSize:'14px',fontWeight:'700',color:'var(--text)',marginBottom:'16px'}},'🏢 Tableau de bord AI Workforce'),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'14px'}},
+        missionsByEmployee.map(emp => React.createElement('div',{key:emp.slug,style:{background:'var(--surf-2)',border:`1px solid ${emp.color}22`,borderRadius:'14px',padding:'16px'}},
+          React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'14px',paddingBottom:'12px',borderBottom:'1px solid var(--border)'}},
+            React.createElement('span',{style:{fontSize:'18px'}},emp.icon),
+            React.createElement('div',null,
+              React.createElement('div',{style:{fontSize:'12px',fontWeight:'700',color:emp.color}},emp.label),
+              React.createElement('div',{style:{fontSize:'10px',color:'var(--text-3)'}},emp.missions.length,' mission'+(emp.missions.length!==1?'s':''))
+            )
+          ),
+          emp.missions.length === 0
+            ? React.createElement('p',{style:{color:'var(--text-3)',fontSize:'12px',textAlign:'center',padding:'12px'}},'Disponible')
+            : emp.missions.map(m => React.createElement('div',{key:m.id,style:{background:'var(--surf-3)',borderRadius:'8px',padding:'10px',marginBottom:'8px'}},
+                React.createElement('div',{style:{fontSize:'12px',fontWeight:'600',color:'var(--text)',marginBottom:'6px',lineHeight:'1.3'}},m.titre||'Mission sans titre'),
+                React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'4px'}},
+                  React.createElement('span',{className:`badge ${STATUS_COLOR[m.statut]||'badge-gray'}`,style:{fontSize:'9px'}},STATUS_LABEL[m.statut]||m.statut),
+                  React.createElement('select',{
+                    style:{fontSize:'10px',background:'var(--surf)',border:'1px solid var(--border)',borderRadius:'6px',color:'var(--text-2)',padding:'2px 4px',cursor:'pointer'},
+                    value:m.statut,
+                    onChange:e=>updateMissionStatus(m.id,e.target.value)
+                  },
+                    ['assigned','in_progress','blocked','awaiting_ceo','done'].map(s=>React.createElement('option',{key:s,value:s},STATUS_LABEL[s]))
+                  )
+                )
+              ))
+        ))
+      )
+    ),
+
+    /* ── RAPPORTS ── */
+    React.createElement('div',{style:{background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:'16px',padding:'20px'}},
+      React.createElement('h3',{style:{fontSize:'14px',fontWeight:'700',color:'var(--text)',marginBottom:'16px'}},'📋 Derniers rapports des employés'),
+      !reports || reports.length === 0
+        ? React.createElement('p',{style:{color:'var(--text-3)',fontSize:'13px',textAlign:'center',padding:'20px'}},'Aucun rapport disponible — les employés rapporteront ici après chaque mission')
+        : React.createElement('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px'}},
+            reports.map(r => {
+              const emp = EMPLOYEES.find(e=>e.slug===r.agent_slug)||{icon:'🤖',label:r.agent_slug,color:'#888'};
+              return React.createElement('div',{key:r.id,style:{background:'var(--surf-3)',borderRadius:'10px',padding:'14px'}},
+                React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'6px',marginBottom:'8px'}},
+                  React.createElement('span',null,emp.icon),
+                  React.createElement('span',{style:{fontSize:'11px',fontWeight:'700',color:emp.color}},emp.label),
+                  React.createElement('span',{style:{fontSize:'10px',color:'var(--text-3)',marginLeft:'auto'}},fmtDate(r.created_at))
+                ),
+                React.createElement('div',{style:{fontSize:'12px',color:'var(--text-2)',lineHeight:'1.5'}},
+                  typeof r.content === 'string' ? r.content.slice(0,120)+'...' : JSON.stringify(r.content).slice(0,120)
+                )
+              );
+            })
+          )
+    ),
+
+    /* ── MODAL ASSIGNATION ── */
+    assigning && React.createElement('div',{style:{position:'fixed',inset:0,background:'rgba(0,0,0,0.7)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center'}},
+      React.createElement('div',{style:{background:'var(--surf)',border:'1px solid var(--border-2)',borderRadius:'20px',padding:'28px',width:'440px',maxWidth:'90vw'}},
+        React.createElement('h3',{style:{fontSize:'16px',fontWeight:'700',color:'var(--text)',marginBottom:'6px'}},'Assigner la mission'),
+        React.createElement('p',{style:{fontSize:'13px',color:'var(--text-2)',marginBottom:'20px'}},assigning.titre||assigning.description?.slice(0,60)),
+        React.createElement('div',{style:{marginBottom:'14px'}},
+          React.createElement('label',{style:{fontSize:'12px',color:'var(--text-2)',marginBottom:'6px',display:'block'}},'Employé IA responsable'),
+          React.createElement('select',{
+            style:{width:'100%',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'10px',color:'var(--text)',padding:'10px 12px',fontSize:'13px'},
+            value:assignForm.employee,
+            onChange:e=>setAssignForm(f=>({...f,employee:e.target.value}))
+          }, EMPLOYEES.map(e=>React.createElement('option',{key:e.slug,value:e.slug},e.icon+' '+e.label)))
+        ),
+        React.createElement('div',{style:{marginBottom:'14px'}},
+          React.createElement('label',{style:{fontSize:'12px',color:'var(--text-2)',marginBottom:'6px',display:'block'}},'Priorité'),
+          React.createElement('select',{
+            style:{width:'100%',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'10px',color:'var(--text)',padding:'10px 12px',fontSize:'13px'},
+            value:assignForm.priority,
+            onChange:e=>setAssignForm(f=>({...f,priority:e.target.value}))
+          }, ['urgent','high','normal','low'].map(p=>React.createElement('option',{key:p,value:p},{urgent:'🔴 Urgent',high:'🟠 Haute',normal:'🔵 Normale',low:'⚪ Basse'}[p])))
+        ),
+        React.createElement('div',{style:{marginBottom:'20px'}},
+          React.createElement('label',{style:{fontSize:'12px',color:'var(--text-2)',marginBottom:'6px',display:'block'}},'Contexte / Instructions pour l\'employé'),
+          React.createElement('textarea',{
+            style:{width:'100%',background:'var(--surf-2)',border:'1px solid var(--border-2)',borderRadius:'10px',color:'var(--text)',padding:'10px 12px',fontSize:'13px',minHeight:'90px',resize:'vertical',fontFamily:'inherit',boxSizing:'border-box'},
+            value:assignForm.context,
+            onChange:e=>setAssignForm(f=>({...f,context:e.target.value})),
+            placeholder:'Ex: Priorité campagne Instagram, budget 500$, délai 1 semaine...'
+          })
+        ),
+        React.createElement('div',{style:{display:'flex',gap:'10px'}},
+          React.createElement('button',{className:'btn btn-primary',style:{flex:1},onClick:assignBrief,disabled:saving},saving?'Assignation...':'✓ Assigner la mission'),
+          React.createElement('button',{className:'btn btn-ghost',onClick:()=>setAssigning(null)},'Annuler')
+        )
+      )
+    )
+  );
+}
+
 function Sidebar({
   tab,
   setTab,
@@ -276,6 +520,10 @@ function Sidebar({
   onClose
 }) {
   const items = [{
+    id: 'cockpit',
+    label: 'Cockpit CEO',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("polygon",{points:"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"}))
+  }, {
     id: 'dashboard',
     label: 'Dashboard',
     icon: /*#__PURE__*/React.createElement("svg", {
@@ -2488,6 +2736,7 @@ function App() {
   }
   const userName = session.user?.email?.split('@')[0] || 'Admin';
   const tabs = {
+    cockpit: CockpitTab,
     dashboard: DashboardTab,
     analytics: AnalyticsTab,
     experts: () => /*#__PURE__*/React.createElement(ExpertsTab, {
