@@ -1225,5 +1225,151 @@ function App() {
 }
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
+
+<!-- ── SUPPORT AI AGENT CHAT WIDGET ── -->
+<style>
+#support-btn{position:fixed;bottom:28px;right:28px;z-index:9000;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#06B6D4);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(124,58,237,0.45);transition:transform 180ms,box-shadow 180ms;}
+#support-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(124,58,237,0.6);}
+#support-btn svg{width:22px;height:22px;color:#fff;fill:none;stroke:currentColor;stroke-width:2;}
+#support-panel{position:fixed;bottom:90px;right:28px;z-index:9000;width:360px;max-height:520px;background:#0C0C18;border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.6);display:none;flex-direction:column;overflow:hidden;font-family:'Inter',system-ui,sans-serif;}
+#support-panel.open{display:flex;}
+.sp-head{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(6,182,212,0.15));padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sp-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7C3AED,#06B6D4);display:grid;place-items:center;font-size:16px;flex-shrink:0;}
+.sp-head-info h3{font-size:14px;font-weight:700;color:#F4F4FF;margin:0 0 2px;}
+.sp-head-info p{font-size:11px;color:#10B981;margin:0;display:flex;align-items:center;gap:4px;}
+.sp-head-info p::before{content:'';width:6px;height:6px;border-radius:50%;background:#10B981;display:inline-block;}
+.sp-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:320px;}
+.sp-messages::-webkit-scrollbar{width:4px;}
+.sp-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+.sp-msg{max-width:85%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.5;}
+.sp-msg.agent{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);color:#E0E0FF;align-self:flex-start;border-bottom-left-radius:4px;}
+.sp-msg.user{background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.2);color:#E0F7FF;align-self:flex-end;border-bottom-right-radius:4px;}
+.sp-msg.system{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);color:#6EE7B7;font-size:11px;align-self:center;text-align:center;border-radius:8px;}
+.sp-typing{display:flex;gap:4px;padding:8px 12px;align-self:flex-start;}
+.sp-typing span{width:6px;height:6px;border-radius:50%;background:#7C3AED;animation:sp-bounce 1.2s infinite;}
+.sp-typing span:nth-child(2){animation-delay:.2s;}
+.sp-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes sp-bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.sp-footer{padding:12px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;}
+#sp-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:9px 12px;color:#F4F4FF;font-size:13px;font-family:inherit;outline:none;resize:none;}
+#sp-input::placeholder{color:#55557A;}
+#sp-input:focus{border-color:rgba(124,58,237,0.4);}
+#sp-send{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7C3AED,#06B6D4);border:none;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:opacity 180ms;}
+#sp-send:disabled{opacity:0.4;cursor:not-allowed;}
+#sp-send svg{width:16px;height:16px;color:#fff;fill:none;stroke:currentColor;stroke-width:2.5;}
+</style>
+
+<button id="support-btn" title="Support IA" onclick="toggleSupport()">
+  <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<div id="support-panel">
+  <div class="sp-head">
+    <div class="sp-avatar">🤖</div>
+    <div class="sp-head-info">
+      <h3>Support AI Agent</h3>
+      <p>En ligne — répond en quelques secondes</p>
+    </div>
+  </div>
+  <div class="sp-messages" id="sp-messages">
+    <div class="sp-msg agent">Bonjour ! Je suis votre assistant CreatorFlow Market. Comment puis-je vous aider aujourd'hui ?</div>
+  </div>
+  <div class="sp-footer">
+    <textarea id="sp-input" rows="1" placeholder="Votre question..." onkeydown="handleSupportKey(event)"></textarea>
+    <button id="sp-send" onclick="sendSupportMessage()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const SUPPORT_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/support-agent';
+const SUPPORT_ANON = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+let supportOpen = false;
+let supportLoading = false;
+
+function toggleSupport() {
+  supportOpen = !supportOpen;
+  document.getElementById('support-panel').classList.toggle('open', supportOpen);
+  if (supportOpen) document.getElementById('sp-input').focus();
+}
+
+function addSupportMsg(text, type) {
+  const msgs = document.getElementById('sp-messages');
+  const d = document.createElement('div');
+  d.className = 'sp-msg ' + type;
+  d.textContent = text;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+  return d;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('sp-messages');
+  const d = document.createElement('div');
+  d.className = 'sp-typing';
+  d.id = 'sp-typing';
+  d.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('sp-typing');
+  if (t) t.remove();
+}
+
+function handleSupportKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendSupportMessage(); }
+}
+
+async function sendSupportMessage() {
+  if (supportLoading) return;
+  const input = document.getElementById('sp-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  addSupportMsg(msg, 'user');
+  supportLoading = true;
+  document.getElementById('sp-send').disabled = true;
+  showTyping();
+
+  try {
+    const { data: { session } } = await window._sbClient.auth.getSession();
+    const resp = await fetch(SUPPORT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPPORT_ANON,
+        'Authorization': session ? `Bearer ${session.access_token}` : `Bearer ${SUPPORT_ANON}`
+      },
+      body: JSON.stringify({ message: msg })
+    });
+    const json = await resp.json();
+    hideTyping();
+    if (json.response) {
+      addSupportMsg(json.response, 'agent');
+      if (json.tools_used && json.tools_used.includes('create_support_ticket')) {
+        addSupportMsg('🎫 Un ticket de suivi a été créé automatiquement.', 'system');
+      }
+      if (json.tools_used && json.tools_used.includes('escalate_to_human')) {
+        addSupportMsg('👤 Escaladé à un agent humain — vous serez contacté sous 24h.', 'system');
+      }
+    } else {
+      addSupportMsg('Désolé, une erreur est survenue. Réessayez dans un instant.', 'agent');
+    }
+  } catch {
+    hideTyping();
+    addSupportMsg('Erreur de connexion. Vérifiez votre connexion et réessayez.', 'agent');
+  } finally {
+    supportLoading = false;
+    document.getElementById('sp-send').disabled = false;
+  }
+}
+
+// Exposer le client Supabase pour le widget
+window._sbClient = window.supabase ? window.supabase.createClient('https://cjtglfutckaogsmwhfsv.supabase.co', SUPPORT_ANON) : null;
+</script>
 </body>
 </html>
