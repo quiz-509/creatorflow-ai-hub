@@ -273,7 +273,8 @@ function CockpitTab() {
   const [agentMissions, setAgentMissions] = React.useState(null);
   const [approvals, setApprovals] = React.useState(null);
   const [reports, setReports] = React.useState(null);
-  const [assigning, setAssigning] = React.useState(null); // brief en cours d'assignation
+  const [aiAgents, setAiAgents] = React.useState([]);
+  const [assigning, setAssigning] = React.useState(null);
   const [assignForm, setAssignForm] = React.useState({ employee: 'marketing', priority: 'normal', context: '' });
   const [saving, setSaving] = React.useState(false);
 
@@ -288,16 +289,18 @@ function CockpitTab() {
   const STATUS_LABEL = { assigned:'Assigné', in_progress:'En cours', blocked:'Bloqué', awaiting_ceo:'Attend CEO', done:'Terminé' };
 
   const load = React.useCallback(async () => {
-    const [b, am, ap, rp] = await Promise.all([
+    const [b, am, ap, rp, ag] = await Promise.all([
       sb.from('briefs').select('id,description,budget,categorie,created_at,user_id,statut').order('created_at',{ascending:false}).limit(20),
-      sb.from('agent_missions').select('id,agent_slug,titre,statut,priority,context,created_at,updated_at,brief_id').neq('statut','done').order('updated_at',{ascending:false}),
+      sb.from('agent_missions').select('id,agent_id,title,objective,statut,priority,brief_id,created_at,updated_at').order('created_at',{ascending:false}).limit(50),
       sb.from('pending_approvals').select('id,type,data,created_at').eq('statut','pending').order('created_at',{ascending:false}).limit(10),
       sb.from('agent_reports').select('id,agent_slug,report_type,content,created_at').order('created_at',{ascending:false}).limit(6),
+      sb.from('ai_agents').select('id,name,slug,type'),
     ]);
     setBriefs(b.data || []);
     setAgentMissions(am.data || []);
     setApprovals(ap.data || []);
     setReports(rp.data || []);
+    setAiAgents(ag.data || []);
   }, []);
 
   React.useEffect(() => { load(); }, [load]);
@@ -305,13 +308,19 @@ function CockpitTab() {
   const assignBrief = async () => {
     if (!assigning) return;
     setSaving(true);
+    // Trouver l'UUID de l'agent sélectionné
+    const agent = aiAgents.find(a =>
+      (a.slug && a.slug.toLowerCase().includes(assignForm.employee)) ||
+      (a.name && a.name.toLowerCase().includes(assignForm.employee)) ||
+      (a.type && a.type.toLowerCase().includes(assignForm.employee))
+    );
     const payload = {
-      agent_slug: assignForm.employee,
-      titre: assigning.description?.slice(0,60) || 'Nouvelle mission',
+      title: assigning.description?.slice(0,80) || 'Nouvelle mission',
+      objective: assignForm.context || assigning.description || '',
       statut: 'assigned',
       priority: assignForm.priority,
-      context: assignForm.context || assigning.description || '',
       brief_id: assigning.id,
+      ...(agent ? { agent_id: agent.id } : {}),
     };
     const { error: insertErr } = await sb.from('agent_missions').insert(payload);
     if (insertErr) {
@@ -340,10 +349,17 @@ function CockpitTab() {
   const loading = briefs === null || agentMissions === null;
   if (loading) return React.createElement('div',{className:'loading-state'},React.createElement('div',{className:'spinner'}));
 
-  const missionsByEmployee = EMPLOYEES.map(e => ({
-    ...e,
-    missions: (agentMissions||[]).filter(m => m.agent_slug === e.slug)
-  }));
+  const missionsByEmployee = EMPLOYEES.map(e => {
+    const matchingAgents = aiAgents.filter(a =>
+      (a.slug && a.slug.toLowerCase().includes(e.slug)) ||
+      (a.name && a.name.toLowerCase().includes(e.slug)) ||
+      (a.type && a.type.toLowerCase().includes(e.slug))
+    ).map(a => a.id);
+    return {
+      ...e,
+      missions: (agentMissions||[]).filter(m => matchingAgents.includes(m.agent_id) || (m.agent_slug === e.slug))
+    };
+  });
 
   const awaitingCEO = (agentMissions||[]).filter(m => m.statut === 'awaiting_ceo');
 
@@ -440,7 +456,7 @@ function CockpitTab() {
           emp.missions.length === 0
             ? React.createElement('p',{style:{color:'var(--text-3)',fontSize:'12px',textAlign:'center',padding:'12px'}},'Disponible')
             : emp.missions.map(m => React.createElement('div',{key:m.id,style:{background:'var(--surf-3)',borderRadius:'8px',padding:'10px',marginBottom:'8px'}},
-                React.createElement('div',{style:{fontSize:'12px',fontWeight:'600',color:'var(--text)',marginBottom:'6px',lineHeight:'1.3'}},m.titre||'Mission sans titre'),
+                React.createElement('div',{style:{fontSize:'12px',fontWeight:'600',color:'var(--text)',marginBottom:'6px',lineHeight:'1.3'}},m.title||m.titre||'Mission sans titre'),
                 React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'4px'}},
                   React.createElement('span',{className:`badge ${STATUS_COLOR[m.statut]||'badge-gray'}`,style:{fontSize:'9px'}},STATUS_LABEL[m.statut]||m.statut),
                   React.createElement('select',{
