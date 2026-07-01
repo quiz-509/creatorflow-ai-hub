@@ -421,6 +421,10 @@ function Sidebar({
     id: 'crm',
     label: 'CRM',
     icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"}), /*#__PURE__*/React.createElement("circle",{cx:"9",cy:"7",r:"4"}), /*#__PURE__*/React.createElement("path",{d:"M23 21v-2a4 4 0 0 0-3-3.87"}), /*#__PURE__*/React.createElement("path",{d:"M16 3.13a4 4 0 0 1 0 7.75"}))
+  }, {
+    id: 'logs',
+    label: 'Logs Agents',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"}), /*#__PURE__*/React.createElement("polyline",{points:"14 2 14 8 20 8"}), /*#__PURE__*/React.createElement("line",{x1:"16",y1:"13",x2:"8",y2:"13"}), /*#__PURE__*/React.createElement("line",{x1:"16",y1:"17",x2:"8",y2:"17"}), /*#__PURE__*/React.createElement("polyline",{points:"10 9 9 9 8 9"}))
   }];
   return /*#__PURE__*/React.createElement(React.Fragment, null,
     open && /*#__PURE__*/React.createElement("div", {
@@ -2240,6 +2244,87 @@ function AnalyticsTab() {
   );
 }
 
+/* ── LOGS TAB ── */
+function LogsTab() {
+  const [logs, setLogs] = React.useState(null);
+  const [filter, setFilter] = React.useState('all');
+  const [page, setPage] = React.useState(0);
+  const PAGE = 50;
+
+  const AGENT_COLOR = { support:'badge-purple', marketing:'badge-blue', content:'badge-green', prospecting:'badge-amber' };
+  const STATUS_COLOR = { executed:'badge-green', failed:'badge-red', pending:'badge-amber' };
+
+  React.useEffect(() => {
+    (async () => {
+      let q = sb.from('agent_actions_log').select('id,agent_slug,action_type,action_data,status,result,created_at,mission_id').order('created_at', { ascending: false }).range(page * PAGE, (page + 1) * PAGE - 1);
+      if (filter !== 'all') q = q.eq('agent_slug', filter);
+      const { data } = await q;
+      setLogs(data || []);
+    })();
+  }, [filter, page]);
+
+  const fmtDate = d => new Date(d).toLocaleString('fr-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  if (!logs) return React.createElement('div', { className: 'loading-state' }, React.createElement('div', { className: 'spinner' }));
+
+  const agents = ['all', 'support', 'marketing', 'content', 'prospecting'];
+
+  return React.createElement('div', { className: 'tab-content' },
+    React.createElement('div', { className: 'section-header' },
+      React.createElement('div', null,
+        React.createElement('h2', { className: 'section-title' }, 'Logs Actions Agents IA'),
+        React.createElement('p', { className: 'section-sub' }, logs.length, ' entrées affichées')
+      )
+    ),
+    React.createElement('div', { style: { display:'flex', gap:'8px', marginBottom:'20px', flexWrap:'wrap' } },
+      agents.map(a => React.createElement('button', {
+        key: a,
+        className: `filter-btn ${filter === a ? 'active' : ''}`,
+        onClick: () => { setFilter(a); setPage(0); setLogs(null); }
+      }, a === 'all' ? 'Tous les agents' : a.charAt(0).toUpperCase() + a.slice(1)))
+    ),
+    React.createElement('div', { className: 'table-wrap' },
+      React.createElement('table', { className: 'data-table' },
+        React.createElement('thead', null,
+          React.createElement('tr', null,
+            React.createElement('th', null, 'Date'),
+            React.createElement('th', null, 'Agent'),
+            React.createElement('th', null, 'Action'),
+            React.createElement('th', null, 'Détails'),
+            React.createElement('th', null, 'Statut'),
+            React.createElement('th', null, 'Résultat')
+          )
+        ),
+        React.createElement('tbody', null,
+          logs.length === 0
+            ? React.createElement('tr', null, React.createElement('td', { colSpan: 6, style: { textAlign:'center', color:'var(--text-3)', padding:'40px' } }, 'Aucun log pour le moment'))
+            : logs.map(log => {
+                const data = log.action_data || {};
+                const result = log.result || {};
+                return React.createElement('tr', { key: log.id },
+                  React.createElement('td', { style: { color:'var(--text-2)', fontSize:'12px', whiteSpace:'nowrap' } }, fmtDate(log.created_at)),
+                  React.createElement('td', null, React.createElement('span', { className: `badge ${AGENT_COLOR[log.agent_slug] || 'badge-gray'}` }, log.agent_slug || '—')),
+                  React.createElement('td', { style: { fontSize:'13px' } }, log.action_type || '—'),
+                  React.createElement('td', { style: { fontSize:'12px', color:'var(--text-2)', maxWidth:'220px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } },
+                    data.message_preview || data.content_preview || data.description || JSON.stringify(data).slice(0, 80)
+                  ),
+                  React.createElement('td', null, React.createElement('span', { className: `badge ${STATUS_COLOR[log.status] || 'badge-gray'}` }, log.status || '—')),
+                  React.createElement('td', { style: { fontSize:'12px', color:'var(--text-2)', maxWidth:'200px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' } },
+                    result.response_preview || result.output_preview || result.error || (data.tools_used ? `Tools: ${data.tools_used.join(', ')}` : '—')
+                  )
+                );
+              })
+        )
+      )
+    ),
+    React.createElement('div', { style: { display:'flex', gap:'12px', marginTop:'20px', alignItems:'center' } },
+      React.createElement('button', { className: 'btn btn-ghost', onClick: () => { setPage(p => Math.max(0, p-1)); setLogs(null); }, disabled: page === 0 }, '← Précédent'),
+      React.createElement('span', { style: { color:'var(--text-2)', fontSize:'13px' } }, `Page ${page + 1}`),
+      React.createElement('button', { className: 'btn btn-ghost', onClick: () => { setPage(p => p+1); setLogs(null); }, disabled: logs.length < PAGE }, 'Suivant →')
+    )
+  );
+}
+
 /* ── CRM TAB ── */
 function CRMTab() {
   const [contacts, setContacts] = React.useState([]);
@@ -2413,7 +2498,8 @@ function App() {
     payments: PaymentsTab,
     blog: BlogTab,
     'ai-workforce': AIWorkforceTab,
-    'crm': CRMTab
+    'crm': CRMTab,
+    'logs': LogsTab
   };
   const ActiveTab = tabs[tab];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("nav", {
