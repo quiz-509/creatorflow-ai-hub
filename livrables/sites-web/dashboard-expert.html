@@ -582,7 +582,6 @@ function App() {
     sb.auth.getSession().then(async ({
       data
     }) => {
-      try {
       if (!data.session) {
         window.location.href = 'connexion.html';
         return;
@@ -655,7 +654,9 @@ function App() {
       const ch = sb.channel('notifs-expert-' + u.id)
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: 'user_id=eq.' + u.id }, () => setHasUnread(true))
         .subscribe();
-      } catch(e) { console.error('Dashboard expert error:', e); }
+      document.getElementById('sk')?.remove();
+    }).catch(e => {
+      console.error('Dashboard expert error:', e);
       document.getElementById('sk')?.remove();
     });
     const el = document.getElementById('cursor-glow');
