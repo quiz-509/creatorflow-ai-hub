@@ -291,9 +291,9 @@ function CockpitTab() {
   const load = React.useCallback(async () => {
     const [b, am, ap, rp, ag] = await Promise.all([
       sb.from('briefs').select('id,description,budget,categorie,created_at,user_id,statut').order('created_at',{ascending:false}).limit(20),
-      sb.from('agent_missions').select('id,agent_id,title,objective,statut,priority,brief_id,created_at,updated_at').order('created_at',{ascending:false}).limit(50),
-      sb.from('pending_approvals').select('id,type,data,created_at').eq('statut','pending').order('created_at',{ascending:false}).limit(10),
-      sb.from('agent_reports').select('id,agent_slug,report_type,content,created_at').order('created_at',{ascending:false}).limit(6),
+      sb.from('agent_missions').select('id,agent_id,title,objective,status,created_at').order('created_at',{ascending:false}).limit(50),
+      sb.from('pending_approvals').select('id,type,data,created_at,status').order('created_at',{ascending:false}).limit(10),
+      sb.from('agent_reports').select('id,agent_slug,content,created_at').order('created_at',{ascending:false}).limit(6),
       sb.from('ai_agents').select('id,name,slug'),
     ]);
     setBriefs(b.data || []);
@@ -312,9 +312,8 @@ function CockpitTab() {
       agent_id: assignForm.agentId,
       title: assigning.description?.slice(0,80) || 'Nouvelle mission',
       objective: assignForm.context || assigning.description || 'Mission assignée par le CEO',
-      status: 'pending',
+      status: 'assigned',
       delivered_to_client: false,
-      brief_id: assigning.id,
     });
     if (insertErr) { alert('Erreur: ' + insertErr.message); setSaving(false); return; }
     await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
@@ -324,7 +323,7 @@ function CockpitTab() {
   };
 
   const approveAction = async (id, decision) => {
-    await sb.from('pending_approvals').update({ statut: decision }).eq('id', id);
+    await sb.from('pending_approvals').update({ status: decision }).eq('id', id);
     load();
   };
 
