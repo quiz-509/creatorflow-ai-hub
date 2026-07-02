@@ -150,6 +150,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .agenda-client{font-size:11px;color:var(--text-3);}
 .agenda-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 
+/* STRIPE CONNECT */
+.stripe-connect-banner{border-radius:16px;padding:24px;margin-bottom:20px;display:flex;align-items:flex-start;gap:16px;}
+.stripe-connect-banner.not-connected{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);}
+.stripe-connect-banner.connected{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);}
+.stripe-connect-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0;}
+.stripe-connect-banner.not-connected .stripe-connect-icon{background:rgba(245,158,11,0.15);}
+.stripe-connect-banner.connected .stripe-connect-icon{background:rgba(16,185,129,0.15);}
+.stripe-connect-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+.stripe-connect-sub{font-size:13px;color:var(--text-2);margin-bottom:14px;}
+.payout-table{width:100%;border-collapse:collapse;}
+.payout-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);}
+.payout-table td{font-size:13px;padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text);}
+.payout-table tr:last-child td{border-bottom:none;}
+.payout-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;}
+.payout-status.transferred{background:rgba(16,185,129,0.12);color:var(--green);}
+.payout-status.pending{background:rgba(245,158,11,0.12);color:var(--amber);}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+.rev-stat-card{background:var(--surf);border:1px solid var(--border);border-radius:16px;padding:20px;}
+.rev-stat-val{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.rev-stat-label{font-size:12px;color:var(--text-2);}
+
 /* PROFIL CARD */
 .profil-card{background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(124,58,237,0.08));border:1px solid rgba(6,182,212,0.2);border-radius:var(--r-lg);padding:20px;text-align:center;}
 .profil-avatar-lg{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--c),var(--v));display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;margin:0 auto 12px;border:2px solid rgba(6,182,212,0.3);overflow:hidden;}
@@ -554,6 +575,9 @@ function App() {
   const [delaiForm, setDelaiForm] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [postuleDone, setPostuleDone] = useState(false);
+  const [stripeStatus, setStripeStatus] = useState(null);
+  const [payouts, setPayouts] = useState([]);
+  const [stripeLoading, setStripeLoading] = useState(false);
   useEffect(() => {
     sb.auth.getSession().then(async ({
       data
@@ -622,6 +646,9 @@ function App() {
         head: true
       }).eq('expert_id', u.id);
       setMissionCount(totalM || 0);
+      const { data: payoutsData } = await sb.from('expert_payouts').select('id,amount_total_cents,amount_expert_cents,commission_cents,paid_at,status').eq('expert_id', u.id).order('paid_at', { ascending: false }).limit(10);
+      setPayouts(payoutsData || []);
+      setStripeStatus({ stripe_account_id: profile?.stripe_account_id, stripe_onboarding_complete: profile?.stripe_onboarding_complete, stripe_payout_enabled: profile?.stripe_payout_enabled });
       const { count: unread } = await sb.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', u.id).eq('read', false);
       setHasUnread((unread || 0) > 0);
       const ch = sb.channel('notifs-expert-' + u.id)
@@ -642,6 +669,29 @@ function App() {
   const handleLogout = async () => {
     await sb.auth.signOut();
     window.location.href = 'connexion.html';
+  };
+  const handleStripeConnect = async () => {
+    setStripeLoading(true);
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const res = await fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/stripe-connect-onboarding', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ return_url: window.location.origin + '/dashboard-expert.html' })
+      });
+      const d = await res.json();
+      if (d.already_connected) {
+        setStripeStatus(s => ({ ...s, stripe_onboarding_complete: true, stripe_payout_enabled: true }));
+      } else if (d.onboarding_url) {
+        window.location.href = d.onboarding_url;
+      } else {
+        alert('Erreur: ' + (d.error || 'Inconnue'));
+      }
+    } catch (e) {
+      alert('Erreur connexion Stripe: ' + e.message);
+    } finally {
+      setStripeLoading(false);
+    }
   };
   const handleDispo = async () => {
     const newVal = !dispo;
@@ -860,7 +910,50 @@ function App() {
   }, todayStr, " \xB7 ", missionCount, " mission", missionCount !== 1 ? 's' : '', " active", missionCount !== 1 ? 's' : '', " \xB7 ", opps.length, " opportunit\xE9", opps.length !== 1 ? 's' : '')), /*#__PURE__*/React.createElement("a", {
     href: "profil-expert.html",
     className: "btn btn-primary"
-  }, "Voir mon profil ", /*#__PURE__*/React.createElement(Ic.Arrow, null))), /*#__PURE__*/React.createElement("div", {
+  }, "Voir mon profil ", /*#__PURE__*/React.createElement(Ic.Arrow, null))), active === 'revenus' ? (function() {
+  const totalNet = payouts.reduce((s, p) => s + p.amount_expert_cents, 0);
+  const totalComm = payouts.reduce((s, p) => s + p.commission_cents, 0);
+  const isConnected = stripeStatus?.stripe_onboarding_complete && stripeStatus?.stripe_payout_enabled;
+  return /*#__PURE__*/React.createElement("div", null,
+    /*#__PURE__*/React.createElement("div", {className: "rev-grid"},
+      /*#__PURE__*/React.createElement("div", {className: "rev-stat-card"},
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-val", style:{color:'var(--green)'}}, payouts.length > 0 ? (totalNet / 100).toFixed(2) + ' $' : '—'),
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-label"}, "Net reçu (total)")),
+      /*#__PURE__*/React.createElement("div", {className: "rev-stat-card"},
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-val"}, payouts.length),
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-label"}, "Missions payées")),
+      /*#__PURE__*/React.createElement("div", {className: "rev-stat-card"},
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-val", style:{color:'var(--text-3)'}}, payouts.length > 0 ? (totalComm / 100).toFixed(2) + ' $' : '—'),
+        /*#__PURE__*/React.createElement("div", {className: "rev-stat-label"}, "Commission platform (15%)"))),
+    /*#__PURE__*/React.createElement("div", {className: "stripe-connect-banner " + (isConnected ? 'connected' : 'not-connected')},
+      /*#__PURE__*/React.createElement("div", {className: "stripe-connect-icon"}, isConnected ? '✅' : '⚡'),
+      /*#__PURE__*/React.createElement("div", {style:{flex:1}},
+        /*#__PURE__*/React.createElement("div", {className: "stripe-connect-title"}, isConnected ? 'Stripe Connect actif — virements activés' : 'Activez Stripe Connect pour recevoir vos paiements'),
+        /*#__PURE__*/React.createElement("div", {className: "stripe-connect-sub"}, isConnected ? 'Vos revenus sont virés automatiquement sur votre compte bancaire après chaque mission livrée. Commission de 15% prélevée automatiquement.' : 'Sans Stripe Connect, vous ne pouvez pas recevoir de virements. La configuration prend moins de 5 minutes.'),
+        !isConnected && /*#__PURE__*/React.createElement("button", {className: "btn btn-primary btn-sm", onClick: handleStripeConnect, disabled: stripeLoading, style:{width:'auto'}}, stripeLoading ? 'Connexion…' : '⚡ Connecter mon compte Stripe'))),
+    /*#__PURE__*/React.createElement("div", {className: "section-card"},
+      /*#__PURE__*/React.createElement("div", {className: "section-head"},
+        /*#__PURE__*/React.createElement("span", {className: "section-title"}, "Historique des paiements")),
+      payouts.length === 0
+        ? /*#__PURE__*/React.createElement("div", {style:{padding:'32px 20px',textAlign:'center',color:'var(--text-3)'}},
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:28,marginBottom:8}}, '💳'),
+            /*#__PURE__*/React.createElement("div", {style:{fontSize:13}}, 'Aucun paiement reçu pour l\'instant.'))
+        : /*#__PURE__*/React.createElement("table", {className: "payout-table"},
+            /*#__PURE__*/React.createElement("thead", null,
+              /*#__PURE__*/React.createElement("tr", null,
+                /*#__PURE__*/React.createElement("th", null, "Date"),
+                /*#__PURE__*/React.createElement("th", null, "Montant total"),
+                /*#__PURE__*/React.createElement("th", null, "Net reçu"),
+                /*#__PURE__*/React.createElement("th", null, "Commission"),
+                /*#__PURE__*/React.createElement("th", null, "Statut"))),
+            /*#__PURE__*/React.createElement("tbody", null,
+              payouts.map((p, i) => /*#__PURE__*/React.createElement("tr", {key: i},
+                /*#__PURE__*/React.createElement("td", null, p.paid_at ? new Date(p.paid_at).toLocaleDateString('fr-CA') : '—'),
+                /*#__PURE__*/React.createElement("td", null, (p.amount_total_cents / 100).toFixed(2) + ' $'),
+                /*#__PURE__*/React.createElement("td", {style:{color:'var(--green)',fontWeight:600}}, (p.amount_expert_cents / 100).toFixed(2) + ' $'),
+                /*#__PURE__*/React.createElement("td", {style:{color:'var(--text-3)'}}, (p.commission_cents / 100).toFixed(2) + ' $'),
+                /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("span", {className:'payout-status ' + (p.status || 'pending')}, p.status === 'transferred' ? '✓ Viré' : '⏳ En attente')))))));
+})() : /*#__PURE__*/React.createElement("div", {
     className: "stats-grid"
   }, /*#__PURE__*/React.createElement("div", {
     className: "stat-card"
