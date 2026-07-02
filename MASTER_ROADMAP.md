@@ -17,6 +17,45 @@
 
 ---
 
+## DIRECTIVE PERMANENTE — VISION OFFICIELLE DE CREATORFLOW AI WORKFORCE
+> Ajoutée le 2026-07-02. Ne jamais supprimer. Ne jamais remplacer. Référence absolue du projet.
+
+### CreatorFlow AI Workforce N'EST PAS :
+- un chatbot
+- un assistant IA
+- un générateur de texte
+- un système qui répond uniquement aux prompts
+- une collection d'agents qui exécutent une seule tâche
+
+### CreatorFlow AI Workforce EST :
+
+Une entreprise composée d'employés IA experts que CreatorFlow Market met à disposition de ses clients.
+
+Chaque AI Employee occupe un poste permanent avec : une spécialité, des responsabilités permanentes, des objectifs, une mémoire, des outils, des KPIs, des procédures, une capacité à collaborer avec les autres employés IA.
+
+**Lorsqu'un client achète un service, il ne reçoit pas un texte ou une réponse IA. Il engage un employé IA expert.**
+
+Cet employé devient responsable du projet jusqu'à sa livraison. Il doit :
+- comprendre le besoin du client
+- planifier le travail
+- utiliser les outils nécessaires
+- collaborer avec d'autres AI Employees si le projet l'exige
+- prendre des initiatives dans son domaine d'expertise
+- résoudre les problèmes rencontrés
+- produire un résultat concret
+- demander uniquement les validations critiques au CEO
+- livrer le projet terminé
+
+**L'objectif d'un AI Employee n'est jamais de produire du texte. Son objectif est de résoudre le problème du client et de fournir un résultat professionnel.**
+
+### Question de validation obligatoire avant chaque feature
+
+> « Est-ce que cette fonctionnalité rapproche réellement cet AI Employee du comportement d'un véritable employé expert capable de prendre en charge un projet client de A à Z ? »
+
+**Si la réponse est NON — ne pas construire.**
+
+---
+
 ## VISION PERMANENTE
 
 CreatorFlow Market n'est pas une marketplace. Ce n'est pas une académie. Ce n'est pas un CRM.
