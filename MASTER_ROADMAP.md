@@ -1,6 +1,8 @@
 # CreatorFlow Market — Master Roadmap
 > Document vivant. Mis à jour après chaque sprint. Source de vérité unique.
 > Dernière mise à jour : 2026-07-02
+>
+> **Constitution AI Workforce :** `livrables/AI_WORKFORCE_OS.md` — lire avant tout développement sur l'AI Workforce.
 
 ---
 
@@ -17,7 +19,8 @@ Chaque ligne de code doit servir cette vision. Si une fonctionnalité ne rapproc
 ---
 
 ## DIRECTIVE ARCHITECTURE AI WORKFORCE — RÈGLE PERMANENTE
-> Ajoutée le 2026-07-01. Mise à jour le 2026-07-01. Ne jamais supprimer. S'applique à toutes les décisions techniques.
+> Ajoutée le 2026-07-01. Mise à jour le 2026-07-02. Ne jamais supprimer. S'applique à toutes les décisions techniques.
+> **Référence complète :** `livrables/AI_WORKFORCE_OS.md` — Constitution v1.0 rédigée le 2026-07-02. Ce document contient les règles détaillées, les templates, les migrations SQL et le guide d'implémentation complet. Ce qui suit est un résumé.
 
 ### La distinction fondamentale : AI Agent vs AI Employee
 
@@ -25,7 +28,29 @@ Chaque ligne de code doit servir cette vision. Si une fonctionnalité ne rapproc
 C'est un outil. Ce n'est pas ce que nous construisons.
 
 **Un AI Employee** est un membre permanent de l'entreprise.
-C'est ce que nous construisons.
+Ce n'est pas un exécutant déclenché par une mission. C'est un poste occupé en permanence.
+
+---
+
+### PHILOSOPHIE FONDAMENTALE — L'employé permanent vs l'exécutant déclenché
+
+> "Je ne construis pas des employés IA qui attendent une mission. Je construis des employés permanents qui occupent un poste dans l'entreprise."
+> — Joacenel, 2026-07-02
+
+**La différence est totale :**
+
+| Exécutant déclenché ❌ | Employé permanent ✅ |
+|----------------------|-------------------|
+| Attend qu'on lui assigne une mission | Travaille en permanence, même sans mission client |
+| Un appel HTTP → une réponse → fin | Heartbeat quotidien automatique via pg_cron |
+| Mémoire éphémère d'une session | Mémoire structurée long terme entre les jours |
+| Produit un document quand sollicité | Produit des rapports spontanément |
+| Alertes CEO seulement sur demande | Alertes CEO dès qu'un seuil est franchi |
+| Pas d'accès aux données réelles | Lit Stripe + Supabase + web chaque matin |
+| Mission = unité de travail | Jour = unité de travail |
+| Réactif | Proactif |
+
+**Un AI Employee qui attend une mission avant de travailler n'est pas un employé. C'est un freelance.**
 
 ---
 
@@ -35,36 +60,69 @@ Chaque AI Employee possède :
 
 | Attribut | Description |
 |----------|-------------|
-| Fonction | Un rôle défini dans l'entreprise (Directeur Marketing, Head of Content, etc.) |
-| Responsabilités permanentes | Des missions récurrentes, pas ponctuelles |
-| Plusieurs compétences | Analyse, création, communication, suivi |
-| Outils | Supabase, APIs, email, web search, fichiers |
-| Mémoire | Historique des missions, décisions, contexte client |
-| Objectifs | OKRs clairs, mesurables |
-| KPIs | Métriques suivies dans le temps |
-| Dossiers | Projets en cours, archivés, livrables |
-| Clients | Relation continue, pas interaction unique |
+| Poste permanent | Un rôle continu dans l'entreprise, pas ponctuel |
+| Heartbeat quotidien | Se déclenche chaque matin automatiquement (pg_cron) |
+| KPI monitoring | Surveille ses métriques en permanence, pas sur demande |
+| Seuils d'alerte | Conditions qui déclenchent une action ou une escalade CEO automatiquement |
+| Initiative autonome | Peut proposer une campagne, un rapport, une action sans qu'on lui demande |
+| Mémoire long terme | Se souvient de ce qu'il a fait la semaine passée, le mois passé |
+| Routines récurrentes | Tâches quotidiennes, hebdomadaires, mensuelles définies |
+| Outils | Supabase, Stripe, web search, email, fichiers, APIs externes |
 | Collègues | Délègue à d'autres AI Employees, reçoit des handoffs |
-| Autonomie temporelle | Travaille sur plusieurs jours, reprend une mission là où elle s'est arrêtée |
+| Reporting spontané | Produit ses rapports sans attendre qu'on les lui demande |
+
+---
+
+### Journée type d'un AI Employee permanent
+
+**Chaque matin (automatique) :**
+- Consulte ses KPIs du jour
+- Compare avec la veille et la semaine passée
+- Détecte les anomalies et opportunités
+- Génère un bilan matinal dans agent_reports
+- Alerte le CEO si un seuil est franchi
+
+**En continu :**
+- Surveille les seuils configurés
+- Détecte les opportunités (contenu viral, concurrent actif, segment sous-exploité)
+- Prend des initiatives dans son périmètre sans demander permission
+- Escalade au CEO uniquement les décisions hors périmètre
+
+**Chaque semaine (automatique) :**
+- Rapport de performance hebdomadaire au CEO
+- Veille concurrentielle
+- Proposition d'une initiative pour la semaine suivante
+
+**Chaque mois (automatique) :**
+- Audit complet de son domaine
+- Révision des objectifs
+- Budget consommé vs prévu
+- Recommandations stratégiques pour le mois suivant
 
 ---
 
 ### Exemple — Le Marketing AI Employee
 
-Il n'est PAS un agent qui écrit des emails.
+Il n'est PAS un agent qui attend une mission.
 
-Il EST le **Directeur Marketing de CreatorFlow**. Il peut :
-- Analyser un marché et des concurrents
-- Créer une stratégie de croissance
-- Lancer et piloter une campagne
-- Suivre les performances dans le temps
-- Déléguer du contenu au Content Employee
-- Déléguer de la prospection au Prospecting Employee
-- Gérer un budget alloué
-- Produire un rapport hebdomadaire au CEO
-- Améliorer ses résultats en continu
+Il EST le **Directeur Marketing permanent de CreatorFlow**. Sans qu'on lui demande :
+- Il consulte le MRR chaque matin et alerte si ça baisse
+- Il surveille le funnel de conversion et identifie les fuites
+- Il analyse les performances du blog et propose les sujets suivants
+- Il fait une veille concurrentielle chaque vendredi
+- Il produit un rapport hebdomadaire le lundi sans qu'on lui demande
+- Il propose une campagne quand il détecte une opportunité
+- Il délègue au Content Employee, au Prospecting Employee
+- Il gère un budget marketing et rend des comptes dessus
+- Quand un client arrive avec une mission, il prend le lead — mais ce n'est pas sa seule raison d'exister
 
-Même logique pour : Content Employee, Prospecting Employee, Support Employee, CEO AI.
+Même logique pour : Content Employee, Prospecting Employee.
+
+---
+
+### Note — Support Agent (distinction importante)
+
+Le Support qu'on a construit est un **AI Agent support client** pour les utilisateurs de la plateforme CreatorFlow Market. C'est un outil produit, pas un AI Employee de l'entreprise. Il ne fait pas partie de l'AI Workforce interne.
 
 ---
 
@@ -388,23 +446,41 @@ Avant tout développement, répondre à :
 
 ## PRIORITÉS IMMÉDIATES (Sprint 3 — maintenant)
 
-### 🔴 Bloquants critiques (sécurité — aucun lancement sans ça)
-1. **RLS tables core** : `users`, `missions`, `crm_contacts`, `approvals` — données exposées sans ça
-2. Remplacer email admin hardcodé par vérification rôle en base de données
+### 🔴 Bloquant absolu (infrastructure AI Workforce OS)
+Avant tout nouveau AI Employee, appliquer la migration suivante dans le SQL Editor Supabase :
+`livrables/AI_WORKFORCE_OS.md` — Section 16 (migrations Priorité 1 : `company_memory`, `agent_heartbeats`, `employee_handoffs`)
 
-### 🟠 Indispensables (AI Workforce opérationnel)
-3. **Monitoring n8n** : alertes si workflow blog tombe
-4. Content AI Employee (pour que Marketing Director puisse réellement déléguer)
-5. Prospecting AI Employee
+Cette migration est le fondement de tout. Sans elle, aucun employé permanent ne peut fonctionner.
+
+### 🔴 Sécurité (aucun lancement commercial sans ça)
+- Remplacer email admin hardcodé par vérification rôle en base de données (`is_admin` dans `profiles`)
+- RLS validé sur toutes les tables — déjà fait le 2026-07-02
+
+### 🟠 Phase A — AI Workforce OS (infrastructure de base)
+1. Appliquer migration OS (Section 16 de la Constitution)
+2. Ajouter outils heartbeat dans `ai-orchestrator` : `read_company_memory`, `update_company_memory`, `log_heartbeat`
+3. Valider avec Marketing Director : 1 heartbeat manuel réussi
+
+### 🟠 Phase B — Marketing Director permanent
+4. Créer `marketing-heartbeat` Edge Function (KPIs Stripe + Supabase, alertes, rapport matinal)
+5. pg_cron quotidien + hebdomadaire pour Marketing Director
+6. Initialiser `company_memory` avec baseline KPIs et OKRs Marketing
+
+### 🟠 Phase C — Content Employee permanent
+7. Construire Content Employee avec heartbeat, gestion handoffs, monitoring articles
+8. Tester délégation Marketing → Content via `employee_handoffs`
+
+### 🟠 Phase D — Prospecting Employee permanent
+9. Construire Prospecting Employee avec heartbeat, monitoring CRM, gestion handoffs
 
 ### 🟡 Importants (crédibilité produit)
-6. Recruter 5 vrais experts (processus de vetting manuel)
-7. Produire 1 cours complet Academy (formateur Rose — Marketing IA)
-8. Migrer progression Academy localStorage → Supabase
+10. Recruter 5 vrais experts (processus de vetting manuel)
+11. Produire 1 cours complet Academy (formateur Rose — Marketing IA)
+12. Migrer progression Academy localStorage → Supabase
 
 ---
 
-## PRIORITÉS SPRINT 3 (Mois 2-3)
+## PRIORITÉS SPRINT 4 (Mois 2-3)
 
 - Algorithme de matching (filtrage intelligent expert-client)
 - CRM avec pipeline visuel (kanban statuts)
@@ -452,6 +528,7 @@ Avant tout développement, répondre à :
 | 2026-07-01 | Sprint 2 — CEO Cockpit | Inbox briefs, assignation missions, board employees, approbations |
 | 2026-07-02 | Sprint 1 — Marketplace | Stripe Connect : commissions 15% auto, stripe-connect-onboarding, stripe-webhook, expert_payouts, dashboard revenus expert |
 | 2026-07-02 | Vision AI Workforce | Marketing Director AI Employee : boucle agentique 10 itérations, 6 outils, mémoire mission, délégation Content/Prospecting, rapports CEO, bouton Lancer dans Cockpit |
+| 2026-07-02 | AI Workforce OS | Constitution v1.0 rédigée — 18 sections, 16 règles, 3 tables à créer, guide d'implémentation complet, taxonomie officielle. Fichier : `livrables/AI_WORKFORCE_OS.md` |
 
 ---
 
