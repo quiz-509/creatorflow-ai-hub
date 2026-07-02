@@ -3,6 +3,17 @@
 > Dernière mise à jour : 2026-07-02
 >
 > **Constitution AI Workforce :** `livrables/AI_WORKFORCE_OS.md` — lire avant tout développement sur l'AI Workforce.
+> **Contexte complet du projet :** `PROJECT_CONTEXT.md` — URLs, stack, APIs, règles permanentes, AI Workforce, roadmap.
+
+## URLS OFFICIELLES (ne plus jamais demander)
+
+| Environnement | URL |
+|---------------|-----|
+| Production | https://creatorflowmarket.com |
+| Admin / CEO Cockpit | https://creatorflowmarket.com/admin |
+| Employés IA | https://creatorflowmarket.com/employes |
+| Supabase projet | https://cjtglfutckaogsmwhfsv.supabase.co |
+| GitHub | https://github.com/quiz-509/creatorflow-ai-hub |
 
 ---
 
