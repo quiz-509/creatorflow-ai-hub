@@ -192,14 +192,19 @@ function detectAlerts(kpis: Record<string, number | string>) {
 // Email CEO
 // ---------------------------------------------------------------------------
 async function sendEmail(apiKey: string, subject: string, html: string) {
-  if (!apiKey) return;
+  console.log('[sendEmail] key set=', !!apiKey, 'keyLen=', apiKey.length, 'to=', CEO_EMAIL);
+  if (!apiKey) { console.log('[sendEmail] SKIP — no key'); return; }
   try {
-    await fetch(RESEND_URL, {
+    const res = await fetch(RESEND_URL, {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: FROM, to: [CEO_EMAIL], subject, html }),
     });
-  } catch (_) { /* non-critique */ }
+    const txt = await res.text();
+    console.log('[sendEmail] status=', res.status, 'body=', txt.slice(0, 300));
+  } catch (err) {
+    console.log('[sendEmail] fetch error=', (err as Error).message);
+  }
 }
 
 function buildDailyAlertHtml(kpis: Record<string, number | string>, alerts: Array<{ type: string; message: string; severity: string }>) {
