@@ -1,5 +1,32 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
+
+// Appel direct à l'API Anthropic via fetch (compatible Supabase Edge Functions)
+async function callClaude(
+  apiKey: string,
+  model: string,
+  maxTokens: number,
+  prompt: string,
+): Promise<string> {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`Anthropic ${res.status}: ${txt.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  return data.content?.[0]?.text ?? '';
+}
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -301,7 +328,6 @@ async function generateWeeklyAnalysis(
 ): Promise<string> {
   if (!anthropicKey) return 'Clé Anthropic non configurée.';
 
-  const anthropic = new Anthropic({ apiKey: anthropicKey });
   const alertText = alerts.length > 0
     ? `ALERTES ACTIVES : ${alerts.map(a => a.message).join(' | ')}`
     : 'Aucune alerte critique cette semaine.';
@@ -328,14 +354,7 @@ ${alertText}
 Rédige un rapport hebdomadaire court (5-8 points). Pour chaque point : observation factuelle + recommandation concrète.
 Sois direct. Pas de blabla. Le CEO lit ça en 2 minutes. Format : texte simple, une ligne par point, pas de markdown.`;
 
-  const response = await anthropic.messages.create({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 1024,
-    messages: [{ role: 'user', content: prompt }],
-  });
-
-  const text = response.content.find(b => b.type === 'text');
-  return text?.type === 'text' ? text.text : 'Analyse indisponible.';
+  return await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 1024, prompt) || 'Analyse indisponible.';
 }
 
 // ---------------------------------------------------------------------------
@@ -500,14 +519,12 @@ async function executeMission(
   const kpis = await readKPIs(supabase);
 
   // 3. Analyse profonde via Claude Sonnet
-  const anthropic = new Anthropic({ apiKey: anthropicKey });
-  const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
-    messages: [{ role: 'user', content: buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>) }],
-  });
-
-  const rawText = response.content.find(b => b.type === 'text')?.text || '';
+  const rawText = await callClaude(
+    anthropicKey,
+    'claude-sonnet-4-6',
+    4096,
+    buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>)
+  );
   const plan = parseMissionPlan(rawText);
 
   // 4. Livrable dans agent_outputs
