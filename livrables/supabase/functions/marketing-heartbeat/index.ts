@@ -192,19 +192,15 @@ function detectAlerts(kpis: Record<string, number | string>) {
 // Email CEO
 // ---------------------------------------------------------------------------
 async function sendEmail(apiKey: string, subject: string, html: string) {
-  console.log('[sendEmail] key set=', !!apiKey, 'keyLen=', apiKey.length, 'to=', CEO_EMAIL);
-  if (!apiKey) { console.log('[sendEmail] SKIP — no key'); return; }
+  const safeSubject = subject.replace(/[\r\n\t]/g, ' ').trim();
+  if (!apiKey) return;
   try {
-    const res = await fetch(RESEND_URL, {
+    await fetch(RESEND_URL, {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: FROM, to: [CEO_EMAIL], subject, html }),
+      body: JSON.stringify({ from: FROM, to: [CEO_EMAIL], subject: safeSubject, html }),
     });
-    const txt = await res.text();
-    console.log('[sendEmail] status=', res.status, 'body=', txt.slice(0, 300));
-  } catch (err) {
-    console.log('[sendEmail] fetch error=', (err as Error).message);
-  }
+  } catch (_) { /* silencieux */ }
 }
 
 function buildDailyAlertHtml(kpis: Record<string, number | string>, alerts: Array<{ type: string; message: string; severity: string }>) {
@@ -358,7 +354,8 @@ Sois direct. Pas de blabla. Le CEO lit ça en 2 minutes. Format : texte simple, 
 
 function parseMissionPlan(text: string): MissionPlan {
   try {
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const stripped = text.replace(/^```(?:json)?\s*/m, '').replace(/\s*```\s*$/m, '').trim();
+    const jsonMatch = stripped.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       return {
@@ -501,10 +498,7 @@ async function executeMission(
   resendKey: string,
   mission: { id: string; title: string; objective: string }
 ): Promise<{ report_id: string | null; requires_validation: boolean }> {
-  console.log('[executeMission] start mission_id=', mission.id);
-
   // 1. Contexte stratégique
-  console.log('[executeMission] step 1: company_memory');
   const { data: stratMem } = await supabase
     .from('company_memory')
     .select('content')
@@ -514,18 +508,15 @@ async function executeMission(
   const strategicContext = stratMem?.content || {};
 
   // 2. KPIs pour contextualiser l'analyse
-  console.log('[executeMission] step 2: readKPIs');
   const kpis = await readKPIs(supabase);
 
   // 3. Analyse via Claude Haiku (rapide, <10s)
-  console.log('[executeMission] step 3: callClaude (key set=', !!anthropicKey, ')');
   const rawText = await callClaude(
     anthropicKey,
     'claude-haiku-4-5-20251001',
     2048,
     buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>)
   );
-  console.log('[executeMission] step 3 done, rawText length=', rawText.length);
   const plan = parseMissionPlan(rawText);
 
   // 4. Livrable dans agent_outputs
@@ -612,25 +603,21 @@ async function processMissions(
   anthropicKey: string,
   resendKey: string,
 ): Promise<{ missions_processed: number; results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> }> {
-  console.log('[processMissions] step 1: recherche agent slug=', AGENT_SLUG);
-  const { data: agent, error: agentError } = await supabase
+  const { data: agent } = await supabase
     .from('ai_agents')
     .select('id')
     .eq('slug', AGENT_SLUG)
     .single();
-  console.log('[processMissions] agent=', JSON.stringify(agent), 'error=', agentError?.message);
 
-  if (!agent) return { missions_processed: 0, results: [], debug_agent_error: agentError?.message } as never;
+  if (!agent) return { missions_processed: 0, results: [] } as never;
 
-  console.log('[processMissions] step 2: recherche missions assigned pour agent', agent.id);
-  const { data: missions, error: missionsError } = await supabase
+  const { data: missions } = await supabase
     .from('agent_missions')
     .select('id, title, objective, status, created_at')
     .eq('agent_id', agent.id)
     .eq('status', 'assigned')
     .order('created_at', { ascending: true })
     .limit(3);
-  console.log('[processMissions] missions count=', missions?.length, 'error=', missionsError?.message);
 
   if (!missions?.length) return { missions_processed: 0, results: [], debug_missions_error: missionsError?.message } as never;
 
