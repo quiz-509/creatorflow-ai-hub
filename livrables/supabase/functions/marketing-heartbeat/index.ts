@@ -506,7 +506,10 @@ async function executeMission(
   resendKey: string,
   mission: { id: string; title: string; objective: string }
 ): Promise<{ report_id: string | null; requires_validation: boolean }> {
+  console.log('[executeMission] start mission_id=', mission.id);
+
   // 1. Contexte stratégique
+  console.log('[executeMission] step 1: company_memory');
   const { data: stratMem } = await supabase
     .from('company_memory')
     .select('content')
@@ -516,15 +519,18 @@ async function executeMission(
   const strategicContext = stratMem?.content || {};
 
   // 2. KPIs pour contextualiser l'analyse
+  console.log('[executeMission] step 2: readKPIs');
   const kpis = await readKPIs(supabase);
 
   // 3. Analyse profonde via Claude Sonnet
+  console.log('[executeMission] step 3: callClaude (key set=', !!anthropicKey, ')');
   const rawText = await callClaude(
     anthropicKey,
     'claude-sonnet-4-6',
     4096,
     buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>)
   );
+  console.log('[executeMission] step 3 done, rawText length=', rawText.length);
   const plan = parseMissionPlan(rawText);
 
   // 4. Livrable dans agent_outputs
@@ -611,25 +617,27 @@ async function processMissions(
   anthropicKey: string,
   resendKey: string,
 ): Promise<{ missions_processed: number; results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> }> {
-  // Trouver l'agent_id du Marketing Director
-  const { data: agent } = await supabase
+  console.log('[processMissions] step 1: recherche agent slug=', AGENT_SLUG);
+  const { data: agent, error: agentError } = await supabase
     .from('ai_agents')
     .select('id')
     .eq('slug', AGENT_SLUG)
     .single();
+  console.log('[processMissions] agent=', JSON.stringify(agent), 'error=', agentError?.message);
 
-  if (!agent) return { missions_processed: 0, results: [] };
+  if (!agent) return { missions_processed: 0, results: [], debug_agent_error: agentError?.message } as never;
 
-  // Missions assignées en attente (max 3 par run pour rester dans le timeout)
-  const { data: missions } = await supabase
+  console.log('[processMissions] step 2: recherche missions assigned pour agent', agent.id);
+  const { data: missions, error: missionsError } = await supabase
     .from('agent_missions')
     .select('id, title, objective, status, created_at')
     .eq('agent_id', agent.id)
     .eq('status', 'assigned')
     .order('created_at', { ascending: true })
     .limit(3);
+  console.log('[processMissions] missions count=', missions?.length, 'error=', missionsError?.message);
 
-  if (!missions?.length) return { missions_processed: 0, results: [] };
+  if (!missions?.length) return { missions_processed: 0, results: [], debug_missions_error: missionsError?.message } as never;
 
   const results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> = [];
 
