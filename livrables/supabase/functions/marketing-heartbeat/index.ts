@@ -13,12 +13,24 @@ const FROM = 'Marketing Director IA <noreply@creatorflowmarket.com>';
 
 // Seuils d'alerte (Constitution Section 5.1)
 const ALERT_THRESHOLDS = {
-  users_7d_drop_pct: 30,    // -30% nouveaux users vs semaine précédente
-  conversion_rate_min: 20,  // < 20% brief → mission sur 30j
-  articles_silence_hours: 96, // 0 article en 96h
-  tickets_open_max: 10,     // > 10 tickets ouverts depuis > 48h
-  mrr_drop_pct: 20,         // -20% MRR en 7j
+  users_7d_drop_pct: 30,
+  conversion_rate_min: 20,
+  articles_silence_hours: 96,
+  tickets_open_max: 10,
+  mrr_drop_pct: 20,
 };
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+interface MissionPlan {
+  analysis: string;
+  strategy: string;
+  deliverable: string;
+  next_steps: string;
+  requires_ceo_validation: boolean;
+  ceo_validation: string;
+}
 
 // ---------------------------------------------------------------------------
 // Lecture KPIs depuis Supabase
@@ -237,7 +249,7 @@ h2{font-size:18px;margin:20px 0 4px;color:#E9D5FF;}
   </div>
 </div>
 ${alerts.length > 0 ? `<h2>⚠ Alertes (${alerts.length})</h2>${alertRows}` : '<p style="color:#34D399;font-size:13px;">✓ Aucune anomalie détectée aujourd\'hui.</p>'}
-<p style="text-align:center"><a href="https://creatorflowmarket.com/admin.html" class="btn">Ouvrir le CEO Cockpit →</a></p>
+<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Ouvrir le CEO Cockpit →</a></p>
 <div class="footer">Marketing Director IA · CreatorFlow Market · Rapport automatique quotidien</div>
 </div></body></html>`;
 }
@@ -273,7 +285,7 @@ h2{font-size:18px;margin:20px 0 8px;color:#E9D5FF;}
   <p style="margin:0 0 8px;font-size:11px;color:#9898B8;font-weight:700;">ANALYSE & RECOMMANDATIONS</p>
   ${analysisHtml}
 </div>
-<p style="text-align:center"><a href="https://creatorflowmarket.com/admin.html" class="btn">Ouvrir le CEO Cockpit →</a></p>
+<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Ouvrir le CEO Cockpit →</a></p>
 <div class="footer">Marketing Director IA · CreatorFlow Market · Rapport hebdomadaire automatique</div>
 </div></body></html>`;
 }
@@ -327,6 +339,303 @@ Sois direct. Pas de blabla. Le CEO lit ça en 2 minutes. Format : texte simple, 
 }
 
 // ---------------------------------------------------------------------------
+// MISSION PIPELINE — Marketing Director prend en charge une mission client
+// ---------------------------------------------------------------------------
+
+function parseMissionPlan(text: string): MissionPlan {
+  try {
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        analysis: String(parsed.analysis || ''),
+        strategy: String(parsed.strategy || ''),
+        deliverable: String(parsed.deliverable || ''),
+        next_steps: String(parsed.next_steps || ''),
+        requires_ceo_validation: Boolean(parsed.requires_ceo_validation),
+        ceo_validation: String(parsed.ceo_validation || ''),
+      };
+    }
+  } catch (_) { /* fallback ci-dessous */ }
+  return {
+    analysis: text.slice(0, 600),
+    strategy: 'Plan disponible dans le livrable complet.',
+    deliverable: text,
+    next_steps: 'Voir rapport complet dans le CEO Cockpit.',
+    requires_ceo_validation: false,
+    ceo_validation: '',
+  };
+}
+
+function buildMissionPrompt(
+  mission: { title: string; objective: string },
+  strategicContext: Record<string, unknown>,
+  kpis: Record<string, number | string>
+): string {
+  return `Tu es le Marketing Director permanent de CreatorFlow Market.
+
+Le CEO vient de t'assigner une mission. Tu dois l'analyser en profondeur, créer un plan stratégique concret et produire un premier livrable professionnel complet.
+
+═══ MISSION ASSIGNÉE ═══
+Titre : ${mission.title}
+Objectif : ${mission.objective}
+
+═══ CONTEXTE STRATÉGIQUE ═══
+${JSON.stringify(strategicContext, null, 2)}
+
+═══ KPIs ACTUELS ═══
+- Utilisateurs total : ${kpis.users_total} (+${kpis.users_7d} cette semaine)
+- Briefs ouverts : ${kpis.briefs_open} | Conversion 30j : ${kpis.conversion_30d_pct}%
+- Articles publiés (7j) : ${kpis.articles_7d} | Contacts CRM : ${kpis.crm_contacts_total}
+- Revenus estimés (7j) : ${kpis.mrr_estimate_7d} $
+
+═══ TON RÔLE ═══
+Tu es expert en marketing digital pour créateurs de contenu, solopreneurs et TPE francophones.
+Tu maîtrises : stratégie de contenu, growth marketing, copywriting, réseaux sociaux, email marketing, SEO.
+Ton travail n'est pas de répondre à une question. C'est de prendre en charge cette mission concrètement dès maintenant.
+
+═══ FORMAT DE RÉPONSE ═══
+Réponds UNIQUEMENT avec un objet JSON valide. Pas de markdown autour, pas de backticks, juste le JSON.
+
+{
+  "analysis": "Analyse du besoin en 3-4 phrases précises. Ce que le client veut vraiment. Les enjeux derrière la demande.",
+  "strategy": "Stratégie complète en 6-8 points numérotés. Objectifs mesurables, canaux prioritaires, approche, timeline 4 semaines, KPIs de succès.",
+  "deliverable": "Premier livrable COMPLET et professionnel. PAS un résumé, PAS un plan — le vrai contenu. Si stratégie de contenu : le calendrier semaine par semaine avec thèmes, formats, accroches, hashtags. Si campagne email : les 3 premiers emails complets rédigés. Si plan marketing : le plan détaillé actionnable.",
+  "next_steps": "3 actions concrètes exécutables dans les 48h pour faire avancer cette mission.",
+  "requires_ceo_validation": false,
+  "ceo_validation": ""
+}
+
+Note : requires_ceo_validation = true uniquement si la mission implique une dépense budgétaire, un contact client externe direct, ou une décision stratégique hors de ton périmètre habituel.`;
+}
+
+function buildMissionEmailHtml(
+  mission: { title: string; objective: string },
+  plan: MissionPlan,
+  reportId: string | null,
+  requiresValidation: boolean
+): string {
+  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const strategyLines = plan.strategy
+    .split('\n')
+    .filter(l => l.trim())
+    .map(l => `<li style="margin-bottom:6px;font-size:13px;color:#D1D5DB;">${l}</li>`)
+    .join('');
+  const deliverablePreview = plan.deliverable.length > 800
+    ? plan.deliverable.slice(0, 800) + '\n\n[... voir rapport complet dans le cockpit]'
+    : plan.deliverable;
+
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
+.wrap{max-width:600px;margin:0 auto;padding:28px 20px;}
+.header{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.logo{font-size:16px;font-weight:800;color:#F4F4FF;}
+.logo em{font-style:normal;color:#A855F7;}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:14px;}
+.status-ok{background:rgba(52,211,153,0.15);color:#34D399;border:1px solid rgba(52,211,153,0.3);}
+.status-warn{background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3);}
+h2{font-size:18px;margin:0 0 4px;color:#E9D5FF;}
+.meta{font-size:12px;color:#9898B8;margin-bottom:20px;}
+.section{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
+.section-label{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
+.section-warn{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+.section-warn .section-label{color:#F59E0B;}
+ul{padding-left:18px;margin:0;}
+.deliverable{font-size:12px;color:#A1A1C8;white-space:pre-wrap;line-height:1.7;font-family:monospace;}
+.btn{display:inline-block;background:#A855F7;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
+.footer{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}
+</style></head><body><div class="wrap">
+<div class="header"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
+<div class="status-badge ${requiresValidation ? 'status-warn' : 'status-ok'}">${requiresValidation ? '⚠ Validation CEO requise' : '✓ Mission prise en charge'}</div>
+<h2>${mission.title}</h2>
+<div class="meta">${dateStr} · Mission assignée par le CEO</div>
+
+<div class="section">
+  <div class="section-label">Analyse du brief</div>
+  <p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${plan.analysis}</p>
+</div>
+
+<div class="section">
+  <div class="section-label">Stratégie proposée</div>
+  <ul>${strategyLines || `<li style="color:#D1D5DB;font-size:13px;">${plan.strategy}</li>`}</ul>
+</div>
+
+<div class="section">
+  <div class="section-label">Premier livrable</div>
+  <div class="deliverable">${deliverablePreview}</div>
+</div>
+
+${requiresValidation ? `
+<div class="section section-warn">
+  <div class="section-label">Validation requise avant exécution</div>
+  <p style="margin:0;font-size:13px;color:#D1D5DB;">${plan.ceo_validation}</p>
+</div>` : ''}
+
+<div class="section">
+  <div class="section-label">Prochaines étapes — 48h</div>
+  <p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.7;white-space:pre-wrap;">${plan.next_steps}</p>
+</div>
+
+<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Voir le rapport complet →</a></p>
+<div class="footer">Marketing Director IA · CreatorFlow Market · Mission automatique</div>
+</div></body></html>`;
+}
+
+async function executeMission(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+  mission: { id: string; title: string; objective: string }
+): Promise<{ report_id: string | null; requires_validation: boolean }> {
+  // 1. Contexte stratégique
+  const { data: stratMem } = await supabase
+    .from('company_memory')
+    .select('content')
+    .eq('agent_slug', AGENT_SLUG)
+    .eq('memory_type', 'strategic_context')
+    .single();
+  const strategicContext = stratMem?.content || {};
+
+  // 2. KPIs pour contextualiser l'analyse
+  const kpis = await readKPIs(supabase);
+
+  // 3. Analyse profonde via Claude Sonnet
+  const anthropic = new Anthropic({ apiKey: anthropicKey });
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 4096,
+    messages: [{ role: 'user', content: buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>) }],
+  });
+
+  const rawText = response.content.find(b => b.type === 'text')?.text || '';
+  const plan = parseMissionPlan(rawText);
+
+  // 4. Livrable dans agent_outputs
+  await supabase.from('agent_outputs').insert({
+    mission_id: mission.id,
+    output_type: 'marketing_plan',
+    output_data: {
+      title: `Plan Marketing — ${mission.title}`,
+      analysis: plan.analysis,
+      strategy: plan.strategy,
+      deliverable: plan.deliverable,
+      next_steps: plan.next_steps,
+    },
+    status: 'completed',
+  });
+
+  // 5. Rapport structuré dans agent_reports
+  const { data: report } = await supabase
+    .from('agent_reports')
+    .insert({
+      agent_slug: AGENT_SLUG,
+      title: `Plan Marketing — ${mission.title}`,
+      sections: [
+        { heading: 'Analyse du brief', content: plan.analysis },
+        { heading: 'Stratégie proposée', content: plan.strategy },
+        { heading: 'Livrable initial', content: plan.deliverable },
+        { heading: 'Prochaines étapes (48h)', content: plan.next_steps },
+        { heading: 'Validation CEO', content: plan.requires_ceo_validation ? plan.ceo_validation : 'Aucune — exécution autonome autorisée.' },
+      ],
+      report_type: 'mission_plan',
+      content: { mission_id: mission.id, plan },
+    })
+    .select('id')
+    .single();
+
+  // 6. Log immuable de l'action
+  await supabase.from('agent_actions_log').insert({
+    mission_id: mission.id,
+    agent_slug: AGENT_SLUG,
+    action_type: 'mission_analysis',
+    action_data: {
+      objective: mission.objective.slice(0, 300),
+      plan_preview: plan.analysis.slice(0, 300),
+      report_id: report?.id || null,
+    },
+    input: { mission_id: mission.id, title: mission.title, objective: mission.objective },
+  });
+
+  // 7. Mission → in_progress
+  await supabase
+    .from('agent_missions')
+    .update({ status: 'in_progress', started_at: new Date().toISOString() })
+    .eq('id', mission.id);
+
+  // 8. Approbation CEO si nécessaire
+  if (plan.requires_ceo_validation) {
+    await supabase.from('pending_approvals').insert({
+      type: 'mission_plan',
+      data: {
+        mission_id: mission.id,
+        mission_title: mission.title,
+        plan_summary: plan.strategy.slice(0, 500),
+        report_id: report?.id || null,
+        asked_by: AGENT_SLUG,
+      },
+      status: 'pending',
+    });
+  }
+
+  // 9. Email CEO avec plan complet
+  await sendEmail(
+    resendKey,
+    plan.requires_ceo_validation
+      ? `⚠ Validation requise — Marketing Director : ${mission.title.slice(0, 55)}`
+      : `📋 Plan Marketing prêt — ${mission.title.slice(0, 55)}`,
+    buildMissionEmailHtml(mission, plan, report?.id || null, plan.requires_ceo_validation)
+  );
+
+  return { report_id: report?.id || null, requires_validation: plan.requires_ceo_validation };
+}
+
+async function processMissions(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+): Promise<{ missions_processed: number; results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> }> {
+  // Trouver l'agent_id du Marketing Director
+  const { data: agent } = await supabase
+    .from('ai_agents')
+    .select('id')
+    .eq('slug', AGENT_SLUG)
+    .single();
+
+  if (!agent) return { missions_processed: 0, results: [] };
+
+  // Missions assignées en attente (max 3 par run pour rester dans le timeout)
+  const { data: missions } = await supabase
+    .from('agent_missions')
+    .select('id, title, objective, status, created_at')
+    .eq('agent_id', agent.id)
+    .eq('status', 'assigned')
+    .order('created_at', { ascending: true })
+    .limit(3);
+
+  if (!missions?.length) return { missions_processed: 0, results: [] };
+
+  const results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> = [];
+
+  for (const mission of missions) {
+    try {
+      const result = await executeMission(supabase, anthropicKey, resendKey, mission);
+      results.push({ mission_id: mission.id, success: true, ...result });
+    } catch (err) {
+      await supabase.from('agent_actions_log').insert({
+        mission_id: mission.id,
+        agent_slug: AGENT_SLUG,
+        action_type: 'mission_error',
+        action_data: { error: (err as Error).message },
+        input: { mission_id: mission.id },
+      }).catch(() => {});
+      results.push({ mission_id: mission.id, success: false, error: (err as Error).message });
+    }
+  }
+
+  return { missions_processed: results.length, results };
+}
+
+// ---------------------------------------------------------------------------
 // Handler principal
 // ---------------------------------------------------------------------------
 Deno.serve(async (req: Request) => {
@@ -342,16 +651,24 @@ Deno.serve(async (req: Request) => {
 
   let body: { run_type?: string } = {};
   try { body = await req.json(); } catch (_) { /* GET de test */ }
-  const runType = (body.run_type || 'daily') as 'daily' | 'weekly' | 'monthly' | 'alert';
+  const runType = (body.run_type || 'daily') as 'daily' | 'weekly' | 'monthly' | 'alert' | 'mission';
 
   try {
-    // 1. Lire les KPIs
-    const kpis = await readKPIs(supabase);
+    // ── MISSION : Marketing Director prend en charge les missions assignées ──
+    if (runType === 'mission') {
+      const missionResults = await processMissions(supabase, anthropicKey, resendKey);
+      return new Response(JSON.stringify({
+        ok: true,
+        run_type: 'mission',
+        ...missionResults,
+        duration_ms: Date.now() - startTime,
+      }), { headers: { ...cors, 'Content-Type': 'application/json' } });
+    }
 
-    // 2. Détecter les alertes
+    // ── HEARTBEAT : surveillance KPIs + alertes ─────────────────────────────
+    const kpis = await readKPIs(supabase);
     const alerts = detectAlerts(kpis as Record<string, number | string>);
 
-    // 3. Lire le contexte stratégique (company_memory)
     const { data: stratMem } = await supabase
       .from('company_memory')
       .select('content')
@@ -360,7 +677,6 @@ Deno.serve(async (req: Request) => {
       .single();
     const strategicContext = stratMem?.content || {};
 
-    // 4. Créer le rapport dans agent_reports
     const isWeekly = runType === 'weekly' || runType === 'monthly';
     let reportTitle: string;
     let reportSections: Array<{ heading: string; content: string }>;
@@ -394,74 +710,62 @@ Deno.serve(async (req: Request) => {
       .select('id')
       .single();
 
-    // 5. Mettre à jour la baseline si hebdomadaire
     if (isWeekly) {
-      await supabase
-        .from('company_memory')
-        .upsert({
-          agent_slug: AGENT_SLUG,
-          memory_type: 'kpi_baseline',
-          content: {
-            snapshot_date: new Date().toISOString(),
-            users_total: kpis.users_total,
-            users_7d: kpis.users_7d,
-            missions_completed_7d: kpis.missions_completed_7d,
-            briefs_open: kpis.briefs_open,
-            articles_7d: kpis.articles_7d,
-            tickets_open_stale: kpis.tickets_open_stale,
-            mrr_estimate_7d: kpis.mrr_estimate_7d,
-            conversion_30d_pct: kpis.conversion_30d_pct,
-            crm_contacts_total: kpis.crm_contacts_total,
-            notes: `Baseline mise à jour automatiquement — ${runType}`,
-          },
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'agent_slug,memory_type' });
+      await supabase.from('company_memory').upsert({
+        agent_slug: AGENT_SLUG,
+        memory_type: 'kpi_baseline',
+        content: {
+          snapshot_date: new Date().toISOString(),
+          users_total: kpis.users_total,
+          users_7d: kpis.users_7d,
+          missions_completed_7d: kpis.missions_completed_7d,
+          briefs_open: kpis.briefs_open,
+          articles_7d: kpis.articles_7d,
+          tickets_open_stale: kpis.tickets_open_stale,
+          mrr_estimate_7d: kpis.mrr_estimate_7d,
+          conversion_30d_pct: kpis.conversion_30d_pct,
+          crm_contacts_total: kpis.crm_contacts_total,
+          notes: `Baseline mise à jour automatiquement — ${runType}`,
+        },
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'agent_slug,memory_type' });
 
-      // Mettre à jour weekly_context
-      await supabase
-        .from('company_memory')
-        .upsert({
-          agent_slug: AGENT_SLUG,
-          memory_type: 'weekly_context',
-          content: {
-            week_start: new Date().toISOString(),
-            summary: analysis.slice(0, 500),
-            alerts_count: alerts.length,
-            key_metrics: {
-              users_7d: kpis.users_7d,
-              articles_7d: kpis.articles_7d,
-              missions_7d: kpis.missions_completed_7d,
-            },
+      await supabase.from('company_memory').upsert({
+        agent_slug: AGENT_SLUG,
+        memory_type: 'weekly_context',
+        content: {
+          week_start: new Date().toISOString(),
+          summary: analysis.slice(0, 500),
+          alerts_count: alerts.length,
+          key_metrics: {
+            users_7d: kpis.users_7d,
+            articles_7d: kpis.articles_7d,
+            missions_7d: kpis.missions_completed_7d,
           },
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'agent_slug,memory_type' });
+        },
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'agent_slug,memory_type' });
     }
 
-    // 6. Envoyer emails selon le type de run
     if (alerts.length > 0) {
-      // Alertes = email immédiat, quel que soit le type de run
       const criticalAlerts = alerts.filter(a => a.severity === 'critical');
       const subject = criticalAlerts.length > 0
         ? `🔴 ALERTE Marketing — ${criticalAlerts[0].message.slice(0, 60)}`
         : `🟡 Attention Marketing — ${alerts[0].message.slice(0, 60)}`;
       await sendEmail(resendKey, subject, buildDailyAlertHtml(kpis as Record<string, number | string>, alerts));
     } else if (isWeekly) {
-      // Rapport hebdomadaire sans alerte
       await sendEmail(
         resendKey,
         `📊 Rapport hebdomadaire Marketing Director — ${new Date().toLocaleDateString('fr-CA')}`,
         buildWeeklyReportHtml(kpis as Record<string, number | string>, analysis)
       );
     }
-    // Bilan quotidien sans alerte = pas d'email (juste le rapport en base)
 
-    // 7. Mettre à jour ai_agents.last_active
     await supabase
       .from('ai_agents')
       .update({ last_active: new Date().toISOString() })
       .eq('slug', AGENT_SLUG);
 
-    // 8. Logger le heartbeat
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG,
       run_type: runType,
@@ -492,15 +796,17 @@ Deno.serve(async (req: Request) => {
 
   } catch (err) {
     const duration = Date.now() - startTime;
-    try {
-      await supabase.from('agent_heartbeats').insert({
-        agent_slug: AGENT_SLUG,
-        run_type: runType,
-        status: 'error',
-        error_message: (err as Error).message,
-        duration_ms: duration,
-      });
-    } catch (_) { /* silencieux */ }
+    if (runType !== 'mission') {
+      try {
+        await supabase.from('agent_heartbeats').insert({
+          agent_slug: AGENT_SLUG,
+          run_type: runType,
+          status: 'error',
+          error_message: (err as Error).message,
+          duration_ms: duration,
+        });
+      } catch (_) { /* silencieux */ }
+    }
 
     return new Response(JSON.stringify({ error: (err as Error).message }), {
       status: 500, headers: { ...cors, 'Content-Type': 'application/json' },
