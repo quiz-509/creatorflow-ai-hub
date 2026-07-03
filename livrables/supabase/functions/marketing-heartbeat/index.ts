@@ -1,31 +1,21 @@
+import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
-// Appel direct à l'API Anthropic via fetch (compatible Supabase Edge Functions)
+// Wrapper SDK Anthropic — même pattern que ai-orchestrator
 async function callClaude(
   apiKey: string,
   model: string,
   maxTokens: number,
   prompt: string,
 ): Promise<string> {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+  const client = new Anthropic({ apiKey });
+  const msg = await client.messages.create({
+    model,
+    max_tokens: maxTokens,
+    messages: [{ role: 'user', content: prompt }],
   });
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Anthropic ${res.status}: ${txt.slice(0, 200)}`);
-  }
-  const data = await res.json();
-  return data.content?.[0]?.text ?? '';
+  const block = msg.content.find((b: { type: string }) => b.type === 'text');
+  return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
 }
 
 const cors = {
@@ -522,12 +512,12 @@ async function executeMission(
   console.log('[executeMission] step 2: readKPIs');
   const kpis = await readKPIs(supabase);
 
-  // 3. Analyse profonde via Claude Sonnet
+  // 3. Analyse via Claude Haiku (rapide, <10s)
   console.log('[executeMission] step 3: callClaude (key set=', !!anthropicKey, ')');
   const rawText = await callClaude(
     anthropicKey,
-    'claude-sonnet-4-6',
-    4096,
+    'claude-haiku-4-5-20251001',
+    2048,
     buildMissionPrompt(mission, strategicContext, kpis as Record<string, number | string>)
   );
   console.log('[executeMission] step 3 done, rawText length=', rawText.length);
