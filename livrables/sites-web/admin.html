@@ -320,8 +320,10 @@ function CockpitTab() {
     if (insertErr) { alert('Erreur: ' + insertErr.message); setSaving(false); return; }
     await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
     const selectedAgent = aiAgents.find(a => a.id === assignForm.agentId);
-    if (selectedAgent?.slug === 'marketing') {
-      fetch(`${SUPABASE_URL}/functions/v1/marketing-heartbeat`, {
+    const fnMap = { marketing: 'marketing-heartbeat', content: 'content-heartbeat' };
+    const fn = fnMap[selectedAgent?.slug];
+    if (fn) {
+      fetch(`${SUPABASE_URL}/functions/v1/${fn}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
         body: JSON.stringify({ run_type: 'mission' }),
