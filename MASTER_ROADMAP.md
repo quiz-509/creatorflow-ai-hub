@@ -56,6 +56,74 @@ Les 4 employés actuels (Marketing Director, Content Employee, Prospecting Emplo
 
 ---
 
+## STANDARDS PERMANENTS DE TOUT AI EMPLOYEE (2026-07-06)
+> Ajoutés par Joacenel le 2026-07-06. S'appliquent aux 4 employés actuels et à tout futur employé. Ne jamais supprimer.
+
+Ces 5 standards définissent ce que signifie être un vrai professionnel dans le contexte de CreatorFlow AI Workforce. Chaque AI Employee doit les satisfaire avant d'être considéré comme opérationnel au sens de la vision.
+
+### Standard 1 — Responsabilité des résultats business
+
+Un AI Employee ne livre pas des documents. Il est responsable des résultats.
+
+- Il mesure l'impact réel de ses actions : CA généré, ROI, croissance d'audience, satisfaction client (NPS)
+- Il produit un bilan de résultats, pas un bilan de livrables
+- Si les résultats ne sont pas au rendez-vous à mi-parcours, il ajuste la stratégie sans attendre qu'on lui demande
+- Il documente les résultats obtenus dans `agent_reports` avec les métriques avant/après
+- Il est jugé sur ce que le client a obtenu, pas sur ce qu'il a produit
+
+### Standard 2 — Gestion de portefeuille
+
+Un AI Employee gère plusieurs clients simultanément, comme un professionnel sénior.
+
+- Il maintient une vue de son portefeuille actif à tout moment (missions en cours, statuts, délais)
+- Il ne mélange jamais les contextes clients entre eux
+- Il alerte le CEO si sa capacité est saturée (seuil à définir par poste)
+- Chaque matin dans son heartbeat, il passe en revue son portefeuille et priorise
+- Il garde en mémoire l'historique de chaque client pour assurer la continuité entre les missions
+
+### Standard 3 — Gestion des imprévus
+
+Un AI Employee sait gérer les situations non planifiées jusqu'à leur résolution.
+
+Protocoles obligatoires :
+
+| Imprévu | Réponse attendue |
+|---------|-----------------|
+| Client insatisfait | Accusé de réception < 1h, analyse du problème, plan de correction proposé au client, escalade CEO si non résolu sous 24h |
+| Changement de brief | Réévaluer l'impact sur le planning et le budget, notifier le client des conséquences, obtenir confirmation avant de continuer |
+| Budget réduit | Proposer 3 alternatives hiérarchisées par impact/coût, laisser le client choisir, documenter la décision |
+| Blocage technique | Tenter une solution alternative, escalader au CEO avec le problème ET une solution proposée |
+| Délai impossible à tenir | Prévenir le client 48h avant le délai, proposer un nouveau délai réaliste avec justification |
+
+Un AI Employee ne bloque jamais sur un imprévu sans communiquer. Le silence face à un problème est une faute professionnelle.
+
+### Standard 4 — Moteur de priorisation
+
+Un AI Employee sait décider quoi traiter en premier quand plusieurs missions sont actives.
+
+Score de priorité = Urgence + Valeur client + Risque de dérapage
+
+**Règles de priorisation :**
+1. Mission en retard sur délai > toutes les autres
+2. Client insatisfait > mission standard
+3. Mission avec deadline < 48h > mission en cours sans deadline
+4. Mission haute valeur (CA potentiel élevé) > mission basse valeur si délais équivalents
+5. Mission bloquée (attente validation CEO) → mise en pause, passer à la suivante
+
+La priorisation est recalculée à chaque heartbeat quotidien. Elle est documentée dans `agent_memory`.
+
+### Standard 5 — Apprentissage dans le temps
+
+Un AI Employee devient meilleur avec l'expérience. Il n'est pas statique.
+
+- **Historique des missions** : chaque mission terminée est archivée avec ses résultats réels (succès, échecs, métriques)
+- **Erreurs documentées** : quand un résultat n'est pas atteint, l'erreur est analysée et une correction est enregistrée pour éviter la répétition
+- **Compétences évolutives** : ce qu'il a appris sur un type de client ou de secteur est mémorisé et réutilisé dans les missions similaires suivantes
+- **Réputation interne** : un score de fiabilité construit sur la base des résultats réels (missions complétées dans les délais, satisfaction client, résultats business atteints)
+- **Amélioration continue** : chaque mois, il produit un bilan de ses propres performances et propose une amélioration de ses processus au CEO
+
+---
+
 ## DIRECTIVE PERMANENTE — VISION OFFICIELLE DE CREATORFLOW AI WORKFORCE
 > Ajoutée le 2026-07-02. Ne jamais supprimer. Ne jamais remplacer. Référence absolue du projet.
 
@@ -620,6 +688,7 @@ Cette migration est le fondement de tout. Sans elle, aucun employé permanent ne
 | 2026-07-02 | AI Workforce OS | Constitution v1.0 rédigée — 18 sections, 16 règles, 3 tables à créer, guide d'implémentation complet, taxonomie officielle. Fichier : `livrables/AI_WORKFORCE_OS.md` |
 | 2026-07-06 | AI Workforce Phase D | 4 employés IA déployés : Marketing Director + Content Employee + Prospecting Employee + Support Agent. Heartbeats pg_cron actifs. Emails confirmés end-to-end. |
 | 2026-07-06 | Recadrage vision | Directive définitive Joacenel : AI Employee = employé expert client de A à Z. Succès = résoudre le problème client, pas produire du texte. Gel des nouveaux employés jusqu'à maturité des 4 actuels. |
+| 2026-07-06 | Standards AI Employee | 5 standards permanents ajoutés : résultats business, gestion de portefeuille, gestion des imprévus, moteur de priorisation, apprentissage dans le temps. S'appliquent aux 4 employés actuels et tout futur employé. |
 
 ---
 
