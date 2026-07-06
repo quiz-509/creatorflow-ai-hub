@@ -320,7 +320,7 @@ function CockpitTab() {
     if (insertErr) { alert('Erreur: ' + insertErr.message); setSaving(false); return; }
     await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
     const selectedAgent = aiAgents.find(a => a.id === assignForm.agentId);
-    const fnMap = { marketing: 'marketing-heartbeat', content: 'content-heartbeat' };
+    const fnMap = { marketing: 'marketing-heartbeat', content: 'content-heartbeat', prospecting: 'prospecting-heartbeat' };
     const fn = fnMap[selectedAgent?.slug];
     if (fn) {
       fetch(`${SUPABASE_URL}/functions/v1/${fn}`, {
