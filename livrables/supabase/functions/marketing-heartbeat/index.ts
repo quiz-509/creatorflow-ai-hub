@@ -354,7 +354,7 @@ Sois direct. Pas de blabla. Le CEO lit ça en 2 minutes. Format : texte simple, 
 
 function parseMissionPlan(text: string): MissionPlan {
   try {
-    const stripped = text.replace(/^```(?:json)?\s*/m, '').replace(/\s*```\s*$/m, '').trim();
+    const stripped = text.replace(/```(?:json)?/g, '').trim();
     const jsonMatch = stripped.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
@@ -656,9 +656,11 @@ Deno.serve(async (req: Request) => {
 
   const supabase = createClient(supabaseUrl, serviceKey);
 
-  let body: { run_type?: string } = {};
+  let body: { run_type?: string; type?: string; table?: string } = {};
   try { body = await req.json(); } catch (_) { /* GET de test */ }
-  const runType = (body.run_type || 'daily') as 'daily' | 'weekly' | 'monthly' | 'alert' | 'mission';
+  // Détecte les payloads Database Webhook de Supabase (INSERT sur agent_missions)
+  const isDbWebhook = body.type === 'INSERT' && body.table === 'agent_missions';
+  const runType = (body.run_type || (isDbWebhook ? 'mission' : 'daily')) as 'daily' | 'weekly' | 'monthly' | 'alert' | 'mission';
 
   try {
     // ── MISSION : Marketing Director prend en charge les missions assignées ──
