@@ -1,6 +1,6 @@
 # CreatorFlow Market — Master Roadmap
 > Document vivant. Mis à jour après chaque sprint. Source de vérité unique.
-> Dernière mise à jour : 2026-07-02
+> Dernière mise à jour : 2026-07-06
 >
 > **Constitution AI Workforce :** `livrables/AI_WORKFORCE_OS.md` — lire avant tout développement sur l'AI Workforce.
 > **Contexte complet du projet :** `PROJECT_CONTEXT.md` — URLs, stack, APIs, règles permanentes, AI Workforce, roadmap.
@@ -14,6 +14,45 @@
 | Employés IA | https://creatorflowmarket.com/employes |
 | Supabase projet | https://cjtglfutckaogsmwhfsv.supabase.co |
 | GitHub | https://github.com/quiz-509/creatorflow-ai-hub |
+
+---
+
+## RECADRAGE DÉFINITIF — VISION AI WORKFORCE (2026-07-06)
+> Directive de Joacenel. Ne jamais supprimer. Remplace toute interprétation antérieure qui contredit ce qui suit.
+
+### Ce qu'est un AI Employee — définition officielle et finale
+
+Un AI Employee est un **véritable employé expert que CreatorFlow Market met à disposition de ses clients.**
+
+Le client ne paye pas pour un texte. Il ne paye pas pour un rapport. Il **engage un employé IA** qui devient responsable de son projet.
+
+Cet employé gère le projet de A à Z :
+- Comprendre le besoin du client
+- Planifier le travail de manière autonome
+- Prendre des initiatives dans son domaine d'expertise
+- Utiliser les outils disponibles
+- Collaborer avec les autres AI Employees si le projet le nécessite
+- Résoudre les problèmes rencontrés sans attendre qu'on lui dise quoi faire
+- Livrer un résultat concret et mesurable
+- Ne solliciter le CEO que pour les validations critiques
+
+### Ce que le succès signifie
+
+Le succès d'un AI Employee **ne se mesure pas à la qualité du texte qu'il produit.**
+
+Il se mesure à sa **capacité à résoudre le problème du client de manière autonome, professionnelle et mesurable.**
+
+### Règle de gel — aucun nouveau employé
+
+**Aucun nouvel AI Employee ne sera développé tant que les 4 employés actuels ne se comportent pas comme de véritables professionnels capables de gérer des projets complexes de bout en bout.**
+
+Les 4 employés actuels (Marketing Director, Content Employee, Prospecting Employee, Support Agent) doivent d'abord atteindre ce niveau avant toute expansion de l'équipe.
+
+### Question de validation — version officielle finale
+
+> « Est-ce que cette fonctionnalité rapproche réellement cet AI Employee du comportement d'un véritable employé humain expert qui prend en charge un projet client jusqu'à sa livraison ? »
+
+**Si la réponse est NON — cette fonctionnalité ne fait pas partie de la vision. Ne pas construire.**
 
 ---
 
@@ -579,6 +618,8 @@ Cette migration est le fondement de tout. Sans elle, aucun employé permanent ne
 | 2026-07-02 | Sprint 1 — Marketplace | Stripe Connect : commissions 15% auto, stripe-connect-onboarding, stripe-webhook, expert_payouts, dashboard revenus expert |
 | 2026-07-02 | Vision AI Workforce | Marketing Director AI Employee : boucle agentique 10 itérations, 6 outils, mémoire mission, délégation Content/Prospecting, rapports CEO, bouton Lancer dans Cockpit |
 | 2026-07-02 | AI Workforce OS | Constitution v1.0 rédigée — 18 sections, 16 règles, 3 tables à créer, guide d'implémentation complet, taxonomie officielle. Fichier : `livrables/AI_WORKFORCE_OS.md` |
+| 2026-07-06 | AI Workforce Phase D | 4 employés IA déployés : Marketing Director + Content Employee + Prospecting Employee + Support Agent. Heartbeats pg_cron actifs. Emails confirmés end-to-end. |
+| 2026-07-06 | Recadrage vision | Directive définitive Joacenel : AI Employee = employé expert client de A à Z. Succès = résoudre le problème client, pas produire du texte. Gel des nouveaux employés jusqu'à maturité des 4 actuels. |
 
 ---
 
