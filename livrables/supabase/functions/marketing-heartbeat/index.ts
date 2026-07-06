@@ -353,24 +353,25 @@ Sois direct. Pas de blabla. Le CEO lit ça en 2 minutes. Format : texte simple, 
 // ---------------------------------------------------------------------------
 
 function parseMissionPlan(text: string): MissionPlan {
-  try {
-    const stripped = text.replace(/```(?:json)?/g, '').trim();
-    const jsonMatch = stripped.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
-      return {
-        analysis: String(parsed.analysis || ''),
-        strategy: String(parsed.strategy || ''),
-        deliverable: String(parsed.deliverable || ''),
-        next_steps: String(parsed.next_steps || ''),
-        requires_ceo_validation: Boolean(parsed.requires_ceo_validation),
-        ceo_validation: String(parsed.ceo_validation || ''),
-      };
-    }
-  } catch (_) { /* fallback ci-dessous */ }
+  const extract = (tag: string): string => {
+    const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
+    return m ? m[1].trim() : '';
+  };
+  const analysis = extract('ANALYSIS');
+  if (analysis) {
+    const validationRaw = extract('VALIDATION').toLowerCase();
+    return {
+      analysis,
+      strategy: extract('STRATEGY'),
+      deliverable: extract('DELIVERABLE'),
+      next_steps: extract('NEXT_STEPS'),
+      requires_ceo_validation: validationRaw.includes('true'),
+      ceo_validation: extract('CEO_NOTE'),
+    };
+  }
   return {
-    analysis: text.slice(0, 600),
-    strategy: 'Plan disponible dans le livrable complet.',
+    analysis: text.slice(0, 800),
+    strategy: '',
     deliverable: text,
     next_steps: 'Voir rapport complet dans le CEO Cockpit.',
     requires_ceo_validation: false,
@@ -406,18 +407,24 @@ Tu maîtrises : stratégie de contenu, growth marketing, copywriting, réseaux s
 Ton travail n'est pas de répondre à une question. C'est de prendre en charge cette mission concrètement dès maintenant.
 
 ═══ FORMAT DE RÉPONSE ═══
-Réponds UNIQUEMENT avec un objet JSON valide. Pas de markdown autour, pas de backticks, juste le JSON.
+Réponds avec ces 5 sections exactement, dans cet ordre. Commence chaque section par son tag entre crochets.
 
-{
-  "analysis": "Analyse du besoin en 3-4 phrases précises. Ce que le client veut vraiment. Les enjeux derrière la demande.",
-  "strategy": "Stratégie complète en 6-8 points numérotés. Objectifs mesurables, canaux prioritaires, approche, timeline 4 semaines, KPIs de succès.",
-  "deliverable": "Premier livrable COMPLET et professionnel. PAS un résumé, PAS un plan — le vrai contenu. Si stratégie de contenu : le calendrier semaine par semaine avec thèmes, formats, accroches, hashtags. Si campagne email : les 3 premiers emails complets rédigés. Si plan marketing : le plan détaillé actionnable.",
-  "next_steps": "3 actions concrètes exécutables dans les 48h pour faire avancer cette mission.",
-  "requires_ceo_validation": false,
-  "ceo_validation": ""
-}
+[ANALYSIS]
+Analyse du besoin en 3-4 phrases précises. Ce que le client veut vraiment. Les enjeux derrière la demande.
 
-Note : requires_ceo_validation = true uniquement si la mission implique une dépense budgétaire, un contact client externe direct, ou une décision stratégique hors de ton périmètre habituel.`;
+[STRATEGY]
+Stratégie complète en 6-8 points numérotés. Objectifs mesurables, canaux prioritaires, approche, timeline 4 semaines, KPIs de succès.
+
+[DELIVERABLE]
+Premier livrable COMPLET et professionnel. PAS un résumé — le vrai contenu opérationnel. Si stratégie de contenu : calendrier semaine par semaine avec thèmes, formats, accroches. Si campagne email : les 3 premiers emails rédigés. Si plan marketing : le plan détaillé actionnable.
+
+[NEXT_STEPS]
+3 actions concrètes exécutables dans les 48h.
+
+[VALIDATION]
+false
+
+Note : [VALIDATION] = true uniquement si la mission implique une dépense budgétaire, un contact client externe direct, ou une décision hors périmètre.`;
 }
 
 function buildMissionEmailHtml(
