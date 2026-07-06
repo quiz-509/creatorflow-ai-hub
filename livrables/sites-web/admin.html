@@ -319,6 +319,14 @@ function CockpitTab() {
     });
     if (insertErr) { alert('Erreur: ' + insertErr.message); setSaving(false); return; }
     await sb.from('briefs').update({ statut: 'assigned' }).eq('id', assigning.id);
+    const selectedAgent = aiAgents.find(a => a.id === assignForm.agentId);
+    if (selectedAgent?.slug === 'marketing') {
+      fetch(`${SUPABASE_URL}/functions/v1/marketing-heartbeat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_KEY}` },
+        body: JSON.stringify({ run_type: 'mission' }),
+      }).catch(() => {});
+    }
     setAssigning(null);
     setSaving(false);
     load();
