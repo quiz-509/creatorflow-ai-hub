@@ -2757,6 +2757,7 @@ function CRMTab() {
 /* ── CEO PROJECT COCKPIT ── */
 function ProjectsCockpitTab() {
   const [projects, setProjects] = React.useState([]);
+  const [agents, setAgents] = React.useState({});
   const [loading, setLoading] = React.useState(true);
   const [sel, setSel] = React.useState(null);
   const [detail, setDetail] = React.useState(null);
@@ -2770,11 +2771,17 @@ function ProjectsCockpitTab() {
 
   async function load() {
     setLoading(true);
-    const { data } = await sb.from('client_projects')
-      .select('id,title,client_name,client_email,phase,status,priority_score,due_date,blocker_flag,blocker_reason,responsible_agent_id,ai_agents(name,slug),created_at,updated_at')
-      .in('status',['active','completed'])
-      .order('priority_score',{ascending:false}).order('created_at',{ascending:false}).limit(100);
-    setProjects(data||[]);
+    const [projRes, agRes] = await Promise.all([
+      sb.from('client_projects')
+        .select('id,title,client_name,client_email,phase,status,priority_score,due_date,blocker_flag,blocker_reason,responsible_agent_id,created_at,updated_at')
+        .order('priority_score',{ascending:false}).order('created_at',{ascending:false}).limit(100),
+      sb.from('ai_agents').select('id,name,slug'),
+    ]);
+    if (projRes.error) console.error('[Cockpit] client_projects error:', projRes.error);
+    const agMap = {};
+    for (const a of (agRes.data||[])) agMap[a.id] = a;
+    setAgents(agMap);
+    setProjects(projRes.data||[]);
     setLoading(false);
   }
 
@@ -2960,7 +2967,7 @@ function ProjectsCockpitTab() {
             )),
             React.createElement('td',{style:{maxWidth:'200px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--text)'}},p.title||'—'),
             React.createElement('td',null,React.createElement('span',{className:`badge ${PBADGE[p.phase]||'badge-gray'}`},PLABEL[p.phase]||p.phase)),
-            React.createElement('td',{style:{fontSize:'12px',color:'var(--text-2)'}},p.ai_agents?.name||'—'),
+            React.createElement('td',{style:{fontSize:'12px',color:'var(--text-2)'}},agents[p.responsible_agent_id]?.name||'—'),
             React.createElement('td',null,React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'6px'}},
               React.createElement('div',{style:{width:'32px',height:'4px',borderRadius:'99px',overflow:'hidden',background:'rgba(255,255,255,0.06)'}},
                 React.createElement('div',{style:{width:(p.priority_score||0)+'%',height:'100%',borderRadius:'99px',background:p.priority_score>=70?'var(--red)':p.priority_score>=40?'var(--vs)':'var(--c)'}})
@@ -2985,7 +2992,7 @@ function ProjectsCockpitTab() {
             sel.blocker_flag&&React.createElement('span',{className:'badge badge-red'},'🚫 Bloqué')
           ),
           React.createElement('div',{style:{fontSize:'12px',color:'var(--text-3)',marginBottom:'2px'}},sel.client_email),
-          React.createElement('div',{style:{fontSize:'13px',color:'var(--text-2)'}}, '🤖 '+(sel.ai_agents?.name||'—')+' · Priorité '+(sel.priority_score||0)),
+          React.createElement('div',{style:{fontSize:'13px',color:'var(--text-2)'}}, '🤖 '+(agents[sel.responsible_agent_id]?.name||'—')+' · Priorité '+(sel.priority_score||0)),
           React.createElement('div',{style:{fontSize:'12px',color:'var(--text-3)',marginTop:'4px',fontFamily:'monospace'}},'Réf. '+sel.id.slice(0,8).toUpperCase())
         ),
         React.createElement('button',{style:{width:'28px',height:'28px',borderRadius:'6px',background:'rgba(255,255,255,0.05)',border:'1px solid var(--border)',cursor:'pointer',color:'var(--text-2)',fontSize:'16px'},onClick:()=>setSel(null)},'×')
