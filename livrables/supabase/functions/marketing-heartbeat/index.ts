@@ -107,6 +107,57 @@ async function recalcAgentLoad(supabase: ReturnType<typeof createClient>, agentI
   }).eq('id', agentId);
 }
 
+async function writeHistory(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string, eventType: string,
+  oldValue: Record<string, unknown> | null,
+  newValue: Record<string, unknown> | null,
+  actorId: string, note?: string
+): Promise<void> {
+  await supabase.from('project_history').insert({
+    project_id: projectId, event_type: eventType,
+    old_value: oldValue, new_value: newValue,
+    actor_type: 'agent', actor_id: actorId,
+    note: note ?? null,
+  });
+}
+
+async function createInitialMilestones(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string, departmentId: string
+): Promise<void> {
+  const now = new Date();
+  const d = (h: number) => new Date(now.getTime() + h * 3_600_000).toISOString();
+  await supabase.from('project_milestones').insert([
+    { project_id: projectId, title: 'Audit de la situation',  due_date: d(24),      status: 'pending', owner_department_id: departmentId },
+    { project_id: projectId, title: 'Stratégie 90 jours',    due_date: d(48),      status: 'pending', owner_department_id: departmentId },
+    { project_id: projectId, title: 'Livraison finale',      due_date: d(30 * 24), status: 'pending', owner_department_id: departmentId },
+  ]);
+}
+
+async function completeMilestone(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string, title: string
+): Promise<void> {
+  await supabase.from('project_milestones')
+    .update({ status: 'completed', completed_at: new Date().toISOString() })
+    .eq('project_id', projectId).eq('title', title);
+}
+
+async function writeProjectKpis(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string, baselineText: string
+): Promise<void> {
+  const lines = baselineText.split('\n').filter(l => l.trim().length > 3).slice(0, 5);
+  if (!lines.length) return;
+  await supabase.from('project_kpis').insert(
+    lines.map(line => {
+      const parts = line.split('—').map(p => p.trim());
+      return { project_id: projectId, metric_name: parts[0] || line.slice(0, 80) };
+    })
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Phase 1 — INTAKE: nouveau brief → projet + email client
 // ---------------------------------------------------------------------------
@@ -151,6 +202,12 @@ async function handleIntake(
   await supabase.from('briefs')
     .update({ statut: 'in_progress', project_id: project.id })
     .eq('id', brief.id);
+
+  await writeHistory(supabase, project.id, 'phase_change', null,
+    { phase: 'intake', agent: agent.name, client: clientName },
+    agent.id, 'Brief ramassé automatiquement'
+  );
+  if (dept?.id) await createInitialMilestones(supabase, project.id, dept.id);
 
   if (clientEmail) {
     await sendToClient(resendKey, clientEmail,
@@ -200,6 +257,13 @@ async function handleAudit(
     phase: 'audit',
     baseline_kpis: { findings, opportunities, baseline_summary: baseline },
   }).eq('id', project.id);
+
+  await writeHistory(supabase, project.id, 'phase_change',
+    { phase: 'intake' }, { phase: 'audit' },
+    project.responsible_agent_id, 'Audit complété par Claude'
+  );
+  await writeProjectKpis(supabase, project.id, baseline);
+  await completeMilestone(supabase, project.id, 'Audit de la situation');
 
   if (project.client_email) {
     await sendToClient(resendKey, project.client_email,
@@ -258,6 +322,12 @@ async function handleStrategy(
     .update({ phase: 'execution' })
     .eq('id', project.id);
 
+  await writeHistory(supabase, project.id, 'phase_change',
+    { phase: 'audit' }, { phase: 'execution', tasks_delegated: [contentTasks ? 'content' : null, prospectingTasks ? 'prospecting' : null].filter(Boolean) },
+    project.responsible_agent_id, 'Stratégie construite, délégation effectuée'
+  );
+  await completeMilestone(supabase, project.id, 'Stratégie 90 jours');
+
   if (project.client_email) {
     await sendToClient(resendKey, project.client_email,
       `Votre stratégie marketing — ${project.title.slice(0, 50)}`,
@@ -294,6 +364,11 @@ async function handleDeliver(
     results_kpis: { results, impact },
   }).eq('id', project.id);
 
+  await writeHistory(supabase, project.id, 'phase_change',
+    { phase: 'execution' }, { phase: 'completed', results_summary: results.slice(0, 200) },
+    project.responsible_agent_id, 'Projet livré au client'
+  );
+  await completeMilestone(supabase, project.id, 'Livraison finale');
   await recalcAgentLoad(supabase, project.responsible_agent_id);
 
   if (project.client_email) {
