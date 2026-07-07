@@ -735,6 +735,10 @@ function Sidebar({
     label: 'AI Workforce',
     icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("circle",{cx:"12",cy:"7",r:"3"}), /*#__PURE__*/React.createElement("path",{d:"M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"}), /*#__PURE__*/React.createElement("circle",{cx:"4",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M2 20c0-2.2 1-4 2-4"}), /*#__PURE__*/React.createElement("circle",{cx:"20",cy:"13",r:"2"}), /*#__PURE__*/React.createElement("path",{d:"M22 20c0-2.2-1-4-2-4"}))
   }, {
+    id: 'projects',
+    label: 'Projets',
+    icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"}))
+  }, {
     id: 'crm',
     label: 'CRM',
     icon: /*#__PURE__*/React.createElement("svg", {width:"16",height:"16",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"2"}, /*#__PURE__*/React.createElement("path",{d:"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"}), /*#__PURE__*/React.createElement("circle",{cx:"9",cy:"7",r:"4"}), /*#__PURE__*/React.createElement("path",{d:"M23 21v-2a4 4 0 0 0-3-3.87"}), /*#__PURE__*/React.createElement("path",{d:"M16 3.13a4 4 0 0 1 0 7.75"}))
@@ -2750,6 +2754,258 @@ function CRMTab() {
   );
 }
 
+/* ── CEO PROJECT COCKPIT ── */
+function ProjectsCockpitTab() {
+  const [projects, setProjects] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [sel, setSel] = React.useState(null);
+  const [detail, setDetail] = React.useState(null);
+  const [dTab, setDTab] = React.useState('jalons');
+
+  const fmt = d => d ? new Date(d).toLocaleDateString('fr-CA',{month:'short',day:'numeric'}) : '—';
+  const fmtFull = d => d ? new Date(d).toLocaleString('fr-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+  const isOver = p => p.due_date && new Date(p.due_date) < new Date() && p.status === 'active';
+  const PLABEL = {intake:'Intake',audit:'Audit',execution:'Exécution',completed:'Livré'};
+  const PBADGE = {intake:'badge-blue',audit:'badge-amber',execution:'badge-purple',completed:'badge-green'};
+
+  async function load() {
+    setLoading(true);
+    const { data } = await sb.from('client_projects')
+      .select('id,title,client_name,client_email,phase,status,priority_score,due_date,blocker_flag,blocker_reason,responsible_agent_id,ai_agents(name,slug),created_at,updated_at')
+      .in('status',['active','completed'])
+      .order('priority_score',{ascending:false}).order('created_at',{ascending:false}).limit(100);
+    setProjects(data||[]);
+    setLoading(false);
+  }
+
+  async function loadDetail(pid) {
+    setDetail(null);
+    const [m,t,k,c,h,v] = await Promise.all([
+      sb.from('project_milestones').select('*').eq('project_id',pid).order('due_date'),
+      sb.from('project_tasks').select('*').eq('project_id',pid),
+      sb.from('project_kpis').select('*').eq('project_id',pid),
+      sb.from('client_communications').select('*').eq('project_id',pid).order('created_at',{ascending:false}).limit(20),
+      sb.from('project_history').select('*').eq('project_id',pid).order('created_at',{ascending:false}),
+      sb.from('project_validations').select('*').eq('project_id',pid).order('created_at',{ascending:false}),
+    ]);
+    setDetail({milestones:m.data||[],tasks:t.data||[],kpis:k.data||[],comms:c.data||[],history:h.data||[],validations:v.data||[]});
+  }
+
+  React.useEffect(()=>{load();},[]);
+  function open(p){setSel(p);setDTab('jalons');loadDetail(p.id);}
+
+  const active=projects.filter(p=>p.status==='active');
+  const overdue=projects.filter(p=>isOver(p));
+  const blocked=projects.filter(p=>p.blocker_flag);
+  const delivered=projects.filter(p=>p.status==='completed');
+
+  function renderDetailContent() {
+    if(!detail) return React.createElement('div',{className:'spin'});
+    const empty = txt => React.createElement('div',{className:'empty-state'},React.createElement('div',{className:'empty-text'},txt));
+
+    if(dTab==='jalons') {
+      if(!detail.milestones.length) return empty('Aucun jalon enregistré');
+      return React.createElement('table',{className:'data-table'},
+        React.createElement('thead',null,React.createElement('tr',null,
+          React.createElement('th',null,'Jalon'),
+          React.createElement('th',null,'Deadline'),
+          React.createElement('th',null,'Statut')
+        )),
+        React.createElement('tbody',null,detail.milestones.map(m=>{
+          const late=m.status==='pending'&&m.due_date&&new Date(m.due_date)<new Date();
+          return React.createElement('tr',{key:m.id},
+            React.createElement('td',null,m.title),
+            React.createElement('td',{style:{color:late?'var(--red)':'var(--text-2)'}},fmt(m.due_date)),
+            React.createElement('td',null,React.createElement('span',{className:`badge ${m.status==='completed'?'badge-green':late?'badge-red':'badge-amber'}`},
+              m.status==='completed'?'✓ Complété':late?'En retard':'En cours'))
+          );
+        }))
+      );
+    }
+    if(dTab==='taches') {
+      if(!detail.tasks.length) return empty('Aucune tâche déléguée');
+      return React.createElement('table',{className:'data-table'},
+        React.createElement('thead',null,React.createElement('tr',null,
+          React.createElement('th',null,'Tâche'),React.createElement('th',null,'Département'),
+          React.createElement('th',null,'Statut'),React.createElement('th',null,'Résultat')
+        )),
+        React.createElement('tbody',null,detail.tasks.map(t=>React.createElement('tr',{key:t.id},
+          React.createElement('td',null,t.title),
+          React.createElement('td',null,React.createElement('span',{className:'badge badge-blue'},t.assigned_department||'—')),
+          React.createElement('td',null,React.createElement('span',{className:`badge ${t.status==='completed'?'badge-green':'badge-amber'}`},t.status)),
+          React.createElement('td',{style:{fontSize:'12px',color:'var(--text-2)',maxWidth:'180px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},t.result||'—')
+        )))
+      );
+    }
+    if(dTab==='kpis') {
+      if(!detail.kpis.length) return empty('Aucun KPI enregistré');
+      return React.createElement('div',{style:{display:'grid',gap:'12px',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',padding:'16px 20px'}},
+        detail.kpis.map(k=>React.createElement('div',{key:k.id,style:{background:'var(--surf-2)',border:'1px solid var(--border)',borderRadius:'10px',padding:'14px 16px'}},
+          React.createElement('div',{style:{fontSize:'11px',fontWeight:'700',color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'8px'}},k.metric_name),
+          React.createElement('div',{style:{display:'flex',gap:'16px'}},
+            k.baseline!=null&&React.createElement('div',null,
+              React.createElement('div',{style:{fontSize:'18px',fontWeight:'800',color:'var(--text-2)'}},k.baseline),
+              React.createElement('div',{style:{fontSize:'10px',color:'var(--text-3)'}}, 'Baseline')
+            ),
+            k.target!=null&&React.createElement('div',null,
+              React.createElement('div',{style:{fontSize:'18px',fontWeight:'800',color:'var(--vs)'}},k.target),
+              React.createElement('div',{style:{fontSize:'10px',color:'var(--text-3)'}}, 'Cible')
+            ),
+            k.current_value!=null&&React.createElement('div',null,
+              React.createElement('div',{style:{fontSize:'18px',fontWeight:'800',color:'var(--green)'}},k.current_value),
+              React.createElement('div',{style:{fontSize:'10px',color:'var(--text-3)'}}, 'Actuel')
+            )
+          )
+        ))
+      );
+    }
+    if(dTab==='comms') {
+      if(!detail.comms.length) return empty('Aucune communication enregistrée');
+      return React.createElement('div',null,detail.comms.map(c=>React.createElement('div',{key:c.id,style:{padding:'14px 20px',borderBottom:'1px solid var(--border)'}},
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'4px'}},
+          React.createElement('div',{style:{fontSize:'13px',fontWeight:'600',color:'var(--text)'}},c.subject||'—'),
+          React.createElement('div',{style:{fontSize:'11px',color:'var(--text-3)'}},fmtFull(c.created_at))
+        ),
+        React.createElement('div',{style:{fontSize:'12px',color:'var(--text-2)'}},c.content_preview||'—')
+      )));
+    }
+    if(dTab==='historique') {
+      if(!detail.history.length) return empty('Aucun historique enregistré');
+      return React.createElement('div',null,detail.history.map(h=>React.createElement('div',{key:h.id,style:{display:'flex',gap:'12px',alignItems:'flex-start',padding:'12px 20px',borderBottom:'1px solid var(--border)'}},
+        React.createElement('div',{style:{width:'8px',height:'8px',borderRadius:'50%',background:'var(--v)',marginTop:'5px',flexShrink:0}}),
+        React.createElement('div',{style:{flex:1}},
+          React.createElement('div',{style:{display:'flex',justifyContent:'space-between'}},
+            React.createElement('div',{style:{fontSize:'13px',fontWeight:'600',color:'var(--text)'}},h.event_type.replace(/_/g,' ')),
+            React.createElement('div',{style:{fontSize:'11px',color:'var(--text-3)'}},fmtFull(h.created_at))
+          ),
+          h.note&&React.createElement('div',{style:{fontSize:'12px',color:'var(--text-2)',marginTop:'2px'}},h.note),
+          (h.old_value||h.new_value)&&React.createElement('div',{style:{fontSize:'11px',color:'var(--text-3)',marginTop:'2px'}},
+            (h.old_value?.phase||'')+(h.old_value?.phase?' → ':''),(h.new_value?.phase||''))
+        )
+      )));
+    }
+    if(dTab==='validations') {
+      if(!detail.validations.length) return empty('Aucune validation en attente');
+      return React.createElement('table',{className:'data-table'},
+        React.createElement('thead',null,React.createElement('tr',null,
+          React.createElement('th',null,'Phase'),React.createElement('th',null,'Résumé'),
+          React.createElement('th',null,'Statut'),React.createElement('th',null,'Date')
+        )),
+        React.createElement('tbody',null,detail.validations.map(v=>React.createElement('tr',{key:v.id},
+          React.createElement('td',null,v.phase),
+          React.createElement('td',{style:{fontSize:'12px',color:'var(--text-2)',maxWidth:'200px'}},v.summary||'—'),
+          React.createElement('td',null,React.createElement('span',{className:`badge ${v.status==='approved'?'badge-green':v.status==='rejected'?'badge-red':'badge-amber'}`},v.status)),
+          React.createElement('td',{style:{fontSize:'12px',color:'var(--text-3)'}},fmtFull(v.created_at))
+        )))
+      );
+    }
+    return null;
+  }
+
+  return React.createElement('div',null,
+    React.createElement('div',{className:'page-header'},
+      React.createElement('div',null,
+        React.createElement('div',{className:'page-title'},'CEO Project Cockpit'),
+        React.createElement('div',{className:'page-sub'},'Supervision complète du portefeuille projets clients')
+      ),
+      React.createElement('button',{className:'btn btn-primary',style:{fontSize:13,padding:'8px 16px'},onClick:load,disabled:loading},loading?'…':'⟳ Actualiser')
+    ),
+    React.createElement('div',{className:'stats-grid',style:{marginBottom:20}},
+      React.createElement('div',{className:'stat-card'},
+        React.createElement('div',{className:'stat-icon',style:{background:'rgba(79,70,229,0.1)',fontSize:'18px'}},'📂'),
+        React.createElement('div',{className:'stat-val'},active.length),
+        React.createElement('div',{className:'stat-label'},'Projets actifs')
+      ),
+      React.createElement('div',{className:'stat-card'},
+        React.createElement('div',{className:'stat-icon',style:{background:'rgba(239,68,68,0.1)',fontSize:'18px'}},'⚠'),
+        React.createElement('div',{className:'stat-val',style:overdue.length?{color:'var(--red)'}:{}},overdue.length),
+        React.createElement('div',{className:'stat-label'},'En retard')
+      ),
+      React.createElement('div',{className:'stat-card'},
+        React.createElement('div',{className:'stat-icon',style:{background:'rgba(245,158,11,0.1)',fontSize:'18px'}},'🚫'),
+        React.createElement('div',{className:'stat-val',style:blocked.length?{color:'var(--amber)'}:{}},blocked.length),
+        React.createElement('div',{className:'stat-label'},'Bloqués')
+      ),
+      React.createElement('div',{className:'stat-card'},
+        React.createElement('div',{className:'stat-icon',style:{background:'rgba(16,185,129,0.1)',fontSize:'18px'}},'✅'),
+        React.createElement('div',{className:'stat-val'},delivered.length),
+        React.createElement('div',{className:'stat-label'},'Projets livrés')
+      )
+    ),
+    React.createElement('div',{className:'section-card',style:{marginBottom:20}},
+      React.createElement('div',{className:'section-head'},
+        React.createElement('span',{className:'section-title'},'Portefeuille projets'),
+        React.createElement('span',{className:'section-count'},projects.length+' projets')
+      ),
+      loading?React.createElement('div',{className:'spin'}):
+      projects.length===0?React.createElement('div',{className:'empty-state'},React.createElement('div',{className:'empty-icon'},'📁'),React.createElement('div',{className:'empty-text'},'Aucun projet')):
+      React.createElement('table',{className:'data-table'},
+        React.createElement('thead',null,React.createElement('tr',null,
+          React.createElement('th',null,'Client'),
+          React.createElement('th',null,'Projet'),
+          React.createElement('th',null,'Phase'),
+          React.createElement('th',null,'Employé'),
+          React.createElement('th',null,'Priorité'),
+          React.createElement('th',null,'Alerte')
+        )),
+        React.createElement('tbody',null,projects.map(p=>{
+          const ov=isOver(p);
+          return React.createElement('tr',{key:p.id,className:'clickable',style:sel?.id===p.id?{background:'rgba(124,58,237,0.08)'}:{},onClick:()=>open(p)},
+            React.createElement('td',null,React.createElement('div',{className:'user-row-info'},
+              React.createElement('div',{className:'mini-avatar',style:{background:'linear-gradient(135deg,var(--v),var(--c))',fontSize:'11px'}},(p.client_name||'?')[0].toUpperCase()),
+              React.createElement('div',null,
+                React.createElement('div',{className:'user-row-name'},p.client_name||'—'),
+                React.createElement('div',{className:'user-row-email'},p.client_email||'—')
+              )
+            )),
+            React.createElement('td',{style:{maxWidth:'200px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--text)'}},p.title||'—'),
+            React.createElement('td',null,React.createElement('span',{className:`badge ${PBADGE[p.phase]||'badge-gray'}`},PLABEL[p.phase]||p.phase)),
+            React.createElement('td',{style:{fontSize:'12px',color:'var(--text-2)'}},p.ai_agents?.name||'—'),
+            React.createElement('td',null,React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'6px'}},
+              React.createElement('div',{style:{width:'32px',height:'4px',borderRadius:'99px',overflow:'hidden',background:'rgba(255,255,255,0.06)'}},
+                React.createElement('div',{style:{width:(p.priority_score||0)+'%',height:'100%',borderRadius:'99px',background:p.priority_score>=70?'var(--red)':p.priority_score>=40?'var(--vs)':'var(--c)'}})
+              ),
+              React.createElement('span',{style:{fontSize:'11px',color:'var(--text-3)'}},p.priority_score||0)
+            )),
+            React.createElement('td',null,
+              p.blocker_flag?React.createElement('span',{className:'badge badge-red'},'🚫 Bloqué'):
+              ov?React.createElement('span',{className:'badge badge-red'},'⚠ En retard'):
+              React.createElement('span',{style:{color:'var(--text-3)',fontSize:'12px'}},'—')
+            )
+          );
+        }))
+      )
+    ),
+    sel&&React.createElement('div',{className:'section-card'},
+      React.createElement('div',{style:{padding:'20px 24px',borderBottom:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:12}},
+        React.createElement('div',null,
+          React.createElement('div',{style:{display:'flex',alignItems:'center',gap:'10px',marginBottom:'6px'}},
+            React.createElement('div',{style:{fontSize:'16px',fontWeight:'800',color:'var(--text)'}},sel.client_name),
+            React.createElement('span',{className:`badge ${PBADGE[sel.phase]||'badge-gray'}`},PLABEL[sel.phase]||sel.phase),
+            sel.blocker_flag&&React.createElement('span',{className:'badge badge-red'},'🚫 Bloqué')
+          ),
+          React.createElement('div',{style:{fontSize:'12px',color:'var(--text-3)',marginBottom:'2px'}},sel.client_email),
+          React.createElement('div',{style:{fontSize:'13px',color:'var(--text-2)'}}, '🤖 '+(sel.ai_agents?.name||'—')+' · Priorité '+(sel.priority_score||0)),
+          React.createElement('div',{style:{fontSize:'12px',color:'var(--text-3)',marginTop:'4px',fontFamily:'monospace'}},'Réf. '+sel.id.slice(0,8).toUpperCase())
+        ),
+        React.createElement('button',{style:{width:'28px',height:'28px',borderRadius:'6px',background:'rgba(255,255,255,0.05)',border:'1px solid var(--border)',cursor:'pointer',color:'var(--text-2)',fontSize:'16px'},onClick:()=>setSel(null)},'×')
+      ),
+      React.createElement('div',{style:{padding:'10px 24px',borderBottom:'1px solid var(--border)',fontSize:'13px',color:'var(--text-2)'}},sel.title),
+      React.createElement('div',{style:{display:'flex',gap:'4px',padding:'10px 24px',borderBottom:'1px solid var(--border)',flexWrap:'wrap'}},
+        [['jalons','Jalons'],['taches','Tâches'],['kpis','KPIs'],['comms','Comms'],['historique','Historique'],['validations','Validations']].map(([id,label])=>
+          React.createElement('button',{key:id,onClick:()=>setDTab(id),style:{
+            padding:'5px 12px',borderRadius:'6px',fontSize:'12px',fontWeight:'600',cursor:'pointer',
+            background:dTab===id?'rgba(124,58,237,0.15)':'transparent',
+            color:dTab===id?'var(--vs)':'var(--text-3)',
+            border:dTab===id?'1px solid rgba(124,58,237,0.3)':'1px solid transparent'
+          }},label)
+        )
+      ),
+      React.createElement('div',{style:{minHeight:'200px',maxHeight:'400px',overflowY:'auto'}},renderDetailContent())
+    )
+  );
+}
+
 /* ── APP ROOT ── */
 function App() {
   const [session, setSession] = useState(undefined);
@@ -2816,6 +3072,7 @@ function App() {
     payments: PaymentsTab,
     blog: BlogTab,
     'ai-workforce': AIWorkforceTab,
+    'projects': ProjectsCockpitTab,
     'crm': CRMTab,
     'logs': LogsTab
   };
