@@ -3009,8 +3009,8 @@ function ProjectsCockpitTab() {
     }
     if(dTab==='historique') {
       if(!detail.history.length) return empty('Aucun historique enregistré');
-      const EVT_ICON = { phase_change:'🔄', assignment:'📋', communication:'📧', milestone:'🏁', task_delegated:'📤', note:'📝' };
-      const EVT_COLOR = { phase_change:'var(--v)', assignment:'var(--c)', communication:'var(--green)', milestone:'var(--amber)', task_delegated:'var(--vs)', note:'var(--text-3)' };
+      const EVT_ICON = { phase_change:'🔄', assignment:'📋', communication:'📧', milestone:'🏁', task_delegated:'📤', content_delivered:'📝', note:'📝' };
+      const EVT_COLOR = { phase_change:'var(--v)', assignment:'var(--c)', communication:'var(--green)', milestone:'var(--amber)', task_delegated:'var(--vs)', content_delivered:'var(--c)', note:'var(--text-3)' };
       const PHASE_FR = {intake:'Intake',audit:'Audit',execution:'Exécution',completed:'Livré'};
       return React.createElement('div',{style:{padding:'8px 0'}},
         detail.history.map((h,i)=>React.createElement('div',{key:h.id,style:{display:'flex',gap:0,position:'relative'}},
