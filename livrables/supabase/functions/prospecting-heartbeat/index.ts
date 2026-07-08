@@ -3,139 +3,55 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno
 
 async function callClaude(apiKey: string, model: string, maxTokens: number, prompt: string): Promise<string> {
   const client = new Anthropic({ apiKey });
-  const msg = await client.messages.create({
-    model,
-    max_tokens: maxTokens,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  const msg = await client.messages.create({ model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] });
   const block = msg.content.find((b: { type: string }) => b.type === 'text');
   return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
 }
 
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
+const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type' };
 const CEO_EMAIL = 'pjoacenel@gmail.com';
 const AGENT_SLUG = 'prospecting';
+const DEPARTMENT = 'prospecting';
 const RESEND_URL = 'https://api.resend.com/emails';
 const FROM = 'Prospecting Employee IA <noreply@creatorflowmarket.com>';
-
-const ALERT_THRESHOLDS = {
-  no_new_leads_days: 7,
-  stale_contacts_max: 10,
-  min_contacts_7d: 1,
-};
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+interface ProspectingDeliverable {
+  prospecting_type: string;
+  summary: string;
+  main_deliverable: string;
+  target_profile: string;
+  keywords: string;
+  next_actions: string;
+}
+
+interface ProjectDecision {
+  action: 'execute' | 'initiate' | 'escalate' | 'hold' | 'complete';
+  reason: string;
+  task_title?: string;
+  task_description?: string;
+  recommended_action?: string;
+}
+
+interface PortfolioResult {
+  projects_reviewed: number;
+  actions_taken: number;
+  decisions: Array<{ project_id: string; project_title: string; action: string; reason: string }>;
+}
+
 interface ProspectingPlan {
   analysis: string;
-  target_profile: string;
+  icp: string;
+  prospect_list: string;
   outreach_sequence: string;
-  linkedin_strategy: string;
+  qualification_criteria: string;
   next_steps: string;
-  requires_ceo_validation: boolean;
 }
 
 // ---------------------------------------------------------------------------
-// Lecture KPIs CRM
-// ---------------------------------------------------------------------------
-async function readCRMKPIs(supabase: ReturnType<typeof createClient>) {
-  const now = new Date();
-  const minus7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-  const minus30d = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  const minus14d = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString();
-
-  const [
-    { count: total_contacts },
-    { count: new_7d },
-    { count: new_30d },
-    { count: status_new },
-    { count: status_contacted },
-    { count: status_qualified },
-    { count: stale_contacts },
-    { count: missions_completed_30d },
-    { count: profiles_total },
-    { count: profiles_7d },
-    { data: recent_contacts },
-  ] = await Promise.all([
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).gte('created_at', minus7d),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).gte('created_at', minus30d),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).eq('status', 'new'),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).eq('status', 'contacted'),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).eq('status', 'qualified'),
-    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).eq('status', 'new').lte('created_at', minus14d),
-    supabase.from('agent_missions').select('*', { count: 'exact', head: true }).eq('status', 'completed').gte('completed_at', minus30d),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }),
-    supabase.from('profiles').select('*', { count: 'exact', head: true }).gte('created_at', minus7d),
-    supabase.from('crm_contacts').select('name, email, status, role, created_at').order('created_at', { ascending: false }).limit(3),
-  ]);
-
-  const conversion_rate = total_contacts && total_contacts > 0
-    ? Math.round(((status_qualified || 0) / total_contacts) * 100)
-    : 0;
-
-  const days_since_new = new_7d === 0
-    ? Math.round((now.getTime() - new Date(minus7d).getTime()) / (1000 * 60 * 60 * 24))
-    : 0;
-
-  return {
-    snapshot_date: now.toISOString(),
-    total_contacts: total_contacts || 0,
-    new_7d: new_7d || 0,
-    new_30d: new_30d || 0,
-    status_new: status_new || 0,
-    status_contacted: status_contacted || 0,
-    status_qualified: status_qualified || 0,
-    stale_contacts: stale_contacts || 0,
-    conversion_rate_pct: conversion_rate,
-    missions_completed_30d: missions_completed_30d || 0,
-    platform_users: profiles_total || 0,
-    new_users_7d: profiles_7d || 0,
-    days_since_new_lead: days_since_new,
-    recent_contacts: recent_contacts || [],
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Détection des alertes
-// ---------------------------------------------------------------------------
-function detectAlerts(kpis: Record<string, number | string | unknown[]>) {
-  const alerts: Array<{ type: string; message: string; severity: 'critical' | 'warning' }> = [];
-
-  if (typeof kpis.new_7d === 'number' && kpis.new_7d < ALERT_THRESHOLDS.min_contacts_7d && typeof kpis.total_contacts === 'number' && kpis.total_contacts > 0) {
-    alerts.push({
-      type: 'no_new_leads',
-      message: `Aucun nouveau prospect cette semaine — pipeline d'acquisition à relancer`,
-      severity: 'critical',
-    });
-  }
-
-  if (typeof kpis.stale_contacts === 'number' && kpis.stale_contacts >= ALERT_THRESHOLDS.stale_contacts_max) {
-    alerts.push({
-      type: 'stale_leads',
-      message: `${kpis.stale_contacts} contacts "new" sans suivi depuis +14j — relance requise`,
-      severity: 'warning',
-    });
-  }
-
-  if (typeof kpis.status_new === 'number' && kpis.status_new > 5 && typeof kpis.status_contacted === 'number' && kpis.status_contacted === 0) {
-    alerts.push({
-      type: 'no_outreach',
-      message: `${kpis.status_new} leads en attente — aucune prise de contact initiée`,
-      severity: 'warning',
-    });
-  }
-
-  return alerts;
-}
-
-// ---------------------------------------------------------------------------
-// Email CEO
+// Email
 // ---------------------------------------------------------------------------
 async function sendEmail(apiKey: string, subject: string, html: string) {
   const safeSubject = subject.replace(/[\r\n\t]/g, ' ').trim();
@@ -150,147 +66,436 @@ async function sendEmail(apiKey: string, subject: string, html: string) {
 }
 
 // ---------------------------------------------------------------------------
-// HTML — Rapport quotidien CRM
+// Couche décision
 // ---------------------------------------------------------------------------
-function buildDailyReportHtml(kpis: Record<string, number | string | unknown[]>, alerts: Array<{ type: string; message: string; severity: string }>) {
-  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  const alertRows = alerts.map(a =>
-    `<div class="alert ${a.severity}"><span class="badge">${a.severity === 'critical' ? '🔴 CRITIQUE' : '🟡 ATTENTION'}</span><p>${a.message}</p></div>`
-  ).join('');
+function buildDecisionPrompt(
+  project: { title: string; client_name: string; phase: string; objective?: string; blocker_flag?: boolean; blocker_reason?: string; due_date?: string },
+  pendingTasks: Array<{ title: string }>,
+  completedTasks: Array<{ title: string }>,
+  history: Array<{ event_type: string; description: string; created_at: string }>,
+): string {
+  const overdue = project.due_date && new Date(project.due_date) < new Date();
+  return `Tu es le Prospecting Employee de CreatorFlow Market, expert en acquisition et développement commercial. Révision de ton portefeuille.
 
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
-.wrap{max-width:580px;margin:0 auto;padding:28px 20px;}
-.header{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.logo{font-size:16px;font-weight:800;color:#F4F4FF;}
-.logo em{font-style:normal;color:#F59E0B;}
-h2{font-size:18px;margin:20px 0 4px;color:#FDE68A;}
-.meta{font-size:12px;color:#9898B8;margin-bottom:20px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
-.card{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;}
-.card-label{font-size:11px;color:#9898B8;margin-bottom:4px;}
-.card-value{font-size:22px;font-weight:700;color:#F4F4FF;}
-.card-sub{font-size:11px;margin-top:2px;color:#9898B8;}
-.up{color:#34D399;}.warn{color:#F59E0B;}.crit{color:#EF4444;}
-.pipeline{display:flex;gap:6px;margin:16px 0;}
-.stage{flex:1;background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px;text-align:center;}
-.stage-label{font-size:10px;color:#9898B8;margin-bottom:4px;}
-.stage-val{font-size:20px;font-weight:700;color:#F4F4FF;}
-.alert{border-radius:8px;padding:12px 14px;margin:8px 0;}
-.alert.critical{background:#1a0a0a;border:1px solid #EF4444;}
-.alert.warning{background:#1a1500;border:1px solid #F59E0B;}
-.badge{font-size:10px;font-weight:700;display:block;margin-bottom:4px;color:#F4F4FF;}
-.alert p{margin:0;font-size:13px;color:#D1D5DB;}
-.btn{display:inline-block;background:#F59E0B;color:#000;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
-.footer{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}
-</style></head><body><div class="wrap">
-<div class="header"><div class="logo">CreatorFlow <em>Prospecting Employee</em></div></div>
-<h2>Bilan CRM quotidien</h2>
-<div class="meta">${dateStr}</div>
-<div class="grid">
-  <div class="card">
-    <div class="card-label">Total contacts CRM</div>
-    <div class="card-value">${kpis.total_contacts}</div>
-    <div class="card-sub ${Number(kpis.new_7d) > 0 ? 'up' : 'warn'}">+${kpis.new_7d} cette semaine</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Taux de conversion</div>
-    <div class="card-value ${Number(kpis.conversion_rate_pct) >= 20 ? 'up' : 'warn'}">${kpis.conversion_rate_pct}%</div>
-    <div class="card-sub">new → qualifié</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Utilisateurs plateforme</div>
-    <div class="card-value">${kpis.platform_users}</div>
-    <div class="card-sub ${Number(kpis.new_users_7d) > 0 ? 'up' : ''}>+${kpis.new_users_7d} cette semaine</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Leads stagnants (+14j)</div>
-    <div class="card-value ${Number(kpis.stale_contacts) > 0 ? 'warn' : 'up'}">${kpis.stale_contacts}</div>
-    <div class="card-sub">sans suivi</div>
-  </div>
-</div>
-<h2>Pipeline de conversion</h2>
-<div class="pipeline">
-  <div class="stage"><div class="stage-label">Nouveaux</div><div class="stage-val">${kpis.status_new}</div></div>
-  <div class="stage"><div class="stage-label">Contactés</div><div class="stage-val">${kpis.status_contacted}</div></div>
-  <div class="stage"><div class="stage-label">Qualifiés</div><div class="stage-val">${kpis.status_qualified}</div></div>
-</div>
-${alerts.length > 0 ? `<h2>⚠ Alertes (${alerts.length})</h2>${alertRows}` : '<p style="color:#34D399;font-size:13px;">✓ Pipeline prospecting nominal — aucune anomalie.</p>'}
-<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Ouvrir le CEO Cockpit →</a></p>
-<div class="footer">Prospecting Employee IA · CreatorFlow Market · Rapport automatique quotidien</div>
-</div></body></html>`;
+PROJET : ${project.title} | CLIENT : ${project.client_name} | PHASE : ${project.phase}
+OBJECTIF : ${(project.objective || '').slice(0, 180)}
+BLOCAGE : ${project.blocker_flag ? 'OUI — ' + project.blocker_reason : 'Non'} | RETARD : ${overdue ? 'OUI' : 'Non'}
+
+MES TÂCHES EN ATTENTE (${pendingTasks.length}) :
+${pendingTasks.slice(0, 3).map(t => `- ${t.title}`).join('\n') || 'Aucune'}
+
+MES TÂCHES COMPLÉTÉES (${completedTasks.length}) :
+${completedTasks.slice(0, 3).map(t => `- ${t.title}`).join('\n') || 'Aucune'}
+
+DERNIERS ÉVÉNEMENTS :
+${history.slice(0, 5).map(h => `[${h.created_at.slice(0, 10)}] ${h.event_type} — ${h.description.slice(0, 70)}`).join('\n') || 'Aucun'}
+
+Tu es RESPONSABLE du volet prospection de ce projet. Décide.
+
+[ACTION]
+execute (tâche en attente à traiter) | initiate (créer + démarrer une tâche proactivement — seulement si aucune activité récente) | escalate (projet bloqué, alerter Marketing Director) | hold (tout est en ordre) | complete (ma contribution prospection est terminée)
+
+[REASON]
+1-2 phrases.
+
+[TASK_TITLE]
+(si initiate uniquement)
+
+[TASK_DESCRIPTION]
+(si initiate uniquement)
+
+[RECOMMENDED_ACTION]
+(si escalate uniquement)`;
+}
+
+function parseDecision(text: string): ProjectDecision {
+  const extract = (tag: string): string => {
+    const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
+    return m ? m[1].trim() : '';
+  };
+  const rawAction = extract('ACTION').split('\n')[0].trim().toLowerCase();
+  const validActions = ['execute', 'initiate', 'escalate', 'hold', 'complete'];
+  const action = (validActions.includes(rawAction) ? rawAction : 'hold') as ProjectDecision['action'];
+  return {
+    action,
+    reason: extract('REASON') || 'Aucune raison fournie.',
+    task_title: extract('TASK_TITLE') || undefined,
+    task_description: extract('TASK_DESCRIPTION') || undefined,
+    recommended_action: extract('RECOMMENDED_ACTION') || undefined,
+  };
+}
+
+async function makeDecision(
+  anthropicKey: string,
+  project: { title: string; client_name: string; phase: string; objective?: string; blocker_flag?: boolean; blocker_reason?: string; due_date?: string },
+  pendingTasks: Array<{ title: string }>,
+  completedTasks: Array<{ title: string }>,
+  history: Array<{ event_type: string; description: string; created_at: string }>,
+): Promise<ProjectDecision> {
+  const raw = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 256, buildDecisionPrompt(project, pendingTasks, completedTasks, history));
+  return parseDecision(raw);
 }
 
 // ---------------------------------------------------------------------------
-// HTML — Email mission prospecting
+// Couche exécution
 // ---------------------------------------------------------------------------
-function buildMissionEmailHtml(
-  mission: { title: string; objective: string },
-  plan: ProspectingPlan,
-  reportId: string | null,
-  requiresValidation: boolean
+function buildProjectTaskPrompt(
+  project: { title: string; client_name: string; objective?: string },
+  task: { title: string; description?: string },
+  isRevision = false,
+  previousDeliverable = '',
 ): string {
-  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  const sequenceLines = plan.outreach_sequence
-    .split('\n').filter(l => l.trim())
-    .map(l => `<li style="margin-bottom:8px;font-size:13px;color:#D1D5DB;">${l}</li>`)
-    .join('');
+  const revisionBlock = isRevision
+    ? `⚠ RÉVISION — Le client demande des améliorations.\nRetour client : ${(task.description || '').slice(0, 300)}\n\n${previousDeliverable ? `LIVRABLE PRÉCÉDENT (à améliorer) :\n${previousDeliverable.slice(0, 600)}\n\n` : ''}Produis une version SUBSTANTIELLEMENT AMÉLIORÉE. Ne répète pas le précédent.`
+    : `Produis un livrable de prospection complet et actionnable. Tu es responsable du résultat.`;
+  return `Tu es le Prospecting Employee de CreatorFlow Market. Tu es RESPONSABLE du volet acquisition de ce projet client.
 
+═══ PROJET CLIENT ═══
+Client : ${project.client_name}
+Projet : ${project.title}
+Objectif : ${(project.objective || '').slice(0, 400)}
+
+═══ TÂCHE PROSPECTION ═══
+${task.title}
+${isRevision ? '' : (task.description || 'Développer une stratégie d\'acquisition adaptée à ce client.').slice(0, 700)}
+
+${revisionBlock}
+
+[PROSPECTING_TYPE]
+icp_definition | prospect_list | outreach_sequence | linkedin_strategy | email_campaign | market_analysis | lead_scoring | partnership_strategy
+
+[SUMMARY]
+2-3 phrases sur ce que tu as produit et pourquoi adapté à CE client.
+
+[MAIN_DELIVERABLE]
+Le livrable complet et prêt à utiliser.
+ICP : Profil idéal + Pain points + Signaux d'achat + Canaux préférés
+Prospect list : 15-20 prospects qualifiés avec entreprise / poste / LinkedIn / raison de cibler
+Sequence outreach : Message 1 (J0) + Relance 1 (J3) + Relance 2 (J7) + Message final (J14)
+Stratégie : Approche complète + Canaux + Timeline 30 jours + KPIs cibles
+
+[TARGET_PROFILE]
+Description précise du client idéal à cibler pour CE projet.
+
+[KEYWORDS]
+6-8 termes de recherche LinkedIn/Google pour trouver des prospects.
+
+[NEXT_ACTIONS]
+3 actions concrètes à lancer dans les 48h pour ce client.`;
+}
+
+function parseProspectingDeliverable(text: string): ProspectingDeliverable {
+  const extract = (tag: string): string => {
+    const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
+    return m ? m[1].trim() : '';
+  };
+  const rawType = extract('PROSPECTING_TYPE') || 'prospect_list';
+  const prospecting_type = rawType.replace(/\*\*/g, '').replace(/#+/g, '').replace(/---/g, '').split('\n')[0].trim().slice(0, 60);
+  return {
+    prospecting_type: prospecting_type || 'prospect_list',
+    summary: extract('SUMMARY') || text.slice(0, 300),
+    main_deliverable: extract('MAIN_DELIVERABLE') || text,
+    target_profile: extract('TARGET_PROFILE'),
+    keywords: extract('KEYWORDS'),
+    next_actions: extract('NEXT_ACTIONS'),
+  };
+}
+
+function buildDeliveryEmailHtml(project: { title: string; client_name: string }, deliverable: ProspectingDeliverable, isRevision = false): string {
+  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const preview = deliverable.main_deliverable.slice(0, 900);
+  const kwTags = deliverable.keywords.split('\n').filter(k => k.trim()).slice(0, 7)
+    .map(k => `<span style="display:inline-block;background:#0d0d2a;border:1px solid rgba(59,130,246,0.3);border-radius:99px;padding:3px 10px;font-size:11px;color:#93C5FD;margin:3px;">${k.trim()}</span>`).join('');
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
 body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
 .wrap{max-width:600px;margin:0 auto;padding:28px 20px;}
-.header{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.logo{font-size:16px;font-weight:800;color:#F4F4FF;}
-.logo em{font-style:normal;color:#F59E0B;}
-.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:14px;}
-.ok{background:rgba(52,211,153,0.15);color:#34D399;border:1px solid rgba(52,211,153,0.3);}
-.warn{background:rgba(245,158,11,0.15);color:#F59E0B;border:1px solid rgba(245,158,11,0.3);}
-h2{font-size:18px;margin:0 0 4px;color:#FDE68A;}
-.meta{font-size:12px;color:#9898B8;margin-bottom:20px;}
-.section{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
-.section-label{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;}
-ul{padding-left:18px;margin:0;}
-.sequence{font-size:12px;color:#A1A1C8;white-space:pre-wrap;line-height:1.7;}
-.btn{display:inline-block;background:#F59E0B;color:#000;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
+.logo{font-size:16px;font-weight:800;color:#F4F4FF;padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.logo em{font-style:normal;color:#3B82F6;}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(52,211,153,0.15);color:#34D399;border:1px solid rgba(52,211,153,0.3);margin:14px 0;}
+h2{font-size:18px;margin:4px 0;color:#BAE6FD;}.meta{font-size:12px;color:#9898B8;margin-bottom:16px;}
+.s{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
+.sl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.preview{font-size:12px;color:#A1A1C8;white-space:pre-wrap;line-height:1.7;font-family:monospace;}
+.btn{display:inline-block;background:#3B82F6;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
 .footer{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}
 </style></head><body><div class="wrap">
-<div class="header"><div class="logo">CreatorFlow <em>Prospecting Employee</em></div></div>
-<div class="badge ${requiresValidation ? 'warn' : 'ok'}">${requiresValidation ? '⚠ Validation CEO requise' : '✓ Mission prise en charge'}</div>
-<h2>${mission.title}</h2>
-<div class="meta">${dateStr} · Mission assignée par le CEO</div>
-
-<div class="section">
-  <div class="section-label">Analyse du brief</div>
-  <p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${plan.analysis}</p>
-</div>
-
-<div class="section">
-  <div class="section-label">Profil cible — ICP</div>
-  <p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.7;white-space:pre-wrap;">${plan.target_profile}</p>
-</div>
-
-<div class="section">
-  <div class="section-label">Séquence d'outreach (3 emails)</div>
-  <ul>${sequenceLines || `<li style="color:#D1D5DB;font-size:13px;">${plan.outreach_sequence}</li>`}</ul>
-</div>
-
-<div class="section">
-  <div class="section-label">Stratégie LinkedIn</div>
-  <div class="sequence">${plan.linkedin_strategy}</div>
-</div>
-
-<div class="section">
-  <div class="section-label">Prochaines étapes — 48h</div>
-  <p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.7;white-space:pre-wrap;">${plan.next_steps}</p>
-</div>
-
-<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Voir le rapport complet →</a></p>
-<div class="footer">Prospecting Employee IA · CreatorFlow Market · Mission automatique</div>
+<div class="logo">CreatorFlow <em>Prospecting Employee</em></div>
+<div class="badge">${isRevision ? '🔄 Révision livrée' : '✓ Livrable produit'} — ${deliverable.prospecting_type.replace(/_/g, ' ')}</div>
+<h2>${project.client_name}</h2>
+<div class="meta">${dateStr} · ${project.title.slice(0, 70)}</div>
+<div class="s"><div class="sl">Résumé</div><p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${deliverable.summary}</p></div>
+${deliverable.target_profile ? `<div class="s"><div class="sl">Profil cible</div><p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${deliverable.target_profile}</p></div>` : ''}
+<div class="s"><div class="sl">Livrable — aperçu</div><div class="preview">${preview}${deliverable.main_deliverable.length > 900 ? '\n\n[... voir rapport complet dans le CEO Cockpit]' : ''}</div></div>
+${kwTags ? `<div class="s"><div class="sl">Termes de recherche</div><div style="margin-top:4px;">${kwTags}</div></div>` : ''}
+${deliverable.next_actions ? `<div class="s"><div class="sl">Prochaines actions — 48h</div><p style="margin:0;font-size:13px;color:#D1D5DB;white-space:pre-wrap;line-height:1.7;">${deliverable.next_actions}</p></div>` : ''}
+<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Voir le Cockpit Projets →</a></p>
+<div class="footer">Prospecting Employee IA · CreatorFlow Market · Livraison automatique</div>
 </div></body></html>`;
 }
 
+async function sendEmailTo(apiKey: string, to: string, subject: string, html: string) {
+  const safeSubject = subject.replace(/[\r\n\t]/g, ' ').trim();
+  if (!apiKey || !to) return;
+  try {
+    await fetch(RESEND_URL, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: FROM, to: [to], subject: safeSubject, html }),
+    });
+  } catch (_) {}
+}
+
+function buildRevisionClientEmailHtml(project: { title: string; client_name: string }, deliverable: ProspectingDeliverable): string {
+  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
+.w{max-width:600px;margin:0 auto;padding:28px 20px;}
+.logo{font-size:16px;font-weight:800;padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.logo em{font-style:normal;color:#3B82F6;}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(251,191,36,0.15);color:#FBBF24;border:1px solid rgba(251,191,36,0.3);margin:14px 0;}
+h2{font-size:18px;margin:4px 0;color:#BAE6FD;}.meta{font-size:12px;color:#9898B8;margin-bottom:16px;}
+.s{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
+.sl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.prev{font-size:12px;color:#A1A1C8;white-space:pre-wrap;line-height:1.7;font-family:monospace;}
+.btn{display:inline-block;background:#3B82F6;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
+.ft{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}
+</style></head><body><div class="w">
+<div class="logo">CreatorFlow <em>Market</em></div>
+<div class="badge">🔄 Votre révision est prête</div>
+<h2>${project.client_name}</h2><div class="meta">${dateStr} · ${project.title.slice(0, 70)}</div>
+<div class="s"><div class="sl">Ce qui a été amélioré</div><p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${deliverable.summary}</p></div>
+<div class="s"><div class="sl">Livrable révisé — aperçu</div><div class="prev">${deliverable.main_deliverable.slice(0, 600)}${deliverable.main_deliverable.length > 600 ? '\n\n[... rapport complet disponible dans votre espace client]' : ''}</div></div>
+<p style="text-align:center"><a href="https://creatorflowmarket.com/dashboard-client.html" class="btn">Voir le rapport complet →</a></p>
+<div class="ft">CreatorFlow Market · Votre équipe IA</div>
+</div></body></html>`;
+}
+
+async function executeTask(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+  agent: { id: string },
+  project: { id: string; title: string; client_name: string; client_email?: string; objective?: string; responsible_agent_id?: string },
+  task: { id: string; title: string; description?: string },
+): Promise<boolean> {
+  try {
+    const isRevision = task.title.startsWith('RÉVISION');
+
+    let previousDeliverable = '';
+    if (isRevision) {
+      const { data: prevReports } = await supabase
+        .from('agent_reports')
+        .select('sections, content, created_at')
+        .eq('agent_slug', AGENT_SLUG)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      const prevReport = prevReports?.find(r => r.content?.project_id === project.id);
+      if (prevReport?.sections) {
+        const mainSection = prevReport.sections.find((s: { heading: string; content: string }) =>
+          s.heading.toLowerCase().includes('livrable') || s.heading.toLowerCase().includes('complet')
+        );
+        previousDeliverable = mainSection?.content?.slice(0, 700) || '';
+      }
+    }
+
+    const { data: mdAgent } = await supabase.from('ai_agents').select('id,name,slug').eq('id', project.responsible_agent_id || '').single();
+
+    const raw = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 2048,
+      buildProjectTaskPrompt(project, task, isRevision, previousDeliverable));
+    const deliverable = parseProspectingDeliverable(raw);
+
+    const { data: report } = await supabase.from('agent_reports').insert({
+      agent_slug: AGENT_SLUG,
+      title: `${isRevision ? 'Révision' : 'Livrable'} Prospection — ${project.client_name} : ${deliverable.prospecting_type}`,
+      sections: [
+        { heading: 'Type de livrable', content: deliverable.prospecting_type },
+        { heading: 'Résumé', content: deliverable.summary },
+        { heading: 'Profil cible', content: deliverable.target_profile },
+        { heading: 'Livrable complet', content: deliverable.main_deliverable },
+        { heading: 'Termes de recherche', content: deliverable.keywords },
+        { heading: 'Prochaines actions', content: deliverable.next_actions },
+      ],
+      report_type: isRevision ? 'prospecting_revision' : 'prospecting_deliverable',
+      content: { task_id: task.id, project_id: project.id, deliverable, is_revision: isRevision },
+    }).select('id').single();
+
+    await supabase.from('project_tasks').update({ status: 'completed', result: deliverable.summary.slice(0, 500) }).eq('id', task.id);
+
+    await supabase.from('project_history').insert({
+      project_id: project.id,
+      event_type: isRevision ? 'revision_delivered' : 'prospecting_delivered',
+      old_value: { task_status: 'pending', task_title: task.title },
+      new_value: { task_status: 'completed', prospecting_type: deliverable.prospecting_type, report_id: report?.id || null },
+      actor_type: 'agent',
+      actor_id: agent.id,
+      note: `${isRevision ? 'Révision prospection' : deliverable.prospecting_type.replace(/_/g, ' ')} livré pour "${project.title.slice(0, 60)}"`,
+    });
+
+    await supabase.from('employee_handoffs').insert({
+      from_agent: AGENT_SLUG,
+      to_agent: mdAgent?.slug || 'marketing',
+      handoff_type: isRevision ? 'revision_completed' : 'prospecting_completed',
+      payload: {
+        task_id: task.id, project_id: project.id, project_title: project.title,
+        client_name: project.client_name, prospecting_type: deliverable.prospecting_type,
+        summary: deliverable.summary.slice(0, 300), report_id: report?.id || null,
+      },
+      status: 'completed',
+      completed_at: new Date().toISOString(),
+    });
+
+    await sendEmail(resendKey,
+      isRevision
+        ? `🔄 Révision livrée — ${project.client_name}`
+        : `🎯 Prospection livrée — ${project.client_name} (${deliverable.prospecting_type.replace(/_/g, ' ')})`,
+      buildDeliveryEmailHtml(project, deliverable, isRevision),
+    );
+
+    if (isRevision) {
+      if (project.client_email) {
+        await sendEmailTo(resendKey, project.client_email,
+          `🔄 Votre révision est prête — ${project.title.slice(0, 55)}`,
+          buildRevisionClientEmailHtml(project, deliverable),
+        );
+      }
+      await supabase.from('project_revisions')
+        .update({ status: 'resolved', resolved_at: new Date().toISOString() })
+        .eq('project_id', project.id)
+        .eq('status', 'in_progress');
+      await supabase.from('client_projects')
+        .update({ status: 'completed', phase: 'completed', updated_at: new Date().toISOString() })
+        .eq('id', project.id);
+    }
+
+    return true;
+  } catch (err) {
+    console.error('[prospecting] executeTask error:', (err as Error).message);
+    return false;
+  }
+}
+
+async function escalateProject(
+  supabase: ReturnType<typeof createClient>,
+  agent: { id: string },
+  project: { id: string; title: string; client_name: string },
+  reason: string,
+  recommendedAction: string,
+): Promise<void> {
+  await supabase.from('employee_handoffs').insert({
+    from_agent: AGENT_SLUG,
+    to_agent: 'marketing',
+    handoff_type: 'escalation',
+    payload: { project_id: project.id, project_title: project.title, client_name: project.client_name, reason, recommended_action: recommendedAction },
+    status: 'pending',
+  });
+  await supabase.from('project_history').insert({
+    project_id: project.id,
+    event_type: 'escalation',
+    actor_type: 'agent',
+    actor_id: agent.id,
+    description: `Prospecting Employee a escaladé vers Marketing Director : ${reason}`,
+    metadata: { reason, recommended_action: recommendedAction },
+  });
+}
+
 // ---------------------------------------------------------------------------
-// Parser — format sections texte
+// Portfolio review — Project Ownership
+// ---------------------------------------------------------------------------
+async function reviewProjectPortfolio(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+): Promise<PortfolioResult> {
+  const { data: agent } = await supabase.from('ai_agents').select('id,name').eq('slug', AGENT_SLUG).single();
+  if (!agent) return { projects_reviewed: 0, actions_taken: 0, decisions: [] };
+
+  const minus30d = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+  const { data: taskRows } = await supabase
+    .from('project_tasks')
+    .select('id, project_id, title, description, status, created_at, updated_at')
+    .eq('assigned_department', DEPARTMENT)
+    .gte('created_at', minus30d)
+    .order('created_at', { ascending: false });
+
+  const projectIds = [...new Set((taskRows || []).map((t: { project_id: string }) => t.project_id))];
+  if (!projectIds.length) return { projects_reviewed: 0, actions_taken: 0, decisions: [] };
+
+  const { data: projects } = await supabase
+    .from('client_projects')
+    .select('id, title, client_name, client_email, phase, status, priority_score, objective, blocker_flag, blocker_reason, due_date, responsible_agent_id, updated_at')
+    .in('id', projectIds)
+    .eq('status', 'active')
+    .order('priority_score', { ascending: false })
+    .limit(3);
+
+  const decisions: PortfolioResult['decisions'] = [];
+  let actions_taken = 0;
+  const minus24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+
+  for (const project of (projects || [])) {
+    try {
+      const myTasks = (taskRows || []).filter((t: { project_id: string }) => t.project_id === project.id);
+      const pendingTasks = myTasks.filter((t: { status: string }) => t.status === 'pending');
+      const completedTasks = myTasks.filter((t: { status: string }) => t.status === 'completed');
+
+      const { data: history } = await supabase
+        .from('project_history')
+        .select('event_type, description, actor_type, created_at')
+        .eq('project_id', project.id)
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      let decision = await makeDecision(anthropicKey, project, pendingTasks, completedTasks, history || []);
+
+      if (decision.action === 'initiate') {
+        const recentWork = completedTasks.some((t: { updated_at?: string; created_at: string }) =>
+          (t.updated_at || t.created_at) > minus24h
+        );
+        if (recentWork) {
+          decision = { action: 'hold', reason: 'Activité récente détectée dans les 24h — attente.' };
+        }
+      }
+
+      if (decision.action === 'execute' && pendingTasks.length > 0 && actions_taken < 2) {
+        const success = await executeTask(supabase, anthropicKey, resendKey, agent, project, pendingTasks[0]);
+        if (success) actions_taken++;
+      } else if (decision.action === 'initiate' && pendingTasks.length === 0 && actions_taken < 2) {
+        const { data: newTask } = await supabase.from('project_tasks').insert({
+          project_id: project.id,
+          assigned_department: DEPARTMENT,
+          title: decision.task_title || `Initiative prospection — ${project.title.slice(0, 50)}`,
+          description: decision.task_description || `Initiative autonome du Prospecting Employee sur le projet ${project.title}.`,
+          status: 'pending',
+        }).select('id, title, description').single();
+        if (newTask) {
+          const success = await executeTask(supabase, anthropicKey, resendKey, agent, project, newTask);
+          if (success) actions_taken++;
+        }
+      } else if (decision.action === 'escalate') {
+        await escalateProject(supabase, agent, project, decision.reason, decision.recommended_action || '');
+        actions_taken++;
+      }
+
+      await supabase.from('project_history').insert({
+        project_id: project.id,
+        event_type: 'portfolio_review',
+        actor_type: 'agent',
+        actor_id: agent.id,
+        description: `Prospecting Employee — décision : ${decision.action}. ${decision.reason.slice(0, 100)}`,
+        metadata: { action: decision.action, reason: decision.reason },
+      });
+
+      decisions.push({ project_id: project.id, project_title: project.title, action: decision.action, reason: decision.reason });
+    } catch (err) {
+      decisions.push({ project_id: project.id, project_title: project.title, action: 'error', reason: (err as Error).message });
+    }
+  }
+
+  return { projects_reviewed: projects?.length || 0, actions_taken, decisions };
+}
+
+// ---------------------------------------------------------------------------
+// Legacy — missions CEO (conservé)
 // ---------------------------------------------------------------------------
 function parseProspectingPlan(text: string): ProspectingPlan {
   const extract = (tag: string): string => {
@@ -299,218 +504,92 @@ function parseProspectingPlan(text: string): ProspectingPlan {
   };
   const analysis = extract('ANALYSIS');
   if (analysis) {
-    return {
-      analysis,
-      target_profile: extract('TARGET_PROFILE'),
-      outreach_sequence: extract('OUTREACH_SEQUENCE'),
-      linkedin_strategy: extract('LINKEDIN_STRATEGY'),
-      next_steps: extract('NEXT_STEPS'),
-      requires_ceo_validation: extract('VALIDATION').toLowerCase().includes('true'),
-    };
+    return { analysis, icp: extract('ICP'), prospect_list: extract('PROSPECT_LIST'), outreach_sequence: extract('OUTREACH'), qualification_criteria: extract('QUALIFICATION'), next_steps: extract('NEXT_STEPS') };
   }
-  return {
-    analysis: text.slice(0, 800),
-    target_profile: '',
-    outreach_sequence: text,
-    linkedin_strategy: '',
-    next_steps: 'Voir rapport complet dans le CEO Cockpit.',
-    requires_ceo_validation: false,
-  };
+  return { analysis: text.slice(0, 800), icp: '', prospect_list: text, outreach_sequence: '', qualification_criteria: '', next_steps: 'Voir rapport complet dans le CEO Cockpit.' };
 }
 
-// ---------------------------------------------------------------------------
-// Prompt mission prospecting
-// ---------------------------------------------------------------------------
-function buildProspectingMissionPrompt(
-  mission: { title: string; objective: string },
-  kpis: Record<string, number | string | unknown[]>
-): string {
-  return `Tu es le Prospecting Employee permanent de CreatorFlow Market.
-
-Tu viens de recevoir une mission de prospection du CEO. Prends-la en charge et produis un plan d'acquisition complet avec une séquence d'outreach opérationnelle.
+function buildProspectingMissionPrompt(mission: { title: string; objective: string }): string {
+  return `Tu es le Prospecting Employee de CreatorFlow Market. Mission CEO reçue.
 
 ═══ MISSION ═══
 Titre : ${mission.title}
 Objectif : ${mission.objective}
 
-═══ ÉTAT DU CRM ═══
-- Contacts total : ${kpis.total_contacts}
-- Nouveaux cette semaine : ${kpis.new_7d}
-- Statut pipeline : ${kpis.status_new} nouveaux | ${kpis.status_contacted} contactés | ${kpis.status_qualified} qualifiés
-- Taux de conversion : ${kpis.conversion_rate_pct}%
-- Utilisateurs plateforme : ${kpis.platform_users} (+${kpis.new_users_7d} cette semaine)
-
-═══ TON RÔLE ═══
-Tu es expert en growth marketing, prospection B2B et acquisition digitale pour créateurs de contenu, solopreneurs et TPE francophones.
-Tu maîtrises : cold emailing, LinkedIn outreach, lead scoring, qualification BANT, séquences automatisées.
-Ton travail : identifier les bons prospects et produire des messages qui génèrent des réponses.
-
-═══ CONTEXTE CREATORFLOW MARKET ═══
-CreatorFlow Market est une marketplace hybride experts humains + employés IA pour créateurs, solopreneurs et TPE francophones.
-Cible principale : créateurs de contenu, freelances, solopreneurs qui veulent déléguer leur marketing, contenu et prospection.
-
-═══ FORMAT DE RÉPONSE ═══
-Réponds avec ces sections exactement, dans cet ordre :
-
 [ANALYSIS]
-Analyse du besoin en 3-4 phrases. Qui cibler, pourquoi, quelle approche.
+Analyse du besoin acquisition en 3-4 phrases.
 
-[TARGET_PROFILE]
-Profil client idéal (ICP) détaillé : secteur, taille, poste décideur, pain points, canaux, signaux d'achat. Format structuré, une ligne par critère.
+[ICP]
+Profil idéal client : secteur + taille + poste décideur + pain points + canaux préférés.
 
-[OUTREACH_SEQUENCE]
-3 emails d'outreach complets et prêts à envoyer. Format : Email 1 — Objet : ... / Corps : ... | Email 2 — Objet : ... / Corps : ... | Email 3 — Objet : ... / Corps : ...
+[PROSPECT_LIST]
+15 prospects qualifiés : Prénom Nom | Poste | Entreprise | Secteur | Raison de cibler | Source LinkedIn/Google
 
-[LINKEDIN_STRATEGY]
-Stratégie LinkedIn en 5 points : profil à optimiser, types de posts à publier, commentaires stratégiques, connexions à cibler, message de connexion type.
+[OUTREACH]
+Séquence de 4 messages (J0, J3, J7, J14). Format : JOUR : Sujet | Corps complet.
+
+[QUALIFICATION]
+5 critères de qualification. Format : Critère | Signaux positifs | Signaux négatifs.
 
 [NEXT_STEPS]
-3 actions concrètes exécutables dans les 48h pour lancer la campagne.
-
-[VALIDATION]
-false
-
-Note : [VALIDATION] = true uniquement si la mission nécessite un budget publicitaire ou l'accès à des outils payants non disponibles.`;
+3 actions dans les 48h.`;
 }
 
-// ---------------------------------------------------------------------------
-// Exécution d'une mission prospecting
-// ---------------------------------------------------------------------------
-async function executeMission(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-  mission: { id: string; title: string; objective: string }
-): Promise<{ report_id: string | null; requires_validation: boolean }> {
-  const kpis = await readCRMKPIs(supabase);
+function buildMissionEmailHtml(mission: { title: string }, plan: ProspectingPlan): string {
+  const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
+.wrap{max-width:600px;margin:0 auto;padding:28px 20px;}
+.header{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.logo{font-size:16px;font-weight:800;color:#F4F4FF;}.logo em{font-style:normal;color:#3B82F6;}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(52,211,153,0.15);color:#34D399;border:1px solid rgba(52,211,153,0.3);margin:14px 0;}
+h2{font-size:18px;margin:4px 0;color:#BAE6FD;}.meta{font-size:12px;color:#9898B8;margin-bottom:20px;}
+.s{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
+.sl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.prev{font-size:12px;color:#A1A1C8;white-space:pre-wrap;line-height:1.7;font-family:monospace;}
+.btn{display:inline-block;background:#3B82F6;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
+.footer{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}
+</style></head><body><div class="wrap">
+<div class="header"><div class="logo">CreatorFlow <em>Prospecting Employee</em></div></div>
+<div class="badge">✓ Mission prise en charge</div>
+<h2>${mission.title}</h2><div class="meta">${dateStr} · Mission CEO</div>
+<div class="s"><div class="sl">Analyse</div><p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${plan.analysis}</p></div>
+<div class="s"><div class="sl">ICP — Profil idéal</div><p style="margin:0;font-size:13px;color:#D1D5DB;line-height:1.6;">${plan.icp}</p></div>
+<div class="s"><div class="sl">Prospects (aperçu)</div><div class="prev">${plan.prospect_list.slice(0, 700)}${plan.prospect_list.length > 700 ? '\n[... voir rapport complet]' : ''}</div></div>
+<div class="s"><div class="sl">Séquence outreach</div><div class="prev">${plan.outreach_sequence.slice(0, 600)}${plan.outreach_sequence.length > 600 ? '\n[...]' : ''}</div></div>
+<div class="s"><div class="sl">Prochaines étapes</div><p style="margin:0;font-size:13px;color:#D1D5DB;white-space:pre-wrap;line-height:1.7;">${plan.next_steps}</p></div>
+<p style="text-align:center"><a href="https://creatorflowmarket.com/admin" class="btn">Voir le rapport complet →</a></p>
+<div class="footer">Prospecting Employee IA · CreatorFlow Market</div>
+</div></body></html>`;
+}
 
-  const rawText = await callClaude(
-    anthropicKey,
-    'claude-haiku-4-5-20251001',
-    2048,
-    buildProspectingMissionPrompt(mission, kpis as Record<string, number | string | unknown[]>)
-  );
+async function executeMission(supabase: ReturnType<typeof createClient>, anthropicKey: string, resendKey: string, mission: { id: string; title: string; objective: string }): Promise<void> {
+  const rawText = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 2048, buildProspectingMissionPrompt(mission));
   const plan = parseProspectingPlan(rawText);
 
-  await supabase.from('agent_outputs').insert({
-    mission_id: mission.id,
-    output_type: 'prospecting_plan',
-    output_data: {
-      title: `Plan Prospecting — ${mission.title}`,
-      analysis: plan.analysis,
-      target_profile: plan.target_profile,
-      outreach_sequence: plan.outreach_sequence,
-      linkedin_strategy: plan.linkedin_strategy,
-      next_steps: plan.next_steps,
-    },
-    status: 'completed',
-  });
+  await supabase.from('agent_outputs').insert({ mission_id: mission.id, output_type: 'prospecting_plan', output_data: { title: `Plan Prospection — ${mission.title}`, analysis: plan.analysis, icp: plan.icp, prospect_list: plan.prospect_list, outreach_sequence: plan.outreach_sequence, qualification_criteria: plan.qualification_criteria, next_steps: plan.next_steps }, status: 'completed' });
 
-  const { data: report } = await supabase
-    .from('agent_reports')
-    .insert({
-      agent_slug: AGENT_SLUG,
-      title: `Plan Prospecting — ${mission.title}`,
-      sections: [
-        { heading: 'Analyse', content: plan.analysis },
-        { heading: 'Profil cible (ICP)', content: plan.target_profile },
-        { heading: 'Séquence outreach', content: plan.outreach_sequence },
-        { heading: 'Stratégie LinkedIn', content: plan.linkedin_strategy },
-        { heading: 'Prochaines étapes', content: plan.next_steps },
-      ],
-      report_type: 'prospecting_plan',
-      content: { mission_id: mission.id, plan },
-    })
-    .select('id')
-    .single();
+  const { data: report } = await supabase.from('agent_reports').insert({ agent_slug: AGENT_SLUG, title: `Plan Prospection — ${mission.title}`, sections: [{ heading: 'Analyse', content: plan.analysis }, { heading: 'ICP', content: plan.icp }, { heading: 'Prospects', content: plan.prospect_list }, { heading: 'Séquence outreach', content: plan.outreach_sequence }, { heading: 'Critères de qualification', content: plan.qualification_criteria }, { heading: 'Prochaines étapes', content: plan.next_steps }], report_type: 'prospecting_plan', content: { mission_id: mission.id, plan } }).select('id').single();
 
-  await supabase.from('agent_actions_log').insert({
-    mission_id: mission.id,
-    agent_slug: AGENT_SLUG,
-    action_type: 'prospecting_mission',
-    action_data: {
-      objective: mission.objective.slice(0, 300),
-      plan_preview: plan.analysis.slice(0, 300),
-      report_id: report?.id || null,
-    },
-    input: { mission_id: mission.id, title: mission.title },
-  });
+  await supabase.from('agent_actions_log').insert({ mission_id: mission.id, agent_slug: AGENT_SLUG, action_type: 'prospecting_mission', action_data: { objective: mission.objective.slice(0, 300), plan_preview: plan.analysis.slice(0, 300), report_id: report?.id || null }, input: { mission_id: mission.id, title: mission.title } });
+  await supabase.from('agent_missions').update({ status: 'in_progress', started_at: new Date().toISOString() }).eq('id', mission.id);
 
-  await supabase
-    .from('agent_missions')
-    .update({ status: 'in_progress', started_at: new Date().toISOString() })
-    .eq('id', mission.id);
-
-  if (plan.requires_ceo_validation) {
-    await supabase.from('pending_approvals').insert({
-      type: 'prospecting_plan',
-      data: {
-        mission_id: mission.id,
-        mission_title: mission.title,
-        plan_summary: plan.target_profile.slice(0, 500),
-        report_id: report?.id || null,
-        asked_by: AGENT_SLUG,
-      },
-      status: 'pending',
-    });
-  }
-
-  await sendEmail(
-    resendKey,
-    plan.requires_ceo_validation
-      ? `⚠ Validation requise — Prospecting Employee : ${mission.title.slice(0, 55)}`
-      : `🎯 Plan Prospecting prêt — ${mission.title.slice(0, 55)}`,
-    buildMissionEmailHtml(mission, plan, report?.id || null, plan.requires_ceo_validation)
-  );
-
-  return { report_id: report?.id || null, requires_validation: plan.requires_ceo_validation };
+  await sendEmail(resendKey, `🎯 Plan Prospection prêt — ${mission.title.slice(0, 55)}`, buildMissionEmailHtml(mission, plan));
 }
 
-// ---------------------------------------------------------------------------
-// Traitement des missions assignées
-// ---------------------------------------------------------------------------
-async function processMissions(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-): Promise<{ missions_processed: number; results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> }> {
-  const { data: agent } = await supabase
-    .from('ai_agents')
-    .select('id')
-    .eq('slug', AGENT_SLUG)
-    .single();
+async function processMissions(supabase: ReturnType<typeof createClient>, anthropicKey: string, resendKey: string): Promise<{ missions_processed: number }> {
+  const { data: agent } = await supabase.from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
+  if (!agent) return { missions_processed: 0 };
 
-  if (!agent) return { missions_processed: 0, results: [] } as never;
-
-  const { data: missions } = await supabase
-    .from('agent_missions')
-    .select('id, title, objective, status, created_at')
-    .eq('agent_id', agent.id)
-    .eq('status', 'assigned')
-    .order('created_at', { ascending: true })
-    .limit(3);
-
-  if (!missions?.length) return { missions_processed: 0, results: [] } as never;
-
-  const results: Array<{ mission_id: string; success: boolean; report_id?: string | null; error?: string }> = [];
+  const { data: missions } = await supabase.from('agent_missions').select('id, title, objective, status, created_at').eq('agent_id', agent.id).eq('status', 'assigned').order('created_at', { ascending: true }).limit(2);
+  if (!missions?.length) return { missions_processed: 0 };
 
   for (const mission of missions) {
-    try {
-      const result = await executeMission(supabase, anthropicKey, resendKey, mission);
-      results.push({ mission_id: mission.id, success: true, ...result });
-    } catch (err) {
-      await supabase.from('agent_actions_log').insert({
-        mission_id: mission.id,
-        agent_slug: AGENT_SLUG,
-        action_type: 'mission_error',
-        action_data: { error: (err as Error).message },
-        input: { mission_id: mission.id },
-      }).catch(() => {});
-      results.push({ mission_id: mission.id, success: false, error: (err as Error).message });
-    }
+    try { await executeMission(supabase, anthropicKey, resendKey, mission); }
+    catch (err) { await supabase.from('agent_actions_log').insert({ mission_id: mission.id, agent_slug: AGENT_SLUG, action_type: 'mission_error', action_data: { error: (err as Error).message }, input: { mission_id: mission.id } }).catch(() => {}); }
   }
 
-  return { missions_processed: results.length, results };
+  return { missions_processed: missions.length };
 }
 
 // ---------------------------------------------------------------------------
@@ -524,7 +603,6 @@ Deno.serve(async (req: Request) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
   const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
   const resendKey = Deno.env.get('RESEND_API_KEY') ?? '';
-
   const supabase = createClient(supabaseUrl, serviceKey);
 
   let body: { run_type?: string; type?: string; table?: string } = {};
@@ -533,79 +611,34 @@ Deno.serve(async (req: Request) => {
   const runType = (body.run_type || (isDbWebhook ? 'mission' : 'daily')) as 'daily' | 'mission';
 
   try {
-    // ── MISSION ──────────────────────────────────────────────────────────────
     if (runType === 'mission') {
-      const missionResults = await processMissions(supabase, anthropicKey, resendKey);
-      return new Response(JSON.stringify({
-        ok: true,
-        run_type: 'mission',
-        ...missionResults,
-        duration_ms: Date.now() - startTime,
-      }), { headers: { ...cors, 'Content-Type': 'application/json' } });
+      const r = await processMissions(supabase, anthropicKey, resendKey);
+      return new Response(JSON.stringify({ ok: true, run_type: 'mission', ...r, duration_ms: Date.now() - startTime }), { headers: { ...cors, 'Content-Type': 'application/json' } });
     }
 
-    // ── HEARTBEAT QUOTIDIEN ───────────────────────────────────────────────────
-    const kpis = await readCRMKPIs(supabase);
-    const alerts = detectAlerts(kpis as Record<string, number | string | unknown[]>);
-
-    const { data: report } = await supabase
-      .from('agent_reports')
-      .insert({
-        agent_slug: AGENT_SLUG,
-        title: `Bilan CRM Prospecting Employee — ${new Date().toLocaleDateString('fr-CA')}`,
-        sections: [
-          { heading: 'KPIs CRM', content: JSON.stringify(kpis, null, 2) },
-          { heading: 'Alertes', content: alerts.length > 0 ? alerts.map(a => `${a.severity.toUpperCase()} — ${a.message}`).join('\n') : 'Aucune alerte.' },
-        ],
-        report_type: 'daily_kpi',
-        content: { kpis, alerts },
-      })
-      .select('id')
-      .single();
-
-    if (alerts.length > 0) {
-      const critical = alerts.filter(a => a.severity === 'critical');
-      const subject = critical.length > 0
-        ? `🔴 ALERTE Prospecting — ${critical[0].message.slice(0, 60)}`
-        : `🟡 Attention Prospecting — ${alerts[0].message.slice(0, 60)}`;
-      await sendEmail(resendKey, subject, buildDailyReportHtml(kpis as Record<string, number | string | unknown[]>, alerts));
-    }
+    const portfolio = await reviewProjectPortfolio(supabase, anthropicKey, resendKey);
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG,
       run_type: 'daily',
-      status: alerts.length > 0 ? 'alert_sent' : 'ok',
-      kpis_snapshot: kpis,
-      alerts_triggered: alerts,
-      report_id: report?.id || null,
+      status: portfolio.actions_taken > 0 ? 'tasks_processed' : 'ok',
+      kpis_snapshot: { projects_reviewed: portfolio.projects_reviewed, actions_taken: portfolio.actions_taken, decisions: portfolio.decisions.map(d => ({ project: d.project_title.slice(0, 40), action: d.action })) },
+      alerts_triggered: portfolio.decisions.filter(d => d.action === 'escalate').map(d => ({ type: 'escalation', message: d.reason })),
       duration_ms: Date.now() - startTime,
     });
 
-    await supabase
-      .from('ai_agents')
-      .update({ last_active: new Date().toISOString() })
-      .eq('slug', AGENT_SLUG);
+    await supabase.from('ai_agents').update({ last_active: new Date().toISOString() }).eq('slug', AGENT_SLUG);
 
     return new Response(JSON.stringify({
       ok: true,
       run_type: 'daily',
-      status: alerts.length > 0 ? 'alert_sent' : 'ok',
-      kpis_summary: {
-        total_contacts: kpis.total_contacts,
-        new_7d: kpis.new_7d,
-        status_new: kpis.status_new,
-        status_contacted: kpis.status_contacted,
-        status_qualified: kpis.status_qualified,
-        conversion_rate_pct: kpis.conversion_rate_pct,
-      },
-      alerts_count: alerts.length,
-      report_id: report?.id,
+      projects_reviewed: portfolio.projects_reviewed,
+      actions_taken: portfolio.actions_taken,
+      decisions: portfolio.decisions,
       duration_ms: Date.now() - startTime,
     }), { headers: { ...cors, 'Content-Type': 'application/json' } });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
-      status: 500, headers: { ...cors, 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({ error: (err as Error).message }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } });
   }
 });

@@ -374,7 +374,7 @@ async function handleDeliver(
   if (project.client_email) {
     await sendToClient(resendKey, project.client_email,
       `Votre projet est terminé — ${project.title.slice(0, 50)}`,
-      clientBuildDelivery(project.client_name, project.title, results, impact, nextSteps),
+      clientBuildDelivery(project.client_name, project.title, results, impact, nextSteps, project.id),
       project.id, 'delivery', project.responsible_agent_id, supabase
     );
   }
@@ -495,6 +495,14 @@ async function handleCheck(
   for (const agent of agents || []) {
     await recalcAgentLoad(supabase, agent.id);
   }
+
+  // 4. Traiter les escalations remontées par les employés IA
+  const escalationsProcessed = await processEscalations(supabase, anthropicKey, resendKey);
+  if (escalationsProcessed > 0) actions.push(`escalations_resolved:${escalationsProcessed}`);
+
+  // 5. Traiter les demandes de révision clients
+  const revisionsCreated = await processRevisionRequests(supabase, resendKey);
+  if (revisionsCreated > 0) actions.push(`revision_tasks_created:${revisionsCreated}`);
 
   return { briefs_picked_up: newBriefs?.length || 0, projects_reviewed: projects?.length || 0, actions };
 }
@@ -644,8 +652,9 @@ Votre équipe travaille activement. Vous serez notifié dès que la livraison fi
 </div></body></html>`;
 }
 
-function clientBuildDelivery(name: string, title: string, results: string, impact: string, nextSteps: string): string {
+function clientBuildDelivery(name: string, title: string, results: string, impact: string, nextSteps: string, projectId: string): string {
   const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const revisionUrl = `https://creatorflowmarket.com/revision.html?pid=${projectId}`;
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
 <div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
 <div class="badge">✅ Livraison finale — Étape 3/3</div>
@@ -654,6 +663,7 @@ function clientBuildDelivery(name: string, title: string, results: string, impac
 <div class="sec"><div class="lbl">Impact sur votre activité</div><div class="txt">${impact}</div></div>
 <div class="sec"><div class="lbl">Prochaines étapes recommandées</div><div class="txt">${nextSteps}</div></div>
 <p style="text-align:center"><a href="${dash}" class="btn">Voir le rapport complet →</a></p>
+<p style="text-align:center;margin-top:4px;"><a href="${revisionUrl}" style="color:#9CA3AF;font-size:12px;text-decoration:underline;">Une modification nécessaire ? Demander une révision</a></p>
 <div class="ft">CreatorFlow Market · Merci de votre confiance.</div>
 </div></body></html>`;
 }
@@ -673,6 +683,224 @@ h2{font-size:18px;margin:20px 0 4px;color:#A5B4FC;}
 .ft{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}`;
 
 const cockpit = 'https://creatorflowmarket.com/admin';
+
+// ---------------------------------------------------------------------------
+// ESCALATIONS — traiter les blocages remontés par les employés IA
+// ---------------------------------------------------------------------------
+function promptEscalation(
+  project: { title: string; client_name: string; phase: string; objective?: string },
+  fromAgent: string,
+  reason: string,
+  recommended: string,
+): string {
+  return `Tu es le Marketing Director de CreatorFlow Market.
+
+Un de tes employés IA a escaladé un problème sur un projet client.
+
+PROJET : ${project.title} | CLIENT : ${project.client_name} | PHASE : ${project.phase}
+OBJECTIF : ${(project.objective || '').slice(0, 200)}
+EMPLOYÉ : ${fromAgent}
+RAISON DE L'ESCALADE : ${reason}
+RECOMMANDATION DE L'EMPLOYÉ : ${recommended || 'Aucune'}
+
+Tu dois débloquer ce projet. Décide de l'action à prendre.
+
+[ACTION]
+create_task (créer une nouvelle tâche pour l'employé) | notify_ceo (alerter le CEO — urgence uniquement) | contact_client (demander une info au client) | hold (monitorer, pas d'action immédiate)
+
+[RESOLUTION]
+Décision prise en 1-2 phrases.
+
+[TASK_TITLE]
+(si create_task — titre de la nouvelle tâche)
+
+[TASK_DESC]
+(si create_task — description)
+
+[CLIENT_MESSAGE]
+(si contact_client — message à envoyer au client)`;
+}
+
+function ceoBuildEscalation(project: { title: string; client_name: string; phase: string }, fromAgent: string, reason: string, resolution: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
+<h2>⚠ Escalade traitée — ${project.title.slice(0, 60)}</h2>
+<div class="sec"><div class="lbl">Employé</div><div class="txt">${fromAgent}</div></div>
+<div class="sec"><div class="lbl">Client</div><div class="txt">${project.client_name} — Phase : ${project.phase}</div></div>
+<div class="sec"><div class="lbl">Raison</div><div class="txt">${reason}</div></div>
+<div class="sec"><div class="lbl">Résolution</div><div class="txt">${resolution}</div></div>
+<p style="text-align:center"><a href="${cockpit}" class="btn">Voir dans le Cockpit →</a></p>
+<div class="ft">Marketing Director IA · CreatorFlow Market</div>
+</div></body></html>`;
+}
+
+async function processEscalations(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+): Promise<number> {
+  const { data: handoffs } = await supabase
+    .from('employee_handoffs')
+    .select('id, from_agent, to_agent, handoff_type, payload, created_at')
+    .eq('to_agent', AGENT_SLUG)
+    .eq('handoff_type', 'escalation')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: true })
+    .limit(3);
+
+  if (!handoffs?.length) return 0;
+
+  let resolved = 0;
+  const { data: mdAgent } = await supabase.from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
+
+  for (const handoff of handoffs) {
+    try {
+      const { project_id, reason, recommended_action } = handoff.payload || {};
+      if (!project_id) continue;
+
+      const { data: project } = await supabase
+        .from('client_projects')
+        .select('id, title, client_name, client_email, phase, objective, responsible_agent_id')
+        .eq('id', project_id)
+        .single();
+      if (!project) continue;
+
+      const raw = await callClaude(anthropicKey, 512, promptEscalation(project, handoff.from_agent, reason || '', recommended_action || ''));
+      const action = extract(raw, 'ACTION').split('\n')[0].trim().toLowerCase();
+      const resolution = extract(raw, 'RESOLUTION') || 'Escalade résolue.';
+
+      if (action === 'create_task') {
+        const taskTitle = extract(raw, 'TASK_TITLE') || `Déblocage — ${(reason || '').slice(0, 60)}`;
+        const taskDesc = extract(raw, 'TASK_DESC') || '';
+        await supabase.from('project_tasks').insert({
+          project_id: project.id,
+          assigned_department: handoff.from_agent,
+          title: taskTitle,
+          description: taskDesc,
+          status: 'pending',
+        });
+      } else if (action === 'notify_ceo') {
+        await sendToCEO(resendKey,
+          `⚠ Escalade — ${project.title.slice(0, 60)}`,
+          ceoBuildEscalation(project, handoff.from_agent, reason || '', resolution),
+        );
+      } else if (action === 'contact_client' && project.client_email) {
+        const clientMsg = extract(raw, 'CLIENT_MESSAGE') || `Nous avons besoin de votre retour sur le projet "${project.title}" pour avancer.`;
+        await sendToClient(
+          resendKey, project.client_email,
+          `Question sur votre projet — ${project.title.slice(0, 55)}`,
+          `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
+<h2>Votre projet avance</h2>
+<div class="sec"><div class="txt">Bonjour ${project.client_name},\n\n${clientMsg}\n\nMerci de répondre à cet email ou de nous contacter directement.</div></div>
+<div class="ft">CreatorFlow Market · votre équipe IA</div>
+</div></body></html>`,
+          project.id, project.phase, project.responsible_agent_id || mdAgent?.id || '', supabase,
+        );
+      }
+
+      // Marquer l'escalade comme résolue
+      await supabase.from('employee_handoffs')
+        .update({ status: 'resolved' })
+        .eq('id', handoff.id);
+
+      await writeHistory(
+        supabase, project.id, 'escalation_resolved',
+        { from: handoff.from_agent, reason: reason || '' },
+        { action, resolution: resolution.slice(0, 200) },
+        mdAgent?.id || '',
+        `Escalade de ${handoff.from_agent} résolue par Marketing Director : ${action}`,
+      );
+
+      resolved++;
+    } catch (err) {
+      console.error('[marketing] processEscalations error:', (err as Error).message);
+    }
+  }
+
+  return resolved;
+}
+
+// ---------------------------------------------------------------------------
+// RÉVISIONS — traiter les demandes de révision clients
+// ---------------------------------------------------------------------------
+async function processRevisionRequests(
+  supabase: ReturnType<typeof createClient>,
+  resendKey: string,
+): Promise<number> {
+  const { data: revisions } = await supabase
+    .from('project_revisions')
+    .select('id, project_id, reason, department, requested_by, created_at')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: true })
+    .limit(3);
+
+  if (!revisions?.length) return 0;
+
+  let processed = 0;
+  const { data: mdAgent } = await supabase.from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
+
+  for (const revision of revisions) {
+    try {
+      const { data: project } = await supabase
+        .from('client_projects')
+        .select('id, title, client_name, client_email, phase, status, responsible_agent_id')
+        .eq('id', revision.project_id)
+        .single();
+      if (!project) continue;
+
+      // Déterminer les départements concernés par la révision
+      const departments: string[] = revision.department
+        ? [revision.department]
+        : ['content', 'prospecting'];
+
+      // Créer les tâches de révision
+      for (const dept of departments) {
+        await supabase.from('project_tasks').insert({
+          project_id: project.id,
+          assigned_department: dept,
+          title: `RÉVISION — ${(revision.reason || 'Améliorer le livrable précédent').slice(0, 80)}`,
+          description: `Le client a demandé une révision.\n\nRaison : ${revision.reason || 'Non précisée'}\nDemandé par : ${revision.requested_by}\nDate : ${revision.created_at?.slice(0, 10)}\n\nRéférencer le livrable précédent et produire une version améliorée qui répond précisément à ces retours.`,
+          status: 'pending',
+        });
+      }
+
+      // Réactiver le projet pour la révision
+      await supabase.from('client_projects').update({
+        status: 'active',
+        phase: 'revision',
+        updated_at: new Date().toISOString(),
+      }).eq('id', project.id);
+
+      // Marquer la révision comme en cours
+      await supabase.from('project_revisions').update({ status: 'in_progress' }).eq('id', revision.id);
+
+      // Historique
+      await writeHistory(
+        supabase, project.id, 'revision_requested',
+        { status: project.status, phase: project.phase },
+        { status: 'active', phase: 'revision', departments },
+        mdAgent?.id || '',
+        `Révision demandée par ${revision.requested_by} : ${(revision.reason || '').slice(0, 100)}`,
+      );
+
+      // Notifier le CEO
+      await sendToCEO(resendKey,
+        `🔄 Révision en cours — ${project.title.slice(0, 60)}`,
+        ceoBuildAlert(
+          `Une révision a été demandée par ${revision.requested_by} sur "${project.title}".`,
+          `Raison : ${revision.reason || 'Non précisée'}\nDépartements : ${departments.join(', ')}\nClient : ${project.client_name}`,
+        ),
+      );
+
+      processed++;
+    } catch (err) {
+      console.error('[marketing] processRevisionRequests error:', (err as Error).message);
+    }
+  }
+
+  return processed;
+}
 
 function ceoBuildAlert(message: string, context: string): string {
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">

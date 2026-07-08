@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demander une révision — CreatorFlow Market</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #04040A; color: #F4F4FF; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: #0d0d1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 40px 36px; max-width: 520px; width: 100%; }
+    .logo { font-size: 15px; font-weight: 800; color: #F4F4FF; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .logo em { font-style: normal; color: #4F46E5; }
+    h1 { font-size: 22px; margin-bottom: 6px; color: #F4F4FF; }
+    .sub { font-size: 13px; color: #9898B8; margin-bottom: 28px; line-height: 1.6; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #9898B8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    textarea { width: 100%; background: #080810; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #F4F4FF; font-size: 13px; line-height: 1.7; padding: 14px 16px; resize: vertical; min-height: 130px; font-family: Arial, sans-serif; outline: none; transition: border-color 0.2s; }
+    textarea:focus { border-color: rgba(79,70,229,0.6); }
+    textarea::placeholder { color: #55557A; }
+    .btn { display: block; width: 100%; background: #4F46E5; color: #fff; border: none; border-radius: 999px; padding: 13px 24px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .msg { display: none; margin-top: 18px; padding: 14px 18px; border-radius: 10px; font-size: 13px; line-height: 1.6; }
+    .msg.ok { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25); color: #34D399; }
+    .msg.err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #F87171; }
+    .note { font-size: 11px; color: #55557A; margin-top: 16px; line-height: 1.6; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">CreatorFlow <em>Market</em></div>
+    <h1>Demander une révision</h1>
+    <p class="sub">Décrivez précisément ce que vous souhaitez améliorer. Votre équipe IA prendra en charge la révision lors du prochain cycle de travail.</p>
+    <form id="form">
+      <label for="reason">Vos retours</label>
+      <textarea id="reason" name="reason" placeholder="Ex : Le ton est trop formel, je préférerais quelque chose de plus accessible. Les mots-clés proposés ne correspondent pas bien à mon secteur..."></textarea>
+      <button type="submit" class="btn" id="btn">Envoyer la demande de révision</button>
+    </form>
+    <div class="msg" id="msg"></div>
+    <p class="note">La révision sera traitée automatiquement. Vous recevrez un email dès qu'elle sera prête.</p>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqdGdsZnV0Y2thb2dzbXdoZnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzMDk2OTIsImV4cCI6MjA2MTg4NTY5Mn0.7Vj5MX1fvd2MDQL7JwGr-_N4XF1aCW4VJKBCA1AJMFY';
+
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('pid') || '';
+
+    const form = document.getElementById('form');
+    const btn = document.getElementById('btn');
+    const msgEl = document.getElementById('msg');
+
+    function showMsg(text, type) {
+      msgEl.textContent = text;
+      msgEl.className = 'msg ' + type;
+      msgEl.style.display = 'block';
+    }
+
+    if (!projectId) {
+      showMsg('Lien invalide. Veuillez utiliser le lien présent dans votre email de livraison.', 'err');
+      btn.disabled = true;
+    }
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const reason = document.getElementById('reason').value.trim();
+      if (!reason) {
+        showMsg('Veuillez décrire vos retours avant d\'envoyer.', 'err');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+      try {
+        const res = await fetch(SUPABASE_URL + '/functions/v1/handle-revision', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + ANON_KEY,
+          },
+          body: JSON.stringify({ project_id: projectId, reason }),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          showMsg('✓ ' + (data.message || 'Demande enregistrée. Vous recevrez un email dès que votre révision sera prête.'), 'ok');
+          form.style.display = 'none';
+        } else {
+          throw new Error(data.error || 'Erreur serveur');
+        }
+      } catch (err) {
+        showMsg('Une erreur est survenue : ' + err.message + '. Veuillez réessayer ou nous contacter.', 'err');
+        btn.disabled = false;
+        btn.textContent = 'Envoyer la demande de révision';
+      }
+    });
+  </script>
+</body>
+</html>
