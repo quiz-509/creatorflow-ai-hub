@@ -145,6 +145,7 @@ function buildProjectTaskPrompt(
   isRevision = false,
   previousDeliverable = '',
   feedbackContext = '',
+  clientMemory = '',
 ): string {
   const revisionBlock = isRevision
     ? `⚠ RÉVISION — Le client demande des améliorations.\nRetour client : ${(task.description || '').slice(0, 300)}\n\n${previousDeliverable ? `LIVRABLE PRÉCÉDENT (à améliorer) :\n${previousDeliverable.slice(0, 600)}\n\n` : ''}Produis une version SUBSTANTIELLEMENT AMÉLIORÉE. Ne répète pas le précédent.`
@@ -152,13 +153,16 @@ function buildProjectTaskPrompt(
   const feedbackBlock = feedbackContext
     ? `\n═══ RETOURS CLIENTS PASSÉS ═══\n${feedbackContext}\nTiens compte de ces retours pour améliorer ce livrable.\n`
     : '';
+  const memoryBlock = clientMemory
+    ? `\n═══ PROFIL CLIENT — HISTORIQUE ═══\n${clientMemory}\n`
+    : '';
   return `Tu es le Prospecting Employee de CreatorFlow Market. Tu es RESPONSABLE du volet acquisition de ce projet client.
 
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
 Objectif : ${(project.objective || '').slice(0, 400)}
-
+${memoryBlock}
 ═══ TÂCHE PROSPECTION ═══
 ${task.title}
 ${isRevision ? '' : (task.description || 'Développer une stratégie d\'acquisition adaptée à ce client.').slice(0, 700)}
@@ -274,6 +278,68 @@ async function getFeedbackContext(
   return `Score moyen client : ${avg.toFixed(1)}/3 (${feedbacks.length} évaluation${feedbacks.length > 1 ? 's' : ''})\n${comments}`;
 }
 
+async function getClientMemory(
+  supabase: ReturnType<typeof createClient>,
+  clientEmail: string,
+): Promise<string> {
+  if (!clientEmail) return '';
+  const { data } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', DEPARTMENT)
+    .maybeSingle();
+  if (!data) return '';
+  return `Client récurrent (${data.projects_count} projet${data.projects_count > 1 ? 's' : ''} passé${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
+}
+
+async function updateClientMemory(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  clientEmail: string,
+  clientName: string,
+  project: { title: string; objective?: string },
+  deliverableSummary: string,
+  deliverableType: string,
+  feedbackContext: string,
+): Promise<void> {
+  if (!clientEmail) return;
+  const { data: existing } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', DEPARTMENT)
+    .maybeSingle();
+
+  const prompt = `Tu es le Prospecting Employee de CreatorFlow Market. Synthétise ce que tu sais sur ce client pour t'en souvenir lors du prochain projet.
+
+CLIENT : ${clientName}
+PROJET LIVRÉ : ${project.title}
+LIVRABLE : ${deliverableType} — ${deliverableSummary.slice(0, 300)}
+${feedbackContext ? `RETOUR CLIENT : ${feedbackContext}` : ''}
+${existing?.memory ? `CE QUE TU SAVAIS DÉJÀ :\n${existing.memory}` : '(Premier projet avec ce client)'}
+
+Synthétise en 6-8 points bullet le profil de ce client :
+- Secteur et type d'entreprise ciblée
+- Canaux de prospection les plus efficaces pour lui
+- Profil de prospect idéal validé
+- Ce qui a bien fonctionné dans la stratégie
+- Erreurs ou approches à éviter
+- Niveau de maturité commerciale du client
+- Recommandations pour le prochain projet`;
+
+  try {
+    const memory = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 256, prompt);
+    await supabase.from('client_memory').upsert({
+      client_email: clientEmail,
+      department: DEPARTMENT,
+      memory: memory.slice(0, 2000),
+      projects_count: (existing?.projects_count || 0) + 1,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'client_email,department' });
+  } catch (_) {}
+}
+
 function buildRevisionClientEmailHtml(project: { title: string; client_name: string }, deliverable: ProspectingDeliverable): string {
   const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
@@ -329,9 +395,10 @@ async function executeTask(
 
     const { data: mdAgent } = await supabase.from('ai_agents').select('id,name,slug').eq('id', project.responsible_agent_id || '').single();
     const feedbackContext = await getFeedbackContext(supabase, project.id);
+    const clientMemory = await getClientMemory(supabase, project.client_email || '');
 
     const raw = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 2048,
-      buildProjectTaskPrompt(project, task, isRevision, previousDeliverable, feedbackContext));
+      buildProjectTaskPrompt(project, task, isRevision, previousDeliverable, feedbackContext, clientMemory));
     const deliverable = parseProspectingDeliverable(raw);
 
     const { data: report } = await supabase.from('agent_reports').insert({
@@ -380,6 +447,15 @@ async function executeTask(
         : `🎯 Prospection livrée — ${project.client_name} (${deliverable.prospecting_type.replace(/_/g, ' ')})`,
       buildDeliveryEmailHtml(project, deliverable, isRevision),
     );
+
+    // Apprentissage — mémoriser ce client pour les prochains projets
+    if (!isRevision && project.client_email) {
+      await updateClientMemory(
+        supabase, anthropicKey,
+        project.client_email, project.client_name,
+        project, deliverable.summary, deliverable.prospecting_type, feedbackContext,
+      );
+    }
 
     if (isRevision) {
       if (project.client_email) {
