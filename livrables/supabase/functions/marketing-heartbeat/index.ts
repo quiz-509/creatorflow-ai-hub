@@ -504,6 +504,10 @@ async function handleCheck(
   const revisionsCreated = await processRevisionRequests(supabase, resendKey);
   if (revisionsCreated > 0) actions.push(`revision_tasks_created:${revisionsCreated}`);
 
+  // 6. Envoyer des propositions upsell aux clients satisfaits récents
+  const upsellsSent = await processUpsellOpportunities(supabase, anthropicKey, resendKey);
+  if (upsellsSent > 0) actions.push(`upsell_proposals_sent:${upsellsSent}`);
+
   return { briefs_picked_up: newBriefs?.length || 0, projects_reviewed: projects?.length || 0, actions };
 }
 
@@ -902,6 +906,188 @@ async function processRevisionRequests(
   }
 
   return processed;
+}
+
+// ---------------------------------------------------------------------------
+// UPSELL — proposer de nouveaux projets aux clients satisfaits
+// ---------------------------------------------------------------------------
+function promptUpsell(
+  project: { title: string; objective?: string },
+  clientName: string,
+  deliverablesSummary: string,
+  score: number,
+  clientMemory: string,
+): string {
+  return `Tu es le Marketing Director de CreatorFlow Market. Un client vient de terminer un projet avec succès.
+
+CLIENT : ${clientName}
+PROJET COMPLÉTÉ : ${project.title}
+OBJECTIF INITIAL : ${(project.objective || '').slice(0, 200)}
+LIVRABLES PRODUITS : ${deliverablesSummary.slice(0, 400)}
+SATISFACTION : ${score}/3
+${clientMemory ? `CE QU'ON SAIT DE CE CLIENT :\n${clientMemory}` : ''}
+
+Génère une proposition commerciale personnalisée pour lui proposer de continuer à travailler ensemble.
+
+[INTRO]
+2 phrases qui font référence naturellement à ce qui a été accompli et ouvrent vers la suite. Ton chaleureux et professionnel.
+
+[SERVICES]
+2-3 services complémentaires ADAPTÉS À CE CLIENT SPÉCIFIQUEMENT. Pour chaque service :
+Nom du service | Bénéfice concret pour lui | Pourquoi maintenant
+
+[CTA]
+1 phrase d'appel à l'action directe et engageante.`;
+}
+
+function clientBuildProposal(
+  clientName: string,
+  projectTitle: string,
+  intro: string,
+  services: string,
+  cta: string,
+  projectId: string,
+): string {
+  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const briefUrl = 'https://creatorflowmarket.com/#brief';
+  const serviceLines = services.split('\n').filter(l => l.trim()).map(l => {
+    const parts = l.split('|').map(p => p.trim());
+    if (parts.length >= 2) {
+      return `<div class="sec"><div class="lbl">${parts[0]}</div><div class="txt">${parts.slice(1).join(' — ')}</div></div>`;
+    }
+    return `<div class="sec"><div class="txt">${l}</div></div>`;
+  }).join('');
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
+<div class="badge" style="background:rgba(79,70,229,0.15);color:#A5B4FC;border:1px solid rgba(79,70,229,0.3);">✦ Pour ${clientName}</div>
+<h2>Et si on continuait sur votre lancée ?</h2>
+<div class="meta">${d} · Suite de "${projectTitle.slice(0, 50)}"</div>
+<div class="sec"><div class="txt">${intro}</div></div>
+<div class="lbl" style="margin:20px 0 8px;">Services recommandés pour vous</div>
+${serviceLines}
+<p style="font-size:13px;color:#D1D5DB;margin:16px 0;">${cta}</p>
+<p style="text-align:center"><a href="${briefUrl}" class="btn">Soumettre un nouveau brief →</a></p>
+<div class="ft">CreatorFlow Market · Réf. ${projectId.slice(0, 8).toUpperCase()}</div>
+</div></body></html>`;
+}
+
+async function processUpsellOpportunities(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+): Promise<number> {
+  // Projets complétés dans les 7 derniers jours avec client_email
+  const minus7d = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+  const { data: projects } = await supabase
+    .from('client_projects')
+    .select('id, title, client_name, client_email, objective, updated_at')
+    .eq('status', 'completed')
+    .eq('phase', 'completed')
+    .gte('updated_at', minus7d)
+    .not('client_email', 'is', null)
+    .order('updated_at', { ascending: false })
+    .limit(5);
+
+  if (!projects?.length) return 0;
+
+  let sent = 0;
+  const minus30d = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+
+  for (const project of projects) {
+    if (sent >= 2) break;
+    try {
+      // Vérifier qu'une proposition n'a pas déjà été envoyée récemment à ce client
+      const { data: existing } = await supabase
+        .from('client_proposals')
+        .select('id')
+        .eq('client_email', project.client_email)
+        .gte('created_at', minus30d)
+        .limit(1);
+      if (existing?.length) continue;
+
+      // Vérifier que le client a un score satisfaisant (>= 2)
+      const { data: feedbacks } = await supabase
+        .from('project_feedback')
+        .select('score')
+        .eq('project_id', project.id);
+      if (feedbacks?.length) {
+        const avg = feedbacks.reduce((s: number, f: { score: number }) => s + f.score, 0) / feedbacks.length;
+        if (avg < 2) continue;
+      }
+
+      // Charger la mémoire client + résumés des livrables
+      const { data: memRow } = await supabase
+        .from('client_memory')
+        .select('memory')
+        .eq('client_email', project.client_email)
+        .limit(3);
+      const clientMemory = (memRow || []).map(r => r.memory).join('\n').slice(0, 600);
+
+      const { data: reports } = await supabase
+        .from('agent_reports')
+        .select('agent_slug, sections')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      const projectReports = (reports || []).filter(r => {
+        const summary = r.sections?.find((s: { heading: string }) => s.heading === 'Résumé');
+        return summary?.content;
+      });
+      const deliverablesSummary = projectReports.slice(0, 3)
+        .map(r => {
+          const summary = r.sections?.find((s: { heading: string }) => s.heading === 'Résumé');
+          return `[${r.agent_slug}] ${summary?.content?.slice(0, 150) || ''}`;
+        }).join('\n');
+
+      const avgScore = feedbacks?.length
+        ? feedbacks.reduce((s: number, f: { score: number }) => s + f.score, 0) / feedbacks.length
+        : 2.5;
+
+      const raw = await callClaude(anthropicKey, 512, promptUpsell(project, project.client_name, deliverablesSummary, Math.round(avgScore), clientMemory));
+      const extract = (tag: string) => {
+        const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
+        return m ? m[1].trim() : '';
+      };
+      const intro = extract('INTRO') || `Votre projet "${project.title}" est maintenant terminé et les résultats sont entre vos mains.`;
+      const services = extract('SERVICES') || 'Stratégie de contenu avancée | Amplifier votre visibilité | Continuer sur la lancée';
+      const cta = extract('CTA') || 'Prêt à aller plus loin ? Soumettez votre prochain brief en 2 minutes.';
+
+      // Enregistrer la proposition
+      const { data: proposal } = await supabase
+        .from('client_proposals')
+        .insert({
+          client_email: project.client_email,
+          project_id: project.id,
+          proposal_text: `${intro}\n\n${services}`,
+          status: 'sent',
+        })
+        .select('id')
+        .single();
+
+      // Envoyer au client
+      await sendToClient(
+        resendKey,
+        project.client_email,
+        `Et si on continuait sur votre lancée ? — ${project.client_name}`,
+        clientBuildProposal(project.client_name, project.title, intro, services, cta, project.id),
+        project.id, 'upsell', '', supabase,
+      );
+
+      // Notifier le CEO
+      await sendToCEO(resendKey,
+        `✦ Proposition envoyée — ${project.client_name}`,
+        ceoBuildAlert(
+          `Une proposition commerciale a été envoyée automatiquement à ${project.client_name} (${project.client_email}).`,
+          `Projet de référence : "${project.title}"\nProposition ID : ${proposal?.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
+        ),
+      );
+
+      sent++;
+    } catch (err) {
+      console.error('[marketing] processUpsellOpportunities error:', (err as Error).message);
+    }
+  }
+
+  return sent;
 }
 
 function ceoBuildAlert(message: string, context: string): string {
