@@ -146,6 +146,7 @@ function buildProjectTaskPrompt(
   previousDeliverable = '',
   feedbackContext = '',
   clientMemory = '',
+  peerContext = '',
 ): string {
   const kpiList = kpis.length
     ? kpis.map(k => `- ${k.metric_name}`).join('\n')
@@ -158,6 +159,9 @@ function buildProjectTaskPrompt(
     : '';
   const memoryBlock = clientMemory
     ? `\n═══ PROFIL CLIENT — HISTORIQUE ═══\n${clientMemory}\n`
+    : '';
+  const peerBlock = peerContext
+    ? `\n═══ CE QUE TES COLLÈGUES ONT DÉJÀ PRODUIT ═══\n${peerContext}\nAligne ton contenu avec ce qui a déjà été livré.\n`
     : '';
   return `Tu es le Content Employee de CreatorFlow Market. Tu es RESPONSABLE de ce projet client.
 
@@ -172,7 +176,7 @@ ${isRevision ? '' : (task.description || 'Produire du contenu marketing de quali
 
 ═══ KPIs À AMÉLIORER ═══
 ${kpiList}
-${feedbackBlock}
+${peerBlock}${feedbackBlock}
 ${revisionBlock}
 
 [CONTENT_TYPE]
@@ -276,6 +280,34 @@ async function getFeedbackContext(
   if (avg >= 2.5 && !comments) return '';
 
   return `Score moyen client : ${avg.toFixed(1)}/3 (${feedbacks.length} évaluation${feedbacks.length > 1 ? 's' : ''})\n${comments}`;
+}
+
+async function getPeerDeliverables(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string,
+): Promise<string> {
+  const peerSlugs = ['prospecting', 'support'];
+  const { data: reports } = await supabase
+    .from('agent_reports')
+    .select('agent_slug, title, sections, content, created_at')
+    .in('agent_slug', peerSlugs)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  const relevant = (reports || [])
+    .filter(r => r.content?.project_id === projectId)
+    .slice(0, 4);
+
+  if (!relevant.length) return '';
+
+  return relevant.map(r => {
+    const summary = r.sections?.find((s: { heading: string }) => s.heading === 'Résumé');
+    const main = r.sections?.find((s: { heading: string }) =>
+      s.heading.toLowerCase().includes('livrable') || s.heading.toLowerCase().includes('profil') || s.heading.toLowerCase().includes('complet')
+    );
+    const preview = (summary?.content || main?.content || '').slice(0, 250);
+    return `[${r.agent_slug.toUpperCase()} EMPLOYEE — ${r.title.slice(0, 60)}]\n${preview}`;
+  }).join('\n\n');
 }
 
 async function getClientMemory(
@@ -397,9 +429,10 @@ async function executeTask(
     const { data: mdAgent } = await supabase.from('ai_agents').select('id,name,slug').eq('id', project.responsible_agent_id || '').single();
     const feedbackContext = await getFeedbackContext(supabase, project.id);
     const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    const peerContext = await getPeerDeliverables(supabase, project.id);
 
     const raw = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 2048,
-      buildProjectTaskPrompt(project, task, kpis || [], isRevision, previousDeliverable, feedbackContext, clientMemory));
+      buildProjectTaskPrompt(project, task, kpis || [], isRevision, previousDeliverable, feedbackContext, clientMemory, peerContext));
     const deliverable = parseDeliverable(raw);
 
     const { data: report } = await supabase.from('agent_reports').insert({
