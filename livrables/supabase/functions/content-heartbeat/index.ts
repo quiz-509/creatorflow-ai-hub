@@ -378,8 +378,12 @@ function parseDeliverable(text: string): ContentDeliverable {
     const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
     return m ? m[1].trim() : '';
   };
+  const rawType = extract('CONTENT_TYPE') || 'article_blog';
+  // Strip markdown formatting and take only the first line
+  const content_type = rawType
+    .replace(/\*\*/g, '').replace(/#+/g, '').replace(/---/g, '').split('\n')[0].trim().slice(0, 60);
   return {
-    content_type: extract('CONTENT_TYPE') || 'article_blog',
+    content_type: content_type || 'article_blog',
     summary: extract('SUMMARY') || text.slice(0, 300),
     main_deliverable: extract('MAIN_DELIVERABLE') || text,
     keywords: extract('KEYWORDS'),
