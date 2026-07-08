@@ -144,10 +144,14 @@ function buildProjectTaskPrompt(
   task: { title: string; description?: string },
   isRevision = false,
   previousDeliverable = '',
+  feedbackContext = '',
 ): string {
   const revisionBlock = isRevision
     ? `⚠ RÉVISION — Le client demande des améliorations.\nRetour client : ${(task.description || '').slice(0, 300)}\n\n${previousDeliverable ? `LIVRABLE PRÉCÉDENT (à améliorer) :\n${previousDeliverable.slice(0, 600)}\n\n` : ''}Produis une version SUBSTANTIELLEMENT AMÉLIORÉE. Ne répète pas le précédent.`
     : `Produis un livrable support complet et actionnable. Tu es responsable de la satisfaction du client.`;
+  const feedbackBlock = feedbackContext
+    ? `\n═══ RETOURS CLIENTS PASSÉS ═══\n${feedbackContext}\nTiens compte de ces retours pour améliorer ce livrable.\n`
+    : '';
   return `Tu es le Support Agent de CreatorFlow Market. Tu es RESPONSABLE du volet support et relation client de ce projet.
 
 ═══ PROJET CLIENT ═══
@@ -158,7 +162,7 @@ Objectif : ${(project.objective || '').slice(0, 400)}
 ═══ TÂCHE SUPPORT ═══
 ${task.title}
 ${isRevision ? '' : (task.description || 'Assurer la satisfaction du client et résoudre ses problèmes.').slice(0, 700)}
-
+${feedbackBlock}
 ${revisionBlock}
 
 [SUPPORT_TYPE]
@@ -245,6 +249,31 @@ async function sendEmailTo(apiKey: string, to: string, subject: string, html: st
   } catch (_) {}
 }
 
+async function getFeedbackContext(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string,
+): Promise<string> {
+  const { data: feedbacks } = await supabase
+    .from('project_feedback')
+    .select('score, comment, created_at')
+    .eq('project_id', projectId)
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (!feedbacks?.length) return '';
+
+  const avg = feedbacks.reduce((s: number, f: { score: number }) => s + f.score, 0) / feedbacks.length;
+  const comments = feedbacks
+    .filter((f: { comment?: string }) => f.comment?.trim())
+    .slice(0, 3)
+    .map((f: { score: number; comment: string }) => `• (${f.score}/3) ${f.comment.slice(0, 150)}`)
+    .join('\n');
+
+  if (avg >= 2.5 && !comments) return '';
+
+  return `Score moyen client : ${avg.toFixed(1)}/3 (${feedbacks.length} évaluation${feedbacks.length > 1 ? 's' : ''})\n${comments}`;
+}
+
 function buildRevisionClientEmailHtml(project: { title: string; client_name: string }, deliverable: SupportDeliverable): string {
   const dateStr = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
@@ -299,9 +328,10 @@ async function executeTask(
     }
 
     const { data: mdAgent } = await supabase.from('ai_agents').select('id,name,slug').eq('id', project.responsible_agent_id || '').single();
+    const feedbackContext = await getFeedbackContext(supabase, project.id);
 
     const raw = await callClaude(anthropicKey, 'claude-haiku-4-5-20251001', 2048,
-      buildProjectTaskPrompt(project, task, isRevision, previousDeliverable));
+      buildProjectTaskPrompt(project, task, isRevision, previousDeliverable, feedbackContext));
     const deliverable = parseSupportDeliverable(raw);
 
     const { data: report } = await supabase.from('agent_reports').insert({

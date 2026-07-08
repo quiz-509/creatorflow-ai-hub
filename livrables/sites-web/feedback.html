@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Évaluer votre livrable — CreatorFlow Market</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #04040A; color: #F4F4FF; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { background: #0d0d1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 40px 36px; max-width: 500px; width: 100%; }
+    .logo { font-size: 15px; font-weight: 800; color: #F4F4FF; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .logo em { font-style: normal; color: #4F46E5; }
+    h1 { font-size: 22px; margin-bottom: 6px; }
+    .sub { font-size: 13px; color: #9898B8; margin-bottom: 32px; line-height: 1.6; }
+    .scores { display: flex; gap: 12px; margin-bottom: 28px; }
+    .score-btn { flex: 1; background: #080810; border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px 8px; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .score-btn:hover { border-color: rgba(79,70,229,0.5); background: rgba(79,70,229,0.08); }
+    .score-btn.selected { border-color: #4F46E5; background: rgba(79,70,229,0.15); }
+    .score-btn .emoji { font-size: 26px; display: block; margin-bottom: 6px; }
+    .score-btn .label { font-size: 11px; font-weight: 700; color: #9898B8; text-transform: uppercase; letter-spacing: 0.05em; }
+    .score-btn.selected .label { color: #A5B4FC; }
+    .comment-wrap { display: none; }
+    .comment-wrap.visible { display: block; }
+    label { display: block; font-size: 11px; font-weight: 700; color: #9898B8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    textarea { width: 100%; background: #080810; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #F4F4FF; font-size: 13px; line-height: 1.7; padding: 14px 16px; resize: vertical; min-height: 100px; font-family: Arial, sans-serif; outline: none; transition: border-color 0.2s; }
+    textarea:focus { border-color: rgba(79,70,229,0.6); }
+    textarea::placeholder { color: #55557A; }
+    .btn { display: block; width: 100%; background: #4F46E5; color: #fff; border: none; border-radius: 999px; padding: 13px 24px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .msg { display: none; margin-top: 18px; padding: 14px 18px; border-radius: 10px; font-size: 13px; line-height: 1.6; }
+    .msg.ok { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25); color: #34D399; }
+    .msg.err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #F87171; }
+    .note { font-size: 11px; color: #55557A; margin-top: 16px; line-height: 1.6; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">CreatorFlow <em>Market</em></div>
+    <h1>Votre avis compte</h1>
+    <p class="sub">Comment évaluez-vous le livrable produit par votre équipe IA ?</p>
+    <div class="scores" id="scores">
+      <button class="score-btn" data-score="3" type="button">
+        <span class="emoji">⭐⭐⭐</span>
+        <span class="label">Excellent</span>
+      </button>
+      <button class="score-btn" data-score="2" type="button">
+        <span class="emoji">⭐⭐</span>
+        <span class="label">Satisfaisant</span>
+      </button>
+      <button class="score-btn" data-score="1" type="button">
+        <span class="emoji">⭐</span>
+        <span class="label">À améliorer</span>
+      </button>
+    </div>
+    <div class="comment-wrap" id="commentWrap">
+      <label for="comment">Précisez votre retour (optionnel)</label>
+      <textarea id="comment" placeholder="Ce qui vous a plu, ce qui pourrait être amélioré..."></textarea>
+    </div>
+    <button class="btn" id="btn" disabled>Envoyer mon évaluation</button>
+    <div class="msg" id="msg"></div>
+    <p class="note">Votre retour est transmis directement à votre équipe IA pour améliorer les prochains livrables.</p>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqdGdsZnV0Y2thb2dzbXdoZnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYzMDk2OTIsImV4cCI6MjA2MTg4NTY5Mn0.7Vj5MX1fvd2MDQL7JwGr-_N4XF1aCW4VJKBCA1AJMFY';
+
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('pid') || '';
+
+    const btn = document.getElementById('btn');
+    const msgEl = document.getElementById('msg');
+    const commentWrap = document.getElementById('commentWrap');
+    let selectedScore = null;
+
+    function showMsg(text, type) {
+      msgEl.textContent = text;
+      msgEl.className = 'msg ' + type;
+      msgEl.style.display = 'block';
+    }
+
+    if (!projectId) {
+      showMsg('Lien invalide. Veuillez utiliser le lien présent dans votre email de livraison.', 'err');
+      btn.disabled = true;
+    }
+
+    document.querySelectorAll('.score-btn').forEach(function(b) {
+      b.addEventListener('click', function() {
+        document.querySelectorAll('.score-btn').forEach(function(x) { x.classList.remove('selected'); });
+        b.classList.add('selected');
+        selectedScore = parseInt(b.dataset.score);
+        commentWrap.classList.add('visible');
+        btn.disabled = false;
+      });
+    });
+
+    btn.addEventListener('click', async function() {
+      if (!selectedScore) return;
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours...';
+      const comment = document.getElementById('comment').value.trim();
+      try {
+        const res = await fetch(SUPABASE_URL + '/functions/v1/handle-feedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + ANON_KEY,
+          },
+          body: JSON.stringify({ project_id: projectId, score: selectedScore, comment: comment || undefined }),
+        });
+        const data = await res.json();
+        if (res.ok && data.ok) {
+          document.getElementById('scores').style.display = 'none';
+          commentWrap.style.display = 'none';
+          btn.style.display = 'none';
+          showMsg('✓ ' + (data.message || 'Merci pour votre retour !'), 'ok');
+        } else {
+          throw new Error(data.error || 'Erreur serveur');
+        }
+      } catch (err) {
+        showMsg('Une erreur est survenue : ' + err.message + '. Veuillez réessayer.', 'err');
+        btn.disabled = false;
+        btn.textContent = 'Envoyer mon évaluation';
+      }
+    });
+  </script>
+</body>
+</html>

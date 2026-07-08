@@ -655,6 +655,7 @@ Votre équipe travaille activement. Vous serez notifié dès que la livraison fi
 function clientBuildDelivery(name: string, title: string, results: string, impact: string, nextSteps: string, projectId: string): string {
   const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
   const revisionUrl = `https://creatorflowmarket.com/revision.html?pid=${projectId}`;
+  const feedbackUrl = `https://creatorflowmarket.com/feedback.html?pid=${projectId}`;
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
 <div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
 <div class="badge">✅ Livraison finale — Étape 3/3</div>
@@ -663,7 +664,8 @@ function clientBuildDelivery(name: string, title: string, results: string, impac
 <div class="sec"><div class="lbl">Impact sur votre activité</div><div class="txt">${impact}</div></div>
 <div class="sec"><div class="lbl">Prochaines étapes recommandées</div><div class="txt">${nextSteps}</div></div>
 <p style="text-align:center"><a href="${dash}" class="btn">Voir le rapport complet →</a></p>
-<p style="text-align:center;margin-top:4px;"><a href="${revisionUrl}" style="color:#9CA3AF;font-size:12px;text-decoration:underline;">Une modification nécessaire ? Demander une révision</a></p>
+<p style="text-align:center;margin-top:12px;"><a href="${feedbackUrl}" style="color:#A5B4FC;font-size:12px;text-decoration:none;background:rgba(79,70,229,0.12);border:1px solid rgba(79,70,229,0.25);border-radius:999px;padding:6px 16px;display:inline-block;">⭐ Évaluer ce livrable (1 minute)</a></p>
+<p style="text-align:center;margin-top:6px;"><a href="${revisionUrl}" style="color:#9CA3AF;font-size:12px;text-decoration:underline;">Une modification nécessaire ? Demander une révision</a></p>
 <div class="ft">CreatorFlow Market · Merci de votre confiance.</div>
 </div></body></html>`;
 }
