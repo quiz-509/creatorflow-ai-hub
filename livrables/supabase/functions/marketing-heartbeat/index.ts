@@ -311,18 +311,26 @@ async function getClientMemory(
 
 async function getLastClientContact(
   supabase: ReturnType<typeof createClient>, projectId: string,
-): Promise<string> {
-  const { data } = await supabase
-    .from('client_communications')
-    .select('sent_at, subject')
-    .eq('project_id', projectId)
-    .eq('direction', 'outbound')
-    .order('sent_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (!data) return '';
-  const h = Math.round((Date.now() - new Date(data.sent_at).getTime()) / 3_600_000);
-  return `il y a ${h}h — "${(data.subject || '').slice(0, 60)}"`;
+): Promise<{ summary: string; count: number }> {
+  const [lastRes, countRes] = await Promise.all([
+    supabase
+      .from('client_communications')
+      .select('sent_at, subject')
+      .eq('project_id', projectId)
+      .eq('direction', 'outbound')
+      .order('sent_at', { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from('client_communications')
+      .select('*', { count: 'exact', head: true })
+      .eq('project_id', projectId)
+      .eq('direction', 'outbound'),
+  ]);
+  const count = countRes.count || 0;
+  if (!lastRes.data || !lastRes.data.sent_at) return { summary: '', count };
+  const h = Math.round((Date.now() - new Date(lastRes.data.sent_at).getTime()) / 3_600_000);
+  return { summary: `il y a ${h}h — "${(lastRes.data.subject || '').slice(0, 60)}"`, count };
 }
 
 // ---------------------------------------------------------------------------
@@ -380,6 +388,7 @@ function buildOwnerDecisionPrompt(
   history: HistoryEvent[],
   internalRequests: InternalRequest[],
   lastClientContact: string,
+  contactCount: number,
   clientMemory: string,
   experience: string,
 ): string {
@@ -395,6 +404,10 @@ function buildOwnerDecisionPrompt(
       ).join('\n')
     : 'Aucune requête collaborateur envoyée';
 
+  const contactWarning = contactCount >= 2
+    ? `⚠️ Tu as déjà envoyé ${contactCount} messages à ce client sans réponse. NE PAS recontacter — passe à l'étape suivante (auditer ou solliciter).`
+    : '';
+
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ta décision pour ce projet.\n' : ''}
 ═══ PROJET EN COURS ═══
@@ -403,7 +416,8 @@ Client : ${project.client_name}
 Objectif : ${(project.objective || '').slice(0, 500)}
 Phase actuelle : ${project.phase}
 Inactif depuis : ${hoursSince}h
-Dernier contact client : ${lastClientContact || 'Aucun contact envoyé'}
+Contacts envoyés au client : ${contactCount} — Dernier : ${lastClientContact || 'Aucun'}
+${contactWarning}
 ${clientMemory ? `\n═══ PROFIL CLIENT CONNU ═══\n${clientMemory}\n` : ''}
 ═══ COLLABORATEURS ═══
 ${reqStatus}
@@ -729,7 +743,7 @@ async function reviewOwnerPortfolio(
 
   for (const project of (projects as ClientProject[]) || []) {
     try {
-      const [{ data: history }, { data: internalReqs }, lastContact, clientMemory] = await Promise.all([
+      const [{ data: history }, { data: internalReqs }, contactInfo, clientMemory] = await Promise.all([
         supabase.from('project_history')
           .select('event_type, note, created_at')
           .eq('project_id', project.id)
@@ -749,7 +763,7 @@ async function reviewOwnerPortfolio(
           profile, project,
           (history || []) as HistoryEvent[],
           (internalReqs || []) as InternalRequest[],
-          lastContact, clientMemory, experience,
+          contactInfo.summary, contactInfo.count, clientMemory, experience,
         ),
       );
       const decision = parseOwnerDecision(raw);
