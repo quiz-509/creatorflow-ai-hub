@@ -20,53 +20,84 @@ const cors = {
 const CEO_EMAIL = 'pjoacenel@gmail.com';
 const AGENT_SLUG = 'marketing';
 const RESEND_URL = 'https://api.resend.com/emails';
-const FROM_CEO = 'Marketing Director IA <noreply@creatorflowmarket.com>';
 const FROM_CLIENT = 'CreatorFlow Market <noreply@creatorflowmarket.com>';
+const FROM_CEO = 'Aria — CreatorFlow Market <noreply@creatorflowmarket.com>';
+
+// ---------------------------------------------------------------------------
+// Email CSS partagé
+// ---------------------------------------------------------------------------
+const S = `body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
+.w{max-width:600px;margin:0 auto;padding:28px 20px;}
+.hd{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.logo{font-size:16px;font-weight:800;color:#F4F4FF;}
+.logo em{font-style:normal;color:#818CF8;}
+.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin:14px 0;}
+.h2{font-size:18px;margin:4px 0 2px;color:#C7D2FE;}
+.meta{font-size:12px;color:#9898B8;margin-bottom:16px;}
+.sec{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
+.lbl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.txt{font-size:13px;color:#D1D5DB;line-height:1.75;white-space:pre-wrap;}
+.btn{display:inline-block;background:#4F46E5;color:#fff;text-decoration:none;padding:10px 24px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
+.ft{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}`;
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-interface Agent { id: string; name: string; slug: string; current_projects: number; max_projects: number; }
+interface EmployeeProfile {
+  slug: string;
+  name: string;
+  avatar_emoji: string;
+  title: string;
+  system_prompt_context: string;
+  communication_tone: string;
+}
+
 interface ClientProject {
-  id: string; brief_id: string; client_id: string; client_email: string; client_name: string;
-  department_id: string; responsible_agent_id: string; title: string; objective: string;
-  phase: string; priority_score: number; status: string; baseline_kpis: Record<string, unknown>;
-  due_date: string; created_at: string; updated_at: string;
+  id: string;
+  brief_id: string;
+  client_id: string;
+  client_email: string;
+  client_name: string;
+  department_id: string;
+  responsible_agent_id: string;
+  title: string;
+  objective: string;
+  phase: string;
+  priority_score: number;
+  status: string;
+  due_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface OwnerDecision {
+  action: string;
+  reason: string;
+  collaborator_brief: string;
+  client_message: string;
+}
+
+interface InternalRequest {
+  to_dept: string;
+  status: string;
+  brief?: string;
+  result?: string;
+  result_summary?: string;
+}
+
+interface HistoryEvent {
+  event_type: string;
+  note: string;
+  created_at: string;
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Infrastructure
 // ---------------------------------------------------------------------------
-function extract(text: string, tag: string): string {
-  const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
-  return m ? m[1].trim() : '';
-}
-
-async function getAvailableAgent(supabase: ReturnType<typeof createClient>): Promise<Agent | null> {
-  const { data: dept } = await supabase.from('departments').select('id').eq('slug', AGENT_SLUG).single();
-  if (!dept) return null;
-  const { data: agents } = await supabase
-    .from('ai_agents').select('id, name, slug, current_projects, max_projects')
-    .eq('department_id', dept.id).eq('status', 'active').neq('availability', 'unavailable')
-    .order('current_projects', { ascending: true }).limit(5);
-  return (agents as Agent[])?.find(a => a.current_projects < (a.max_projects || 5)) ?? null;
-}
-
-async function getClientInfo(supabase: ReturnType<typeof createClient>, userId: string): Promise<{ email: string; name: string }> {
-  try {
-    const { data } = await supabase.auth.admin.getUserById(userId);
-    const email = data?.user?.email ?? '';
-    const name = data?.user?.user_metadata?.full_name ?? email.split('@')[0] ?? 'Client';
-    return { email, name };
-  } catch (_) {
-    return { email: '', name: 'Client' };
-  }
-}
-
 async function sendToClient(
   resendKey: string, to: string, subject: string, html: string,
   projectId: string, phase: string, agentId: string,
-  supabase: ReturnType<typeof createClient>
+  supabase: ReturnType<typeof createClient>,
 ): Promise<void> {
   if (!resendKey || !to) return;
   const safe = subject.replace(/[\r\n\t]/g, ' ').trim();
@@ -81,7 +112,7 @@ async function sendToClient(
       subject: safe, content_preview: html.replace(/<[^>]*>/g, '').slice(0, 300),
       sent_by_agent_id: agentId,
     });
-  } catch (_) { /* silencieux */ }
+  } catch (_) {}
 }
 
 async function sendToCEO(resendKey: string, subject: string, html: string): Promise<void> {
@@ -93,10 +124,40 @@ async function sendToCEO(resendKey: string, subject: string, html: string): Prom
       headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: FROM_CEO, to: [CEO_EMAIL], subject: safe, html }),
     });
-  } catch (_) { /* silencieux */ }
+  } catch (_) {}
 }
 
-async function recalcAgentLoad(supabase: ReturnType<typeof createClient>, agentId: string): Promise<void> {
+async function writeHistory(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string, eventType: string,
+  oldValue: Record<string, unknown> | null,
+  newValue: Record<string, unknown> | null,
+  actorId: string, note?: string,
+): Promise<void> {
+  await supabase.from('project_history').insert({
+    project_id: projectId, event_type: eventType,
+    old_value: oldValue, new_value: newValue,
+    actor_type: 'agent', actor_id: actorId,
+    note: note ?? null,
+  });
+}
+
+async function getClientInfo(
+  supabase: ReturnType<typeof createClient>, userId: string,
+): Promise<{ email: string; name: string }> {
+  try {
+    const { data } = await supabase.auth.admin.getUserById(userId);
+    const email = data?.user?.email ?? '';
+    const name = data?.user?.user_metadata?.full_name ?? email.split('@')[0] ?? 'Client';
+    return { email, name };
+  } catch (_) {
+    return { email: '', name: 'Client' };
+  }
+}
+
+async function recalcAgentLoad(
+  supabase: ReturnType<typeof createClient>, agentId: string,
+): Promise<void> {
   const { count } = await supabase.from('client_projects')
     .select('*', { count: 'exact', head: true })
     .eq('responsible_agent_id', agentId).eq('status', 'active');
@@ -107,75 +168,519 @@ async function recalcAgentLoad(supabase: ReturnType<typeof createClient>, agentI
   }).eq('id', agentId);
 }
 
-async function writeHistory(
+// ---------------------------------------------------------------------------
+// Chargement du profil Aria depuis la DB
+// ---------------------------------------------------------------------------
+async function loadOwnerProfile(
   supabase: ReturnType<typeof createClient>,
-  projectId: string, eventType: string,
-  oldValue: Record<string, unknown> | null,
-  newValue: Record<string, unknown> | null,
-  actorId: string, note?: string
-): Promise<void> {
-  await supabase.from('project_history').insert({
-    project_id: projectId, event_type: eventType,
-    old_value: oldValue, new_value: newValue,
-    actor_type: 'agent', actor_id: actorId,
-    note: note ?? null,
-  });
-}
-
-async function createInitialMilestones(
-  supabase: ReturnType<typeof createClient>,
-  projectId: string, departmentId: string
-): Promise<void> {
-  const now = new Date();
-  const d = (h: number) => new Date(now.getTime() + h * 3_600_000).toISOString();
-  await supabase.from('project_milestones').insert([
-    { project_id: projectId, title: 'Audit de la situation',  due_date: d(24),      status: 'pending', owner_department_id: departmentId },
-    { project_id: projectId, title: 'Stratégie 90 jours',    due_date: d(48),      status: 'pending', owner_department_id: departmentId },
-    { project_id: projectId, title: 'Livraison finale',      due_date: d(30 * 24), status: 'pending', owner_department_id: departmentId },
-  ]);
-}
-
-async function completeMilestone(
-  supabase: ReturnType<typeof createClient>,
-  projectId: string, title: string
-): Promise<void> {
-  await supabase.from('project_milestones')
-    .update({ status: 'completed', completed_at: new Date().toISOString() })
-    .eq('project_id', projectId).eq('title', title);
-}
-
-async function writeProjectKpis(
-  supabase: ReturnType<typeof createClient>,
-  projectId: string, baselineText: string
-): Promise<void> {
-  const lines = baselineText.split('\n').filter(l => l.trim().length > 3).slice(0, 5);
-  if (!lines.length) return;
-  await supabase.from('project_kpis').insert(
-    lines.map(line => {
-      const parts = line.split('—').map(p => p.trim());
-      return { project_id: projectId, metric_name: parts[0] || line.slice(0, 80) };
-    })
-  );
+): Promise<EmployeeProfile | null> {
+  const { data } = await supabase
+    .from('employee_profiles')
+    .select('slug, name, avatar_emoji, title, system_prompt_context, communication_tone')
+    .eq('slug', AGENT_SLUG)
+    .single();
+  return data || null;
 }
 
 // ---------------------------------------------------------------------------
-// Phase 1 — INTAKE: nouveau brief → projet + email client
+// Contexte client
+// ---------------------------------------------------------------------------
+async function getClientMemory(
+  supabase: ReturnType<typeof createClient>, clientEmail: string,
+): Promise<string> {
+  if (!clientEmail) return '';
+  const { data } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', AGENT_SLUG)
+    .maybeSingle();
+  if (!data) return '';
+  return `Client récurrent (${data.projects_count} projet${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
+}
+
+async function getLastClientContact(
+  supabase: ReturnType<typeof createClient>, projectId: string,
+): Promise<string> {
+  const { data } = await supabase
+    .from('client_communications')
+    .select('created_at, subject')
+    .eq('project_id', projectId)
+    .eq('direction', 'outbound')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!data) return '';
+  const h = Math.round((Date.now() - new Date(data.created_at).getTime()) / 3_600_000);
+  return `il y a ${h}h — "${(data.subject || '').slice(0, 60)}"`;
+}
+
+// ---------------------------------------------------------------------------
+// Constructeurs d'emails
+// ---------------------------------------------------------------------------
+function buildClientEmail(
+  profile: EmployeeProfile,
+  clientName: string,
+  badgeText: string,
+  badgeColor: string,
+  subject: string,
+  message: string,
+  projectId: string,
+  cta?: { text: string; url: string },
+): string {
+  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const ctaHtml = cta
+    ? `<p style="text-align:center;margin:20px 0"><a href="${cta.url}" class="btn">${cta.text}</a></p>`
+    : '';
+  const paragraphs = message
+    .split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<div class="sec"><div class="txt">${p.trim().replace(/\n/g, '<br>')}</div></div>`)
+    .join('');
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
+<div class="badge" style="background:rgba(79,70,229,0.15);color:${badgeColor};border:1px solid rgba(79,70,229,0.3);">${badgeText}</div>
+<div class="h2">${clientName}</div>
+<div class="meta">${d} · ${subject.slice(0, 70)}</div>
+${paragraphs}
+${ctaHtml}
+<div class="ft">${profile.name} · ${profile.title} · CreatorFlow Market</div>
+</div></body></html>`;
+}
+
+function buildCEOAlertEmail(title: string, message: string, context: string): string {
+  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
+<div class="badge" style="background:rgba(239,68,68,0.15);color:#FCA5A5;border:1px solid rgba(239,68,68,0.3);">Alerte CEO</div>
+<div class="h2">${title}</div>
+<div class="meta">${d}</div>
+<div class="sec"><div class="lbl">Message</div><div class="txt">${message}</div></div>
+${context ? `<div class="sec"><div class="lbl">Contexte</div><div class="txt">${context}</div></div>` : ''}
+<div class="ft">Aria · Marketing Employee · CreatorFlow Market</div>
+</div></body></html>`;
+}
+
+// ---------------------------------------------------------------------------
+// Prompt de décision — Aria raisonne sur son projet
+// ---------------------------------------------------------------------------
+function buildOwnerDecisionPrompt(
+  profile: EmployeeProfile,
+  project: ClientProject,
+  history: HistoryEvent[],
+  internalRequests: InternalRequest[],
+  lastClientContact: string,
+  clientMemory: string,
+): string {
+  const hoursSince = Math.round(
+    (Date.now() - new Date(project.updated_at).getTime()) / 3_600_000,
+  );
+  const pending = internalRequests.filter(r => r.status === 'pending');
+  const completed = internalRequests.filter(r => r.status === 'completed');
+
+  const reqStatus = internalRequests.length
+    ? internalRequests.map(r =>
+        `• ${r.to_dept.toUpperCase()}: ${r.status}${r.result_summary ? ' — ' + r.result_summary.slice(0, 120) : ''}`,
+      ).join('\n')
+    : 'Aucune requête collaborateur envoyée';
+
+  return `${profile.system_prompt_context}
+
+═══ PROJET EN COURS ═══
+Titre : ${project.title}
+Client : ${project.client_name}
+Objectif : ${(project.objective || '').slice(0, 500)}
+Phase actuelle : ${project.phase}
+Inactif depuis : ${hoursSince}h
+Dernier contact client : ${lastClientContact || 'Aucun contact envoyé'}
+${clientMemory ? `\n═══ PROFIL CLIENT CONNU ═══\n${clientMemory}\n` : ''}
+═══ COLLABORATEURS ═══
+${reqStatus}
+${completed.length ? `→ ${completed.length} collaborateur(s) ont livré. Tu peux synthétiser.` : ''}
+${pending.length ? `→ ${pending.length} requête(s) encore en cours chez les collaborateurs.` : ''}
+
+═══ HISTORIQUE RÉCENT ═══
+${history.slice(0, 6).map(h => `[${(h.created_at || '').slice(0, 10)}] ${h.note || h.event_type}`).join('\n') || 'Aucun événement'}
+
+En tant que responsable exclusive de ${project.client_name}, quelle est ta prochaine action ?
+
+[ACTION]
+contacter_client | auditer | solliciter_content | solliciter_prospecting | solliciter_support | synthétiser | livrer | validation_CEO | attendre
+
+[RAISON]
+1-2 phrases de raisonnement professionnel. Pourquoi cette action maintenant ?
+
+[BRIEF_COLLABORATEUR]
+(si solliciter_* — brief précis : contexte du projet, objectif client, et ce que tu attends exactement du collaborateur)
+
+[MESSAGE_CLIENT]
+(si contacter_client, auditer, synthétiser, ou livrer — le message complet envoyé au client. Minimum 150 mots. Ton professionnel et direct. Signe avec ton prénom.)`;
+}
+
+function parseOwnerDecision(text: string): OwnerDecision {
+  const extract = (tag: string): string => {
+    const m = text.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎÔÂÊ]+\\]|$)`));
+    return m ? m[1].trim() : '';
+  };
+  const rawAction = extract('ACTION').split('\n')[0].trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, ''); // strip accents for matching
+  const map: Record<string, string> = {
+    'contacter_client': 'contacter_client',
+    'auditer': 'auditer',
+    'solliciter_content': 'solliciter_content',
+    'solliciter_prospecting': 'solliciter_prospecting',
+    'solliciter_support': 'solliciter_support',
+    'synthetiser': 'synthétiser',
+    'livrer': 'livrer',
+    'validation_ceo': 'validation_CEO',
+    'attendre': 'attendre',
+  };
+  const action = map[rawAction] || 'attendre';
+  return {
+    action,
+    reason: extract('RAISON') || extract('REASON') || 'Aucune raison fournie.',
+    collaborator_brief: extract('BRIEF_COLLABORATEUR'),
+    client_message: extract('MESSAGE_CLIENT'),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Exécution de la décision
+// ---------------------------------------------------------------------------
+async function executeOwnerDecision(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+  profile: EmployeeProfile,
+  project: ClientProject,
+  agentId: string,
+  decision: OwnerDecision,
+): Promise<void> {
+  const { action, reason, collaborator_brief, client_message } = decision;
+
+  // Toujours tracer la décision
+  await writeHistory(
+    supabase, project.id, 'owner_decision',
+    { phase: project.phase },
+    { action, decision_reason: reason },
+    agentId,
+    `${profile.name} — décision : ${action}. ${reason.slice(0, 200)}`,
+  );
+
+  // ── contacter_client ──────────────────────────────────────────────────────
+  if (action === 'contacter_client' && client_message && project.client_email) {
+    const subj = `Mise à jour — ${project.title.slice(0, 55)}`;
+    await sendToClient(
+      resendKey, project.client_email, subj,
+      buildClientEmail(profile, project.client_name, '✦ Message d\'Aria', '#A5B4FC', subj, client_message, project.id),
+      project.id, 'update', agentId, supabase,
+    );
+    await supabase.from('client_projects')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', project.id);
+    return;
+  }
+
+  // ── auditer ───────────────────────────────────────────────────────────────
+  if (action === 'auditer') {
+    const auditPrompt = `${profile.system_prompt_context}
+
+Tu analyses un nouveau projet client pour en comprendre le contexte, identifier les opportunités et poser les bases de la stratégie.
+
+CLIENT : ${project.client_name}
+PROJET : ${project.title}
+BRIEF : ${(project.objective || '').slice(0, 600)}
+
+[ANALYSE]
+3-4 constats clés sur la situation actuelle.
+
+[OPPORTUNITÉS]
+3 opportunités marketing concrètes et actionnables.
+
+[QUESTIONS]
+2-3 questions à poser au client pour affiner la stratégie.
+
+[MESSAGE_CLIENT]
+Le message complet envoyé au client (minimum 200 mots). Tu partages tes premières analyses, montres que tu as compris leur situation, et poses tes questions. Signe avec ton prénom.`;
+
+    const raw = await callClaude(anthropicKey, 2048, auditPrompt);
+    const ex = (tag: string) => {
+      const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙ]+\\]|$)`));
+      return m ? m[1].trim() : '';
+    };
+
+    await supabase.from('agent_reports').insert({
+      agent_slug: AGENT_SLUG,
+      title: `Audit — ${project.title}`,
+      sections: [
+        { heading: 'Analyse', content: ex('ANALYSE') },
+        { heading: 'Opportunités', content: ex('OPPORTUNIT') || ex('OPPORTUNITES') },
+        { heading: 'Questions client', content: ex('QUESTIONS') },
+      ],
+      report_type: 'owner_audit',
+      content: { project_id: project.id },
+    });
+
+    await supabase.from('client_projects')
+      .update({ phase: 'audit', updated_at: new Date().toISOString() })
+      .eq('id', project.id);
+
+    const msgClient = ex('MESSAGE_CLIENT') || client_message;
+    if (msgClient && project.client_email) {
+      const subj = `Notre analyse de votre projet — ${project.title.slice(0, 50)}`;
+      await sendToClient(
+        resendKey, project.client_email, subj,
+        buildClientEmail(profile, project.client_name, '🔍 Analyse initiale', '#A5B4FC', subj, msgClient, project.id,
+          { text: 'Voir votre espace client →', url: 'https://creatorflowmarket.com/dashboard-client.html' }),
+        project.id, 'audit', agentId, supabase,
+      );
+    }
+    return;
+  }
+
+  // ── solliciter_content / prospecting / support ────────────────────────────
+  if (['solliciter_content', 'solliciter_prospecting', 'solliciter_support'].includes(action)) {
+    const toDept = action.replace('solliciter_', '');
+    if (!collaborator_brief) return;
+
+    // Ne pas envoyer si requête déjà en cours pour ce département
+    const { data: existing } = await supabase
+      .from('internal_requests')
+      .select('id')
+      .eq('project_id', project.id)
+      .eq('to_dept', toDept)
+      .eq('status', 'pending')
+      .limit(1);
+    if (existing?.length) return;
+
+    await supabase.from('internal_requests').insert({
+      project_id: project.id,
+      from_dept: AGENT_SLUG,
+      to_dept: toDept,
+      brief: collaborator_brief,
+      objective: (project.objective || '').slice(0, 500),
+      status: 'pending',
+      decision_reason: reason,
+    });
+
+    await supabase.from('client_projects')
+      .update({ phase: 'execution', updated_at: new Date().toISOString() })
+      .eq('id', project.id);
+    return;
+  }
+
+  // ── synthétiser ───────────────────────────────────────────────────────────
+  if (action === 'synthétiser') {
+    const { data: completedReqs } = await supabase
+      .from('internal_requests')
+      .select('to_dept, brief, result, result_summary')
+      .eq('project_id', project.id)
+      .eq('status', 'completed');
+
+    if (!completedReqs?.length) return;
+
+    const synthPrompt = `${profile.system_prompt_context}
+
+Tu as reçu les travaux de tes collaborateurs pour le projet de ${project.client_name}. Synthétise-les en un message client cohérent.
+
+PROJET : ${project.title}
+OBJECTIF : ${(project.objective || '').slice(0, 300)}
+
+TRAVAUX REÇUS :
+${completedReqs.map(r =>
+  `[${r.to_dept.toUpperCase()}]\nBrief donné : ${(r.brief || '').slice(0, 200)}\nRésultat : ${(r.result || r.result_summary || '').slice(0, 500)}`
+).join('\n\n')}
+
+Rédige un message professionnel pour le client (minimum 300 mots) qui :
+- Présente les livrables de façon claire et valorisante
+- Explique comment les utiliser concrètement
+- Indique les prochaines étapes recommandées
+- Invite le client à réagir
+
+Ne mentionne jamais le nom de tes collaborateurs. Tu es leur unique point de contact. Signe avec ton prénom.`;
+
+    const synthesis = client_message || await callClaude(anthropicKey, 2048, synthPrompt);
+    if (!synthesis || !project.client_email) return;
+
+    const subj = `Vos livrables sont prêts — ${project.title.slice(0, 50)}`;
+    await sendToClient(
+      resendKey, project.client_email, subj,
+      buildClientEmail(profile, project.client_name, '✅ Livrables prêts', '#34D399', subj, synthesis, project.id,
+        { text: 'Voir vos livrables →', url: 'https://creatorflowmarket.com/dashboard-client.html' }),
+      project.id, 'synthesis', agentId, supabase,
+    );
+
+    await supabase.from('agent_reports').insert({
+      agent_slug: AGENT_SLUG,
+      title: `Synthèse — ${project.title}`,
+      sections: [{ heading: 'Synthèse livrée au client', content: synthesis }],
+      report_type: 'owner_synthesis',
+      content: { project_id: project.id },
+    });
+
+    await supabase.from('client_projects')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', project.id);
+    return;
+  }
+
+  // ── livrer ────────────────────────────────────────────────────────────────
+  if (action === 'livrer') {
+    const livraisonPrompt = `${profile.system_prompt_context}
+
+Tu clôtures le projet de ${project.client_name}. Rédige le message de livraison finale.
+
+PROJET : ${project.title}
+OBJECTIF INITIAL : ${(project.objective || '').slice(0, 300)}
+
+Rédige un message de clôture (minimum 200 mots) qui :
+- Confirme que le projet est terminé
+- Récapitule ce qui a été accompli
+- Donne 3 recommandations concrètes pour la suite
+- Invite à évaluer la collaboration
+
+Signe avec ton prénom.`;
+
+    const finalMsg = client_message || await callClaude(anthropicKey, 1024, livraisonPrompt);
+
+    await supabase.from('client_projects')
+      .update({ phase: 'completed', status: 'completed', updated_at: new Date().toISOString() })
+      .eq('id', project.id);
+
+    if (finalMsg && project.client_email) {
+      const feedbackUrl = `https://creatorflowmarket.com/feedback.html?pid=${project.id}`;
+      const msgWithFeedback = `${finalMsg}\n\n---\nVotre avis compte : ${feedbackUrl}`;
+      const subj = `Votre projet est terminé — ${project.title.slice(0, 50)}`;
+      await sendToClient(
+        resendKey, project.client_email, subj,
+        buildClientEmail(profile, project.client_name, '🎉 Projet clôturé', '#34D399', subj, msgWithFeedback, project.id,
+          { text: 'Évaluer la collaboration →', url: feedbackUrl }),
+        project.id, 'delivery', agentId, supabase,
+      );
+    }
+
+    await recalcAgentLoad(supabase, agentId);
+
+    await sendToCEO(resendKey,
+      `✅ Projet clôturé — ${project.client_name}`,
+      buildCEOAlertEmail(
+        `Projet clôturé`,
+        `Le projet "${project.title}" a été livré et clôturé par ${profile.name}.`,
+        `Client : ${project.client_name} (${project.client_email || 'email inconnu'})`,
+      ),
+    );
+    return;
+  }
+
+  // ── validation_CEO ────────────────────────────────────────────────────────
+  if (action === 'validation_CEO') {
+    await sendToCEO(resendKey,
+      `⚠ Validation requise — ${project.client_name}`,
+      buildCEOAlertEmail(
+        'Validation CEO requise',
+        `${profile.name} demande une validation pour le projet "${project.title}".`,
+        `Client : ${project.client_name}\nRaison : ${(client_message || reason).slice(0, 400)}`,
+      ),
+    );
+    return;
+  }
+
+  // ── attendre → déjà loggé dans l'historique ──────────────────────────────
+}
+
+// ---------------------------------------------------------------------------
+// Revue du portefeuille — cœur du modèle Owner
+// ---------------------------------------------------------------------------
+async function reviewOwnerPortfolio(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+  profile: EmployeeProfile,
+): Promise<{ projects_reviewed: number; actions: string[] }> {
+  const { data: agent } = await supabase
+    .from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
+  if (!agent) return { projects_reviewed: 0, actions: [] };
+
+  const { data: dept } = await supabase
+    .from('departments').select('id').eq('slug', AGENT_SLUG).single();
+
+  const { data: projects } = await supabase
+    .from('client_projects')
+    .select('*')
+    .eq('department_id', dept?.id)
+    .eq('status', 'active')
+    .order('priority_score', { ascending: false })
+    .limit(5);
+
+  const actions: string[] = [];
+
+  for (const project of (projects as ClientProject[]) || []) {
+    try {
+      const [{ data: history }, { data: internalReqs }, lastContact, clientMemory] = await Promise.all([
+        supabase.from('project_history')
+          .select('event_type, note, created_at')
+          .eq('project_id', project.id)
+          .order('created_at', { ascending: false })
+          .limit(8),
+        supabase.from('internal_requests')
+          .select('to_dept, status, brief, result, result_summary')
+          .eq('project_id', project.id)
+          .order('created_at', { ascending: false }),
+        getLastClientContact(supabase, project.id),
+        getClientMemory(supabase, project.client_email || ''),
+      ]);
+
+      const raw = await callClaude(
+        anthropicKey, 512,
+        buildOwnerDecisionPrompt(
+          profile, project,
+          (history || []) as HistoryEvent[],
+          (internalReqs || []) as InternalRequest[],
+          lastContact, clientMemory,
+        ),
+      );
+      const decision = parseOwnerDecision(raw);
+
+      await executeOwnerDecision(
+        supabase, anthropicKey, resendKey,
+        profile, project, agent.id, decision,
+      );
+
+      actions.push(`${project.title.slice(0, 30)}: ${decision.action}`);
+    } catch (err) {
+      console.error('[marketing] reviewOwnerPortfolio error:', (err as Error).message);
+    }
+  }
+
+  return { projects_reviewed: projects?.length || 0, actions };
+}
+
+// ---------------------------------------------------------------------------
+// Intake — prise en charge d'un nouveau brief
 // ---------------------------------------------------------------------------
 async function handleIntake(
   supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
   resendKey: string,
-  brief: { id: string; description: string; user_id: string }
+  profile: EmployeeProfile,
+  brief: { id: string; description: string; user_id: string },
 ): Promise<string | null> {
-  const agent = await getAvailableAgent(supabase);
-  if (!agent) {
+  const [{ data: dept }, { data: agent }] = await Promise.all([
+    supabase.from('departments').select('id').eq('slug', AGENT_SLUG).single(),
+    supabase.from('ai_agents').select('id,name,current_projects,max_projects').eq('slug', AGENT_SLUG).single(),
+  ]);
+  if (!agent || (agent.current_projects || 0) >= (agent.max_projects || 5)) {
     await sendToCEO(resendKey,
-      '⚠ Aucun Marketing Employee disponible',
-      ceoBuildAlert('Aucun Marketing Employee disponible. Le brief ne peut pas être assigné automatiquement.', brief.description)
+      '⚠ Capacité maximale atteinte — brief en attente',
+      buildCEOAlertEmail(
+        'Aucun Marketing Employee disponible',
+        'Un brief vient d\'arriver mais la capacité maximale est atteinte.',
+        `Brief : ${brief.description.slice(0, 300)}`,
+      ),
     );
     return null;
   }
 
-  const { data: dept } = await supabase.from('departments').select('id').eq('slug', AGENT_SLUG).single();
   const { email: clientEmail, name: clientName } = await getClientInfo(supabase, brief.user_id);
   const title = (brief.description || '').slice(0, 100);
 
@@ -195,208 +700,118 @@ async function handleIntake(
 
   if (!project) return null;
 
-  await supabase.from('ai_agents')
-    .update({ current_projects: (agent.current_projects || 0) + 1 })
-    .eq('id', agent.id);
-
   await supabase.from('briefs')
     .update({ statut: 'in_progress', project_id: project.id })
     .eq('id', brief.id);
 
-  await writeHistory(supabase, project.id, 'phase_change', null,
-    { phase: 'intake', agent: agent.name, client: clientName },
-    agent.id, 'Brief ramassé automatiquement'
-  );
-  if (dept?.id) await createInitialMilestones(supabase, project.id, dept.id);
+  await supabase.from('ai_agents')
+    .update({ current_projects: (agent.current_projects || 0) + 1 })
+    .eq('id', agent.id);
 
+  await writeHistory(
+    supabase, project.id, 'intake',
+    null, { agent: AGENT_SLUG, client: clientName },
+    agent.id, `Projet pris en charge par ${profile.name}`,
+  );
+
+  // Email d'accueil au client — généré par Claude avec l'identité d'Aria
   if (clientEmail) {
-    await sendToClient(resendKey, clientEmail,
-      `Votre projet est pris en charge — ${title.slice(0, 50)}`,
-      clientBuildIntake(clientName, brief.description, project.id),
-      project.id, 'intake', agent.id, supabase
+    const welcomePrompt = `${profile.system_prompt_context}
+
+Un nouveau client vient de te confier un projet. Rédige un message d'accueil (150-200 mots) qui :
+- Confirme que tu as bien reçu leur demande et que tu en es la responsable
+- Montre que tu as lu et compris leur brief
+- Explique que tu vas analyser la situation et revenir avec tes premières recommandations sous 24-48h
+- Donne confiance dès le premier contact
+
+BRIEF DU CLIENT : ${brief.description.slice(0, 400)}
+
+Signe avec ton prénom uniquement. Ne mentionne pas d'autres membres d'équipe.`;
+
+    const welcomeMsg = await callClaude(anthropicKey, 512, welcomePrompt);
+    const subj = `Votre projet est entre de bonnes mains — ${title.slice(0, 50)}`;
+    await sendToClient(
+      resendKey, clientEmail, subj,
+      buildClientEmail(profile, clientName, '✦ Projet reçu', '#A5B4FC', subj, welcomeMsg, project.id),
+      project.id, 'intake', agent.id, supabase,
     );
   }
 
   await sendToCEO(resendKey,
-    `📋 Nouveau projet — ${title.slice(0, 60)}`,
-    ceoBuildNewProject(project.id, brief.description, clientName, clientEmail, agent.name)
+    `📋 Nouveau projet — ${clientName}`,
+    buildCEOAlertEmail(
+      'Nouveau projet entrant',
+      `${profile.name} a pris en charge un nouveau projet de ${clientName}.`,
+      `Projet : "${title}"\nClient : ${clientEmail || 'email inconnu'}\nBrief : ${brief.description.slice(0, 300)}`,
+    ),
   );
 
   return project.id;
 }
 
 // ---------------------------------------------------------------------------
-// Phase 2 — AUDIT: analyse du brief → email client
+// Révisions — transformées en internal_requests
 // ---------------------------------------------------------------------------
-async function handleAudit(
+async function processRevisionRequests(
   supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-  project: ClientProject
-): Promise<void> {
-  const raw = await callClaude(anthropicKey, 2048, promptAudit(project));
-  const findings = extract(raw, 'FINDINGS');
-  const opportunities = extract(raw, 'OPPORTUNITIES');
-  const baseline = extract(raw, 'BASELINE');
-  const questions = extract(raw, 'QUESTIONS');
+): Promise<number> {
+  const { data: revisions } = await supabase
+    .from('project_revisions')
+    .select('id, project_id, reason, department')
+    .eq('status', 'pending')
+    .limit(3);
 
-  await supabase.from('agent_reports').insert({
-    agent_slug: AGENT_SLUG,
-    title: `Audit — ${project.title}`,
-    sections: [
-      { heading: 'Constats', content: findings },
-      { heading: 'Opportunités', content: opportunities },
-      { heading: 'Baseline KPIs', content: baseline },
-      { heading: 'Questions client', content: questions },
-    ],
-    report_type: 'project_audit',
-    content: { project_id: project.id },
-  });
+  if (!revisions?.length) return 0;
+  let processed = 0;
 
-  await supabase.from('client_projects').update({
-    phase: 'audit',
-    baseline_kpis: { findings, opportunities, baseline_summary: baseline },
-  }).eq('id', project.id);
+  for (const rev of revisions) {
+    try {
+      const dept = rev.department || 'content';
 
-  await writeHistory(supabase, project.id, 'phase_change',
-    { phase: 'intake' }, { phase: 'audit' },
-    project.responsible_agent_id, 'Audit complété par Claude'
-  );
-  await writeProjectKpis(supabase, project.id, baseline);
-  await completeMilestone(supabase, project.id, 'Audit de la situation');
+      // Vérifier qu'il n'y a pas déjà une requête de révision en cours
+      const { data: existing } = await supabase
+        .from('internal_requests')
+        .select('id')
+        .eq('project_id', rev.project_id)
+        .eq('to_dept', dept)
+        .eq('status', 'pending')
+        .limit(1);
 
-  if (project.client_email) {
-    await sendToClient(resendKey, project.client_email,
-      `Audit de votre situation — ${project.title.slice(0, 50)}`,
-      clientBuildAudit(project.client_name, project.title, findings, opportunities, questions),
-      project.id, 'audit', project.responsible_agent_id, supabase
-    );
+      if (!existing?.length) {
+        await supabase.from('internal_requests').insert({
+          project_id: rev.project_id,
+          from_dept: AGENT_SLUG,
+          to_dept: dept,
+          brief: `RÉVISION DEMANDÉE PAR LE CLIENT\nRaison : ${rev.reason}`,
+          status: 'pending',
+          decision_reason: 'Révision demandée par le client via le formulaire',
+        });
+      }
+
+      await supabase.from('project_revisions')
+        .update({ status: 'in_progress' })
+        .eq('id', rev.id);
+
+      processed++;
+    } catch (err) {
+      console.error('[marketing] processRevisionRequests error:', (err as Error).message);
+    }
   }
+  return processed;
 }
 
 // ---------------------------------------------------------------------------
-// Phase 3 — STRATEGY: plan 90j + délégation Content/Prospecting
-// ---------------------------------------------------------------------------
-async function handleStrategy(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-  project: ClientProject
-): Promise<void> {
-  const raw = await callClaude(anthropicKey, 2048, promptStrategy(project));
-  const strategy = extract(raw, 'STRATEGY');
-  const actionPlan = extract(raw, 'ACTION_PLAN');
-  const contentTasks = extract(raw, 'CONTENT_TASKS');
-  const prospectingTasks = extract(raw, 'PROSPECTING_TASKS');
-  const kpis = extract(raw, 'KPIS');
-
-  if (contentTasks) {
-    await supabase.from('project_tasks').insert({
-      project_id: project.id, assigned_department: 'content',
-      title: `Contenu — ${project.title}`, description: contentTasks, status: 'pending',
-    });
-  }
-
-  if (prospectingTasks) {
-    await supabase.from('project_tasks').insert({
-      project_id: project.id, assigned_department: 'prospecting',
-      title: `Prospection — ${project.title}`, description: prospectingTasks, status: 'pending',
-    });
-  }
-
-  await supabase.from('agent_reports').insert({
-    agent_slug: AGENT_SLUG,
-    title: `Stratégie — ${project.title}`,
-    sections: [
-      { heading: 'Stratégie', content: strategy },
-      { heading: "Plan d'action", content: actionPlan },
-      { heading: 'Tâches Content', content: contentTasks },
-      { heading: 'Tâches Prospecting', content: prospectingTasks },
-      { heading: 'KPIs cibles', content: kpis },
-    ],
-    report_type: 'project_strategy',
-    content: { project_id: project.id },
-  });
-
-  await supabase.from('client_projects')
-    .update({ phase: 'execution' })
-    .eq('id', project.id);
-
-  await writeHistory(supabase, project.id, 'phase_change',
-    { phase: 'audit' }, { phase: 'execution', tasks_delegated: [contentTasks ? 'content' : null, prospectingTasks ? 'prospecting' : null].filter(Boolean) },
-    project.responsible_agent_id, 'Stratégie construite, délégation effectuée'
-  );
-  await completeMilestone(supabase, project.id, 'Stratégie 90 jours');
-
-  if (project.client_email) {
-    await sendToClient(resendKey, project.client_email,
-      `Votre stratégie marketing — ${project.title.slice(0, 50)}`,
-      clientBuildStrategy(project.client_name, project.title, strategy, actionPlan, kpis),
-      project.id, 'strategy', project.responsible_agent_id, supabase
-    );
-  }
-
-  await sendToCEO(resendKey,
-    `📊 Stratégie prête — ${project.title.slice(0, 60)}`,
-    ceoBuildStrategy(project, strategy, contentTasks, prospectingTasks)
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Phase 5 — DELIVER: rapport final au client
-// ---------------------------------------------------------------------------
-async function handleDeliver(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-  project: ClientProject
-): Promise<void> {
-  const { data: tasks } = await supabase.from('project_tasks')
-    .select('title, status, result').eq('project_id', project.id);
-
-  const raw = await callClaude(anthropicKey, 2048, promptDeliver(project, tasks || []));
-  const results = extract(raw, 'RESULTS');
-  const impact = extract(raw, 'IMPACT');
-  const nextSteps = extract(raw, 'NEXT_STEPS');
-
-  await supabase.from('client_projects').update({
-    phase: 'completed', status: 'completed',
-    results_kpis: { results, impact },
-  }).eq('id', project.id);
-
-  await writeHistory(supabase, project.id, 'phase_change',
-    { phase: 'execution' }, { phase: 'completed', results_summary: results.slice(0, 200) },
-    project.responsible_agent_id, 'Projet livré au client'
-  );
-  await completeMilestone(supabase, project.id, 'Livraison finale');
-  await recalcAgentLoad(supabase, project.responsible_agent_id);
-
-  if (project.client_email) {
-    await sendToClient(resendKey, project.client_email,
-      `Votre projet est terminé — ${project.title.slice(0, 50)}`,
-      clientBuildDelivery(project.client_name, project.title, results, impact, nextSteps, project.id),
-      project.id, 'delivery', project.responsible_agent_id, supabase
-    );
-  }
-
-  await sendToCEO(resendKey,
-    `✅ Projet livré — ${project.title.slice(0, 60)}`,
-    ceoBuildAlert(`Le projet "${project.title}" est terminé et livré au client.`, `Client : ${project.client_name} (${project.client_email})`)
-  );
-}
-
-// ---------------------------------------------------------------------------
-// CHECK — revue quotidienne de tous les projets actifs
+// handleCheck — point d'entrée principal
 // ---------------------------------------------------------------------------
 async function handleCheck(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
-  resendKey: string
+  resendKey: string,
+  profile: EmployeeProfile,
 ): Promise<{ briefs_picked_up: number; projects_reviewed: number; actions: string[] }> {
-  const now = new Date();
   const actions: string[] = [];
 
-  // 1. Ramasser les briefs non assignés
+  // 1. Ramasser les nouveaux briefs
   const { data: newBriefs } = await supabase
     .from('briefs')
     .select('id, description, user_id, statut')
@@ -407,790 +822,80 @@ async function handleCheck(
 
   for (const brief of newBriefs || []) {
     if (!brief.user_id || !brief.description) continue;
-    const pid = await handleIntake(supabase, resendKey, brief);
+    const pid = await handleIntake(supabase, anthropicKey, resendKey, profile, brief);
     if (pid) actions.push(`intake:${pid}`);
   }
 
-  // 2. Revue des projets actifs marketing
-  const { data: dept } = await supabase.from('departments').select('id').eq('slug', AGENT_SLUG).single();
-  if (!dept) return { briefs_picked_up: (newBriefs?.length || 0), projects_reviewed: 0, actions };
+  // 2. Revue du portefeuille — Claude décide pour chaque projet
+  const { projects_reviewed, actions: ownerActions } = await reviewOwnerPortfolio(
+    supabase, anthropicKey, resendKey, profile,
+  );
+  actions.push(...ownerActions);
 
-  const { data: projects } = await supabase
-    .from('client_projects')
-    .select('*')
-    .eq('department_id', dept.id)
-    .eq('status', 'active')
-    .order('priority_score', { ascending: false });
+  // 3. Révisions → internal_requests
+  const revisionsCreated = await processRevisionRequests(supabase);
+  if (revisionsCreated > 0) actions.push(`revision_requests_created:${revisionsCreated}`);
 
-  let auditDone = false;
-  let strategyDone = false;
-  let deliverDone = false;
-
-  for (const project of (projects as ClientProject[]) || []) {
-    const hoursElapsed = (now.getTime() - new Date(project.updated_at).getTime()) / 3_600_000;
-
-    // Phase intake → audit (après 2h)
-    if (!auditDone && project.phase === 'intake' && hoursElapsed >= 2) {
-      await handleAudit(supabase, anthropicKey, resendKey, project);
-      actions.push(`audit:${project.id}`);
-      auditDone = true;
-      continue;
-    }
-
-    // Phase audit → strategy (après 24h)
-    if (!strategyDone && project.phase === 'audit' && hoursElapsed >= 24) {
-      await handleStrategy(supabase, anthropicKey, resendKey, project);
-      actions.push(`strategy:${project.id}`);
-      strategyDone = true;
-      continue;
-    }
-
-    // Phase execution → deliver (si toutes tâches complètes)
-    if (!deliverDone && project.phase === 'execution') {
-      const { data: tasks } = await supabase
-        .from('project_tasks').select('status').eq('project_id', project.id);
-
-      const allDone = tasks?.length ? tasks.every((t: { status: string }) => t.status === 'completed') : false;
-      const hasNoTasks = !tasks?.length;
-
-      if (hasNoTasks && hoursElapsed >= 72) {
-        // Pas de tâches déléguées et 72h passées — livrer quand même
-        await handleDeliver(supabase, anthropicKey, resendKey, project);
-        actions.push(`deliver:${project.id}`);
-        deliverDone = true;
-      } else if (allDone) {
-        await handleDeliver(supabase, anthropicKey, resendKey, project);
-        actions.push(`deliver:${project.id}`);
-        deliverDone = true;
-      } else if (hoursElapsed >= 72) {
-        // Mise à jour hebdomadaire au client
-        const pending = tasks?.filter((t: { status: string }) => t.status !== 'completed').length || 0;
-        if (project.client_email) {
-          await sendToClient(resendKey, project.client_email,
-            `Mise à jour de votre projet — ${project.title.slice(0, 50)}`,
-            clientBuildProgress(project.client_name, project.title, (tasks?.length || 0) - pending, tasks?.length || 0),
-            project.id, 'execution', project.responsible_agent_id, supabase
-          );
-          await supabase.from('client_projects').update({ updated_at: new Date().toISOString() }).eq('id', project.id);
-          actions.push(`progress_update:${project.id}`);
-        }
-      }
-    }
-
-    // Alerte si en retard sur la deadline
-    if (project.due_date && new Date(project.due_date) < now) {
-      await sendToCEO(resendKey,
-        `🔴 Projet en retard — ${project.title.slice(0, 60)}`,
-        ceoBuildAlert(`Le projet "${project.title}" a dépassé sa deadline.`,
-          `Client : ${project.client_name} | Phase actuelle : ${project.phase}`)
-      );
-      actions.push(`overdue:${project.id}`);
-    }
-  }
-
-  // 3. Recalculer la disponibilité de tous les agents
-  const { data: agents } = await supabase
-    .from('ai_agents').select('id, max_projects').eq('status', 'active');
-
-  for (const agent of agents || []) {
-    await recalcAgentLoad(supabase, agent.id);
-  }
-
-  // 4. Traiter les escalations remontées par les employés IA
-  const escalationsProcessed = await processEscalations(supabase, anthropicKey, resendKey);
-  if (escalationsProcessed > 0) actions.push(`escalations_resolved:${escalationsProcessed}`);
-
-  // 5. Traiter les demandes de révision clients
-  const revisionsCreated = await processRevisionRequests(supabase, resendKey);
-  if (revisionsCreated > 0) actions.push(`revision_tasks_created:${revisionsCreated}`);
-
-  // 6. Envoyer des propositions upsell aux clients satisfaits récents
-  const upsellsSent = await processUpsellOpportunities(supabase, anthropicKey, resendKey);
-  if (upsellsSent > 0) actions.push(`upsell_proposals_sent:${upsellsSent}`);
-
-  return { briefs_picked_up: newBriefs?.length || 0, projects_reviewed: projects?.length || 0, actions };
+  return {
+    briefs_picked_up: newBriefs?.length || 0,
+    projects_reviewed,
+    actions,
+  };
 }
 
 // ---------------------------------------------------------------------------
-// Prompts Claude
+// Main
 // ---------------------------------------------------------------------------
-function promptAudit(p: ClientProject): string {
-  return `Tu es le Marketing Director de CreatorFlow Market. Tu prends en charge ce projet client.
-
-PROJET : ${p.title}
-OBJECTIF : ${p.objective}
-
-Produis un audit de la situation actuelle basé sur ce brief.
-
-[FINDINGS]
-3-5 constats précis sur la situation actuelle (forces, faiblesses, risques).
-
-[OPPORTUNITIES]
-3 opportunités concrètes : opportunité — pourquoi pertinente — action recommandée.
-
-[BASELINE]
-4-5 KPIs à mesurer. Format : Métrique — Comment mesurer — Valeur cible.
-
-[QUESTIONS]
-2-3 questions précises à poser au client pour affiner la stratégie.`;
-}
-
-function promptStrategy(p: ClientProject): string {
-  return `Tu es le Marketing Director de CreatorFlow Market.
-
-PROJET : ${p.title}
-OBJECTIF : ${p.objective}
-AUDIT : ${JSON.stringify(p.baseline_kpis).slice(0, 600)}
-
-Construis la stratégie complète sur 90 jours.
-
-[STRATEGY]
-4-5 axes stratégiques. Pour chaque axe : nom — objectif — pourquoi prioritaire.
-
-[ACTION_PLAN]
-Plan 30/60/90 jours. Format : Semaine X — Action — Livrable.
-
-[CONTENT_TASKS]
-Tâches de contenu à déléguer. Format : Tâche — Description — Deadline.
-
-[PROSPECTING_TASKS]
-Tâches de prospection à déléguer. Format : Tâche — Description — Deadline.
-
-[KPIS]
-4-5 KPIs cibles à J+90. Format : KPI — Baseline — Cible.`;
-}
-
-function promptDeliver(p: ClientProject, tasks: Array<{ title: string; status: string; result?: string }>): string {
-  const tasksSummary = tasks.map(t => `${t.title} (${t.status}) : ${t.result || 'en cours'}`).join('\n');
-  return `Tu es le Marketing Director de CreatorFlow Market. Produis le rapport final de ce projet.
-
-PROJET : ${p.title}
-OBJECTIF : ${p.objective}
-TÂCHES : ${tasksSummary || 'Aucune tâche déléguée.'}
-
-[RESULTS]
-Ce qui a été accompli concrètement. Factuel et précis.
-
-[IMPACT]
-Impact mesurable sur l'activité du client. Avant/après si possible.
-
-[NEXT_STEPS]
-3 recommandations pour maintenir l'élan après la livraison.`;
-}
-
-// ---------------------------------------------------------------------------
-// HTML — Emails client (FROM: CreatorFlow Market)
-// ---------------------------------------------------------------------------
-const S = `body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
-.w{max-width:580px;margin:0 auto;padding:28px 20px;}
-.hd{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.logo{font-size:16px;font-weight:800;color:#F4F4FF;}.logo em{font-style:normal;color:#4F46E5;}
-h2{font-size:18px;margin:20px 0 4px;color:#A5B4FC;}
-.meta{font-size:12px;color:#9898B8;margin-bottom:20px;}
-.sec{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
-.lbl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
-.txt{font-size:13px;color:#D1D5DB;line-height:1.7;white-space:pre-wrap;}
-.badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:14px;background:rgba(79,70,229,0.15);color:#A5B4FC;border:1px solid rgba(79,70,229,0.3);}
-.btn{display:inline-block;background:#4F46E5;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
-.ft{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}`;
-
-const dash = 'https://creatorflowmarket.com/dashboard-client.html';
-
-function clientBuildIntake(name: string, objective: string, projectId: string): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge">✓ Projet pris en charge</div>
-<h2>Bonjour ${name},</h2><div class="meta">${d}</div>
-<div class="sec"><div class="lbl">Votre mission</div><div class="txt">${objective}</div></div>
-<div class="sec"><div class="lbl">Ce qui se passe maintenant</div><div class="txt">Votre dossier est entre les mains de votre équipe CreatorFlow Market. Un audit complet de votre situation vous sera envoyé dans les prochaines 24h.
-
-Vous n'avez rien à faire — nous gérons tout.</div></div>
-<p style="text-align:center"><a href="${dash}" class="btn">Suivre l'avancement →</a></p>
-<div class="ft">CreatorFlow Market · Réf. ${projectId.slice(0,8).toUpperCase()}</div>
-</div></body></html>`;
-}
-
-function clientBuildAudit(name: string, title: string, findings: string, opportunities: string, questions: string): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge">📋 Audit — Étape 1/3</div>
-<h2>Audit de votre situation</h2><div class="meta">${d} · ${title}</div>
-<div class="sec"><div class="lbl">Constats</div><div class="txt">${findings}</div></div>
-<div class="sec"><div class="lbl">Opportunités identifiées</div><div class="txt">${opportunities}</div></div>
-${questions ? `<div class="sec"><div class="lbl">Questions pour affiner la stratégie</div><div class="txt">${questions}</div></div>` : ''}
-<p style="font-size:13px;color:#D1D5DB;">Votre stratégie complète vous sera envoyée dans les prochaines 24h.</p>
-<p style="text-align:center"><a href="${dash}" class="btn">Voir mon dossier →</a></p>
-<div class="ft">CreatorFlow Market · Audit préparé par votre équipe</div>
-</div></body></html>`;
-}
-
-function clientBuildStrategy(name: string, title: string, strategy: string, actionPlan: string, kpis: string): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge">🚀 Stratégie — Étape 2/3</div>
-<h2>Votre stratégie marketing sur 90 jours</h2><div class="meta">${d} · ${title}</div>
-<div class="sec"><div class="lbl">Stratégie</div><div class="txt">${strategy}</div></div>
-<div class="sec"><div class="lbl">Plan d'action</div><div class="txt">${actionPlan}</div></div>
-<div class="sec"><div class="lbl">KPIs à atteindre</div><div class="txt">${kpis}</div></div>
-<p style="font-size:13px;color:#D1D5DB;">Votre équipe passe maintenant à l'exécution. Vous recevrez des mises à jour régulières.</p>
-<p style="text-align:center"><a href="${dash}" class="btn">Suivre l'exécution →</a></p>
-<div class="ft">CreatorFlow Market · Stratégie préparée par votre équipe</div>
-</div></body></html>`;
-}
-
-function clientBuildProgress(name: string, title: string, done: number, total: number): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge">📈 Mise à jour projet</div>
-<h2>Avancement de votre projet</h2><div class="meta">${d} · ${title}</div>
-<div class="sec"><div class="lbl">Progression</div><div class="txt">${done} tâches complétées sur ${total} (${pct}%)
-
-Votre équipe travaille activement. Vous serez notifié dès que la livraison finale est prête.</div></div>
-<p style="text-align:center"><a href="${dash}" class="btn">Voir le détail →</a></p>
-<div class="ft">CreatorFlow Market · Mise à jour automatique</div>
-</div></body></html>`;
-}
-
-function clientBuildDelivery(name: string, title: string, results: string, impact: string, nextSteps: string, projectId: string): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  const revisionUrl = `https://creatorflowmarket.com/revision.html?pid=${projectId}`;
-  const feedbackUrl = `https://creatorflowmarket.com/feedback.html?pid=${projectId}`;
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge">✅ Livraison finale — Étape 3/3</div>
-<h2>Votre projet est terminé</h2><div class="meta">${d} · ${title}</div>
-<div class="sec"><div class="lbl">Ce qui a été accompli</div><div class="txt">${results}</div></div>
-<div class="sec"><div class="lbl">Impact sur votre activité</div><div class="txt">${impact}</div></div>
-<div class="sec"><div class="lbl">Prochaines étapes recommandées</div><div class="txt">${nextSteps}</div></div>
-<p style="text-align:center"><a href="${dash}" class="btn">Voir le rapport complet →</a></p>
-<p style="text-align:center;margin-top:12px;"><a href="${feedbackUrl}" style="color:#A5B4FC;font-size:12px;text-decoration:none;background:rgba(79,70,229,0.12);border:1px solid rgba(79,70,229,0.25);border-radius:999px;padding:6px 16px;display:inline-block;">⭐ Évaluer ce livrable (1 minute)</a></p>
-<p style="text-align:center;margin-top:6px;"><a href="${revisionUrl}" style="color:#9CA3AF;font-size:12px;text-decoration:underline;">Une modification nécessaire ? Demander une révision</a></p>
-<div class="ft">CreatorFlow Market · Merci de votre confiance.</div>
-</div></body></html>`;
-}
-
-// ---------------------------------------------------------------------------
-// HTML — Emails CEO (FROM: Marketing Director IA)
-// ---------------------------------------------------------------------------
-const SC = `body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;margin:0;padding:0;}
-.w{max-width:580px;margin:0 auto;padding:28px 20px;}
-.hd{padding:16px 0 20px;border-bottom:1px solid rgba(255,255,255,0.1);}
-.logo{font-size:16px;font-weight:800;color:#F4F4FF;}.logo em{font-style:normal;color:#4F46E5;}
-h2{font-size:18px;margin:20px 0 4px;color:#A5B4FC;}
-.sec{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px 18px;margin:12px 0;}
-.lbl{font-size:10px;font-weight:700;color:#9898B8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
-.txt{font-size:13px;color:#D1D5DB;line-height:1.7;white-space:pre-wrap;}
-.btn{display:inline-block;background:#4F46E5;color:#fff;text-decoration:none;padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;margin:16px 0;}
-.ft{text-align:center;font-size:11px;color:#55557A;padding:16px 0 0;border-top:1px solid rgba(255,255,255,0.05);}`;
-
-const cockpit = 'https://creatorflowmarket.com/admin';
-
-// ---------------------------------------------------------------------------
-// ESCALATIONS — traiter les blocages remontés par les employés IA
-// ---------------------------------------------------------------------------
-function promptEscalation(
-  project: { title: string; client_name: string; phase: string; objective?: string },
-  fromAgent: string,
-  reason: string,
-  recommended: string,
-): string {
-  return `Tu es le Marketing Director de CreatorFlow Market.
-
-Un de tes employés IA a escaladé un problème sur un projet client.
-
-PROJET : ${project.title} | CLIENT : ${project.client_name} | PHASE : ${project.phase}
-OBJECTIF : ${(project.objective || '').slice(0, 200)}
-EMPLOYÉ : ${fromAgent}
-RAISON DE L'ESCALADE : ${reason}
-RECOMMANDATION DE L'EMPLOYÉ : ${recommended || 'Aucune'}
-
-Tu dois débloquer ce projet. Décide de l'action à prendre.
-
-[ACTION]
-create_task (créer une nouvelle tâche pour l'employé) | notify_ceo (alerter le CEO — urgence uniquement) | contact_client (demander une info au client) | hold (monitorer, pas d'action immédiate)
-
-[RESOLUTION]
-Décision prise en 1-2 phrases.
-
-[TASK_TITLE]
-(si create_task — titre de la nouvelle tâche)
-
-[TASK_DESC]
-(si create_task — description)
-
-[CLIENT_MESSAGE]
-(si contact_client — message à envoyer au client)`;
-}
-
-function ceoBuildEscalation(project: { title: string; client_name: string; phase: string }, fromAgent: string, reason: string, resolution: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
-<h2>⚠ Escalade traitée — ${project.title.slice(0, 60)}</h2>
-<div class="sec"><div class="lbl">Employé</div><div class="txt">${fromAgent}</div></div>
-<div class="sec"><div class="lbl">Client</div><div class="txt">${project.client_name} — Phase : ${project.phase}</div></div>
-<div class="sec"><div class="lbl">Raison</div><div class="txt">${reason}</div></div>
-<div class="sec"><div class="lbl">Résolution</div><div class="txt">${resolution}</div></div>
-<p style="text-align:center"><a href="${cockpit}" class="btn">Voir dans le Cockpit →</a></p>
-<div class="ft">Marketing Director IA · CreatorFlow Market</div>
-</div></body></html>`;
-}
-
-async function processEscalations(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-): Promise<number> {
-  const { data: handoffs } = await supabase
-    .from('employee_handoffs')
-    .select('id, from_agent, to_agent, handoff_type, payload, created_at')
-    .eq('to_agent', AGENT_SLUG)
-    .eq('handoff_type', 'escalation')
-    .eq('status', 'pending')
-    .order('created_at', { ascending: true })
-    .limit(3);
-
-  if (!handoffs?.length) return 0;
-
-  let resolved = 0;
-  const { data: mdAgent } = await supabase.from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
-
-  for (const handoff of handoffs) {
-    try {
-      const { project_id, reason, recommended_action } = handoff.payload || {};
-      if (!project_id) continue;
-
-      const { data: project } = await supabase
-        .from('client_projects')
-        .select('id, title, client_name, client_email, phase, objective, responsible_agent_id')
-        .eq('id', project_id)
-        .single();
-      if (!project) continue;
-
-      const raw = await callClaude(anthropicKey, 512, promptEscalation(project, handoff.from_agent, reason || '', recommended_action || ''));
-      const action = extract(raw, 'ACTION').split('\n')[0].trim().toLowerCase();
-      const resolution = extract(raw, 'RESOLUTION') || 'Escalade résolue.';
-
-      if (action === 'create_task') {
-        const taskTitle = extract(raw, 'TASK_TITLE') || `Déblocage — ${(reason || '').slice(0, 60)}`;
-        const taskDesc = extract(raw, 'TASK_DESC') || '';
-        await supabase.from('project_tasks').insert({
-          project_id: project.id,
-          assigned_department: handoff.from_agent,
-          title: taskTitle,
-          description: taskDesc,
-          status: 'pending',
-        });
-      } else if (action === 'notify_ceo') {
-        await sendToCEO(resendKey,
-          `⚠ Escalade — ${project.title.slice(0, 60)}`,
-          ceoBuildEscalation(project, handoff.from_agent, reason || '', resolution),
-        );
-      } else if (action === 'contact_client' && project.client_email) {
-        const clientMsg = extract(raw, 'CLIENT_MESSAGE') || `Nous avons besoin de votre retour sur le projet "${project.title}" pour avancer.`;
-        await sendToClient(
-          resendKey, project.client_email,
-          `Question sur votre projet — ${project.title.slice(0, 55)}`,
-          `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<h2>Votre projet avance</h2>
-<div class="sec"><div class="txt">Bonjour ${project.client_name},\n\n${clientMsg}\n\nMerci de répondre à cet email ou de nous contacter directement.</div></div>
-<div class="ft">CreatorFlow Market · votre équipe IA</div>
-</div></body></html>`,
-          project.id, project.phase, project.responsible_agent_id || mdAgent?.id || '', supabase,
-        );
-      }
-
-      // Marquer l'escalade comme résolue
-      await supabase.from('employee_handoffs')
-        .update({ status: 'resolved' })
-        .eq('id', handoff.id);
-
-      await writeHistory(
-        supabase, project.id, 'escalation_resolved',
-        { from: handoff.from_agent, reason: reason || '' },
-        { action, resolution: resolution.slice(0, 200) },
-        mdAgent?.id || '',
-        `Escalade de ${handoff.from_agent} résolue par Marketing Director : ${action}`,
-      );
-
-      resolved++;
-    } catch (err) {
-      console.error('[marketing] processEscalations error:', (err as Error).message);
-    }
-  }
-
-  return resolved;
-}
-
-// ---------------------------------------------------------------------------
-// RÉVISIONS — traiter les demandes de révision clients
-// ---------------------------------------------------------------------------
-async function processRevisionRequests(
-  supabase: ReturnType<typeof createClient>,
-  resendKey: string,
-): Promise<number> {
-  const { data: revisions } = await supabase
-    .from('project_revisions')
-    .select('id, project_id, reason, department, requested_by, created_at')
-    .eq('status', 'pending')
-    .order('created_at', { ascending: true })
-    .limit(3);
-
-  if (!revisions?.length) return 0;
-
-  let processed = 0;
-  const { data: mdAgent } = await supabase.from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
-
-  for (const revision of revisions) {
-    try {
-      const { data: project } = await supabase
-        .from('client_projects')
-        .select('id, title, client_name, client_email, phase, status, responsible_agent_id')
-        .eq('id', revision.project_id)
-        .single();
-      if (!project) continue;
-
-      // Déterminer les départements concernés par la révision
-      const departments: string[] = revision.department
-        ? [revision.department]
-        : ['content', 'prospecting'];
-
-      // Créer les tâches de révision
-      for (const dept of departments) {
-        await supabase.from('project_tasks').insert({
-          project_id: project.id,
-          assigned_department: dept,
-          title: `RÉVISION — ${(revision.reason || 'Améliorer le livrable précédent').slice(0, 80)}`,
-          description: `Le client a demandé une révision.\n\nRaison : ${revision.reason || 'Non précisée'}\nDemandé par : ${revision.requested_by}\nDate : ${revision.created_at?.slice(0, 10)}\n\nRéférencer le livrable précédent et produire une version améliorée qui répond précisément à ces retours.`,
-          status: 'pending',
-        });
-      }
-
-      // Réactiver le projet pour la révision
-      await supabase.from('client_projects').update({
-        status: 'active',
-        phase: 'revision',
-        updated_at: new Date().toISOString(),
-      }).eq('id', project.id);
-
-      // Marquer la révision comme en cours
-      await supabase.from('project_revisions').update({ status: 'in_progress' }).eq('id', revision.id);
-
-      // Historique
-      await writeHistory(
-        supabase, project.id, 'revision_requested',
-        { status: project.status, phase: project.phase },
-        { status: 'active', phase: 'revision', departments },
-        mdAgent?.id || '',
-        `Révision demandée par ${revision.requested_by} : ${(revision.reason || '').slice(0, 100)}`,
-      );
-
-      // Notifier le CEO
-      await sendToCEO(resendKey,
-        `🔄 Révision en cours — ${project.title.slice(0, 60)}`,
-        ceoBuildAlert(
-          `Une révision a été demandée par ${revision.requested_by} sur "${project.title}".`,
-          `Raison : ${revision.reason || 'Non précisée'}\nDépartements : ${departments.join(', ')}\nClient : ${project.client_name}`,
-        ),
-      );
-
-      processed++;
-    } catch (err) {
-      console.error('[marketing] processRevisionRequests error:', (err as Error).message);
-    }
-  }
-
-  return processed;
-}
-
-// ---------------------------------------------------------------------------
-// UPSELL — proposer de nouveaux projets aux clients satisfaits
-// ---------------------------------------------------------------------------
-function promptUpsell(
-  project: { title: string; objective?: string },
-  clientName: string,
-  deliverablesSummary: string,
-  score: number,
-  clientMemory: string,
-): string {
-  return `Tu es le Marketing Director de CreatorFlow Market. Un client vient de terminer un projet avec succès.
-
-CLIENT : ${clientName}
-PROJET COMPLÉTÉ : ${project.title}
-OBJECTIF INITIAL : ${(project.objective || '').slice(0, 200)}
-LIVRABLES PRODUITS : ${deliverablesSummary.slice(0, 400)}
-SATISFACTION : ${score}/3
-${clientMemory ? `CE QU'ON SAIT DE CE CLIENT :\n${clientMemory}` : ''}
-
-Génère une proposition commerciale personnalisée pour lui proposer de continuer à travailler ensemble.
-
-[INTRO]
-2 phrases qui font référence naturellement à ce qui a été accompli et ouvrent vers la suite. Ton chaleureux et professionnel.
-
-[SERVICES]
-2-3 services complémentaires ADAPTÉS À CE CLIENT SPÉCIFIQUEMENT. Pour chaque service :
-Nom du service | Bénéfice concret pour lui | Pourquoi maintenant
-
-[CTA]
-1 phrase d'appel à l'action directe et engageante.`;
-}
-
-function clientBuildProposal(
-  clientName: string,
-  projectTitle: string,
-  intro: string,
-  services: string,
-  cta: string,
-  projectId: string,
-): string {
-  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
-  const briefUrl = 'https://creatorflowmarket.com/#brief';
-  const serviceLines = services.split('\n').filter(l => l.trim()).map(l => {
-    const parts = l.split('|').map(p => p.trim());
-    if (parts.length >= 2) {
-      return `<div class="sec"><div class="lbl">${parts[0]}</div><div class="txt">${parts.slice(1).join(' — ')}</div></div>`;
-    }
-    return `<div class="sec"><div class="txt">${l}</div></div>`;
-  }).join('');
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
-<div class="badge" style="background:rgba(79,70,229,0.15);color:#A5B4FC;border:1px solid rgba(79,70,229,0.3);">✦ Pour ${clientName}</div>
-<h2>Et si on continuait sur votre lancée ?</h2>
-<div class="meta">${d} · Suite de "${projectTitle.slice(0, 50)}"</div>
-<div class="sec"><div class="txt">${intro}</div></div>
-<div class="lbl" style="margin:20px 0 8px;">Services recommandés pour vous</div>
-${serviceLines}
-<p style="font-size:13px;color:#D1D5DB;margin:16px 0;">${cta}</p>
-<p style="text-align:center"><a href="${briefUrl}" class="btn">Soumettre un nouveau brief →</a></p>
-<div class="ft">CreatorFlow Market · Réf. ${projectId.slice(0, 8).toUpperCase()}</div>
-</div></body></html>`;
-}
-
-async function processUpsellOpportunities(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  resendKey: string,
-): Promise<number> {
-  // Projets complétés dans les 7 derniers jours avec client_email
-  const minus7d = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
-  const { data: projects } = await supabase
-    .from('client_projects')
-    .select('id, title, client_name, client_email, objective, updated_at')
-    .eq('status', 'completed')
-    .eq('phase', 'completed')
-    .gte('updated_at', minus7d)
-    .not('client_email', 'is', null)
-    .order('updated_at', { ascending: false })
-    .limit(5);
-
-  if (!projects?.length) return 0;
-
-  let sent = 0;
-  const minus30d = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-
-  for (const project of projects) {
-    if (sent >= 2) break;
-    try {
-      // Vérifier qu'une proposition n'a pas déjà été envoyée récemment à ce client
-      const { data: existing } = await supabase
-        .from('client_proposals')
-        .select('id')
-        .eq('client_email', project.client_email)
-        .gte('created_at', minus30d)
-        .limit(1);
-      if (existing?.length) continue;
-
-      // Vérifier que le client a un score satisfaisant (>= 2)
-      const { data: feedbacks } = await supabase
-        .from('project_feedback')
-        .select('score')
-        .eq('project_id', project.id);
-      if (feedbacks?.length) {
-        const avg = feedbacks.reduce((s: number, f: { score: number }) => s + f.score, 0) / feedbacks.length;
-        if (avg < 2) continue;
-      }
-
-      // Charger la mémoire client + résumés des livrables
-      const { data: memRow } = await supabase
-        .from('client_memory')
-        .select('memory')
-        .eq('client_email', project.client_email)
-        .limit(3);
-      const clientMemory = (memRow || []).map(r => r.memory).join('\n').slice(0, 600);
-
-      const { data: reports } = await supabase
-        .from('agent_reports')
-        .select('agent_slug, sections')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      const projectReports = (reports || []).filter(r => {
-        const summary = r.sections?.find((s: { heading: string }) => s.heading === 'Résumé');
-        return summary?.content;
-      });
-      const deliverablesSummary = projectReports.slice(0, 3)
-        .map(r => {
-          const summary = r.sections?.find((s: { heading: string }) => s.heading === 'Résumé');
-          return `[${r.agent_slug}] ${summary?.content?.slice(0, 150) || ''}`;
-        }).join('\n');
-
-      const avgScore = feedbacks?.length
-        ? feedbacks.reduce((s: number, f: { score: number }) => s + f.score, 0) / feedbacks.length
-        : 2.5;
-
-      const raw = await callClaude(anthropicKey, 512, promptUpsell(project, project.client_name, deliverablesSummary, Math.round(avgScore), clientMemory));
-      const extract = (tag: string) => {
-        const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_]+\\]|$)`));
-        return m ? m[1].trim() : '';
-      };
-      const intro = extract('INTRO') || `Votre projet "${project.title}" est maintenant terminé et les résultats sont entre vos mains.`;
-      const services = extract('SERVICES') || 'Stratégie de contenu avancée | Amplifier votre visibilité | Continuer sur la lancée';
-      const cta = extract('CTA') || 'Prêt à aller plus loin ? Soumettez votre prochain brief en 2 minutes.';
-
-      // Enregistrer la proposition
-      const { data: proposal } = await supabase
-        .from('client_proposals')
-        .insert({
-          client_email: project.client_email,
-          project_id: project.id,
-          proposal_text: `${intro}\n\n${services}`,
-          status: 'sent',
-        })
-        .select('id')
-        .single();
-
-      // Envoyer au client
-      await sendToClient(
-        resendKey,
-        project.client_email,
-        `Et si on continuait sur votre lancée ? — ${project.client_name}`,
-        clientBuildProposal(project.client_name, project.title, intro, services, cta, project.id),
-        project.id, 'upsell', '', supabase,
-      );
-
-      // Notifier le CEO
-      await sendToCEO(resendKey,
-        `✦ Proposition envoyée — ${project.client_name}`,
-        ceoBuildAlert(
-          `Une proposition commerciale a été envoyée automatiquement à ${project.client_name} (${project.client_email}).`,
-          `Projet de référence : "${project.title}"\nProposition ID : ${proposal?.id?.slice(0, 8).toUpperCase() || 'N/A'}`,
-        ),
-      );
-
-      sent++;
-    } catch (err) {
-      console.error('[marketing] processUpsellOpportunities error:', (err as Error).message);
-    }
-  }
-
-  return sent;
-}
-
-function ceoBuildAlert(message: string, context: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
-<h2>⚠ Alerte</h2>
-<div class="sec"><div class="txt">${message}\n\n${context}</div></div>
-<p style="text-align:center"><a href="${cockpit}" class="btn">Ouvrir le Cockpit →</a></p>
-<div class="ft">Marketing Director IA · CreatorFlow Market</div>
-</div></body></html>`;
-}
-
-function ceoBuildNewProject(projectId: string, objective: string, clientName: string, clientEmail: string, agentName: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
-<h2>Nouveau projet assigné automatiquement</h2>
-<div class="sec"><div class="lbl">Détails</div><div class="txt">Client : ${clientName} (${clientEmail})
-Objectif : ${objective.slice(0,300)}
-Responsable : ${agentName}
-Réf. : ${projectId.slice(0,8).toUpperCase()}</div></div>
-<p style="text-align:center"><a href="${cockpit}" class="btn">Voir dans le Cockpit →</a></p>
-<div class="ft">Marketing Director IA · CreatorFlow Market</div>
-</div></body></html>`;
-}
-
-function ceoBuildStrategy(p: ClientProject, strategy: string, contentTasks: string, prospecting: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${SC}</style></head><body><div class="w">
-<div class="hd"><div class="logo">CreatorFlow <em>Marketing Director</em></div></div>
-<h2>Stratégie prête — ${p.title}</h2>
-<div class="sec"><div class="lbl">Stratégie</div><div class="txt">${strategy.slice(0,400)}</div></div>
-${contentTasks ? `<div class="sec"><div class="lbl">Délégué → Content Employee</div><div class="txt">${contentTasks.slice(0,250)}</div></div>` : ''}
-${prospecting ? `<div class="sec"><div class="lbl">Délégué → Prospecting Employee</div><div class="txt">${prospecting.slice(0,250)}</div></div>` : ''}
-<p style="text-align:center"><a href="${cockpit}" class="btn">Voir dans le Cockpit →</a></p>
-<div class="ft">Marketing Director IA · CreatorFlow Market</div>
-</div></body></html>`;
-}
-
-// ---------------------------------------------------------------------------
-// Handler principal
-// ---------------------------------------------------------------------------
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
   const startTime = Date.now();
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  );
-  const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY') ?? '';
-  const resendKey = Deno.env.get('RESEND_API_KEY') ?? '';
-
-  let body: { run_type?: string; brief_id?: string; project_id?: string } = {};
-  try { body = await req.json(); } catch (_) { /* GET or no body */ }
-
-  const runType = body.run_type || 'check';
-
   try {
-    // ── INTAKE direct (admin cockpit → assigner un brief spécifique) ──────────
-    if (runType === 'intake' && body.brief_id) {
-      const { data: brief } = await supabase
-        .from('briefs').select('id, description, user_id, statut').eq('id', body.brief_id).single();
-      if (!brief) return new Response(JSON.stringify({ error: 'Brief introuvable' }), { status: 404, headers: cors });
-      const pid = await handleIntake(supabase, resendKey, brief);
-      return new Response(JSON.stringify({ ok: true, project_id: pid, duration_ms: Date.now() - startTime }), {
-        headers: { ...cors, 'Content-Type': 'application/json' },
-      });
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+    const resendKey = Deno.env.get('RESEND_API_KEY') || '';
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Charger le profil d'Aria depuis la DB
+    const profile = await loadOwnerProfile(supabase);
+    if (!profile) {
+      return new Response(
+        JSON.stringify({ ok: false, error: 'Profil employee_profiles introuvable pour slug=marketing' }),
+        { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
+      );
     }
 
-    // ── CHECK / DAILY heartbeat ───────────────────────────────────────────────
-    if (runType === 'check' || runType === 'daily') {
-      const result = await handleCheck(supabase, anthropicKey, resendKey);
+    const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
+    const runType = body.run_type || body.type || 'check';
 
-      await supabase.from('agent_heartbeats').insert({
-        agent_slug: AGENT_SLUG,
-        run_type: 'daily',
-        status: 'ok',
-        kpis_snapshot: { projects_reviewed: result.projects_reviewed, actions_taken: result.actions.length, briefs_picked_up: result.briefs_picked_up },
-        alerts_triggered: [],
-        duration_ms: Date.now() - startTime,
-      });
-
-      await supabase.from('ai_agents')
-        .update({ last_active: new Date().toISOString() })
-        .eq('slug', AGENT_SLUG);
-
-      return new Response(JSON.stringify({ ok: true, run_type: 'check', ...result, duration_ms: Date.now() - startTime }), {
-        headers: { ...cors, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // ── MISSION (legacy CEO cockpit — conservé pour compatibilité) ────────────
-    if (runType === 'mission') {
-      const result = await handleCheck(supabase, anthropicKey, resendKey);
-      return new Response(JSON.stringify({ ok: true, run_type: 'mission', ...result, duration_ms: Date.now() - startTime }), {
-        headers: { ...cors, 'Content-Type': 'application/json' },
-      });
-    }
-
-    return new Response(JSON.stringify({ error: 'run_type inconnu' }), { status: 400, headers: cors });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: (err as Error).message }), {
-      status: 500, headers: { ...cors, 'Content-Type': 'application/json' },
+    await supabase.from('agent_heartbeats').insert({
+      agent_slug: AGENT_SLUG,
+      run_type: runType,
+      status: 'running',
+      started_at: new Date().toISOString(),
     });
+
+    const result = await handleCheck(supabase, anthropicKey, resendKey, profile);
+
+    await supabase.from('agent_heartbeats').insert({
+      agent_slug: AGENT_SLUG,
+      run_type: 'daily',
+      status: 'completed',
+      started_at: new Date().toISOString(),
+      decisions: result.actions,
+    });
+
+    return new Response(
+      JSON.stringify({ ok: true, run_type: runType, ...result, duration_ms: Date.now() - startTime }),
+      { headers: { ...cors, 'Content-Type': 'application/json' } },
+    );
+  } catch (err) {
+    console.error('[marketing] fatal error:', (err as Error).message);
+    return new Response(
+      JSON.stringify({ ok: false, error: (err as Error).message }),
+      { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } },
+    );
   }
 });
