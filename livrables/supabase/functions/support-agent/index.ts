@@ -1,3 +1,14 @@
+// ============================================================
+// LEGACY — support-agent
+// Remplacé par : support-heartbeat (Employee-First architecture)
+// Raison : ancienne architecture chat-based sans internal_requests ni profil DB.
+//          Le support est maintenant géré via Kai (Kai's heartbeat + internal_requests).
+// Références vérifiées : app/ (NON), app/dashboard-client.html (NON)
+// Seule référence restante : livrables/sites-web/dashboard-client.html (ancienne version dev)
+// Ne pas supprimer : contient FAQ_KB et logique de routing tickets — utile comme référence.
+// Date marquage LEGACY : 2026-07-09
+// ============================================================
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
 const cors = {

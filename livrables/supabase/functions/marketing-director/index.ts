@@ -1,3 +1,14 @@
+// ============================================================
+// LEGACY — marketing-director
+// Remplacé par : marketing-heartbeat (Employee-First architecture)
+// Raison : ancienne architecture stateless sans identité DB ni journal decision_reason.
+//          Tous les appels production ont migré vers marketing-heartbeat.
+// Références vérifiées : app/admin.html (NON), app/dashboard-*.html (NON)
+// Seule référence restante : livrables/sites-web/admin.html (ancienne version dev)
+// Ne pas supprimer : contient la logique SYSTEM_PROMPT originale — utile comme référence.
+// Date marquage LEGACY : 2026-07-09
+// ============================================================
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
 const cors = {
