@@ -99,18 +99,25 @@ async function sendToClient(
   projectId: string, phase: string, agentId: string,
   supabase: ReturnType<typeof createClient>,
 ): Promise<void> {
-  if (!resendKey || !to) return;
+  if (!to) return;
   const safe = subject.replace(/[\r\n\t]/g, ' ').trim();
+
+  // Toujours tracer dans client_communications — indépendamment de la config email
+  try {
+    await supabase.from('client_communications').insert({
+      project_id: projectId, direction: 'outbound', phase,
+      subject: safe, content_preview: html.replace(/<[^>]*>/g, '').slice(0, 300),
+      sent_by_agent_id: agentId, sent_at: new Date().toISOString(),
+    });
+  } catch (_) {}
+
+  // Envoyer l'email seulement si Resend est configuré
+  if (!resendKey) return;
   try {
     await fetch(RESEND_URL, {
       method: 'POST',
       headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ from: FROM_CLIENT, to: [to], subject: safe, html }),
-    });
-    await supabase.from('client_communications').insert({
-      project_id: projectId, direction: 'outbound', phase,
-      subject: safe, content_preview: html.replace(/<[^>]*>/g, '').slice(0, 300),
-      sent_by_agent_id: agentId,
     });
   } catch (_) {}
 }
@@ -307,14 +314,14 @@ async function getLastClientContact(
 ): Promise<string> {
   const { data } = await supabase
     .from('client_communications')
-    .select('created_at, subject')
+    .select('sent_at, subject')
     .eq('project_id', projectId)
     .eq('direction', 'outbound')
-    .order('created_at', { ascending: false })
+    .order('sent_at', { ascending: false })
     .limit(1)
     .maybeSingle();
   if (!data) return '';
-  const h = Math.round((Date.now() - new Date(data.created_at).getTime()) / 3_600_000);
+  const h = Math.round((Date.now() - new Date(data.sent_at).getTime()) / 3_600_000);
   return `il y a ${h}h — "${(data.subject || '').slice(0, 60)}"`;
 }
 
