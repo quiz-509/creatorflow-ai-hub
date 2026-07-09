@@ -183,6 +183,109 @@ async function loadOwnerProfile(
 }
 
 // ---------------------------------------------------------------------------
+// Expérience accumulée d'Aria (cross-clients)
+// ---------------------------------------------------------------------------
+async function loadOwnerExperience(supabase: ReturnType<typeof createClient>): Promise<string> {
+  const { data } = await supabase
+    .from('employee_experience')
+    .select('experience_text, projects_count')
+    .eq('employee_slug', AGENT_SLUG)
+    .single();
+  if (!data || !data.experience_text || data.projects_count === 0) return '';
+  return data.experience_text;
+}
+
+async function synthesizeOwnerExperience(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+  project: ClientProject,
+): Promise<void> {
+  try {
+    const { data: exp } = await supabase
+      .from('employee_experience')
+      .select('experience_text, projects_count')
+      .eq('employee_slug', AGENT_SLUG)
+      .single();
+    const count = (exp?.projects_count || 0) + 1;
+    const currentExp = exp?.experience_text || '';
+    const newExp = await callClaude(anthropicKey, 400, `Tu es ${profile.name}, ${profile.title} chez CreatorFlow Market.
+
+${currentExp ? `EXPÉRIENCE ACTUELLE (${exp?.projects_count || 0} projets) :\n${currentExp.slice(0, 500)}\n` : ''}PROJET VENANT D'ÊTRE LIVRÉ :
+Client : ${project.client_name}
+Projet : ${project.title}
+Contexte : ${(project.objective || '').slice(0, 200)}
+
+Synthétise ton expérience accumulée en 8-10 bullet points concis (1 ligne chacun).
+Focus : profils clients récurrents, stratégies gagnantes, signaux d'escalade à anticiper, quand solliciter quel collaborateur, erreurs à éviter.
+Format : bullet points uniquement, sans intro ni conclusion.`);
+    await supabase.from('employee_experience').update({
+      experience_text: newExp.trim(),
+      projects_count: count,
+      last_synthesized: new Date().toISOString(),
+    }).eq('employee_slug', AGENT_SLUG);
+  } catch (err) {
+    console.error('[marketing] synthesizeOwnerExperience error:', (err as Error).message);
+  }
+}
+
+async function updateOwnerMetrics(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+): Promise<void> {
+  try {
+    const [totalRes, activeRes, completedRes, durationRes, feedbackRes, incidentRes] = await Promise.all([
+      supabase.from('client_projects').select('*', { count: 'exact', head: true }),
+      supabase.from('client_projects').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+      supabase.from('client_projects').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
+      supabase.from('client_projects').select('created_at, updated_at').eq('status', 'completed').not('updated_at', 'is', null).limit(50),
+      supabase.from('project_feedback').select('score').limit(100),
+      supabase.from('project_history').select('note, created_at').in('event_type', ['escalated', 'revision_requested']).order('created_at', { ascending: false }).limit(1),
+    ]);
+    const total = totalRes.count || 0;
+    const active = activeRes.count || 0;
+    const completed = completedRes.count || 0;
+    const feedbacks = feedbackRes.data || [];
+    const avgSatisfaction = feedbacks.length
+      ? feedbacks.reduce((s: number, f: { score: number }) => s + (f.score || 0), 0) / feedbacks.length : 0;
+    const successRate = feedbacks.length
+      ? (feedbacks.filter((f: { score: number }) => f.score >= 2).length / feedbacks.length) * 100
+      : completed > 0 ? (completed / Math.max(total, 1)) * 100 : 0;
+    let avgDays = 0;
+    if (durationRes.data?.length) {
+      const ms = durationRes.data.reduce((s: number, p: { created_at: string; updated_at: string }) =>
+        s + (new Date(p.updated_at).getTime() - new Date(p.created_at).getTime()), 0);
+      avgDays = ms / durationRes.data.length / 86400000;
+    }
+    const lastIncident = incidentRes.data?.[0]?.note || null;
+    const lastIncidentAt = incidentRes.data?.[0]?.created_at || null;
+    const { data: exp } = await supabase.from('employee_experience').select('experience_text').eq('employee_slug', AGENT_SLUG).single();
+    const metaRaw = await callClaude(anthropicKey, 200, `Tu es ${profile.name}, ${profile.title}.
+Métriques : ${total} projets gérés, ${completed} livrés, ${active} actifs, satisfaction ${avgSatisfaction.toFixed(1)}/5, succès ${successRate.toFixed(0)}%, durée moy ${avgDays.toFixed(1)}j.
+${exp?.experience_text ? 'Expérience : ' + exp.experience_text.slice(0, 250) : ''}
+
+Format exact :
+[COMPÉTENCES] comp1 | comp2 | comp3
+[OBJECTIF] Une phrase sur ton objectif Q3 2026
+[FORMATION] Une phrase sur ce que tu travailles à améliorer`);
+    const tag = (t: string) => { const m = metaRaw.match(new RegExp(`\\[${t}\\]([^\\n]+)`)); return m ? m[1].trim() : ''; };
+    const skills = tag('COMPÉTENCES').split('|').map((s: string) => s.trim()).filter(Boolean);
+    await supabase.from('employee_metrics').update({
+      total_projects: total, active_projects: active, completed_projects: completed,
+      avg_satisfaction: Math.round(avgSatisfaction * 100) / 100,
+      avg_duration_days: Math.round(avgDays * 10) / 10,
+      success_rate: Math.round(successRate * 100) / 100,
+      last_incident: lastIncident, last_incident_at: lastIncidentAt,
+      skills_mastered: skills, quarterly_objectives: tag('OBJECTIF'), training_focus: tag('FORMATION'),
+      updated_at: new Date().toISOString(),
+    }).eq('employee_slug', AGENT_SLUG);
+  } catch (err) {
+    console.error('[marketing] updateOwnerMetrics error:', (err as Error).message);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Contexte client
 // ---------------------------------------------------------------------------
 async function getClientMemory(
@@ -271,6 +374,7 @@ function buildOwnerDecisionPrompt(
   internalRequests: InternalRequest[],
   lastClientContact: string,
   clientMemory: string,
+  experience: string,
 ): string {
   const hoursSince = Math.round(
     (Date.now() - new Date(project.updated_at).getTime()) / 3_600_000,
@@ -285,7 +389,7 @@ function buildOwnerDecisionPrompt(
     : 'Aucune requête collaborateur envoyée';
 
   return `${profile.system_prompt_context}
-
+${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ta décision pour ce projet.\n' : ''}
 ═══ PROJET EN COURS ═══
 Titre : ${project.title}
 Client : ${project.client_name}
@@ -560,6 +664,7 @@ Signe avec ton prénom.`;
     }
 
     await recalcAgentLoad(supabase, agentId);
+    await synthesizeOwnerExperience(supabase, anthropicKey, profile, project);
 
     await sendToCEO(resendKey,
       `✅ Projet clôturé — ${project.client_name}`,
@@ -612,6 +717,7 @@ async function reviewOwnerPortfolio(
     .order('priority_score', { ascending: false })
     .limit(5);
 
+  const experience = await loadOwnerExperience(supabase);
   const actions: string[] = [];
 
   for (const project of (projects as ClientProject[]) || []) {
@@ -636,7 +742,7 @@ async function reviewOwnerPortfolio(
           profile, project,
           (history || []) as HistoryEvent[],
           (internalReqs || []) as InternalRequest[],
-          lastContact, clientMemory,
+          lastContact, clientMemory, experience,
         ),
       );
       const decision = parseOwnerDecision(raw);
@@ -835,6 +941,9 @@ async function handleCheck(
   // 3. Révisions → internal_requests
   const revisionsCreated = await processRevisionRequests(supabase);
   if (revisionsCreated > 0) actions.push(`revision_requests_created:${revisionsCreated}`);
+
+  // 4. Mise à jour des métriques RH
+  await updateOwnerMetrics(supabase, anthropicKey, profile);
 
   return {
     briefs_picked_up: newBriefs?.length || 0,

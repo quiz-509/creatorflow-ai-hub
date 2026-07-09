@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dossiers RH — AI Workforce · CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <style>
+:root{
+  --bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;
+  --border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);
+  --text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;
+  --v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);
+  --c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;
+  --r:14px;--r-lg:20px;--f:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-brand{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:700;}
+.nav-brand em{color:var(--vs);font-style:normal;}
+.nav-badge{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(124,58,237,0.15);color:var(--vs);border:1px solid rgba(124,58,237,0.25);padding:2px 8px;border-radius:99px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.last-update{font-size:11px;color:var(--text-3);}
+.btn-refresh{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.25);font-size:12px;font-weight:600;cursor:pointer;transition:all 160ms;}
+.btn-refresh:hover{background:rgba(124,58,237,0.22);border-color:rgba(124,58,237,0.4);}
+.btn-refresh svg{transition:transform 400ms;}
+.btn-refresh.spin svg{transform:rotate(360deg);}
+
+/* MAIN */
+.main{max-width:1360px;margin:0 auto;padding:36px 28px 80px;}
+
+/* PAGE HEADER */
+.page-header{margin-bottom:32px;}
+.page-title{font-size:26px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;}
+.page-sub{font-size:14px;color:var(--text-2);}
+
+/* EMPLOYEE GRID */
+.employees-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+@media(max-width:900px){.employees-grid{grid-template-columns:1fr;}}
+
+/* EMPLOYEE CARD */
+.emp-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:border-color 200ms;}
+.emp-card:hover{border-color:var(--border-2);}
+
+.emp-header{display:flex;align-items:flex-start;gap:16px;padding:22px 22px 18px;border-bottom:1px solid var(--border);}
+.emp-avatar{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px;flex-shrink:0;}
+.emp-avatar.marketing{background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(109,40,217,0.5));border:1px solid rgba(124,58,237,0.3);}
+.emp-avatar.content{background:linear-gradient(135deg,rgba(6,182,212,0.25),rgba(8,145,178,0.4));border:1px solid rgba(6,182,212,0.25);}
+.emp-avatar.prospecting{background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.4));border:1px solid rgba(245,158,11,0.25);}
+.emp-avatar.support{background:linear-gradient(135deg,rgba(16,185,129,0.25),rgba(5,150,105,0.4));border:1px solid rgba(16,185,129,0.25);}
+.emp-info{flex:1;min-width:0;}
+.emp-name{font-size:17px;font-weight:700;letter-spacing:-0.02em;margin-bottom:2px;}
+.emp-title{font-size:12px;color:var(--text-2);margin-bottom:8px;}
+.emp-role-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border-radius:99px;}
+.emp-role-badge.owner{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.emp-role-badge.collab{background:rgba(255,255,255,0.05);color:var(--text-3);border:1px solid var(--border-2);}
+.emp-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);margin-left:auto;flex-shrink:0;}
+.emp-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* METRICS ROW */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);}
+.metric-cell{background:var(--surf);padding:14px 16px;}
+.metric-label{font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px;}
+.metric-value{font-size:20px;font-weight:800;letter-spacing:-0.03em;line-height:1;}
+.metric-value.green{color:var(--green);}
+.metric-value.amber{color:var(--amber);}
+.metric-value.purple{color:var(--vs);}
+.metric-sub{font-size:10px;color:var(--text-3);margin-top:2px;}
+
+/* BODY */
+.emp-body{padding:18px 22px;}
+
+/* SKILLS */
+.skills-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.skill-tag{display:inline-flex;align-items:center;padding:3px 10px;background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.18);border-radius:99px;font-size:11px;color:var(--vs);font-weight:500;}
+
+/* INFO ROWS */
+.info-block{margin-bottom:14px;}
+.info-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:5px;}
+.info-text{font-size:12px;color:var(--text-2);line-height:1.6;}
+
+/* EXPERIENCE */
+.exp-block{background:var(--surf-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+.exp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.exp-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);}
+.exp-count{font-size:10px;color:var(--vs);font-weight:600;}
+.exp-content{font-size:12px;color:var(--text-2);line-height:1.75;max-height:120px;overflow:hidden;position:relative;}
+.exp-content.expanded{max-height:none;}
+.exp-content::after{content:'';position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(transparent,var(--surf-2));pointer-events:none;}
+.exp-content.expanded::after{display:none;}
+.exp-toggle{font-size:10px;color:var(--vs);cursor:pointer;margin-top:6px;display:inline-block;}
+.exp-toggle:hover{text-decoration:underline;}
+
+/* INCIDENT */
+.incident-block{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:10px;padding:12px 14px;margin-bottom:14px;}
+.incident-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(239,68,68,0.8);margin-bottom:5px;}
+.incident-text{font-size:11px;color:rgba(239,68,68,0.7);line-height:1.5;}
+
+/* FOOTER */
+.emp-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.emp-footer-label{font-size:11px;color:var(--text-3);}
+.emp-footer-date{font-size:11px;color:var(--text-3);}
+
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(4,4,10,0.6);z-index:500;place-items:center;}
+.loading-overlay.active{display:grid;}
+.loader{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--vs);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* EMPTY STATE */
+.empty-exp{font-size:12px;color:var(--text-3);font-style:italic;text-align:center;padding:12px 0;}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    CreatorFlow <em>Market</em>
+    <span class="nav-badge">AI Workforce</span>
+  </div>
+  <div class="nav-right">
+    <span class="last-update" id="lastUpdate">Chargement...</span>
+    <button class="btn-refresh" id="refreshBtn" onclick="loadAllEmployees()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Actualiser
+    </button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">Dossiers RH — AI Workforce</div>
+    <div class="page-sub">Suivi des performances, expérience et objectifs des 4 employés IA de CreatorFlow Market.</div>
+  </div>
+
+  <div class="employees-grid" id="employeesGrid">
+    <!-- Cards injectées dynamiquement -->
+    <div class="emp-card" style="min-height:400px;display:grid;place-items:center;">
+      <div class="loader"></div>
+    </div>
+    <div class="emp-card" style="min-height:400px;display:grid;place-items:center;">
+      <div class="loader"></div>
+    </div>
+    <div class="emp-card" style="min-height:400px;display:grid;place-items:center;">
+      <div class="loader"></div>
+    </div>
+    <div class="emp-card" style="min-height:400px;display:grid;place-items:center;">
+      <div class="loader"></div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const SLUGS = ['marketing', 'content', 'prospecting', 'support'];
+
+const DEPT_COLORS = {
+  marketing: 'marketing',
+  content: 'content',
+  prospecting: 'prospecting',
+  support: 'support',
+};
+
+const DEPT_ACCENT = {
+  marketing: '#A78BFA',
+  content: '#22D3EE',
+  prospecting: '#FCD34D',
+  support: '#34D399',
+};
+
+function fmt(val, suffix = '') {
+  if (val === null || val === undefined) return '—';
+  if (typeof val === 'number') return val.toFixed(val % 1 === 0 ? 0 : 1) + suffix;
+  return val + suffix;
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return 'jamais';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const h = Math.floor(diff / 3600000);
+  if (h < 1) return 'il y a < 1h';
+  if (h < 24) return `il y a ${h}h`;
+  const d = Math.floor(h / 24);
+  return `il y a ${d}j`;
+}
+
+function buildCard(profile, metrics, experience) {
+  const slug = profile.slug;
+  const accent = DEPT_ACCENT[slug] || '#A78BFA';
+  const isOwner = profile.is_owner;
+
+  const m = metrics || {};
+  const exp = experience || {};
+
+  const totalProjects = m.total_projects ?? 0;
+  const activeProjects = m.active_projects ?? 0;
+  const completedProjects = m.completed_projects ?? 0;
+  const successRate = m.success_rate ?? 0;
+  const avgDays = m.avg_duration_days ?? 0;
+  const avgSat = m.avg_satisfaction ?? null;
+  const skills = m.skills_mastered || [];
+  const quarterly = m.quarterly_objectives || '';
+  const training = m.training_focus || '';
+  const lastIncident = m.last_incident || '';
+  const lastIncidentAt = m.last_incident_at || '';
+  const updatedAt = m.updated_at || '';
+
+  const expText = exp.experience_text || '';
+  const expCount = exp.projects_count || 0;
+
+  const rateColor = successRate >= 80 ? 'green' : successRate >= 50 ? 'amber' : 'purple';
+  const metric4Label = isOwner ? 'Satisfaction' : 'En attente';
+  const metric4Value = isOwner
+    ? (avgSat !== null ? `${avgSat.toFixed(1)}<span style="font-size:12px;font-weight:500;color:var(--text-3)">/5</span>` : '—')
+    : `${activeProjects}`;
+  const metric4Sub = isOwner ? 'score moyen clients' : 'livrables en cours';
+
+  const expLines = expText
+    ? expText.split('\n').filter(l => l.trim()).map(l => `<div style="margin-bottom:3px">${escHtml(l.trim())}</div>`).join('')
+    : '';
+
+  const expId = `exp-${slug}`;
+
+  return `
+<div class="emp-card">
+  <div class="emp-header">
+    <div class="emp-avatar ${DEPT_COLORS[slug]}">${escHtml(profile.avatar_emoji || '🤖')}</div>
+    <div class="emp-info">
+      <div class="emp-name">${escHtml(profile.name)}</div>
+      <div class="emp-title">${escHtml(profile.title)}</div>
+      <span class="emp-role-badge ${isOwner ? 'owner' : 'collab'}">${isOwner ? '★ Owner client' : '↳ Collaborateur interne'}</span>
+    </div>
+    <div class="emp-status">Actif</div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-cell">
+      <div class="metric-label">Total</div>
+      <div class="metric-value" style="color:${accent}">${totalProjects}</div>
+      <div class="metric-sub">${isOwner ? 'projets gérés' : 'livrables traités'}</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Complétés</div>
+      <div class="metric-value">${completedProjects}</div>
+      <div class="metric-sub">${isOwner ? 'projets livrés' : 'livrables livrés'}</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Taux succès</div>
+      <div class="metric-value ${rateColor}">${successRate > 0 ? successRate.toFixed(0) + '%' : '—'}</div>
+      <div class="metric-sub">sur tous les ${isOwner ? 'projets' : 'livrables'}</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">${metric4Label}</div>
+      <div class="metric-value">${metric4Value}</div>
+      <div class="metric-sub">${metric4Sub}</div>
+    </div>
+  </div>
+
+  <div class="emp-body">
+
+    ${avgDays > 0 ? `
+    <div class="info-block" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Durée moyenne de livraison : <strong style="color:var(--text)">${avgDays.toFixed(1)} jours</strong>
+      </div>
+    </div>
+    ` : ''}
+
+    ${skills.length > 0 ? `
+    <div class="info-block">
+      <div class="info-label">Compétences maîtrisées</div>
+      <div class="skills-row">
+        ${skills.map(s => `<span class="skill-tag">${escHtml(s)}</span>`).join('')}
+      </div>
+    </div>
+    ` : ''}
+
+    ${quarterly ? `
+    <div class="info-block">
+      <div class="info-label">Objectif Q3 2026</div>
+      <div class="info-text">${escHtml(quarterly)}</div>
+    </div>
+    ` : ''}
+
+    ${training ? `
+    <div class="info-block">
+      <div class="info-label">Focus formation</div>
+      <div class="info-text">${escHtml(training)}</div>
+    </div>
+    ` : ''}
+
+    ${expText ? `
+    <div class="exp-block">
+      <div class="exp-header">
+        <span class="exp-title">Expérience accumulée</span>
+        <span class="exp-count">${expCount} ${expCount <= 1 ? 'projet' : 'projets'}</span>
+      </div>
+      <div class="exp-content" id="${expId}">${expLines}</div>
+      <span class="exp-toggle" onclick="toggleExp('${expId}', this)">Voir plus →</span>
+    </div>
+    ` : `
+    <div class="exp-block">
+      <div class="exp-header">
+        <span class="exp-title">Expérience accumulée</span>
+        <span class="exp-count">0 projet</span>
+      </div>
+      <div class="empty-exp">Aucune expérience encore accumulée.<br>Elle se construira après le premier projet livré.</div>
+    </div>
+    `}
+
+    ${lastIncident ? `
+    <div class="incident-block">
+      <div class="incident-label">Dernier incident · ${timeAgo(lastIncidentAt)}</div>
+      <div class="incident-text">${escHtml(lastIncident.slice(0, 180))}</div>
+    </div>
+    ` : ''}
+
+  </div>
+
+  <div class="emp-footer">
+    <span class="emp-footer-label">Mis à jour</span>
+    <span class="emp-footer-date">${updatedAt ? timeAgo(updatedAt) : 'jamais'}</span>
+  </div>
+</div>`;
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toggleExp(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const expanded = el.classList.toggle('expanded');
+  btn.textContent = expanded ? '← Voir moins' : 'Voir plus →';
+}
+
+async function loadAllEmployees() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spin');
+
+  try {
+    const [profilesRes, metricsRes, experienceRes] = await Promise.all([
+      sb.from('employee_profiles').select('slug, name, avatar_emoji, title, bio, is_owner').in('slug', SLUGS),
+      sb.from('employee_metrics').select('*').in('employee_slug', SLUGS),
+      sb.from('employee_experience').select('*').in('employee_slug', SLUGS),
+    ]);
+
+    const profiles = profilesRes.data || [];
+    const metrics = metricsRes.data || [];
+    const experiences = experienceRes.data || [];
+
+    const profileMap = Object.fromEntries(profiles.map(p => [p.slug, p]));
+    const metricsMap = Object.fromEntries(metrics.map(m => [m.employee_slug, m]));
+    const expMap = Object.fromEntries(experiences.map(e => [e.employee_slug, e]));
+
+    const order = ['marketing', 'content', 'prospecting', 'support'];
+    const grid = document.getElementById('employeesGrid');
+
+    grid.innerHTML = order.map(slug => {
+      const profile = profileMap[slug];
+      if (!profile) return `<div class="emp-card" style="display:grid;place-items:center;min-height:300px;"><span style="color:var(--text-3);font-size:13px;">Profil introuvable : ${slug}</span></div>`;
+      return buildCard(profile, metricsMap[slug], expMap[slug]);
+    }).join('');
+
+    const now = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto', hour12: false });
+    document.getElementById('lastUpdate').textContent = `Actualisé à ${now.split(',')[1]?.trim() || now}`;
+
+  } catch (err) {
+    console.error('loadAllEmployees error:', err);
+    document.getElementById('employeesGrid').innerHTML = `
+      <div class="emp-card" style="grid-column:1/-1;display:grid;place-items:center;min-height:200px;">
+        <span style="color:var(--red);font-size:13px;">Erreur de chargement : ${err.message}</span>
+      </div>`;
+  } finally {
+    setTimeout(() => btn.classList.remove('spin'), 500);
+  }
+}
+
+loadAllEmployees();
+setInterval(loadAllEmployees, 60000);
+</script>
+</body>
+</html>

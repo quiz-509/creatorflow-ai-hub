@@ -53,13 +53,121 @@ async function loadProfile(supabase: ReturnType<typeof createClient>): Promise<E
   return data || null;
 }
 
+async function loadExperience(supabase: ReturnType<typeof createClient>): Promise<string> {
+  const { data } = await supabase
+    .from('employee_experience')
+    .select('experience_text, projects_count')
+    .eq('employee_slug', AGENT_SLUG)
+    .single();
+  if (!data || !data.experience_text || data.projects_count === 0) return '';
+  return data.experience_text;
+}
+
+async function synthesizeExperience(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+  project: ClientProject,
+  deliverableType: string,
+  summary: string,
+): Promise<void> {
+  try {
+    const { data: exp } = await supabase
+      .from('employee_experience')
+      .select('experience_text, projects_count')
+      .eq('employee_slug', profile.slug)
+      .single();
+
+    const count = (exp?.projects_count || 0) + 1;
+    const currentExp = exp?.experience_text || '';
+
+    const prompt = `Tu es ${profile.name}, ${profile.title} chez CreatorFlow Market.
+
+${currentExp ? `EXPÉRIENCE ACTUELLE (${exp?.projects_count || 0} livrables) :\n${currentExp.slice(0, 500)}\n` : ''}
+LIVRABLE VENANT D'ÊTRE PRODUIT :
+Client : ${project.client_name}
+Projet : ${project.title}
+Type : ${deliverableType}
+Résumé : ${summary.slice(0, 200)}
+
+Synthétise ton expérience accumulée en 8-10 bullet points concis (1 ligne chacun).
+Focus : types de demandes support récurrentes, questions FAQ les plus fréquentes, templates qui fonctionnent, points de friction onboarding, cas complexes résolus.
+Format : bullet points uniquement, sans intro ni conclusion.`;
+
+    const newExp = await callClaude(anthropicKey, 400, prompt);
+    await supabase.from('employee_experience').update({
+      experience_text: newExp.trim(),
+      projects_count: count,
+      last_synthesized: new Date().toISOString(),
+    }).eq('employee_slug', profile.slug);
+  } catch (err) {
+    console.error('[support] synthesizeExperience error:', (err as Error).message);
+  }
+}
+
+async function updateMetrics(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+): Promise<void> {
+  try {
+    const [totalRes, completedRes, activeRes, durationRes] = await Promise.all([
+      supabase.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', DEPARTMENT),
+      supabase.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', DEPARTMENT).eq('status', 'completed'),
+      supabase.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', DEPARTMENT).in('status', ['pending', 'in_progress']),
+      supabase.from('internal_requests').select('created_at, completed_at').eq('to_dept', DEPARTMENT).eq('status', 'completed').not('completed_at', 'is', null).limit(50),
+    ]);
+
+    const total = totalRes.count || 0;
+    const completed = completedRes.count || 0;
+    const active = activeRes.count || 0;
+    const successRate = total > 0 ? (completed / total) * 100 : 0;
+
+    let avgDays = 0;
+    if (durationRes.data?.length) {
+      const ms = durationRes.data.reduce((s: number, r: { created_at: string; completed_at: string }) =>
+        s + (new Date(r.completed_at).getTime() - new Date(r.created_at).getTime()), 0);
+      avgDays = ms / durationRes.data.length / 86400000;
+    }
+
+    const { data: exp } = await supabase.from('employee_experience').select('experience_text').eq('employee_slug', profile.slug).single();
+
+    const metaRaw = await callClaude(anthropicKey, 200, `Tu es ${profile.name}, ${profile.title}.
+Métriques : ${total} livrables traités, ${completed} complétés, succès ${successRate.toFixed(0)}%, durée moy ${avgDays.toFixed(1)}j.
+${exp?.experience_text ? 'Expérience : ' + exp.experience_text.slice(0, 250) : ''}
+
+Format exact :
+[COMPÉTENCES] comp1 | comp2 | comp3
+[OBJECTIF] Une phrase sur ton objectif Q3 2026
+[FORMATION] Une phrase sur ce que tu travailles à améliorer`);
+
+    const tag = (t: string) => { const m = metaRaw.match(new RegExp(`\\[${t}\\]([^\\n]+)`)); return m ? m[1].trim() : ''; };
+    const skills = tag('COMPÉTENCES').split('|').map((s: string) => s.trim()).filter(Boolean);
+
+    await supabase.from('employee_metrics').update({
+      total_projects: total,
+      active_projects: active,
+      completed_projects: completed,
+      success_rate: Math.round(successRate * 100) / 100,
+      avg_duration_days: Math.round(avgDays * 10) / 10,
+      skills_mastered: skills,
+      quarterly_objectives: tag('OBJECTIF'),
+      training_focus: tag('FORMATION'),
+      updated_at: new Date().toISOString(),
+    }).eq('employee_slug', profile.slug);
+  } catch (err) {
+    console.error('[support] updateMetrics error:', (err as Error).message);
+  }
+}
+
 function buildDeliverablePrompt(
   profile: EmployeeProfile,
   project: ClientProject,
   request: InternalRequest,
+  experience: string,
 ): string {
   return `${profile.system_prompt_context}
-
+${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -93,6 +201,7 @@ async function executeInternalRequest(
   anthropicKey: string,
   profile: EmployeeProfile,
   request: InternalRequest,
+  experience: string,
 ): Promise<boolean> {
   try {
     const { data: project } = await supabase
@@ -104,7 +213,7 @@ async function executeInternalRequest(
 
     await supabase.from('internal_requests').update({ status: 'in_progress' }).eq('id', request.id);
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request));
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience));
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎÔÂÊ]+\\]|$)`));
@@ -145,6 +254,8 @@ async function executeInternalRequest(
       note: `${profile.name} — livrable produit : ${supportType}. ${summary.slice(0, 100)}`,
     });
 
+    await synthesizeExperience(supabase, anthropicKey, profile, project, supportType, summary);
+
     return true;
   } catch (err) {
     console.error('[support] executeInternalRequest error:', (err as Error).message);
@@ -158,6 +269,8 @@ async function processInternalRequests(
   anthropicKey: string,
   profile: EmployeeProfile,
 ): Promise<{ requests_processed: number; actions: string[] }> {
+  const experience = await loadExperience(supabase);
+
   const { data: requests } = await supabase
     .from('internal_requests')
     .select('id, project_id, from_dept, brief, objective, decision_reason')
@@ -166,18 +279,20 @@ async function processInternalRequests(
     .order('created_at', { ascending: true })
     .limit(3);
 
-  if (!requests?.length) return { requests_processed: 0, actions: [] };
-
   const actions: string[] = [];
   let processed = 0;
 
-  for (const request of requests as InternalRequest[]) {
-    const success = await executeInternalRequest(supabase, anthropicKey, profile, request);
-    if (success) {
-      processed++;
-      actions.push(`executed:${request.id.slice(0, 8)}`);
+  if (requests?.length) {
+    for (const request of requests as InternalRequest[]) {
+      const success = await executeInternalRequest(supabase, anthropicKey, profile, request, experience);
+      if (success) {
+        processed++;
+        actions.push(`executed:${request.id.slice(0, 8)}`);
+      }
     }
   }
+
+  await updateMetrics(supabase, anthropicKey, profile);
 
   return { requests_processed: processed, actions };
 }
