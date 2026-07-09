@@ -1,0 +1,1229 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dashboard Client — CreatorFlow Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+:root{--bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;--border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);--text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;--v:#7C3AED;--v2:#6D28D9;--vs:#A78BFA;--vg:rgba(124,58,237,0.35);--c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;--r:14px;--r-lg:20px;--r-xl:28px;--f:'Inter',system-ui,sans-serif;--f-display:'Plus Jakarta Sans',system-ui,sans-serif;--ease:cubic-bezier(0.16,1,0.3,1);--sidebar:240px;--nav:60px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav);display:flex;align-items:center;background:rgba(4,4,10,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:0 20px 0 0;}
+.nav-brand{width:var(--sidebar);flex-shrink:0;display:flex;align-items:center;padding:0 20px;gap:10px;}
+.brand{display:flex;align-items:center;gap:0;font-size:16px;font-weight:700;letter-spacing:-0.025em;flex-shrink:0;}
+.brand-logo{width:240px;height:56px;background:url('/creatorflow-logo.png') center/140% no-repeat;mix-blend-mode:screen;filter:brightness(1.1) drop-shadow(0 0 8px rgba(124,58,237,0.6));}
+.brand span{display:none;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.notif-btn{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:var(--surf);border:1px solid var(--border-2);color:var(--text-2);position:relative;transition:all 180ms;}
+.notif-btn:hover{color:var(--text);border-color:var(--border-3);}
+.notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--v);border:1.5px solid var(--bg);}
+.user-chip{display:flex;align-items:center;gap:9px;padding:5px 10px 5px 5px;border-radius:999px;background:var(--surf);border:1px solid var(--border-2);cursor:pointer;transition:all 180ms;}
+.user-chip:hover{border-color:var(--border-3);}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--c));display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.user-name{font-size:13px;font-weight:600;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--nav);left:0;bottom:0;width:var(--sidebar);background:var(--surf);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow-y:auto;}
+.sidebar-section{padding:16px 12px 8px;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);padding:0 8px;margin-bottom:6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--text-2);cursor:pointer;transition:all 160ms;position:relative;}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.nav-item.active{background:rgba(124,58,237,0.12);color:var(--vs);}
+.nav-item.active::before{content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--v);}
+.nav-item svg{opacity:0.7;flex-shrink:0;}
+.nav-item.active svg{opacity:1;}
+.nav-badge{margin-left:auto;background:var(--v);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;}
+.sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid var(--border);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);padding-top:var(--nav);min-height:100vh;}
+.main-inner{padding:32px 32px 80px;}
+
+/* HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--text-2);}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:all 220ms var(--ease);white-space:nowrap;}
+.btn-primary{background:linear-gradient(135deg,#9333EA,var(--v) 50%,var(--v2));color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,0.10) inset,0 6px 20px -6px var(--vg);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px -6px rgba(124,58,237,0.6);}
+.btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border-2);color:var(--text-2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.08);color:var(--text);}
+.btn-green{background:linear-gradient(135deg,#059669,var(--green));color:#fff;box-shadow:0 4px 14px -4px rgba(16,185,129,0.45);}
+.btn-green:hover{transform:translateY(-1px);box-shadow:0 8px 20px -4px rgba(16,185,129,0.6);}
+.btn-sm{padding:6px 13px;font-size:12px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.stat-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;position:relative;overflow:hidden;transition:border-color 180ms;}
+.stat-card:hover{border-color:var(--border-2);}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;margin-bottom:14px;font-size:18px;}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
+.stat-label{font-size:12px;color:var(--text-3);font-weight:500;}
+.stat-trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:8px;padding:3px 8px;border-radius:99px;}
+.trend-up{background:rgba(16,185,129,0.1);color:var(--green);}
+.trend-warn{background:rgba(245,158,11,0.1);color:var(--amber);}
+
+/* GRID 2 COL */
+.two-col{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+
+/* SECTION CARD */
+.section-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.section-title{font-size:14px;font-weight:700;}
+.section-link{font-size:12px;color:var(--vs);font-weight:500;}
+.section-link:hover{text-decoration:underline;}
+
+/* MISSIONS */
+.mission-item{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);transition:background 150ms;}
+.mission-item:last-child{border-bottom:none;}
+.mission-item:hover{background:rgba(255,255,255,0.02);}
+.mission-icon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;font-size:18px;}
+.mission-info{flex:1;min-width:0;}
+.mission-name{font-size:13px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mission-meta{font-size:11px;color:var(--text-3);}
+.mission-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;}
+.badge-green{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);}
+.badge-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-purple{background:rgba(124,58,237,0.12);color:var(--vs);border:1px solid rgba(124,58,237,0.2);}
+.badge-blue{background:rgba(6,182,212,0.10);color:var(--c);border:1px solid rgba(6,182,212,0.2);}
+.mission-price{font-size:12px;font-weight:700;color:var(--text-2);}
+
+/* PROPOSITIONS */
+.prop-item{padding:16px 20px;border-bottom:1px solid var(--border);transition:background 150ms;}
+.prop-item:last-child{border-bottom:none;}
+.prop-item:hover{background:rgba(255,255,255,0.02);}
+.prop-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.prop-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.prop-name{font-size:13px;font-weight:700;margin-bottom:1px;}
+.prop-spec{font-size:11px;color:var(--text-3);}
+.prop-price{margin-left:auto;font-size:14px;font-weight:800;color:var(--vs);}
+.prop-msg{font-size:12px;color:var(--text-2);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.prop-actions{display:flex;gap:8px;}
+
+/* MESSAGES */
+.msg-item{display:flex;align-items:flex-start;gap:11px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background 150ms;cursor:pointer;}
+.msg-item:last-child{border-bottom:none;}
+.msg-item:hover{background:rgba(255,255,255,0.02);}
+.msg-item.unread .msg-name{color:var(--text);}
+.msg-item.unread .msg-preview{color:var(--text-2);}
+.msg-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.msg-body{flex:1;min-width:0;}
+.msg-name{font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:2px;}
+.msg-preview{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-time{font-size:10px;color:var(--text-3);flex-shrink:0;margin-top:2px;}
+.unread-dot{width:7px;height:7px;border-radius:50%;background:var(--v);flex-shrink:0;margin-top:6px;}
+
+/* ACTIVITY */
+.activity-item{display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.act-text{font-size:12px;color:var(--text-2);line-height:1.5;}
+.act-text strong{color:var(--text);font-weight:600;}
+.act-time{font-size:10px;color:var(--text-3);margin-top:3px;}
+
+/* PROGRESS */
+.prog-bar{height:4px;background:var(--surf-3);border-radius:99px;overflow:hidden;margin-top:6px;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--v),var(--c));}
+
+#cursor-glow{position:fixed;pointer-events:none;z-index:9998;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,0.04) 0%,transparent 70%);transform:translate(-50%,-50%);left:-999px;top:-999px;transition:left 80ms linear,top 80ms linear;}
+@keyframes sk-sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.sk{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:sk-sh 1.4s ease-in-out infinite;border-radius:8px;}
+
+.sidebar{transition:transform 280ms cubic-bezier(0.16,1,0.3,1);}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99;}
+.hamburger{display:none;width:36px;height:36px;border-radius:9px;background:var(--surf);border:1px solid var(--border-2);place-items:center;color:var(--text-2);flex-shrink:0;}
+.hamburger:hover{color:var(--text);border-color:var(--border-3);}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.sidebar-backdrop.open{display:block;}.main{margin-left:0;}.main-inner{padding:20px 16px 60px;}.stats-grid{grid-template-columns:repeat(2,1fr);}.hamburger{display:grid;}.nav-brand{width:auto;}}
+@media(max-width:520px){.stats-grid{grid-template-columns:1fr!important;}.main-inner{padding:16px 12px 60px!important;}.section-head{padding:14px 16px!important;}.mission-item,.prop-item,.msg-item,.activity-item{padding:12px 16px!important;}.mission-name{font-size:12px!important;}.stat-card{padding:16px!important;}}
+@media(max-width:520px){.sk-stats{grid-template-columns:1fr!important;}.sk-main{padding:76px 12px 0!important;}}
+.sk-overlay{position:fixed;inset:0;z-index:9999;background:#04040A;pointer-events:none;}
+.sk-nav{position:fixed;top:0;left:0;right:0;height:60px;background:rgba(4,4,10,0.92);border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:center;padding:0 20px 0 0;}
+.sk-nav-brand{width:240px;padding:0 20px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.sk-nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.sk-sidebar{position:fixed;top:60px;left:0;bottom:0;width:240px;background:#0C0C18;border-right:1px solid rgba(255,255,255,0.055);padding:20px 12px;}
+.sk-main{margin-left:240px;padding:88px 32px 0;}
+.sk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.sk-cols{display:grid;grid-template-columns:1fr 360px;gap:20px;}
+@media(max-width:1100px){.sk-stats{grid-template-columns:repeat(2,1fr);}.sk-cols{grid-template-columns:1fr;}}
+@media(max-width:768px){.sk-sidebar{display:none;}.sk-main{margin-left:0;padding:80px 16px 0;}.sk-stats{grid-template-columns:repeat(2,1fr);}.sk-nav-brand{width:auto;}}
+  </style>
+</head>
+<body>
+<div id="cursor-glow"></div>
+<div id="sk" class="sk-overlay">
+  <div class="sk-nav">
+    <div class="sk-nav-brand">
+      <div class="sk" style="width:42px;height:42px;border-radius:50%;flex-shrink:0;"></div>
+      <div class="sk" style="width:110px;height:14px;"></div>
+    </div>
+    <div class="sk-nav-right">
+      <div class="sk" style="width:36px;height:36px;border-radius:9px;"></div>
+      <div class="sk" style="width:96px;height:32px;border-radius:999px;"></div>
+    </div>
+  </div>
+  <div class="sk-sidebar">
+    <div class="sk" style="height:10px;width:56px;margin-bottom:16px;border-radius:4px;"></div>
+    <div class="sk" style="height:36px;border-radius:10px;margin-bottom:5px;"></div>
+    <div class="sk" style="height:36px;border-radius:10px;margin-bottom:5px;opacity:.7;"></div>
+    <div class="sk" style="height:36px;border-radius:10px;margin-bottom:5px;opacity:.5;"></div>
+    <div class="sk" style="height:36px;border-radius:10px;margin-bottom:5px;opacity:.4;"></div>
+    <div class="sk" style="height:36px;border-radius:10px;opacity:.3;"></div>
+  </div>
+  <div class="sk-main">
+    <div style="margin-bottom:24px;">
+      <div class="sk" style="width:220px;height:26px;margin-bottom:8px;"></div>
+      <div class="sk" style="width:300px;height:13px;"></div>
+    </div>
+    <div class="sk-stats">
+      <div class="sk" style="height:108px;border-radius:20px;"></div>
+      <div class="sk" style="height:108px;border-radius:20px;opacity:.85;"></div>
+      <div class="sk" style="height:108px;border-radius:20px;opacity:.7;"></div>
+      <div class="sk" style="height:108px;border-radius:20px;opacity:.55;"></div>
+    </div>
+    <div class="sk-cols">
+      <div>
+        <div class="sk" style="height:52px;border-radius:14px 14px 0 0;margin-bottom:1px;"></div>
+        <div class="sk" style="height:66px;border-radius:0;margin-bottom:1px;opacity:.9;"></div>
+        <div class="sk" style="height:66px;border-radius:0;margin-bottom:1px;opacity:.75;"></div>
+        <div class="sk" style="height:66px;border-radius:0 0 14px 14px;opacity:.6;"></div>
+      </div>
+      <div>
+        <div class="sk" style="height:52px;border-radius:14px 14px 0 0;margin-bottom:1px;"></div>
+        <div class="sk" style="height:60px;border-radius:0;margin-bottom:1px;opacity:.9;"></div>
+        <div class="sk" style="height:60px;border-radius:0;margin-bottom:1px;opacity:.75;"></div>
+        <div class="sk" style="height:60px;border-radius:0 0 14px 14px;opacity:.6;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script>
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect
+} = React;
+const {
+  createClient
+} = supabase;
+const sb = createClient('https://cjtglfutckaogsmwhfsv.supabase.co', 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei');
+const Ic = {
+  Grid: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "3",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "3",
+    y: "14",
+    width: "7",
+    height: "7"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "14",
+    y: "14",
+    width: "7",
+    height: "7"
+  })),
+  Briefcase: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "2",
+    y: "7",
+    width: "20",
+    height: "14",
+    rx: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"
+  })),
+  Users: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "9",
+    cy: "7",
+    r: "4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+  })),
+  Msg: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+  })),
+  Invoice: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "14 2 14 8 20 8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "16",
+    y1: "13",
+    x2: "8",
+    y2: "13"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "16",
+    y1: "17",
+    x2: "8",
+    y2: "17"
+  })),
+  Settings: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "12",
+    cy: "12",
+    r: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+  })),
+  Bell: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M13.73 21a2 2 0 0 1-3.46 0"
+  })),
+  Plus: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "5",
+    x2: "12",
+    y2: "19"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "5",
+    y1: "12",
+    x2: "19",
+    y2: "12"
+  })),
+  Arrow: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12h14M13 5l7 7-7 7"
+  })),
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "13",
+    height: "13",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "20 6 9 17 4 12"
+  })),
+  Logout: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "15",
+    height: "15",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "16 17 21 12 16 7"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "21",
+    y1: "12",
+    x2: "9",
+    y2: "12"
+  })),
+  Star: p => /*#__PURE__*/React.createElement("svg", _extends({}, p, {
+    width: "11",
+    height: "11",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }), /*#__PURE__*/React.createElement("polygon", {
+    points: "12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+  }))
+};
+const NAV_ITEMS = [{
+  id: 'overview',
+  label: 'Vue d\'ensemble',
+  icon: /*#__PURE__*/React.createElement(Ic.Grid, null)
+}, {
+  id: 'missions',
+  label: 'Mes missions',
+  icon: /*#__PURE__*/React.createElement(Ic.Briefcase, null),
+  badge: 2
+}, {
+  id: 'props',
+  label: 'Propositions',
+  icon: /*#__PURE__*/React.createElement(Ic.Users, null),
+  badge: 3
+}, {
+  id: 'ai-employees',
+  label: 'Employés IA',
+  icon: /*#__PURE__*/React.createElement(Ic.Briefcase, null),
+  href: 'employes-ia.html'
+}, {
+  id: 'messages',
+  label: 'Messages',
+  icon: /*#__PURE__*/React.createElement(Ic.Msg, null),
+  badge: 2,
+  href: 'messages.html'
+}, {
+  id: 'invoices',
+  label: 'Factures',
+  icon: /*#__PURE__*/React.createElement(Ic.Invoice, null)
+}];
+function App() {
+  const [active, setActive] = useState('overview');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [initials, setInitials] = useState('??');
+  const [prenom, setPrenom] = useState('');
+  const [briefs, setBriefs] = useState([]);
+  const [convs, setConvs] = useState([]);
+  const [missions, setMissions] = useState([]);
+  const [missionCount, setMissionCount] = useState(0);
+  const [budgetTotal, setBudgetTotal] = useState(0);
+  const [propositions, setPropositions] = useState([]);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [hasUnread, setHasUnread] = useState(false);
+  useEffect(() => {
+    sb.auth.getSession().then(async ({
+      data
+    }) => {
+      if (!data.session) {
+        window.location.href = 'connexion.html';
+        return;
+      }
+      const u = data.session.user;
+      const {
+        data: profile
+      } = await sb.from('profiles').select('*').eq('id', u.id).single();
+      if (profile) {
+        const p = profile.prenom || '';
+        const n = profile.nom || '';
+        setPrenom(p);
+        setInitials(((p[0] || '?') + (n[0] || '?')).toUpperCase());
+        setAvatarUrl(profile.avatar_url || '');
+        setUser({
+          ...u,
+          ...profile
+        });
+      } else {
+        setUser(u);
+      }
+      const {
+        data: b
+      } = await sb.from('briefs').select('id,categorie,budget,delai,statut,created_at,description').eq('user_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(4);
+      setBriefs(b || []);
+      const {
+        data: c
+      } = await sb.from('conversations').select('id,created_at,expert_id').eq('client_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(3);
+      const expertIds = (c || []).map(cv => cv.expert_id).filter(Boolean);
+      let expertProfileMap = {};
+      if (expertIds.length > 0) {
+        const {
+          data: ep
+        } = await sb.from('profiles').select('id,prenom,nom').in('id', expertIds);
+        (ep || []).forEach(p => {
+          expertProfileMap[p.id] = p;
+        });
+      }
+      setConvs((c || []).map(cv => {
+        const p = expertProfileMap[cv.expert_id] || {};
+        const name = `${p.prenom || ''} ${p.nom || ''}`.trim() || 'Expert';
+        const ini = name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'EX';
+        return {
+          ...cv,
+          expertName: name,
+          expertInitials: ini
+        };
+      }));
+      const {
+        data: m
+      } = await sb.from('missions').select('id,titre,categorie,statut,prix,deadline,progression,expert_id,created_at').eq('client_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(4);
+      setMissions(m || []);
+      const {
+        count: totalM
+      } = await sb.from('missions').select('id', {
+        count: 'exact',
+        head: true
+      }).eq('client_id', u.id);
+      setMissionCount(totalM || 0);
+      const {
+        data: mPrix
+      } = await sb.from('missions').select('prix').eq('client_id', u.id);
+      setBudgetTotal((mPrix || []).reduce((s, r) => s + (r.prix || 0), 0));
+      const {
+        data: props
+      } = await sb.from('propositions').select('id,montant,message,delai,statut,created_at,expert_id,brief_id,nom_expert').eq('client_id', u.id).order('created_at', {
+        ascending: false
+      }).limit(10);
+      setPropositions(props || []);
+      const { count: unread } = await sb.from('notifications').select('id', { count: 'exact', head: true }).eq('user_id', u.id).eq('read', false);
+      setHasUnread((unread || 0) > 0);
+      const ch = sb.channel('notifs-client-' + u.id)
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: 'user_id=eq.' + u.id }, () => setHasUnread(true))
+        .subscribe();
+      document.getElementById('sk')?.remove();
+    });
+    const el = document.getElementById('cursor-glow');
+    const move = e => {
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+    };
+    window.addEventListener('mousemove', move, {
+      passive: true
+    });
+    return () => window.removeEventListener('mousemove', move);
+  }, []);
+  const handleLogout = async () => {
+    await sb.auth.signOut();
+    window.location.href = 'connexion.html';
+  };
+  const todayStr = (() => {
+    const s = new Date().toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  })();
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: `sidebar-backdrop${sidebarOpen ? ' open' : ''}`,
+    onClick: () => setSidebarOpen(false)
+  }), /*#__PURE__*/React.createElement("nav", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-brand"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "hamburger",
+    onClick: () => setSidebarOpen(o => !o),
+    "aria-label": "Menu"
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "6",
+    x2: "21",
+    y2: "6"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "12",
+    x2: "21",
+    y2: "12"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "3",
+    y1: "18",
+    x2: "21",
+    y2: "18"
+  }))), /*#__PURE__*/React.createElement("a", {
+    href: "/",
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }), /*#__PURE__*/React.createElement("span", null, "CreatorFlow Market"))), /*#__PURE__*/React.createElement("div", {
+    className: "nav-right"
+  }, /*#__PURE__*/React.createElement("a", {
+    className: "notif-btn",
+    href: "notifications.html",
+    style: {textDecoration:'none',color:'inherit'}
+  }, /*#__PURE__*/React.createElement(Ic.Bell, null), hasUnread && /*#__PURE__*/React.createElement("span", {
+    className: "notif-dot"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "user-chip"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "avatar"
+  }, avatarUrl ? /*#__PURE__*/React.createElement("img", {src: avatarUrl, alt: ""}) : initials), /*#__PURE__*/React.createElement("span", {
+    className: "user-name"
+  }, user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : 'Chargement…'))))), /*#__PURE__*/React.createElement("aside", {
+    className: `sidebar${sidebarOpen ? ' open' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Menu"), NAV_ITEMS.map(item => {
+    const badge = item.badge ? /*#__PURE__*/React.createElement("span", {
+      className: "nav-badge"
+    }, item.id === 'missions' ? missionCount : item.id === 'messages' ? convs.length : item.id === 'props' ? propositions.filter(p => p.statut === 'en_attente').length : item.badge) : null;
+    const cls = `nav-item ${active === item.id ? 'active' : ''}`;
+    return item.href ? /*#__PURE__*/React.createElement("a", {
+      key: item.id,
+      href: item.href,
+      className: cls,
+      style: {
+        textDecoration: 'none',
+        color: 'inherit'
+      }
+    }, item.icon, item.label, badge) : /*#__PURE__*/React.createElement("div", {
+      key: item.id,
+      className: cls,
+      onClick: () => {
+        setActive(item.id);
+        setSidebarOpen(false);
+      }
+    }, item.icon, item.label, badge);
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-label"
+  }, "Compte"), /*#__PURE__*/React.createElement("a", {
+    href: "parametres.html",
+    className: "nav-item"
+  }, /*#__PURE__*/React.createElement(Ic.Settings, null), "Param\xE8tres")), /*#__PURE__*/React.createElement("div", {
+    className: "sidebar-bottom"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-item",
+    style: {
+      color: 'var(--text-3)',
+      cursor: 'pointer'
+    },
+    onClick: handleLogout
+  }, /*#__PURE__*/React.createElement(Ic.Logout, null), "D\xE9connexion"))), /*#__PURE__*/React.createElement("main", {
+    className: "main"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "main-inner"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "page-header"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", {
+    className: "page-title"
+  }, "Bonjour, ", prenom || 'Client', " \uD83D\uDC4B"), /*#__PURE__*/React.createElement("p", {
+    className: "page-sub"
+  }, todayStr, " \xB7 ", missionCount, " mission", missionCount !== 1 ? 's' : '', " active", missionCount !== 1 ? 's' : '', " \xB7 ", briefs.length, " brief", briefs.length !== 1 ? 's' : '', " d\xE9pos\xE9", briefs.length !== 1 ? 's' : '')), /*#__PURE__*/React.createElement("a", {
+    href: "nouveau-brief.html",
+    className: "btn btn-primary"
+  }, /*#__PURE__*/React.createElement(Ic.Plus, null), "Nouveau brief")), /*#__PURE__*/React.createElement("div", {
+    className: "stats-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)',
+      color: 'var(--vs)'
+    }
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, briefs.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Briefs d\xE9pos\xE9s"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-up"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), briefs.filter(b => b.statut === 'ouvert').length, " ouverts")), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.10)',
+      color: 'var(--c)'
+    }
+  }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, missionCount), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Missions en cours"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-warn"
+  }, missionCount > 0 ? 'En cours' : 'Aucune')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(6,182,212,0.10)',
+      color: 'var(--c)'
+    }
+  }, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, convs.length), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Conversations actives"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-warn"
+  }, convs.length > 0 ? 'En cours' : 'Aucune')), /*#__PURE__*/React.createElement("div", {
+    className: "stat-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stat-icon",
+    style: {
+      background: 'rgba(16,185,129,0.10)',
+      color: 'var(--green)'
+    }
+  }, "\uD83D\uDCB6"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-val"
+  }, budgetTotal > 0 ? budgetTotal.toLocaleString('fr-CA') + '$' : '—'), /*#__PURE__*/React.createElement("div", {
+    className: "stat-label"
+  }, "Budget engag\xE9 (total)"), /*#__PURE__*/React.createElement("div", {
+    className: "stat-trend trend-up"
+  }, /*#__PURE__*/React.createElement(Ic.Check, null), missionCount, " mission", missionCount !== 1 ? 's' : ''))), briefs.length === 0 && missions.length === 0 ? /*#__PURE__*/React.createElement("div", {style:{background:'linear-gradient(135deg,rgba(124,58,237,0.08) 0%,rgba(6,182,212,0.06) 100%)',border:'1px solid rgba(124,58,237,0.2)',borderRadius:16,padding:'28px 32px',display:'flex',gap:24,alignItems:'flex-start',marginBottom:4}}, /*#__PURE__*/React.createElement("div", {style:{fontSize:36,lineHeight:1,flexShrink:0}}, "🎉"), /*#__PURE__*/React.createElement("div", {style:{flex:1}}, /*#__PURE__*/React.createElement("h2", {style:{fontSize:18,fontWeight:700,color:'var(--fg)',marginBottom:4}}, "Bienvenue sur CreatorFlow Market\xA0!"), /*#__PURE__*/React.createElement("p", {style:{color:'var(--muted)',marginBottom:20,fontSize:14}}, "3 \xE9tapes pour recevoir vos premi\xE8res propositions d’experts."), /*#__PURE__*/React.createElement("div", {style:{display:'flex',flexDirection:'column',gap:10}}, /*#__PURE__*/React.createElement("div", {style:{display:'flex',alignItems:'center',gap:10,fontSize:14}}, /*#__PURE__*/React.createElement("span", null, "✅"), /*#__PURE__*/React.createElement("span", {style:{color:'var(--fg)',fontWeight:500}}, "Cr\xE9er un compte")), /*#__PURE__*/React.createElement("div", {style:{display:'flex',alignItems:'center',gap:10,fontSize:14}}, /*#__PURE__*/React.createElement("span", null, "⬜"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("strong", null, "D\xE9poser votre premier brief"), " — ", /*#__PURE__*/React.createElement("a", {href:"nouveau-brief.html",style:{color:'var(--vs)',fontWeight:600,textDecoration:'none'}}, "Commencer →"))), /*#__PURE__*/React.createElement("div", {style:{display:'flex',alignItems:'center',gap:10,fontSize:14,opacity:0.45}}, /*#__PURE__*/React.createElement("span", null, "🔒"), /*#__PURE__*/React.createElement("span", null, "Recevoir des propositions d’experts"))))) : null, /*#__PURE__*/React.createElement("div", {
+    className: "two-col"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Mes briefs r\xE9cents"), /*#__PURE__*/React.createElement("a", {
+    href: "nouveau-brief.html",
+    className: "section-link"
+  }, "+ Nouveau brief")), briefs.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "📋"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucun brief d\xE9pos\xE9"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "D\xE9crivez votre projet pour recevoir des propositions d'experts IA."), /*#__PURE__*/React.createElement("a", {href:"nouveau-brief.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "D\xE9poser mon premier brief")) : briefs.map(b => /*#__PURE__*/React.createElement("div", {
+    key: b.id,
+    className: "mission-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mission-icon",
+    style: {
+      background: 'rgba(124,58,237,0.12)',
+      color: 'var(--vs)'
+    }
+  }, "\uD83D\uDCCB"), /*#__PURE__*/React.createElement("div", {
+    className: "mission-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mission-name"
+  }, b.categorie || 'Projet'), /*#__PURE__*/React.createElement("div", {
+    className: "mission-meta"
+  }, "Budget : ", b.budget, " \xB7 D\xE9lai : ", b.delai)), /*#__PURE__*/React.createElement("div", {
+    className: "mission-right"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${b.statut === 'ouvert' ? 'badge-green' : 'badge-amber'}`
+  }, b.statut === 'ouvert' ? 'Ouvert' : b.statut), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: 'var(--text-3)'
+    }
+  }, new Date(b.created_at).toLocaleDateString('fr-CA')))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Mes missions en cours"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-3)'
+    }
+  }, missions.length, " mission", missions.length !== 1 ? 's' : '')), missions.length === 0 ? /*#__PURE__*/React.createElement("div", {className:"ds-empty",style:{padding:"48px 24px"}}, /*#__PURE__*/React.createElement("div", {className:"ds-empty-icon"}, "🚀"), /*#__PURE__*/React.createElement("div", {className:"ds-empty-title"}, "Aucune mission en cours"), /*#__PURE__*/React.createElement("p", {className:"ds-empty-sub"}, "Vos missions apparaissent ici d\xE8s qu'un expert accepte votre brief."), /*#__PURE__*/React.createElement("a", {href:"experts.html",className:"btn btn-primary btn-sm",style:{marginTop:8}}, "Trouver un expert")) : missions.map(m => {
+    const statusMap = {
+      nouveau: 'badge-green',
+      en_attente_paiement: 'badge-amber',
+      en_cours: 'badge-green',
+      en_revision: 'badge-amber',
+      termine: 'badge-green',
+      annule: 'badge-red'
+    };
+    const labelMap = {
+      nouveau: 'Nouveau',
+      en_attente_paiement: 'Paiement en attente',
+      en_cours: 'En cours',
+      en_revision: 'En révision',
+      termine: 'Terminé',
+      annule: 'Annulé'
+    };
+    const payable = m.prix > 0 && m.statut !== 'termine' && m.statut !== 'annule';
+    return /*#__PURE__*/React.createElement("div", {
+      key: m.id,
+      className: "mission-item",
+      onClick: () => window.location.href = `mission.html?id=${m.id}`,
+      style: {
+        cursor: 'pointer'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mission-icon",
+      style: {
+        background: 'rgba(124,58,237,0.12)',
+        color: 'var(--vs)'
+      }
+    }, "\uD83D\uDE80"), /*#__PURE__*/React.createElement("div", {
+      className: "mission-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "mission-name"
+    }, m.titre), /*#__PURE__*/React.createElement("div", {
+      className: "mission-meta"
+    }, m.categorie), m.progression != null && /*#__PURE__*/React.createElement("div", {
+      className: "prog-bar",
+      style: {
+        width: 120
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "prog-fill",
+      style: {
+        width: m.progression + '%'
+      }
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: "mission-right"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: `badge ${statusMap[m.statut] || 'badge-green'}`
+    }, labelMap[m.statut] || m.statut), /*#__PURE__*/React.createElement("span", {
+      className: "mission-price"
+    }, m.prix ? m.prix + '$' : ''), payable && /*#__PURE__*/React.createElement("a", {
+      href: `paiement.html?mission_id=${m.id}`,
+      onClick: e => e.stopPropagation(),
+      className: "btn btn-green btn-sm",
+      style: {
+        fontSize: 10,
+        padding: '3px 10px'
+      }
+    }, "Payer"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        color: 'var(--text-3)'
+      }
+    }, m.deadline ? new Date(m.deadline).toLocaleDateString('fr-CA') : '')));
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Messages r\xE9cents"), /*#__PURE__*/React.createElement("a", {
+    href: "#",
+    className: "section-link",
+    onClick: e => {
+      e.preventDefault();
+      setActive('messages');
+    }
+  }, "Tout voir \u2192")), convs.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune conversation active")) : convs.map(c => /*#__PURE__*/React.createElement("a", {
+    key: c.id,
+    className: "msg-item",
+    href: `messages.html?conv=${c.id}`,
+    style: {
+      textDecoration: 'none',
+      color: 'inherit'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "msg-avatar",
+    style: {
+      background: 'linear-gradient(135deg,#7C3AED,#A78BFA)'
+    }
+  }, c.expertInitials), /*#__PURE__*/React.createElement("div", {
+    className: "msg-body"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "msg-name"
+  }, c.expertName), /*#__PURE__*/React.createElement("div", {
+    className: "msg-preview"
+  }, "Conversation en cours")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "msg-time"
+  }, new Date(c.created_at).toLocaleDateString('fr-CA'))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '12px 20px'
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "messages.html",
+    className: "btn btn-ghost btn-sm",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  }, "Ouvrir la messagerie ", /*#__PURE__*/React.createElement(Ic.Arrow, null)))), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Propositions re\xE7ues"), propositions.filter(p => p.statut === 'en_attente').length > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'rgba(124,58,237,0.12)',
+      color: 'var(--vs)',
+      fontSize: 11,
+      fontWeight: 700,
+      padding: '3px 9px',
+      borderRadius: 99
+    }
+  }, propositions.filter(p => p.statut === 'en_attente').length, " en attente")), propositions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCEC"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune proposition re\xE7ue")) : propositions.slice(0, 4).map(p => {
+    const expertName = p.nom_expert || 'Expert';
+    const statutColor = {
+      en_attente: 'var(--amber)',
+      acceptee: 'var(--green)',
+      refusee: 'var(--red)'
+    }[p.statut] || 'var(--text-2)';
+    const statutLabel = {
+      en_attente: 'En attente',
+      acceptee: 'Acceptée',
+      refusee: 'Refusée'
+    }[p.statut] || p.statut;
+    return /*#__PURE__*/React.createElement("div", {
+      key: p.id,
+      className: "msg-item",
+      style: {
+        alignItems: 'flex-start'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "msg-avatar",
+      style: {
+        background: 'linear-gradient(135deg,var(--v),var(--vs))',
+        flexShrink: 0,
+        marginTop: 2
+      }
+    }, (expertName[0] || 'E').toUpperCase()), /*#__PURE__*/React.createElement("div", {
+      className: "msg-body",
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "msg-name"
+    }, expertName), /*#__PURE__*/React.createElement("div", {
+      className: "msg-preview"
+    }, p.montant ? p.montant.toLocaleString('fr-CA') + ' $' : '', p.delai ? ` · ${p.delai}` : ''), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: 'var(--text-3)',
+        marginTop: 2,
+        lineHeight: 1.4
+      }
+    }, (p.message || '').slice(0, 80), (p.message || '').length > 80 ? '…' : '')), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        gap: 4,
+        flexShrink: 0
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        fontWeight: 700,
+        color: statutColor
+      }
+    }, statutLabel), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        color: 'var(--text-3)'
+      }
+    }, new Date(p.created_at).toLocaleDateString('fr-CA')), p.statut === 'en_attente' && /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-primary btn-sm",
+      style: {
+        fontSize: 10,
+        padding: '4px 10px',
+        marginTop: 4
+      },
+      onClick: async () => {
+        if (!user) return;
+        const {
+          error: propErr
+        } = await sb.from('propositions').update({
+          statut: 'acceptee'
+        }).eq('id', p.id);
+        if (propErr) {
+          alert('Erreur acceptation: ' + propErr.message);
+          return;
+        }
+        let titre = 'Mission';
+        if (p.brief_id) {
+          const {
+            data: brief
+          } = await sb.from('briefs').select('categorie').eq('id', p.brief_id).single();
+          if (brief?.categorie) titre = brief.categorie;
+        }
+        const {
+          data: newMission,
+          error: missionErr
+        } = await sb.from('missions').insert({
+          client_id: user.id,
+          expert_id: p.expert_id,
+          titre,
+          categorie: titre,
+          prix: p.montant || 0,
+          statut: 'en_attente_paiement'
+        }).select('id').single();
+        if (missionErr) {
+          alert('Erreur mission: ' + missionErr.message + '\nCode: ' + missionErr.code + '\nDétail: ' + missionErr.details);
+          return;
+        }
+        if (newMission) {
+          const {
+            error: convErr
+          } = await sb.from('conversations').insert({
+            client_id: user.id,
+            expert_id: p.expert_id
+          });
+          if (convErr) console.warn('Conversation:', convErr.message);
+          const {
+            data: expertProfile
+          } = await sb.from('profiles').select('email').eq('id', p.expert_id).single();
+          const {
+            data: {
+              session: authSession
+            }
+          } = await sb.auth.getSession();
+          if (expertProfile?.email) {
+            fetch('https://cjtglfutckaogsmwhfsv.supabase.co/functions/v1/send-email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei',
+                'Authorization': `Bearer ${authSession.access_token}`
+              },
+              body: JSON.stringify({
+                type: 'proposition_acceptee',
+                to: expertProfile.email,
+                data: {
+                  client_name: `${user.prenom || ''} ${user.nom || ''}`.trim() || 'Client',
+                  mission_titre: titre,
+                  montant: p.montant || 0
+                }
+              })
+            }).catch(() => {});
+          }
+        }
+        if (p.brief_id) {
+          await sb.from('propositions').update({
+            statut: 'refusee'
+          }).eq('brief_id', p.brief_id).neq('id', p.id).eq('statut', 'en_attente');
+        }
+        setPropositions(prev => prev.map(x => x.id === p.id ? {
+          ...x,
+          statut: 'acceptee'
+        } : x.brief_id === p.brief_id && x.statut === 'en_attente' ? {
+          ...x,
+          statut: 'refusee'
+        } : x));
+        if (newMission) {
+          setMissions(prev => [{
+            id: newMission.id,
+            titre,
+            categorie: titre,
+            statut: 'en_attente_paiement',
+            prix: p.montant || 0,
+            expert_id: p.expert_id,
+            created_at: new Date().toISOString()
+          }, ...prev]);
+          setMissionCount(prev => prev + 1);
+          window.location.href = 'paiement.html?mission_id=' + newMission.id;
+        }
+      }
+    }, "Accepter")));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "section-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title"
+  }, "Activit\xE9 r\xE9cente")), briefs.length === 0 && missions.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px 20px',
+      textAlign: 'center',
+      color: 'var(--text-3)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 8
+    }
+  }, "\uD83D\uDCCA"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13
+    }
+  }, "Aucune activit\xE9 r\xE9cente")) : [...briefs.map(b => ({
+    color: 'var(--vs)',
+    label: `Brief "${b.categorie || 'Projet'}" déposé — ${b.budget}`,
+    time: b.created_at
+  })), ...missions.map(m => ({
+    color: 'var(--c)',
+    label: `Mission "${m.titre}" — ${{
+      nouveau: 'Nouveau',
+      en_cours: 'En cours',
+      en_revision: 'En révision',
+      termine: 'Terminé',
+      annule: 'Annulé'
+    }[m.statut] || m.statut}`,
+    time: m.created_at
+  }))].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 4).map((a, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "activity-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "act-dot",
+    style: {
+      background: a.color
+    }
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "act-text"
+  }, a.label), /*#__PURE__*/React.createElement("div", {
+    className: "act-time"
+  }, new Date(a.time).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'linear-gradient(135deg,rgba(124,58,237,0.15),rgba(6,182,212,0.08))',
+      border: '1px solid rgba(124,58,237,0.25)',
+      borderRadius: 'var(--r-lg)',
+      padding: '20px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      marginBottom: 10
+    }
+  }, "\u2728"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      marginBottom: 6
+    }
+  }, "Nouveau projet en t\xEAte ?"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text-2)',
+      marginBottom: 16,
+      lineHeight: 1.5
+    }
+  }, "D\xE9posez un brief et recevez des propositions d'experts certifi\xE9s sous 24h."), /*#__PURE__*/React.createElement("a", {
+    href: "nouveau-brief.html",
+    className: "btn btn-primary",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  }, "D\xE9poser un brief ", /*#__PURE__*/React.createElement(Ic.Arrow, null))))))));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+</script>
+</body>
+</html>
