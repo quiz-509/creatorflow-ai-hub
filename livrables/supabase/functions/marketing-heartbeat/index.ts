@@ -733,7 +733,7 @@ async function reviewOwnerPortfolio(
   const { data: projects } = await supabase
     .from('client_projects')
     .select('*')
-    .eq('department_id', dept?.id)
+    .eq('responsible_agent_id', agent.id)
     .eq('status', 'active')
     .order('priority_score', { ascending: false })
     .limit(5);
