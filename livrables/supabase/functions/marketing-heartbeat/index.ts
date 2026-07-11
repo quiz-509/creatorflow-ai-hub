@@ -405,7 +405,7 @@ function buildOwnerDecisionPrompt(
     : 'Aucune requête collaborateur envoyée';
 
   const contactWarning = contactCount >= 2
-    ? `⚠️ Tu as déjà envoyé ${contactCount} messages à ce client sans réponse. NE PAS recontacter — passe à l'étape suivante (auditer ou solliciter).`
+    ? `⚠️ RÈGLE ABSOLUE : tu as déjà envoyé ${contactCount} messages à ce client. N'envoie AUCUN autre email (ni contacter_client, ni auditer, ni synthétiser). Actions autorisées uniquement : solliciter_content | solliciter_prospecting | solliciter_support | attendre.`
     : '';
 
   return `${profile.system_prompt_context}
