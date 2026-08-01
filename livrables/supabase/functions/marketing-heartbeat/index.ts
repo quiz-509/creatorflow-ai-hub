@@ -1,15 +1,35 @@
 import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
-async function callClaude(apiKey: string, maxTokens: number, prompt: string): Promise<string> {
+const MODEL = 'claude-haiku-4-5-20251001';           // tâches légères: métriques, synthèse
+const DECISION_MODEL = 'claude-sonnet-4-5';           // décisions client complexes
+
+async function callClaude(apiKey: string, maxTokens: number, prompt: string, model = MODEL): Promise<string> {
   const client = new Anthropic({ apiKey });
   const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model,
     max_tokens: maxTokens,
     messages: [{ role: 'user', content: prompt }],
   });
   const block = msg.content.find((b: { type: string }) => b.type === 'text');
   return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
+}
+
+async function webSearch(query: string, apiKey: string, maxResults = 5): Promise<string> {
+  if (!apiKey || !query.trim()) return '';
+  try {
+    const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${maxResults}&search_lang=fr`;
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/json', 'X-Subscription-Token': apiKey },
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const results = (data.web?.results || []).slice(0, maxResults);
+    if (!results.length) return '';
+    return results.map((r: { title: string; url: string; description?: string }) =>
+      `• ${r.title}\n  ${r.url}${r.description ? '\n  ' + r.description.slice(0, 160) : ''}`
+    ).join('\n\n');
+  } catch (_) { return ''; }
 }
 
 const cors = {
@@ -43,6 +63,11 @@ const S = `body{font-family:Arial,sans-serif;background:#04040A;color:#F4F4FF;ma
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
+interface AnalyticsConfig {
+  stripe_customer_id?: string;
+  analytics_webhook_url?: string;
+}
+
 interface EmployeeProfile {
   slug: string;
   name: string;
@@ -117,7 +142,7 @@ async function sendToClient(
     await fetch(RESEND_URL, {
       method: 'POST',
       headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: FROM_CLIENT, to: [to], subject: safe, html }),
+      body: JSON.stringify({ from: FROM_CLIENT, to: [to], subject: safe, html, reply_to: 'replies@veleevorio.resend.app' }),
     });
   } catch (_) {}
 }
@@ -200,6 +225,52 @@ async function loadOwnerExperience(supabase: ReturnType<typeof createClient>): P
     .single();
   if (!data || !data.experience_text || data.projects_count === 0) return '';
   return data.experience_text;
+}
+
+// ---------------------------------------------------------------------------
+// Mémoire stratégique de l'entreprise (company_memory)
+// ---------------------------------------------------------------------------
+async function loadCompanyMemory(supabase: ReturnType<typeof createClient>): Promise<string> {
+  const { data } = await supabase
+    .from('company_memory')
+    .select('memory_type, content')
+    .eq('agent_slug', AGENT_SLUG)
+    .order('updated_at', { ascending: false })
+    .limit(10);
+  if (!data || data.length === 0) return '';
+  return data.map((m: { memory_type: string; content: Record<string, unknown> }) => {
+    const summary = typeof m.content === 'object' && m.content !== null
+      ? Object.entries(m.content).map(([k, v]) => `${k}: ${v}`).join(', ')
+      : String(m.content);
+    return `${m.memory_type}: ${summary}`;
+  }).join('\n');
+}
+
+async function updateCompanyMemory(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  recentActions: string[],
+): Promise<void> {
+  if (recentActions.length === 0) return;
+  const summary = await callClaude(
+    anthropicKey, 128,
+    `Tu es le système de mémoire de CreatorFlow Market.
+Voici les actions réalisées aujourd'hui par le Marketing Director: ${recentActions.join(', ')}.
+Identifie 1 à 3 patterns ou insights stratégiques à retenir (format: "clé: valeur courte").
+Réponds uniquement avec les insights, un par ligne.`,
+  );
+  const lines = summary.split('\n').filter((l: string) => l.includes(':'));
+  for (const line of lines) {
+    const [memType, ...rest] = line.split(':');
+    if (memType && rest.length > 0) {
+      await supabase.from('company_memory').upsert({
+        agent_slug: AGENT_SLUG,
+        memory_type: memType.trim(),
+        content: { insight: rest.join(':').trim() },
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'agent_slug,memory_type' });
+    }
+  }
 }
 
 async function synthesizeOwnerExperience(
@@ -309,6 +380,23 @@ async function getClientMemory(
   return `Client récurrent (${data.projects_count} projet${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
 }
 
+async function getInboundMessages(
+  supabase: ReturnType<typeof createClient>, projectId: string,
+): Promise<string> {
+  const { data } = await supabase
+    .from('client_communications')
+    .select('subject, content_preview, sent_at')
+    .eq('project_id', projectId)
+    .eq('direction', 'inbound')
+    .order('sent_at', { ascending: false })
+    .limit(3);
+  if (!data?.length) return '';
+  return data.map(m =>
+    `[${(m.sent_at || '').slice(0, 10)}] Objet: "${m.subject || ''}"` +
+    `\n${(m.content_preview || '').slice(0, 300)}`
+  ).join('\n\n---\n\n');
+}
+
 async function getLastClientContact(
   supabase: ReturnType<typeof createClient>, projectId: string,
 ): Promise<{ summary: string; count: number }> {
@@ -350,10 +438,16 @@ function buildClientEmail(
   const ctaHtml = cta
     ? `<p style="text-align:center;margin:20px 0"><a href="${cta.url}" class="btn">${cta.text}</a></p>`
     : '';
+  const mdToHtml = (s: string): string => s
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^#{1,3}\s+(.+)$/gm, '<span style="font-size:14px;font-weight:700;color:#C7D2FE;display:block;margin-bottom:4px">$1</span>')
+    .replace(/\n/g, '<br>');
+
   const paragraphs = message
     .split('\n\n')
     .filter(p => p.trim())
-    .map(p => `<div class="sec"><div class="txt">${p.trim().replace(/\n/g, '<br>')}</div></div>`)
+    .map(p => `<div class="sec"><div class="txt">${mdToHtml(p.trim())}</div></div>`)
     .join('');
   return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
 <div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
@@ -380,6 +474,67 @@ ${context ? `<div class="sec"><div class="lbl">Contexte</div><div class="txt">${
 }
 
 // ---------------------------------------------------------------------------
+async function getStripeData(stripeKey: string, customerId: string): Promise<string> {
+  if (!stripeKey || !customerId) return '';
+  try {
+    const h = { 'Authorization': `Bearer ${stripeKey}` };
+    const [custRes, subsRes, chargesRes] = await Promise.all([
+      fetch(`https://api.stripe.com/v1/customers/${customerId}`, { headers: h }),
+      fetch(`https://api.stripe.com/v1/subscriptions?customer=${customerId}&limit=3&status=all`, { headers: h }),
+      fetch(`https://api.stripe.com/v1/charges?customer=${customerId}&limit=5`, { headers: h }),
+    ]);
+    if (!custRes.ok) return '';
+    const [cust, subs, charges] = await Promise.all([
+      custRes.json(),
+      subsRes.ok ? subsRes.json() : { data: [] },
+      chargesRes.ok ? chargesRes.json() : { data: [] },
+    ]);
+    const lines: string[] = [];
+    if (cust.name || cust.email) lines.push(`Client Stripe : ${cust.name || cust.email}`);
+    const activeSubs = (subs.data || []).filter((s: { status: string }) => s.status === 'active');
+    if (activeSubs.length) {
+      lines.push(`Abonnements actifs : ${activeSubs.length}`);
+      activeSubs.forEach((s: { plan?: { amount?: number; currency?: string; interval?: string } }) => {
+        if (s.plan?.amount) lines.push(`  • ${(s.plan.amount / 100).toFixed(2)} ${(s.plan.currency || 'usd').toUpperCase()}/${s.plan.interval || '?'}`);
+      });
+    } else {
+      lines.push('Aucun abonnement actif');
+    }
+    const recent = (charges.data || []).slice(0, 3);
+    if (recent.length) {
+      lines.push(`Derniers paiements :`);
+      recent.forEach((c: { amount: number; currency: string; status: string; created: number }) =>
+        lines.push(`  • [${new Date(c.created * 1000).toISOString().slice(0, 10)}] ${(c.amount / 100).toFixed(2)} ${c.currency.toUpperCase()} — ${c.status}`));
+    }
+    return lines.join('\n');
+  } catch (_) { return ''; }
+}
+
+async function getAnalyticsData(webhookUrl: string): Promise<string> {
+  if (!webhookUrl) return '';
+  try {
+    const res = await fetch(webhookUrl, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const lines: string[] = [];
+    if (data.sessions) lines.push(`Sessions : ${data.sessions}`);
+    if (data.pageviews) lines.push(`Pages vues : ${data.pageviews}`);
+    if (data.bounce_rate != null) lines.push(`Taux de rebond : ${data.bounce_rate}%`);
+    if (data.avg_session_duration) lines.push(`Durée moy. session : ${data.avg_session_duration}`);
+    if (data.top_pages?.length) {
+      lines.push('Top pages :');
+      (data.top_pages as { path: string; views: number }[]).slice(0, 3)
+        .forEach(p => lines.push(`  • ${p.path} — ${p.views} vues`));
+    }
+    if (data.traffic_sources?.length) {
+      lines.push('Sources de trafic :');
+      (data.traffic_sources as { source: string; sessions: number }[]).slice(0, 3)
+        .forEach(s => lines.push(`  • ${s.source} : ${s.sessions} sessions`));
+    }
+    return lines.length ? lines.join('\n') : JSON.stringify(data).slice(0, 400);
+  } catch (_) { return ''; }
+}
+
 // Prompt de décision — Aria raisonne sur son projet
 // ---------------------------------------------------------------------------
 function buildOwnerDecisionPrompt(
@@ -391,6 +546,10 @@ function buildOwnerDecisionPrompt(
   contactCount: number,
   clientMemory: string,
   experience: string,
+  inboundMessages: string,
+  stripeData: string,
+  analyticsData: string,
+  companyContext: string,
 ): string {
   const hoursSince = Math.round(
     (Date.now() - new Date(project.updated_at).getTime()) / 3_600_000,
@@ -409,7 +568,7 @@ function buildOwnerDecisionPrompt(
     : '';
 
   return `${profile.system_prompt_context}
-${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ta décision pour ce projet.\n' : ''}
+${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ta décision pour ce projet.\n' : ''}${companyContext ? `\n═══ MÉMOIRE ENTREPRISE ═══\n${companyContext}\n` : ''}
 ═══ PROJET EN COURS ═══
 Titre : ${project.title}
 Client : ${project.client_name}
@@ -418,6 +577,9 @@ Phase actuelle : ${project.phase}
 Inactif depuis : ${hoursSince}h
 Contacts envoyés au client : ${contactCount} — Dernier : ${lastClientContact || 'Aucun'}
 ${contactWarning}
+${inboundMessages ? `\n═══ RÉPONSES DU CLIENT (non traitées) ═══\n${inboundMessages}\n\n⚠️ Le client a répondu. Ta priorité est de lire ces messages et d'y répondre via contacter_client.\n` : ''}
+${stripeData ? `\n═══ DONNÉES STRIPE (revenus client) ═══\n${stripeData}\n` : ''}
+${analyticsData ? `\n═══ ANALYTICS SITE CLIENT ═══\n${analyticsData}\n` : ''}
 ${clientMemory ? `\n═══ PROFIL CLIENT CONNU ═══\n${clientMemory}\n` : ''}
 ═══ COLLABORATEURS ═══
 ${reqStatus}
@@ -476,6 +638,7 @@ async function executeOwnerDecision(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
   resendKey: string,
+  braveApiKey: string,
   profile: EmployeeProfile,
   project: ClientProject,
   agentId: string,
@@ -508,6 +671,12 @@ async function executeOwnerDecision(
 
   // ── auditer ───────────────────────────────────────────────────────────────
   if (action === 'auditer') {
+    const searchQuery = `${project.client_name} ${project.title}`.slice(0, 120);
+    const searchResults = await webSearch(searchQuery, braveApiKey, 5);
+    const searchSection = searchResults
+      ? `\n═══ PRÉSENCE EN LIGNE DU CLIENT ═══\n${searchResults}\n\nIntègre ces informations dans ton analyse pour montrer au client que tu as fait des recherches sur lui.\n`
+      : '';
+
     const auditPrompt = `${profile.system_prompt_context}
 
 Tu analyses un nouveau projet client pour en comprendre le contexte, identifier les opportunités et poser les bases de la stratégie.
@@ -515,6 +684,7 @@ Tu analyses un nouveau projet client pour en comprendre le contexte, identifier 
 CLIENT : ${project.client_name}
 PROJET : ${project.title}
 BRIEF : ${(project.objective || '').slice(0, 600)}
+${searchSection}
 
 [ANALYSE]
 3-4 constats clés sur la situation actuelle.
@@ -721,7 +891,10 @@ async function reviewOwnerPortfolio(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
   resendKey: string,
+  braveApiKey: string,
+  stripeKey: string,
   profile: EmployeeProfile,
+  companyMemory: string,
 ): Promise<{ projects_reviewed: number; actions: string[] }> {
   const { data: agent } = await supabase
     .from('ai_agents').select('id').eq('slug', AGENT_SLUG).single();
@@ -743,7 +916,9 @@ async function reviewOwnerPortfolio(
 
   for (const project of (projects as ClientProject[]) || []) {
     try {
-      const [{ data: history }, { data: internalReqs }, contactInfo, clientMemory] = await Promise.all([
+      const analyticsConfig = (project as ClientProject & { analytics_config?: AnalyticsConfig }).analytics_config || {};
+
+      const [{ data: history }, { data: internalReqs }, contactInfo, clientMemory, inboundMessages, stripeData, analyticsData] = await Promise.all([
         supabase.from('project_history')
           .select('event_type, note, created_at')
           .eq('project_id', project.id)
@@ -755,6 +930,9 @@ async function reviewOwnerPortfolio(
           .order('created_at', { ascending: false }),
         getLastClientContact(supabase, project.id),
         getClientMemory(supabase, project.client_email || ''),
+        getInboundMessages(supabase, project.id),
+        getStripeData(stripeKey, analyticsConfig.stripe_customer_id || ''),
+        getAnalyticsData(analyticsConfig.analytics_webhook_url || ''),
       ]);
 
       const raw = await callClaude(
@@ -764,12 +942,15 @@ async function reviewOwnerPortfolio(
           (history || []) as HistoryEvent[],
           (internalReqs || []) as InternalRequest[],
           contactInfo.summary, contactInfo.count, clientMemory, experience,
+          inboundMessages, stripeData, analyticsData,
+          companyMemory,
         ),
+        DECISION_MODEL,
       );
       const decision = parseOwnerDecision(raw);
 
       await executeOwnerDecision(
-        supabase, anthropicKey, resendKey,
+        supabase, anthropicKey, resendKey, braveApiKey,
         profile, project, agent.id, decision,
       );
 
@@ -934,6 +1115,8 @@ async function handleCheck(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
   resendKey: string,
+  braveApiKey: string,
+  stripeKey: string,
   profile: EmployeeProfile,
 ): Promise<{ briefs_picked_up: number; projects_reviewed: number; actions: string[] }> {
   const actions: string[] = [];
@@ -954,8 +1137,9 @@ async function handleCheck(
   }
 
   // 2. Revue du portefeuille — Claude décide pour chaque projet
+  const companyMemory = await loadCompanyMemory(supabase);
   const { projects_reviewed, actions: ownerActions } = await reviewOwnerPortfolio(
-    supabase, anthropicKey, resendKey, profile,
+    supabase, anthropicKey, resendKey, braveApiKey, stripeKey, profile, companyMemory,
   );
   actions.push(...ownerActions);
 
@@ -965,6 +1149,11 @@ async function handleCheck(
 
   // 4. Mise à jour des métriques RH
   await updateOwnerMetrics(supabase, anthropicKey, profile);
+
+  // 5. Mettre à jour la mémoire stratégique de l'entreprise
+  if (actions.length > 0) {
+    await updateCompanyMemory(supabase, anthropicKey, actions);
+  }
 
   return {
     briefs_picked_up: newBriefs?.length || 0,
@@ -985,6 +1174,8 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!;
     const resendKey = Deno.env.get('RESEND_API_KEY') || '';
+    const braveApiKey = Deno.env.get('BRAVE_SEARCH_API_KEY') || '';
+    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY') || '';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -1007,7 +1198,7 @@ Deno.serve(async (req) => {
       started_at: new Date().toISOString(),
     });
 
-    const result = await handleCheck(supabase, anthropicKey, resendKey, profile);
+    const result = await handleCheck(supabase, anthropicKey, resendKey, braveApiKey, stripeKey, profile);
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG,
