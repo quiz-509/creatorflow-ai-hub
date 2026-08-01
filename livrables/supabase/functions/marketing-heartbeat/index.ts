@@ -263,12 +263,13 @@ Réponds uniquement avec les insights, un par ligne.`,
   for (const line of lines) {
     const [memType, ...rest] = line.split(':');
     if (memType && rest.length > 0) {
-      await supabase.from('company_memory').upsert({
+      const { error: upsertError } = await supabase.from('company_memory').upsert({
         agent_slug: AGENT_SLUG,
         memory_type: memType.trim(),
         content: { insight: rest.join(':').trim() },
         updated_at: new Date().toISOString(),
       }, { onConflict: 'agent_slug,memory_type' });
+      if (upsertError) console.error('[company_memory] upsert error:', upsertError.message);
     }
   }
 }
