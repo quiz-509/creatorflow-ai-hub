@@ -251,7 +251,19 @@ const {
 const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const ADMIN_EMAIL = 'pjoacenel@gmail.com';
+// const ADMIN_EMAIL = 'pjoacenel@gmail.com'; // Remplacé par vérification Supabase is_admin
+async function checkAdminAccess(user) {
+  const { data: profile, error } = await sb
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single();
+  if (error) {
+    console.error('[admin] checkAdminAccess error:', error.message);
+    return false;
+  }
+  return profile?.is_admin === true;
+}
 const avatarColor = str => {
   const colors = ['#7C3AED', '#059669', '#D97706', '#DC2626', '#2563EB', '#DB2777', '#0891B2'];
   let h = 0;
@@ -3166,6 +3178,7 @@ function ProjectsCockpitTab() {
 /* ── APP ROOT ── */
 function App() {
   const [session, setSession] = useState(undefined);
+  const [isAdmin, setIsAdmin] = useState(undefined);
   const [tab, setTab] = useState('dashboard');
   const [pendingExperts, setPendingExperts] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -3190,18 +3203,22 @@ function App() {
     setPendingExperts(count || 0);
   }, []);
   useEffect(() => {
-    if (session?.user?.email === ADMIN_EMAIL) loadPending();
-  }, [session, loadPending]);
+    if (!session) { setIsAdmin(false); return; }
+    checkAdminAccess(session.user).then(setIsAdmin);
+  }, [session]);
+  useEffect(() => {
+    if (isAdmin) loadPending();
+  }, [isAdmin, loadPending]);
   const logout = async () => {
     await sb.auth.signOut();
   };
-  if (session === undefined) return /*#__PURE__*/React.createElement("div", {
+  if (session === undefined || (session && isAdmin === undefined)) return /*#__PURE__*/React.createElement("div", {
     className: "spin",
     style: {
       marginTop: 80
     }
   });
-  if (!session || session.user?.email !== ADMIN_EMAIL) {
+  if (!session || isAdmin === false) {
     return /*#__PURE__*/React.createElement("div", {
       className: "access-denied"
     }, /*#__PURE__*/React.createElement("div", {
