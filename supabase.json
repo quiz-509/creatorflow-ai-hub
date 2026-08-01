@@ -1,6 +1,0 @@
-{
-  "projectId": "cjtglfutckaogsmwhfsv",
-  "db": {
-    "migrationsDir": "supabase/migrations"
-  }
-}
