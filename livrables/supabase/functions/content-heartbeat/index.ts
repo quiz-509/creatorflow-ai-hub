@@ -12,10 +12,250 @@ async function callClaude(apiKey: string, maxTokens: number, prompt: string): Pr
   return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
 }
 
+async function searchImages(
+  query: string, unsplashKey: string, pexelsKey: string, max = 3,
+): Promise<string> {
+  // Unsplash en priorité, Pexels en fallback
+  if (unsplashKey) {
+    try {
+      const res = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=${max}&orientation=landscape`,
+        { headers: { 'Authorization': `Client-ID ${unsplashKey}` } },
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const photos = (data.results || []).slice(0, max);
+        if (photos.length) {
+          return photos.map((p: { urls: { regular: string }; description?: string; alt_description?: string; user: { name: string } }) =>
+            `• ${p.description || p.alt_description || query} — ${p.urls.regular}\n  Crédit : ${p.user.name} / Unsplash`
+          ).join('\n');
+        }
+      }
+    } catch (_) { /* fall through to Pexels */ }
+  }
+  if (pexelsKey) {
+    try {
+      const res = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${max}&orientation=landscape`,
+        { headers: { 'Authorization': pexelsKey } },
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const photos = (data.photos || []).slice(0, max);
+        if (photos.length) {
+          return photos.map((p: { src: { large: string }; alt?: string; photographer: string }) =>
+            `• ${p.alt || query} — ${p.src.large}\n  Crédit : ${p.photographer} / Pexels`
+          ).join('\n');
+        }
+      }
+    } catch (_) { /* ignore */ }
+  }
+  return '';
+}
+
+async function findYouTubeVideos(query: string, apiKey: string, max = 3): Promise<string> {
+  if (!apiKey || !query.trim()) return '';
+  try {
+    const url = `https://www.googleapis.com/youtube/v3/search?q=${encodeURIComponent(query)}&part=snippet&type=video&maxResults=${max}&key=${apiKey}&relevanceLanguage=fr`;
+    const res = await fetch(url);
+    if (!res.ok) return '';
+    const data = await res.json();
+    const items = (data.items || []).slice(0, max);
+    if (!items.length) return '';
+    return items.map((v: { id: { videoId: string }; snippet: { title: string; channelTitle: string } }) =>
+      `• "${v.snippet.title}" — https://youtube.com/watch?v=${v.id.videoId}\n  Chaîne : ${v.snippet.channelTitle}`
+    ).join('\n');
+  } catch (_) { return ''; }
+}
+
+async function checkGrammar(text: string, lang = 'fr'): Promise<string> {
+  if (!text.trim()) return '';
+  try {
+    const body = new URLSearchParams({ text: text.slice(0, 2000), language: lang });
+    const res = await fetch('https://api.languagetool.org/v2/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const matches = (data.matches || []).slice(0, 8);
+    if (!matches.length) return '';
+    return matches.map((m: { message: string; context?: { text?: string; offset?: number; length?: number }; replacements?: { value: string }[] }) => {
+      const ctx = m.context?.text?.slice(
+        Math.max(0, (m.context.offset || 0) - 10),
+        (m.context.offset || 0) + (m.context.length || 20) + 10,
+      ) || '';
+      const fix = m.replacements?.[0]?.value || '';
+      return `• ${m.message}${ctx ? ' ("' + ctx.trim() + '")' : ''}${fix ? ' → "' + fix + '"' : ''}`;
+    }).join('\n');
+  } catch (_) { return ''; }
+}
+
+async function webSearch(query: string, apiKey: string, maxResults = 5): Promise<string> {
+  if (!apiKey || !query.trim()) return '';
+  try {
+    const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${maxResults}&search_lang=fr`;
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/json', 'X-Subscription-Token': apiKey },
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const results = (data.web?.results || []).slice(0, maxResults);
+    if (!results.length) return '';
+    return results.map((r: { title: string; url: string; description?: string }) =>
+      `• ${r.title}\n  ${r.url}${r.description ? '\n  ' + r.description.slice(0, 160) : ''}`
+    ).join('\n\n');
+  } catch (_) { return ''; }
+}
+
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const PUBLISH_KEYWORDS = [
+  'publier', 'publish', 'poster sur le blog', 'mettre en ligne',
+  'publication directe', 'publier sur le site', 'publish to cms',
+  'publier l\'article', 'poster l\'article',
+];
+
+function needsPublication(brief: string): boolean {
+  const lower = brief.toLowerCase();
+  return PUBLISH_KEYWORDS.some(k => lower.includes(k));
+}
+
+function mdToHtml(md: string): string {
+  return md
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[^<]*<\/li>\n?)+/g, '<ul>$&</ul>')
+    .replace(/\n\n+/g, '</p><p>')
+    .replace(/^(?!<[hul])(.+)$/gm, (line) =>
+      line.startsWith('<') ? line : `<p>${line}</p>`
+    );
+}
+
+async function publishToWordPress(
+  siteUrl: string, username: string, appPassword: string,
+  title: string, htmlContent: string, status = 'publish',
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const endpoint = `${siteUrl.replace(/\/$/, '')}/wp-json/wp/v2/posts`;
+    const credentials = btoa(`${username}:${appPassword}`);
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${credentials}`,
+      },
+      body: JSON.stringify({ title, content: htmlContent, status }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      return { success: false, error: err.slice(0, 200) };
+    }
+    const data = await res.json();
+    return { success: true, url: data.link };
+  } catch (err) {
+    return { success: false, error: (err as Error).message.slice(0, 200) };
+  }
+}
+
+async function publishToGhost(
+  siteUrl: string, adminApiKey: string,
+  title: string, htmlContent: string, status = 'published',
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const [keyId, keySecret] = adminApiKey.split(':');
+    if (!keyId || !keySecret) return { success: false, error: 'admin_api_key invalide (format attendu: id:secret)' };
+
+    const now = Math.floor(Date.now() / 1000);
+    const header = btoa(JSON.stringify({ alg: 'HS256', kid: keyId, typ: 'JWT' }))
+      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    const payload = btoa(JSON.stringify({ iat: now, exp: now + 300, aud: '/admin/' }))
+      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+    const secretBytes = new Uint8Array(
+      (keySecret.match(/.{2}/g) || []).map((b: string) => parseInt(b, 16))
+    );
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw', secretBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'],
+    );
+    const sigBytes = await crypto.subtle.sign(
+      'HMAC', cryptoKey, new TextEncoder().encode(`${header}.${payload}`),
+    );
+    const sig = btoa(String.fromCharCode(...new Uint8Array(sigBytes)))
+      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+
+    const endpoint = `${siteUrl.replace(/\/$/, '')}/ghost/api/admin/posts/`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Ghost ${header}.${payload}.${sig}`,
+      },
+      body: JSON.stringify({ posts: [{ title, html: htmlContent, status }] }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      return { success: false, error: err.slice(0, 200) };
+    }
+    const data = await res.json();
+    return { success: true, url: data.posts?.[0]?.url };
+  } catch (err) {
+    return { success: false, error: (err as Error).message.slice(0, 200) };
+  }
+}
+
+async function deliverViaWebhook(
+  webhookUrl: string, title: string, htmlContent: string, markdown: string,
+  meta: { project_id: string; client_name: string; status?: string },
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        html: htmlContent,
+        markdown,
+        status: meta.status || 'published',
+        project_id: meta.project_id,
+        client_name: meta.client_name,
+        delivered_at: new Date().toISOString(),
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      return { success: false, error: err.slice(0, 200) };
+    }
+    const data = await res.json().catch(() => ({}));
+    return { success: true, url: data.url || data.link || data.permalink || webhookUrl };
+  } catch (err) {
+    return { success: false, error: (err as Error).message.slice(0, 200) };
+  }
+}
+
+async function executeDelivery(
+  adapter: DeliveryConfig, title: string, htmlContent: string, markdown: string,
+  meta: { project_id: string; client_name: string },
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  if (adapter.type === 'wordpress' && adapter.username && adapter.app_password) {
+    return publishToWordPress(adapter.url, adapter.username, adapter.app_password, title, htmlContent, adapter.status || 'publish');
+  }
+  if (adapter.type === 'ghost' && adapter.admin_api_key) {
+    return publishToGhost(adapter.url, adapter.admin_api_key, title, htmlContent, adapter.status || 'published');
+  }
+  if (adapter.type === 'webhook') {
+    return deliverViaWebhook(adapter.url, title, htmlContent, markdown, { ...meta, status: adapter.status });
+  }
+  return { success: false, error: `Adapter "${adapter.type}" non reconnu ou credentials manquants` };
+}
 
 const AGENT_SLUG = 'content';
 const DEPARTMENT = 'content';
@@ -36,12 +276,25 @@ interface InternalRequest {
   decision_reason?: string;
 }
 
+interface DeliveryConfig {
+  type: 'wordpress' | 'ghost' | 'webhook';
+  url: string;
+  // WordPress
+  username?: string;
+  app_password?: string;
+  // Ghost
+  admin_api_key?: string;
+  // All types
+  status?: string;
+}
+
 interface ClientProject {
   id: string;
   title: string;
   client_name: string;
   client_email?: string;
   objective?: string;
+  delivery_config?: DeliveryConfig | null;
 }
 
 async function loadProfile(supabase: ReturnType<typeof createClient>): Promise<EmployeeProfile | null> {
@@ -61,6 +314,64 @@ async function loadExperience(supabase: ReturnType<typeof createClient>): Promis
     .single();
   if (!data || !data.experience_text || data.projects_count === 0) return '';
   return data.experience_text;
+}
+
+async function getClientMemory(
+  supabase: ReturnType<typeof createClient>, clientEmail: string,
+): Promise<string> {
+  if (!clientEmail) return '';
+  const { data } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', DEPARTMENT)
+    .maybeSingle();
+  if (!data) return '';
+  return `Client récurrent (${data.projects_count} livrable${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
+}
+
+async function updateClientMemory(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  clientEmail: string,
+  projectTitle: string,
+  deliverableType: string,
+  summary: string,
+): Promise<void> {
+  if (!clientEmail) return;
+  try {
+    const { data: existing } = await supabase
+      .from('client_memory')
+      .select('memory, projects_count')
+      .eq('client_email', clientEmail)
+      .eq('department', DEPARTMENT)
+      .maybeSingle();
+
+    const count = (existing?.projects_count || 0) + 1;
+    const currentMemory = existing?.memory || '';
+
+    const newMemory = await callClaude(anthropicKey, 300,
+      `Tu es Léo, Content Employee chez CreatorFlow Market.
+${currentMemory ? `MÉMOIRE EXISTANTE (${existing?.projects_count || 0} livrable(s)) :\n${currentMemory.slice(0, 400)}\n` : ''}
+LIVRABLE VENANT D'ÊTRE PRODUIT :
+Projet : ${projectTitle}
+Type : ${deliverableType}
+Résumé : ${summary.slice(0, 200)}
+
+Synthétise la mémoire client en 5-7 bullet points. Focus : préférences éditoriales observées, formats qui fonctionnent, ton attendu, thèmes récurrents, contraintes spécifiques.
+Format : bullet points uniquement, sans intro ni conclusion.`);
+
+    const { error } = await supabase.from('client_memory').upsert({
+      client_email: clientEmail,
+      department: DEPARTMENT,
+      memory: newMemory.trim(),
+      projects_count: count,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'client_email,department' });
+    if (error) console.error('[content] updateClientMemory upsert error:', error.message);
+  } catch (err) {
+    console.error('[content] updateClientMemory error:', (err as Error).message);
+  }
 }
 
 async function synthesizeExperience(
@@ -165,9 +476,15 @@ function buildDeliverablePrompt(
   project: ClientProject,
   request: InternalRequest,
   experience: string,
+  clientMemory: string,
+  searchContext: string,
+  videoContext: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
+${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nAdapte ton livrable aux préférences et contraintes connues de ce client.\n' : ''}
+${searchContext ? '\n═══ RECHERCHE WEB — SOURCES ACTUELLES ═══\n' + searchContext + '\nCite et intègre ces références dans ton livrable pour lui donner de la profondeur et de la crédibilité.\n' : ''}
+${videoContext ? '\n═══ VIDÉOS YOUTUBE PERTINENTES ═══\n' + videoContext + '\nSuggère d\'intégrer ou de référencer ces vidéos dans ton livrable quand c\'est pertinent.\n' : ''}
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -199,6 +516,10 @@ Newsletter : Objet + Corps complet + CTA
 async function executeInternalRequest(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
+  braveApiKey: string,
+  unsplashKey: string,
+  pexelsKey: string,
+  youtubeKey: string,
   profile: EmployeeProfile,
   request: InternalRequest,
   experience: string,
@@ -206,7 +527,7 @@ async function executeInternalRequest(
   try {
     const { data: project } = await supabase
       .from('client_projects')
-      .select('id, title, client_name, client_email, objective')
+      .select('id, title, client_name, client_email, objective, delivery_config')
       .eq('id', request.project_id)
       .single();
 
@@ -217,7 +538,14 @@ async function executeInternalRequest(
 
     await supabase.from('internal_requests').update({ status: 'in_progress' }).eq('id', request.id);
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience));
+    const searchQuery = `${project.title} ${request.brief.split('\n')[0]}`.slice(0, 120);
+    const [searchResults, videoResults, clientMemory] = await Promise.all([
+      webSearch(searchQuery, braveApiKey, 5),
+      findYouTubeVideos(searchQuery, youtubeKey, 3),
+      getClientMemory(supabase, project.client_email || ''),
+    ]);
+
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory, searchResults, videoResults));
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎ]+\\]|$)`));
@@ -229,36 +557,85 @@ async function executeInternalRequest(
     const deliverable = extract('LIVRABLE_COMPLET') || raw;
     const notes = extract('NOTES_POUR_ARIA') || '';
 
+    // Enrichissements post-génération : images + correction grammaticale
+    const titleMatch2 = deliverable.match(/^#\s+(.+)$/m);
+    const imageQuery = titleMatch2 ? titleMatch2[1].trim() : searchQuery;
+    const [imageResults, grammarNotes] = await Promise.all([
+      searchImages(imageQuery, unsplashKey, pexelsKey, 3),
+      checkGrammar(deliverable, 'fr'),
+    ]);
+
+    // Livraison via delivery_config si Aria le demande explicitement
+    let deliveryResult: { success: boolean; url?: string; error?: string } | null = null;
+    if (needsPublication(request.brief) && project.delivery_config) {
+      const titleMatch = deliverable.match(/^#\s+(.+)$/m);
+      const deliveryTitle = titleMatch ? titleMatch[1].trim() : `${project.title} — ${contentType}`;
+      const htmlContent = mdToHtml(deliverable);
+      deliveryResult = await executeDelivery(
+        project.delivery_config as DeliveryConfig,
+        deliveryTitle, htmlContent, deliverable,
+        { project_id: project.id, client_name: project.client_name },
+      );
+      console.log(`[content] delivery for ${project.id}: type=${project.delivery_config.type}, success=${deliveryResult.success}, url=${deliveryResult.url}`);
+    }
+
+    const deliveryNote = deliveryResult
+      ? deliveryResult.success
+        ? `\n\n✅ Livré (${(project.delivery_config as DeliveryConfig).type}) : ${deliveryResult.url}`
+        : `\n\n⚠️ Échec livraison (${(project.delivery_config as DeliveryConfig).type}) : ${deliveryResult.error}`
+      : '';
+
+    const imageSection = imageResults ? `\n\n─── IMAGES SUGGÉRÉES ───\n${imageResults}` : '';
+    const grammarSection = grammarNotes ? `\n\n─── CORRECTIONS LINGUISTIQUES ───\n${grammarNotes}` : '';
+
     await supabase.from('internal_requests').update({
       status: 'completed',
-      result: `[${contentType.toUpperCase()}]\n\n${deliverable}`,
-      result_summary: `${contentType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}`,
+      result: `[${contentType.toUpperCase()}]\n\n${deliverable}${imageSection}${grammarSection}${deliveryNote}`,
+      result_summary: `${contentType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}${deliveryNote}`,
       completed_at: new Date().toISOString(),
     }).eq('id', request.id);
+
+    const reportSections = [
+      { heading: 'Type', content: contentType },
+      { heading: 'Résumé', content: summary },
+      { heading: 'Livrable complet', content: deliverable },
+      { heading: 'Notes pour Aria', content: notes },
+    ];
+    if (deliveryResult) {
+      reportSections.push({
+        heading: 'Livraison',
+        content: deliveryResult.success
+          ? `Livré avec succès (${(project.delivery_config as DeliveryConfig).type}) : ${deliveryResult.url}`
+          : `Échec (${(project.delivery_config as DeliveryConfig).type}) : ${deliveryResult.error}`,
+      });
+    }
 
     await supabase.from('agent_reports').insert({
       agent_slug: AGENT_SLUG,
       title: `${contentType} — ${project.client_name} : ${project.title.slice(0, 50)}`,
-      sections: [
-        { heading: 'Type', content: contentType },
-        { heading: 'Résumé', content: summary },
-        { heading: 'Livrable complet', content: deliverable },
-        { heading: 'Notes pour Aria', content: notes },
-      ],
+      sections: reportSections,
       report_type: 'content_deliverable',
-      content: { project_id: project.id, internal_request_id: request.id, content_type: contentType },
+      content: {
+        project_id: project.id, internal_request_id: request.id, content_type: contentType,
+        delivered: deliveryResult?.success || false,
+        delivery_type: (project.delivery_config as DeliveryConfig | undefined)?.type || null,
+      },
     });
 
     await supabase.from('project_history').insert({
       project_id: project.id,
-      event_type: 'content_delivered',
+      event_type: deliveryResult?.success ? 'content_delivered_external' : 'content_delivered',
       old_value: { request_status: 'pending' },
-      new_value: { request_status: 'completed', content_type: contentType },
+      new_value: {
+        request_status: 'completed', content_type: contentType,
+        ...(deliveryResult?.success ? { delivery_url: deliveryResult.url, delivery_type: (project.delivery_config as DeliveryConfig).type } : {}),
+      },
       actor_type: 'agent',
-      note: `${profile.name} (${profile.title}) — livrable produit : ${contentType}. ${summary.slice(0, 100)}`,
+      note: `${profile.name} (${profile.title}) — ${deliveryResult?.success ? `livré via ${(project.delivery_config as DeliveryConfig).type} : ${deliveryResult.url}` : `livrable produit : ${contentType}. ${summary.slice(0, 100)}`}`,
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, contentType, summary);
+    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, contentType, summary);
 
     return true;
   } catch (err) {
@@ -271,6 +648,10 @@ async function executeInternalRequest(
 async function processInternalRequests(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
+  braveApiKey: string,
+  unsplashKey: string,
+  pexelsKey: string,
+  youtubeKey: string,
   profile: EmployeeProfile,
 ): Promise<{ requests_processed: number; actions: string[] }> {
   const experience = await loadExperience(supabase);
@@ -288,7 +669,7 @@ async function processInternalRequests(
 
   if (requests?.length) {
     for (const request of requests as InternalRequest[]) {
-      const success = await executeInternalRequest(supabase, anthropicKey, profile, request, experience);
+      const success = await executeInternalRequest(supabase, anthropicKey, braveApiKey, unsplashKey, pexelsKey, youtubeKey, profile, request, experience);
       if (success) {
         processed++;
         actions.push(`executed:${request.id.slice(0, 8)}`);
@@ -309,6 +690,10 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+    const braveApiKey = Deno.env.get('BRAVE_SEARCH_API_KEY') || '';
+    const unsplashKey = Deno.env.get('UNSPLASH_ACCESS_KEY') || '';
+    const pexelsKey = Deno.env.get('PEXELS_API_KEY') || '';
+    const youtubeKey = Deno.env.get('YOUTUBE_API_KEY') || '';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -325,7 +710,7 @@ Deno.serve(async (req) => {
       status: 'running', started_at: new Date().toISOString(),
     });
 
-    const result = await processInternalRequests(supabase, anthropicKey, profile);
+    const result = await processInternalRequests(supabase, anthropicKey, braveApiKey, unsplashKey, pexelsKey, youtubeKey, profile);
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG, run_type: 'daily',

@@ -12,6 +12,106 @@ async function callClaude(apiKey: string, maxTokens: number, prompt: string): Pr
   return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
 }
 
+interface ApolloPerson {
+  name?: string;
+  title?: string;
+  linkedin_url?: string;
+  city?: string;
+  country?: string;
+  organization?: { name?: string };
+}
+
+async function apolloSearch(
+  apiKey: string,
+  titles: string[],
+  keywords: string,
+  maxResults = 10,
+): Promise<string> {
+  if (!apiKey || !keywords.trim()) return '';
+  try {
+    const res = await fetch('https://api.apollo.io/api/v1/mixed_people/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify({ api_key: apiKey, q_keywords: keywords, person_titles: titles, per_page: maxResults, page: 1 }),
+    });
+    if (!res.ok) return '';
+    const data = await res.json();
+    const people: ApolloPerson[] = data.people || [];
+    if (!people.length) return '';
+    return people.map(p => {
+      const company = p.organization?.name || '';
+      const location = [p.city, p.country].filter(Boolean).join(', ');
+      const linkedin = p.linkedin_url ? `\n  LinkedIn : ${p.linkedin_url}` : '';
+      return `• ${p.name || 'N/A'} — ${p.title || 'N/A'}${company ? ' @ ' + company : ''}${location ? ' (' + location + ')' : ''}${linkedin}`;
+    }).join('\n\n');
+  } catch (_) { return ''; }
+}
+
+async function extractIcpForApollo(
+  apiKey: string,
+  brief: string,
+  objective: string,
+): Promise<{ titles: string[]; keywords: string }> {
+  try {
+    const raw = await callClaude(apiKey, 150,
+      `Extrait les critères de recherche de prospects depuis ce brief marketing.
+
+BRIEF : ${brief.slice(0, 400)}
+OBJECTIF : ${(objective || '').slice(0, 200)}
+
+Format exact (une ligne chacun, RIEN d'autre) :
+[TITRES] titre1 | titre2 | titre3
+[MOTS_CLES] industrie secteur type de client en 5 mots max`);
+
+    const titlesMatch = raw.match(/\[TITRES\]([^\n]+)/);
+    const kwMatch = raw.match(/\[MOTS_CLES\]([^\n]+)/);
+    const titles = titlesMatch ? titlesMatch[1].split('|').map(t => t.trim()).filter(Boolean) : [];
+    const keywords = kwMatch ? kwMatch[1].trim() : '';
+    return { titles, keywords };
+  } catch (_) {
+    return { titles: [], keywords: '' };
+  }
+}
+
+interface HunterEmail {
+  value: string;
+  first_name?: string;
+  last_name?: string;
+  position?: string;
+  confidence: number;
+}
+
+async function hunterDomainSearch(apiKey: string, domain: string, max = 5): Promise<string> {
+  if (!apiKey || !domain) return '';
+  try {
+    const url = `https://api.hunter.io/v2/domain-search?domain=${encodeURIComponent(domain)}&limit=${max}&api_key=${apiKey}`;
+    const res = await fetch(url);
+    if (!res.ok) return '';
+    const data = await res.json();
+    const emails: HunterEmail[] = data.data?.emails || [];
+    if (!emails.length) return '';
+    return emails.map(e =>
+      `• ${[e.first_name, e.last_name].filter(Boolean).join(' ')} — ${e.value}${e.position ? ' (' + e.position + ')' : ''} [confiance: ${e.confidence}%]`
+    ).join('\n');
+  } catch (_) { return ''; }
+}
+
+async function extractDomainsForHunter(
+  anthropicKey: string, brief: string, objective: string,
+): Promise<string[]> {
+  try {
+    const raw = await callClaude(anthropicKey, 80,
+      `Extrait les noms de domaine web (ex: exemple.com) mentionnés ou implicites dans ce brief de prospection.
+BRIEF : ${brief.slice(0, 300)}
+OBJECTIF : ${(objective || '').slice(0, 150)}
+Réponds UNIQUEMENT avec les domaines séparés par des virgules. Si aucun domaine identifiable, réponds AUCUN.`);
+    if (!raw || raw.trim().toUpperCase().includes('AUCUN')) return [];
+    return raw.split(',')
+      .map(d => d.trim().replace(/^https?:\/\//, '').split('/')[0].toLowerCase())
+      .filter(d => d.includes('.') && d.length > 3);
+  } catch (_) { return []; }
+}
+
 const cors = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -61,6 +161,64 @@ async function loadExperience(supabase: ReturnType<typeof createClient>): Promis
     .single();
   if (!data || !data.experience_text || data.projects_count === 0) return '';
   return data.experience_text;
+}
+
+async function getClientMemory(
+  supabase: ReturnType<typeof createClient>, clientEmail: string,
+): Promise<string> {
+  if (!clientEmail) return '';
+  const { data } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', DEPARTMENT)
+    .maybeSingle();
+  if (!data) return '';
+  return `Client récurrent (${data.projects_count} mission${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
+}
+
+async function updateClientMemory(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  clientEmail: string,
+  projectTitle: string,
+  deliverableType: string,
+  summary: string,
+): Promise<void> {
+  if (!clientEmail) return;
+  try {
+    const { data: existing } = await supabase
+      .from('client_memory')
+      .select('memory, projects_count')
+      .eq('client_email', clientEmail)
+      .eq('department', DEPARTMENT)
+      .maybeSingle();
+
+    const count = (existing?.projects_count || 0) + 1;
+    const currentMemory = existing?.memory || '';
+
+    const newMemory = await callClaude(anthropicKey, 300,
+      `Tu es Maya, Prospecting Employee chez CreatorFlow Market.
+${currentMemory ? `MÉMOIRE EXISTANTE (${existing?.projects_count || 0} mission(s)) :\n${currentMemory.slice(0, 400)}\n` : ''}
+LIVRABLE VENANT D'ÊTRE PRODUIT :
+Projet : ${projectTitle}
+Type : ${deliverableType}
+Résumé : ${summary.slice(0, 200)}
+
+Synthétise la mémoire client en 5-7 bullet points. Focus : ICP validé, secteurs ciblés, canaux d'acquisition efficaces, séquences qui ont fonctionné, contraintes de prospection spécifiques.
+Format : bullet points uniquement, sans intro ni conclusion.`);
+
+    const { error } = await supabase.from('client_memory').upsert({
+      client_email: clientEmail,
+      department: DEPARTMENT,
+      memory: newMemory.trim(),
+      projects_count: count,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'client_email,department' });
+    if (error) console.error('[prospecting] updateClientMemory upsert error:', error.message);
+  } catch (err) {
+    console.error('[prospecting] updateClientMemory error:', (err as Error).message);
+  }
 }
 
 async function synthesizeExperience(
@@ -165,9 +323,15 @@ function buildDeliverablePrompt(
   project: ClientProject,
   request: InternalRequest,
   experience: string,
+  clientMemory: string,
+  realProspects: string,
+  hunterEmails: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
+${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nUtilise cette connaissance pour affiner l\'ICP, éviter de cibler des segments déjà épuisés et adapter la séquence outreach.\n' : ''}
+${realProspects ? '\n═══ VRAIS PROSPECTS (Apollo.io) ═══\n' + realProspects + '\nUtilise ces contacts réels — ne génère pas de profils fictifs.\n' : ''}
+${hunterEmails ? '\n═══ EMAILS VÉRIFIÉS (Hunter.io) ═══\n' + hunterEmails + '\nCes emails sont vérifiés et prêts à l\'usage. Intègre-les dans ta liste ou ta séquence outreach.\n' : ''}
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -199,6 +363,8 @@ Stratégie : Canaux + Messagerie + KPIs + Plan 90 jours
 async function executeInternalRequest(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
+  apolloApiKey: string,
+  hunterApiKey: string,
   profile: EmployeeProfile,
   request: InternalRequest,
   experience: string,
@@ -213,7 +379,33 @@ async function executeInternalRequest(
 
     await supabase.from('internal_requests').update({ status: 'in_progress' }).eq('id', request.id);
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience));
+    const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    const briefLower = (request.brief || '').toLowerCase();
+
+    // Apollo — profils de prospects réels
+    let realProspects = '';
+    const needsRealProspects = ['liste_prospects', 'liste de prospects', 'liste prospects', 'trouver des prospects', 'contacts réels'].some(k => briefLower.includes(k));
+    if (needsRealProspects && apolloApiKey) {
+      const icp = await extractIcpForApollo(anthropicKey, request.brief, project.objective || '');
+      if (icp.keywords || icp.titles.length) {
+        realProspects = await apolloSearch(apolloApiKey, icp.titles, icp.keywords, 10);
+      }
+    }
+
+    // Hunter.io — emails vérifiés par domaine
+    let hunterEmails = '';
+    const needsEmails = ['email', 'trouver emails', 'email finder', 'emails vérifiés', 'contacts email', 'outreach'].some(k => briefLower.includes(k));
+    if (needsEmails && hunterApiKey) {
+      const domains = await extractDomainsForHunter(anthropicKey, request.brief, project.objective || '');
+      const parts: string[] = [];
+      for (const domain of domains.slice(0, 3)) {
+        const found = await hunterDomainSearch(hunterApiKey, domain, 5);
+        if (found) parts.push(`${domain} :\n${found}`);
+      }
+      hunterEmails = parts.join('\n\n');
+    }
+
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory, realProspects, hunterEmails));
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎÔÂÊ]+\\]|$)`));
@@ -255,6 +447,7 @@ async function executeInternalRequest(
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, prospectingType, summary);
+    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, prospectingType, summary);
 
     return true;
   } catch (err) {
@@ -267,6 +460,8 @@ async function executeInternalRequest(
 async function processInternalRequests(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
+  apolloApiKey: string,
+  hunterApiKey: string,
   profile: EmployeeProfile,
 ): Promise<{ requests_processed: number; actions: string[] }> {
   const experience = await loadExperience(supabase);
@@ -284,7 +479,7 @@ async function processInternalRequests(
 
   if (requests?.length) {
     for (const request of requests as InternalRequest[]) {
-      const success = await executeInternalRequest(supabase, anthropicKey, profile, request, experience);
+      const success = await executeInternalRequest(supabase, anthropicKey, apolloApiKey, hunterApiKey, profile, request, experience);
       if (success) {
         processed++;
         actions.push(`executed:${request.id.slice(0, 8)}`);
@@ -305,6 +500,8 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+    const apolloApiKey = Deno.env.get('APOLLO_API_KEY') || '';
+    const hunterApiKey = Deno.env.get('HUNTER_API_KEY') || '';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -321,7 +518,7 @@ Deno.serve(async (req) => {
       status: 'running', started_at: new Date().toISOString(),
     });
 
-    const result = await processInternalRequests(supabase, anthropicKey, profile);
+    const result = await processInternalRequests(supabase, anthropicKey, apolloApiKey, hunterApiKey, profile);
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG, run_type: 'daily',

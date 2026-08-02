@@ -44,6 +44,279 @@ interface ClientProject {
   objective?: string;
 }
 
+interface SupportAdapter {
+  type: 'zendesk' | 'freshdesk' | 'intercom' | 'webhook';
+  // Zendesk
+  subdomain?: string;
+  email?: string;
+  api_token?: string;
+  // Freshdesk
+  api_key?: string;
+  // Intercom
+  access_token?: string;
+  admin_id?: string;
+  // Webhook universel
+  read_url?: string;
+  write_url?: string;
+  auth_header?: string;
+  // Global
+  max_tickets?: number;
+}
+
+interface SupportTicket {
+  id: string;
+  subject: string;
+  description: string;
+  requester_name?: string;
+  requester_email?: string;
+  created_at?: string;
+}
+
+interface ClientProjectWithSupport extends ClientProject {
+  support_adapter: SupportAdapter;
+}
+
+// ─── TICKET ADAPTERS ─────────────────────────────────────────────────────────
+
+async function fetchZendeskTickets(a: SupportAdapter, since: string, max: number): Promise<SupportTicket[]> {
+  const creds = btoa(`${a.email}/token:${a.api_token}`);
+  const res = await fetch(
+    `https://${a.subdomain}.zendesk.com/api/v2/tickets.json?status=new,open&sort_by=created_at&sort_order=desc&per_page=${max}`,
+    { headers: { 'Authorization': `Basic ${creds}` } },
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  const sinceDate = new Date(since);
+  return (data.tickets || [])
+    .filter((t: { created_at: string }) => new Date(t.created_at) > sinceDate)
+    .map((t: { id: number; subject: string; description: string; via?: { source?: { from?: { name?: string; address?: string } } }; created_at: string }) => ({
+      id: String(t.id), subject: t.subject || '', description: t.description || '',
+      requester_name: t.via?.source?.from?.name || '', requester_email: t.via?.source?.from?.address || '',
+      created_at: t.created_at,
+    }));
+}
+
+async function replyZendesk(a: SupportAdapter, ticketId: string, body: string): Promise<{ success: boolean; error?: string }> {
+  const creds = btoa(`${a.email}/token:${a.api_token}`);
+  const res = await fetch(`https://${a.subdomain}.zendesk.com/api/v2/tickets/${ticketId}.json`, {
+    method: 'PUT',
+    headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticket: { comment: { body, public: true }, status: 'pending' } }),
+  });
+  return res.ok ? { success: true } : { success: false, error: (await res.text()).slice(0, 200) };
+}
+
+async function fetchFreshdeskTickets(a: SupportAdapter, since: string, max: number): Promise<SupportTicket[]> {
+  const creds = btoa(`${a.api_key}:X`);
+  const res = await fetch(
+    `https://${a.subdomain}.freshdesk.com/api/v2/tickets?filter=new_and_my_open&per_page=${max}&order_type=desc`,
+    { headers: { 'Authorization': `Basic ${creds}` } },
+  );
+  if (!res.ok) return [];
+  const data = await res.json();
+  const sinceDate = new Date(since);
+  return (Array.isArray(data) ? data : [])
+    .filter((t: { created_at: string }) => new Date(t.created_at) > sinceDate)
+    .map((t: { id: number; subject: string; description_text: string; email?: string; created_at: string }) => ({
+      id: String(t.id), subject: t.subject || '', description: t.description_text || '',
+      requester_email: t.email || '', created_at: t.created_at,
+    }));
+}
+
+async function replyFreshdesk(a: SupportAdapter, ticketId: string, body: string): Promise<{ success: boolean; error?: string }> {
+  const creds = btoa(`${a.api_key}:X`);
+  const res = await fetch(`https://${a.subdomain}.freshdesk.com/api/v2/tickets/${ticketId}/reply`, {
+    method: 'POST',
+    headers: { 'Authorization': `Basic ${creds}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ body: `<p>${body.replace(/\n/g, '<br>')}</p>` }),
+  });
+  return res.ok ? { success: true } : { success: false, error: (await res.text()).slice(0, 200) };
+}
+
+async function fetchIntercomTickets(a: SupportAdapter, since: string, max: number): Promise<SupportTicket[]> {
+  const sinceTs = Math.floor(new Date(since).getTime() / 1000);
+  const res = await fetch(`https://api.intercom.io/conversations?state=open&created_since=${sinceTs}&per_page=${max}`, {
+    headers: { 'Authorization': `Bearer ${a.access_token}`, 'Accept': 'application/json' },
+  });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return (data.conversations || []).map((c: { id: string; source?: { subject?: string; body?: string; author?: { name?: string; email?: string } }; created_at?: number }) => ({
+    id: c.id, subject: c.source?.subject || 'Support request',
+    description: (c.source?.body || '').replace(/<[^>]*>/g, ''),
+    requester_name: c.source?.author?.name || '', requester_email: c.source?.author?.email || '',
+    created_at: c.created_at ? new Date(c.created_at * 1000).toISOString() : '',
+  }));
+}
+
+async function replyIntercom(a: SupportAdapter, conversationId: string, body: string): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch(`https://api.intercom.io/conversations/${conversationId}/reply`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${a.access_token}`, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ type: 'admin', admin_id: a.admin_id, message_type: 'comment', body }),
+  });
+  return res.ok ? { success: true } : { success: false, error: (await res.text()).slice(0, 200) };
+}
+
+async function fetchWebhookTickets(a: SupportAdapter, since: string, max: number): Promise<SupportTicket[]> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (a.auth_header) headers['Authorization'] = a.auth_header;
+  const res = await fetch(a.read_url!, { method: 'POST', headers, body: JSON.stringify({ since, max }) });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return (data.tickets || data || []).slice(0, max);
+}
+
+async function replyWebhook(a: SupportAdapter, ticketId: string, body: string): Promise<{ success: boolean; error?: string }> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (a.auth_header) headers['Authorization'] = a.auth_header;
+  const res = await fetch(a.write_url!, {
+    method: 'POST', headers,
+    body: JSON.stringify({ ticket_id: ticketId, reply: body, replied_at: new Date().toISOString() }),
+  });
+  return res.ok ? { success: true } : { success: false, error: (await res.text()).slice(0, 200) };
+}
+
+async function fetchTickets(adapter: SupportAdapter, since: string): Promise<SupportTicket[]> {
+  const max = adapter.max_tickets || 5;
+  try {
+    if (adapter.type === 'zendesk') return await fetchZendeskTickets(adapter, since, max);
+    if (adapter.type === 'freshdesk') return await fetchFreshdeskTickets(adapter, since, max);
+    if (adapter.type === 'intercom') return await fetchIntercomTickets(adapter, since, max);
+    if (adapter.type === 'webhook' && adapter.read_url) return await fetchWebhookTickets(adapter, since, max);
+    return [];
+  } catch (err) {
+    console.error('[support] fetchTickets error:', (err as Error).message);
+    return [];
+  }
+}
+
+async function postReply(adapter: SupportAdapter, ticketId: string, body: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    if (adapter.type === 'zendesk') return await replyZendesk(adapter, ticketId, body);
+    if (adapter.type === 'freshdesk') return await replyFreshdesk(adapter, ticketId, body);
+    if (adapter.type === 'intercom') return await replyIntercom(adapter, ticketId, body);
+    if (adapter.type === 'webhook' && adapter.write_url) return await replyWebhook(adapter, ticketId, body);
+    return { success: false, error: `Adapter "${adapter.type}" non reconnu ou write_url manquant` };
+  } catch (err) {
+    return { success: false, error: (err as Error).message.slice(0, 200) };
+  }
+}
+
+function buildTicketResponsePrompt(
+  profile: EmployeeProfile,
+  project: ClientProject,
+  ticket: SupportTicket,
+  experience: string,
+  clientMemory: string,
+): string {
+  return `${profile.system_prompt_context}
+${experience ? '\n═══ TON EXPÉRIENCE ═══\n' + experience.slice(0, 300) + '\n' : ''}
+${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nAdapte le ton et les références aux habitudes connues de ce client.\n' : ''}
+═══ CONTEXTE PROJET ═══
+Client : ${project.client_name}
+Projet : ${project.title}
+Objectif : ${(project.objective || '').slice(0, 300)}
+
+═══ TICKET DE SUPPORT ═══
+Sujet : ${ticket.subject}
+De : ${ticket.requester_name || 'Utilisateur'}${ticket.requester_email ? ' <' + ticket.requester_email + '>' : ''}
+Message :
+${ticket.description.slice(0, 800)}
+
+Rédige une réponse professionnelle, directe et utile.
+- Réponds précisément à la question posée
+- Ton adapté au profil du client (${project.client_name})
+- Maximum 3 paragraphes courts
+- Termine par une proposition d'aide supplémentaire
+- En français, sauf si le ticket est dans une autre langue
+
+[RÉPONSE]
+La réponse complète, prête à envoyer.
+
+[ESCALADE]
+OUI ou NON. Si OUI, 1 phrase expliquant pourquoi une intervention humaine est nécessaire.`;
+}
+
+async function processSupportTickets(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+): Promise<{ tickets_processed: number; actions: string[] }> {
+  const experience = await loadExperience(supabase);
+  const since = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString();
+
+  const { data: projects } = await supabase
+    .from('client_projects')
+    .select('id, title, client_name, client_email, objective, support_adapter')
+    .eq('status', 'active')
+    .not('support_adapter', 'is', null);
+
+  const actions: string[] = [];
+  let totalProcessed = 0;
+
+  for (const project of (projects || []) as ClientProjectWithSupport[]) {
+    const adapter = project.support_adapter;
+    const tickets = await fetchTickets(adapter, since);
+    if (!tickets.length) continue;
+
+    console.log(`[support] ${tickets.length} ticket(s) for project ${project.id} (${adapter.type})`);
+
+    const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    let ticketsSummary = '';
+
+    for (const ticket of tickets) {
+      try {
+        const raw = await callClaude(anthropicKey, 600,
+          buildTicketResponsePrompt(profile, project, ticket, experience, clientMemory));
+
+        const replyMatch = raw.match(/\[RÉPONSE\]([\s\S]*?)(?=\[ESCALADE\]|$)/);
+        const escaladeMatch = raw.match(/\[ESCALADE\]([\s\S]*?)$/);
+        const reply = replyMatch ? replyMatch[1].trim() : raw.slice(0, 500);
+        const escaladeText = escaladeMatch ? escaladeMatch[1].trim() : 'NON';
+        const needsEscalation = escaladeText.toUpperCase().startsWith('OUI');
+
+        const result = await postReply(adapter, ticket.id, reply);
+
+        await supabase.from('project_history').insert({
+          project_id: project.id,
+          event_type: needsEscalation ? 'support_escalated' : 'support_ticket_answered',
+          old_value: { ticket_id: ticket.id, status: 'open' },
+          new_value: { ticket_id: ticket.id, replied: result.success, escalation: needsEscalation, adapter_type: adapter.type },
+          actor_type: 'agent',
+          note: needsEscalation
+            ? `⚠️ ${profile.name} — Escalade ticket #${ticket.id} : "${ticket.subject.slice(0, 60)}". ${escaladeText.slice(4, 150)}`
+            : `${profile.name} — Ticket #${ticket.id} traité (${adapter.type}) : "${ticket.subject.slice(0, 60)}". Répondu : ${result.success}`,
+        });
+
+        if (needsEscalation) {
+          await supabase.from('internal_requests').insert({
+            project_id: project.id,
+            from_dept: 'support',
+            to_dept: 'marketing',
+            brief: `⚠️ ESCALADE SUPPORT\n\nTicket #${ticket.id} : "${ticket.subject}"\n\nRaison : ${escaladeText.slice(4, 200)}\n\nMessage original :\n${ticket.description.slice(0, 300)}`,
+            decision_reason: 'Ticket complexe détecté par Kai — requiert intervention ou décision Aria',
+            status: 'pending',
+          });
+        }
+
+        ticketsSummary += `Ticket #${ticket.id} — "${ticket.subject.slice(0, 60)}" : ${needsEscalation ? 'escaladé' : 'répondu'}. `;
+        totalProcessed++;
+        actions.push(`ticket:${ticket.id.slice(0, 8)}:${result.success ? 'replied' : 'failed'}${needsEscalation ? ':escalated' : ''}`);
+      } catch (err) {
+        console.error(`[support] ticket ${ticket.id} error:`, (err as Error).message);
+      }
+    }
+
+    if (ticketsSummary) {
+      await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, 'tickets_support', ticketsSummary.trim());
+    }
+  }
+
+  return { tickets_processed: totalProcessed, actions };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function loadProfile(supabase: ReturnType<typeof createClient>): Promise<EmployeeProfile | null> {
   const { data } = await supabase
     .from('employee_profiles')
@@ -61,6 +334,64 @@ async function loadExperience(supabase: ReturnType<typeof createClient>): Promis
     .single();
   if (!data || !data.experience_text || data.projects_count === 0) return '';
   return data.experience_text;
+}
+
+async function getClientMemory(
+  supabase: ReturnType<typeof createClient>, clientEmail: string,
+): Promise<string> {
+  if (!clientEmail) return '';
+  const { data } = await supabase
+    .from('client_memory')
+    .select('memory, projects_count')
+    .eq('client_email', clientEmail)
+    .eq('department', DEPARTMENT)
+    .maybeSingle();
+  if (!data) return '';
+  return `Client récurrent (${data.projects_count} interaction${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
+}
+
+async function updateClientMemory(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  clientEmail: string,
+  projectTitle: string,
+  interactionType: string,
+  summary: string,
+): Promise<void> {
+  if (!clientEmail) return;
+  try {
+    const { data: existing } = await supabase
+      .from('client_memory')
+      .select('memory, projects_count')
+      .eq('client_email', clientEmail)
+      .eq('department', DEPARTMENT)
+      .maybeSingle();
+
+    const count = (existing?.projects_count || 0) + 1;
+    const currentMemory = existing?.memory || '';
+
+    const newMemory = await callClaude(anthropicKey, 300,
+      `Tu es Kai, Support Agent chez CreatorFlow Market.
+${currentMemory ? `MÉMOIRE EXISTANTE (${existing?.projects_count || 0} interaction(s)) :\n${currentMemory.slice(0, 400)}\n` : ''}
+INTERACTION VENANT D'ÊTRE TRAITÉE :
+Projet : ${projectTitle}
+Type : ${interactionType}
+Résumé : ${summary.slice(0, 200)}
+
+Synthétise la mémoire client en 5-7 bullet points. Focus : problèmes récurrents, environnement technique du client, ton préféré dans les réponses, points de friction onboarding, cas d'escalade passés.
+Format : bullet points uniquement, sans intro ni conclusion.`);
+
+    const { error } = await supabase.from('client_memory').upsert({
+      client_email: clientEmail,
+      department: DEPARTMENT,
+      memory: newMemory.trim(),
+      projects_count: count,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'client_email,department' });
+    if (error) console.error('[support] updateClientMemory upsert error:', error.message);
+  } catch (err) {
+    console.error('[support] updateClientMemory error:', (err as Error).message);
+  }
 }
 
 async function synthesizeExperience(
@@ -165,9 +496,11 @@ function buildDeliverablePrompt(
   project: ClientProject,
   request: InternalRequest,
   experience: string,
+  clientMemory: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
+${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nAdapte le livrable aux problèmes récurrents et à l\'environnement technique connu de ce client.\n' : ''}
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -213,7 +546,8 @@ async function executeInternalRequest(
 
     await supabase.from('internal_requests').update({ status: 'in_progress' }).eq('id', request.id);
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience));
+    const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory));
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎÔÂÊ]+\\]|$)`));
@@ -255,6 +589,7 @@ async function executeInternalRequest(
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, supportType, summary);
+    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, supportType, summary);
 
     return true;
   } catch (err) {
@@ -321,16 +656,27 @@ Deno.serve(async (req) => {
       status: 'running', started_at: new Date().toISOString(),
     });
 
-    const result = await processInternalRequests(supabase, anthropicKey, profile);
+    const [internalResult, ticketResult] = await Promise.all([
+      processInternalRequests(supabase, anthropicKey, profile),
+      processSupportTickets(supabase, anthropicKey, profile),
+    ]);
+
+    const allActions = [...internalResult.actions, ...ticketResult.actions];
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG, run_type: 'daily',
       status: 'completed', started_at: new Date().toISOString(),
-      decisions: result.actions,
+      decisions: allActions,
     });
 
     return new Response(
-      JSON.stringify({ ok: true, ...result, duration_ms: Date.now() - startTime }),
+      JSON.stringify({
+        ok: true,
+        requests_processed: internalResult.requests_processed,
+        tickets_processed: ticketResult.tickets_processed,
+        actions: allActions,
+        duration_ms: Date.now() - startTime,
+      }),
       { headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   } catch (err) {
