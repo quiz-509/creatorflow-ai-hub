@@ -20,6 +20,58 @@ const cors = {
 const AGENT_SLUG = 'support';
 const DEPARTMENT = 'support';
 
+const CRITICAL_KEYWORDS = [
+  'urgent', 'fraude', 'frauduleux', 'piratage', 'piraté', 'hacké', 'hack',
+  'arnaque', 'escroc', 'escroquerie', 'vol', 'volé', 'remboursement total',
+  'avocat', 'juridique', 'tribunal', 'plainte', 'litige', 'menace',
+  'harcèlement', 'illégal', 'données volées', 'sécurité compromise',
+  'carte bancaire', 'charge frauduleuse', 'chargeback', 'dispute',
+];
+
+function detectCriticalKeywords(ticket: SupportTicket): string {
+  const text = `${ticket.subject} ${ticket.description}`.toLowerCase();
+  const matched = CRITICAL_KEYWORDS.filter(kw => text.includes(kw));
+  return matched.length ? `Mots-clés critiques : ${matched.join(', ')}` : '';
+}
+
+async function sendEscalationAlert(
+  resendKey: string,
+  adminEmail: string,
+  project: ClientProject,
+  ticket: SupportTicket,
+  reason: string,
+  kaiResponse: string,
+): Promise<void> {
+  if (!resendKey || !adminEmail) return;
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Kai — Support AI <kai@creatorflowmarket.com>',
+        to: [adminEmail],
+        subject: `🚨 Escalade critique — ${project.client_name} : ${ticket.subject.slice(0, 60)}`,
+        html: `<h2>🚨 Ticket critique détecté</h2>
+<table cellpadding="6" style="border-collapse:collapse">
+<tr><td><strong>Client</strong></td><td>${project.client_name}</td></tr>
+<tr><td><strong>Projet</strong></td><td>${project.title}</td></tr>
+<tr><td><strong>Ticket</strong></td><td>#${ticket.id} — ${ticket.subject}</td></tr>
+<tr><td><strong>De</strong></td><td>${ticket.requester_name || 'N/A'} &lt;${ticket.requester_email || 'N/A'}&gt;</td></tr>
+</table>
+<h3>Raison de l'escalade</h3><p>${reason}</p>
+<h3>Message du client</h3>
+<blockquote style="border-left:4px solid #dc2626;padding-left:12px;color:#555">${ticket.description.slice(0, 500).replace(/\n/g, '<br>')}</blockquote>
+<h3>Réponse de Kai (déjà envoyée au client)</h3>
+<p style="color:#555">${kaiResponse.slice(0, 300).replace(/\n/g, '<br>')}</p>
+<hr><p style="color:#888;font-size:12px">Kai — Support AI Employee, CreatorFlow Market</p>`,
+      }),
+    });
+    console.log(`[support] Escalation alert sent to ${adminEmail} for ticket #${ticket.id}`);
+  } catch (err) {
+    console.error('[support] sendEscalationAlert error:', (err as Error).message);
+  }
+}
+
 interface EmployeeProfile {
   slug: string;
   name: string;
@@ -208,10 +260,12 @@ function buildTicketResponsePrompt(
   ticket: SupportTicket,
   experience: string,
   clientMemory: string,
+  criticalAlert: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ═══\n' + experience.slice(0, 300) + '\n' : ''}
 ${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nAdapte le ton et les références aux habitudes connues de ce client.\n' : ''}
+${criticalAlert ? '\n⚠️ ALERTE CRITIQUE ═══\n' + criticalAlert + '\nCe ticket est pré-identifié critique. Réponds avec empathie maximale, sois rassurant, et indique clairement qu\'une intervention humaine suit.\n' : ''}
 ═══ CONTEXTE PROJET ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -240,6 +294,8 @@ OUI ou NON. Si OUI, 1 phrase expliquant pourquoi une intervention humaine est n�
 async function processSupportTickets(
   supabase: ReturnType<typeof createClient>,
   anthropicKey: string,
+  resendKey: string,
+  adminEmail: string,
   profile: EmployeeProfile,
 ): Promise<{ tickets_processed: number; actions: string[] }> {
   const experience = await loadExperience(supabase);
@@ -266,8 +322,11 @@ async function processSupportTickets(
 
     for (const ticket of tickets) {
       try {
+        const criticalAlert = detectCriticalKeywords(ticket);
+        if (criticalAlert) console.log(`[support] 🚨 Critical ticket #${ticket.id}: ${criticalAlert}`);
+
         const raw = await callClaude(anthropicKey, 600,
-          buildTicketResponsePrompt(profile, project, ticket, experience, clientMemory));
+          buildTicketResponsePrompt(profile, project, ticket, experience, clientMemory, criticalAlert));
 
         const replyMatch = raw.match(/\[RÉPONSE\]([\s\S]*?)(?=\[ESCALADE\]|$)/);
         const escaladeMatch = raw.match(/\[ESCALADE\]([\s\S]*?)$/);
@@ -277,31 +336,40 @@ async function processSupportTickets(
 
         const result = await postReply(adapter, ticket.id, reply);
 
+        // Escalade : mot-clé critique OU Claude dit OUI
+        const finalEscalation = needsEscalation || !!criticalAlert;
+        const escalationReason = criticalAlert
+          ? `${criticalAlert}${needsEscalation ? ' — Confirmé par Kai : ' + escaladeText.slice(4, 100) : ''}`
+          : escaladeText.slice(4, 200);
+
         await supabase.from('project_history').insert({
           project_id: project.id,
-          event_type: needsEscalation ? 'support_escalated' : 'support_ticket_answered',
+          event_type: finalEscalation ? 'support_escalated' : 'support_ticket_answered',
           old_value: { ticket_id: ticket.id, status: 'open' },
-          new_value: { ticket_id: ticket.id, replied: result.success, escalation: needsEscalation, adapter_type: adapter.type },
+          new_value: { ticket_id: ticket.id, replied: result.success, escalation: finalEscalation, critical_keyword: !!criticalAlert, adapter_type: adapter.type },
           actor_type: 'agent',
-          note: needsEscalation
-            ? `⚠️ ${profile.name} — Escalade ticket #${ticket.id} : "${ticket.subject.slice(0, 60)}". ${escaladeText.slice(4, 150)}`
+          note: finalEscalation
+            ? `🚨 ${profile.name} — Escalade ticket #${ticket.id} : "${ticket.subject.slice(0, 60)}". ${escalationReason.slice(0, 150)}`
             : `${profile.name} — Ticket #${ticket.id} traité (${adapter.type}) : "${ticket.subject.slice(0, 60)}". Répondu : ${result.success}`,
         });
 
-        if (needsEscalation) {
+        if (finalEscalation) {
+          // Email d'alerte immédiat à l'admin
+          await sendEscalationAlert(resendKey, adminEmail, project, ticket, escalationReason, reply);
+
           await supabase.from('internal_requests').insert({
             project_id: project.id,
             from_dept: 'support',
             to_dept: 'marketing',
-            brief: `⚠️ ESCALADE SUPPORT\n\nTicket #${ticket.id} : "${ticket.subject}"\n\nRaison : ${escaladeText.slice(4, 200)}\n\nMessage original :\n${ticket.description.slice(0, 300)}`,
-            decision_reason: 'Ticket complexe détecté par Kai — requiert intervention ou décision Aria',
+            brief: `🚨 ESCALADE SUPPORT\n\nTicket #${ticket.id} : "${ticket.subject}"\n\nRaison : ${escalationReason.slice(0, 200)}\n\nMessage original :\n${ticket.description.slice(0, 300)}`,
+            decision_reason: criticalAlert ? 'Ticket critique détecté automatiquement par Kai — mots-clés critiques' : 'Ticket complexe détecté par Kai — requiert intervention ou décision Aria',
             status: 'pending',
           });
         }
 
-        ticketsSummary += `Ticket #${ticket.id} — "${ticket.subject.slice(0, 60)}" : ${needsEscalation ? 'escaladé' : 'répondu'}. `;
+        ticketsSummary += `Ticket #${ticket.id} — "${ticket.subject.slice(0, 60)}" : ${finalEscalation ? 'escaladé🚨' : 'répondu'}. `;
         totalProcessed++;
-        actions.push(`ticket:${ticket.id.slice(0, 8)}:${result.success ? 'replied' : 'failed'}${needsEscalation ? ':escalated' : ''}`);
+        actions.push(`ticket:${ticket.id.slice(0, 8)}:${result.success ? 'replied' : 'failed'}${finalEscalation ? ':escalated' : ''}${criticalAlert ? ':critical' : ''}`);
       } catch (err) {
         console.error(`[support] ticket ${ticket.id} error:`, (err as Error).message);
       }
@@ -640,6 +708,8 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const anthropicKey = Deno.env.get('ANTHROPIC_API_KEY')!;
+    const resendKey = Deno.env.get('RESEND_API_KEY') || '';
+    const adminEmail = Deno.env.get('ADMIN_EMAIL') || 'pjoacenel@gmail.com';
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -658,7 +728,7 @@ Deno.serve(async (req) => {
 
     const [internalResult, ticketResult] = await Promise.all([
       processInternalRequests(supabase, anthropicKey, profile),
-      processSupportTickets(supabase, anthropicKey, profile),
+      processSupportTickets(supabase, anthropicKey, resendKey, adminEmail, profile),
     ]);
 
     const allActions = [...internalResult.actions, ...ticketResult.actions];
