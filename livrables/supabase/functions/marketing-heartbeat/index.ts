@@ -110,6 +110,14 @@ interface InternalRequest {
   result_summary?: string;
 }
 
+interface ContentDeliverable {
+  id: string;
+  project_id: string;
+  brief: string;
+  result: string;
+  result_summary: string;
+}
+
 interface HistoryEvent {
   event_type: string;
   note: string;
@@ -1233,6 +1241,92 @@ async function processRevisionRequests(
 }
 
 // ---------------------------------------------------------------------------
+// Quality Gate — Aria évalue les livrables Léo avant livraison client
+// ---------------------------------------------------------------------------
+async function reviewContentDeliverables(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+): Promise<number> {
+  const { data: deliverables } = await supabase
+    .from('internal_requests')
+    .select('id, project_id, brief, result, result_summary')
+    .eq('to_dept', 'content')
+    .eq('status', 'completed')
+    .is('quality_reviewed_at', null)
+    .order('completed_at', { ascending: true })
+    .limit(5);
+
+  if (!deliverables?.length) return 0;
+
+  let reviewed = 0;
+  for (const d of deliverables as ContentDeliverable[]) {
+    try {
+      const deliverableText = (d.result || '').slice(0, 3000);
+      const briefText = (d.brief || '').slice(0, 500);
+
+      const prompt = `Tu es ${profile.name}, ${profile.title} de CreatorFlow Market. Tu évalues un livrable produit par Léo (Content Agent) avant qu'il parte au client.
+
+BRIEF ORIGINAL :
+${briefText}
+
+LIVRABLE PRODUIT :
+${deliverableText}
+
+Évalue ce livrable sur une échelle de 0 à 10 selon ces critères :
+- Pertinence par rapport au brief (0-3 pts)
+- Qualité rédactionnelle, clarté et cohérence (0-3 pts)
+- Longueur et exhaustivité appropriées (0-2 pts)
+- Valeur ajoutée pour le client (0-2 pts)
+
+Réponds UNIQUEMENT dans ce format :
+SCORE: [chiffre 0-10]
+FEEDBACK: [2-4 phrases de feedback précis — si score < 6, indique ce qui doit être amélioré]
+VERDICT: [APPROUVÉ si score >= 6 | À_RÉVISER si score < 6]`;
+
+      const raw = await callClaude(anthropicKey, 300, prompt, DECISION_MODEL);
+
+      const scoreMatch = raw.match(/SCORE:\s*(\d+)/);
+      const feedbackMatch = raw.match(/FEEDBACK:\s*(.+?)(?=VERDICT:|$)/s);
+      const verdictMatch = raw.match(/VERDICT:\s*(APPROUVÉ|À_RÉVISER)/);
+
+      const score = scoreMatch ? Math.min(10, Math.max(0, parseInt(scoreMatch[1]))) : 5;
+      const feedback = feedbackMatch ? feedbackMatch[1].trim() : raw.slice(0, 300);
+      const needsRevision = verdictMatch ? verdictMatch[1] === 'À_RÉVISER' : score < 6;
+
+      // Mettre à jour la quality gate
+      await supabase.from('internal_requests').update({
+        quality_score: score,
+        quality_feedback: feedback,
+        quality_reviewed_at: new Date().toISOString(),
+      }).eq('id', d.id);
+
+      // Si révision nécessaire, créer un nouveau brief pour Léo
+      if (needsRevision) {
+        await supabase.from('internal_requests').insert({
+          project_id: d.project_id,
+          from_dept: 'marketing',
+          to_dept: 'content',
+          brief: `🔄 RÉVISION DEMANDÉE — Score qualité: ${score}/10\n\nBrief original :\n${briefText}\n\nRetour d'Aria :\n${feedback}\n\nAméliore le livrable en tenant compte de ce feedback.`,
+          objective: 'Révision du livrable suite au contrôle qualité Aria',
+          decision_reason: `Quality gate: score ${score}/10 — seuil minimum: 6/10`,
+          status: 'pending',
+        });
+        console.log(`[marketing] Quality gate: revision requested for ${d.id} (score: ${score}/10)`);
+      } else {
+        console.log(`[marketing] Quality gate: approved ${d.id} (score: ${score}/10)`);
+      }
+
+      reviewed++;
+    } catch (err) {
+      console.error(`[marketing] Quality gate error for ${d.id}:`, (err as Error).message);
+    }
+  }
+
+  return reviewed;
+}
+
+// ---------------------------------------------------------------------------
 // handleCheck — point d'entrée principal
 // ---------------------------------------------------------------------------
 async function handleCheck(
@@ -1282,6 +1376,10 @@ async function handleCheck(
   // 6. Rapport hebdomadaire spontané (1 fois par semaine max)
   const weeklyReportSent = await generateWeeklyReport(supabase, anthropicKey, resendKey, profile);
   if (weeklyReportSent) actions.push('weekly_report:sent');
+
+  // 7. Quality Gate — évaluation des livrables Léo avant livraison client
+  const qualityReviewed = await reviewContentDeliverables(supabase, anthropicKey, profile);
+  if (qualityReviewed > 0) actions.push(`quality_gate:${qualityReviewed}_reviewed`);
 
   return {
     briefs_picked_up: newBriefs?.length || 0,
