@@ -26,25 +26,68 @@ async function apolloSearch(
   titles: string[],
   keywords: string,
   maxResults = 10,
-): Promise<string> {
-  if (!apiKey || !keywords.trim()) return '';
+): Promise<{ formatted: string; people: ApolloPerson[] }> {
+  if (!apiKey || !keywords.trim()) return { formatted: '', people: [] };
   try {
     const res = await fetch('https://api.apollo.io/api/v1/mixed_people/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
       body: JSON.stringify({ api_key: apiKey, q_keywords: keywords, person_titles: titles, per_page: maxResults, page: 1 }),
     });
-    if (!res.ok) return '';
+    if (!res.ok) return { formatted: '', people: [] };
     const data = await res.json();
     const people: ApolloPerson[] = data.people || [];
-    if (!people.length) return '';
-    return people.map(p => {
+    if (!people.length) return { formatted: '', people: [] };
+    const formatted = people.map(p => {
       const company = p.organization?.name || '';
       const location = [p.city, p.country].filter(Boolean).join(', ');
       const linkedin = p.linkedin_url ? `\n  LinkedIn : ${p.linkedin_url}` : '';
       return `• ${p.name || 'N/A'} — ${p.title || 'N/A'}${company ? ' @ ' + company : ''}${location ? ' (' + location + ')' : ''}${linkedin}`;
     }).join('\n\n');
-  } catch (_) { return ''; }
+    return { formatted, people };
+  } catch (_) { return { formatted: '', people: [] }; }
+}
+
+async function saveProspectsToCrm(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string,
+  requestId: string,
+  people: ApolloPerson[],
+): Promise<number> {
+  let saved = 0;
+  for (const person of people) {
+    if (!person.name) continue;
+    try {
+      if (person.linkedin_url) {
+        const { data: existing } = await supabase
+          .from('crm_contacts')
+          .select('id')
+          .eq('linkedin_url', person.linkedin_url)
+          .eq('project_id', projectId)
+          .maybeSingle();
+        if (existing) continue;
+      }
+      const { error } = await supabase.from('crm_contacts').insert({
+        name: person.name,
+        role: person.title || '',
+        company: person.organization?.name || '',
+        linkedin_url: person.linkedin_url || null,
+        status: 'identified',
+        source_mission_id: requestId,
+        agent_slug: AGENT_SLUG,
+        project_id: projectId,
+        notes: `Apollo.io — ${[person.city, person.country].filter(Boolean).join(', ')}`,
+        tags: ['apollo', 'ai-identified'],
+        next_action: 'outreach_1',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      if (!error) saved++;
+    } catch (err) {
+      console.error('[prospecting] saveProspectsToCrm error for', person.name, (err as Error).message);
+    }
+  }
+  return saved;
 }
 
 async function extractIcpForApollo(
@@ -81,19 +124,67 @@ interface HunterEmail {
   confidence: number;
 }
 
-async function hunterDomainSearch(apiKey: string, domain: string, max = 5): Promise<string> {
-  if (!apiKey || !domain) return '';
+async function hunterDomainSearch(
+  apiKey: string,
+  domain: string,
+  max = 5,
+): Promise<{ formatted: string; emails: HunterEmail[] }> {
+  if (!apiKey || !domain) return { formatted: '', emails: [] };
   try {
     const url = `https://api.hunter.io/v2/domain-search?domain=${encodeURIComponent(domain)}&limit=${max}&api_key=${apiKey}`;
     const res = await fetch(url);
-    if (!res.ok) return '';
+    if (!res.ok) return { formatted: '', emails: [] };
     const data = await res.json();
     const emails: HunterEmail[] = data.data?.emails || [];
-    if (!emails.length) return '';
-    return emails.map(e =>
+    if (!emails.length) return { formatted: '', emails: [] };
+    const formatted = emails.map(e =>
       `• ${[e.first_name, e.last_name].filter(Boolean).join(' ')} — ${e.value}${e.position ? ' (' + e.position + ')' : ''} [confiance: ${e.confidence}%]`
     ).join('\n');
-  } catch (_) { return ''; }
+    return { formatted, emails };
+  } catch (_) { return { formatted: '', emails: [] }; }
+}
+
+async function saveHunterContactsToCrm(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string,
+  requestId: string,
+  domain: string,
+  emails: HunterEmail[],
+): Promise<number> {
+  let saved = 0;
+  for (const email of emails) {
+    if (!email.value) continue;
+    try {
+      const { data: existing } = await supabase
+        .from('crm_contacts')
+        .select('id')
+        .eq('email', email.value)
+        .eq('project_id', projectId)
+        .maybeSingle();
+      if (existing) continue;
+      const name = [email.first_name, email.last_name].filter(Boolean).join(' ');
+      const { error } = await supabase.from('crm_contacts').insert({
+        name: name || email.value,
+        email: email.value,
+        role: email.position || '',
+        company: domain,
+        website: `https://${domain}`,
+        status: 'email_verified',
+        source_mission_id: requestId,
+        agent_slug: AGENT_SLUG,
+        project_id: projectId,
+        notes: `Hunter.io — confiance ${email.confidence}%`,
+        tags: ['hunter', 'email-verified'],
+        next_action: 'outreach_1',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      if (!error) saved++;
+    } catch (err) {
+      console.error('[prospecting] saveHunterContactsToCrm error:', (err as Error).message);
+    }
+  }
+  return saved;
 }
 
 async function extractDomainsForHunter(
@@ -110,6 +201,34 @@ Réponds UNIQUEMENT avec les domaines séparés par des virgules. Si aucun domai
       .map(d => d.trim().replace(/^https?:\/\//, '').split('/')[0].toLowerCase())
       .filter(d => d.includes('.') && d.length > 3);
   } catch (_) { return []; }
+}
+
+interface CrmContact {
+  name: string;
+  role?: string;
+  company?: string;
+  email?: string;
+  status?: string;
+  next_action?: string;
+}
+
+async function loadProjectCrmContacts(
+  supabase: ReturnType<typeof createClient>,
+  projectId: string,
+): Promise<string> {
+  const { data } = await supabase
+    .from('crm_contacts')
+    .select('name, role, company, email, status, next_action')
+    .eq('project_id', projectId)
+    .order('created_at', { ascending: false })
+    .limit(25);
+  if (!data || !data.length) return '';
+  const lines = (data as CrmContact[]).map(c => {
+    const email = c.email ? ` — ${c.email}` : '';
+    const action = c.next_action ? ` [→ ${c.next_action}]` : '';
+    return `• ${c.name} — ${c.role || 'N/A'} @ ${c.company || 'N/A'}${email} [${c.status}]${action}`;
+  });
+  return `${data.length} contact(s) déjà dans le CRM :\n${lines.join('\n')}`;
 }
 
 const cors = {
@@ -324,14 +443,16 @@ function buildDeliverablePrompt(
   request: InternalRequest,
   experience: string,
   clientMemory: string,
+  crmContext: string,
   realProspects: string,
   hunterEmails: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
 ${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nUtilise cette connaissance pour affiner l\'ICP, éviter de cibler des segments déjà épuisés et adapter la séquence outreach.\n' : ''}
-${realProspects ? '\n═══ VRAIS PROSPECTS (Apollo.io) ═══\n' + realProspects + '\nUtilise ces contacts réels — ne génère pas de profils fictifs.\n' : ''}
-${hunterEmails ? '\n═══ EMAILS VÉRIFIÉS (Hunter.io) ═══\n' + hunterEmails + '\nCes emails sont vérifiés et prêts à l\'usage. Intègre-les dans ta liste ou ta séquence outreach.\n' : ''}
+${crmContext ? '\n═══ PIPELINE CRM ACTUEL ═══\n' + crmContext + '\nCes contacts sont déjà identifiés. Ne les re-cible pas — concentre-toi sur de nouveaux segments ou sur la progression de leur séquence outreach.\n' : ''}
+${realProspects ? '\n═══ VRAIS PROSPECTS (Apollo.io — sauvegardés en CRM) ═══\n' + realProspects + '\nCes contacts ont été ajoutés automatiquement au CRM. Produis les livrables pour les activer.\n' : ''}
+${hunterEmails ? '\n═══ EMAILS VÉRIFIÉS (Hunter.io — sauvegardés en CRM) ═══\n' + hunterEmails + '\nCes emails vérifiés sont dans le CRM. Intègre-les dans la séquence outreach.\n' : ''}
 ═══ PROJET CLIENT ═══
 Client : ${project.client_name}
 Projet : ${project.title}
@@ -381,31 +502,47 @@ async function executeInternalRequest(
 
     const clientMemory = await getClientMemory(supabase, project.client_email || '');
     const briefLower = (request.brief || '').toLowerCase();
+    let crmSaved = 0;
 
-    // Apollo — profils de prospects réels
+    // Apollo — profils réels + sauvegarde CRM immédiate
     let realProspects = '';
     const needsRealProspects = ['liste_prospects', 'liste de prospects', 'liste prospects', 'trouver des prospects', 'contacts réels'].some(k => briefLower.includes(k));
     if (needsRealProspects && apolloApiKey) {
       const icp = await extractIcpForApollo(anthropicKey, request.brief, project.objective || '');
       if (icp.keywords || icp.titles.length) {
-        realProspects = await apolloSearch(apolloApiKey, icp.titles, icp.keywords, 10);
+        const apolloResult = await apolloSearch(apolloApiKey, icp.titles, icp.keywords, 10);
+        realProspects = apolloResult.formatted;
+        if (apolloResult.people.length) {
+          crmSaved += await saveProspectsToCrm(supabase, project.id, request.id, apolloResult.people);
+          console.log(`[prospecting] Apollo → ${apolloResult.people.length} prospects trouvés, ${crmSaved} sauvegardés en CRM`);
+        }
       }
     }
 
-    // Hunter.io — emails vérifiés par domaine
+    // CRM context : contacts déjà identifiés pour ce projet
+    const crmContext = await loadProjectCrmContacts(supabase, project.id);
+
+    // Hunter.io — emails vérifiés + sauvegarde CRM
     let hunterEmails = '';
     const needsEmails = ['email', 'trouver emails', 'email finder', 'emails vérifiés', 'contacts email', 'outreach'].some(k => briefLower.includes(k));
     if (needsEmails && hunterApiKey) {
       const domains = await extractDomainsForHunter(anthropicKey, request.brief, project.objective || '');
       const parts: string[] = [];
       for (const domain of domains.slice(0, 3)) {
-        const found = await hunterDomainSearch(hunterApiKey, domain, 5);
-        if (found) parts.push(`${domain} :\n${found}`);
+        const hunterResult = await hunterDomainSearch(hunterApiKey, domain, 5);
+        if (hunterResult.formatted) parts.push(`${domain} :\n${hunterResult.formatted}`);
+        if (hunterResult.emails.length) {
+          const hunterSaved = await saveHunterContactsToCrm(supabase, project.id, request.id, domain, hunterResult.emails);
+          crmSaved += hunterSaved;
+          console.log(`[prospecting] Hunter → ${domain}: ${hunterResult.emails.length} emails, ${hunterSaved} sauvegardés en CRM`);
+        }
       }
       hunterEmails = parts.join('\n\n');
     }
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory, realProspects, hunterEmails));
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(
+      profile, project, request, experience, clientMemory, crmContext, realProspects, hunterEmails,
+    ));
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎÔÂÊ]+\\]|$)`));
@@ -417,10 +554,12 @@ async function executeInternalRequest(
     const deliverable = extract('LIVRABLE_COMPLET') || raw;
     const notes = extract('NOTES_POUR_ARIA') || '';
 
+    const crmNote = crmSaved > 0 ? `\n\n${crmSaved} prospect(s) ajouté(s) au CRM.` : '';
+
     await supabase.from('internal_requests').update({
       status: 'completed',
       result: `[${prospectingType.toUpperCase()}]\n\n${deliverable}`,
-      result_summary: `${prospectingType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}`,
+      result_summary: `${prospectingType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}${crmNote}`,
       completed_at: new Date().toISOString(),
     }).eq('id', request.id);
 
@@ -432,18 +571,19 @@ async function executeInternalRequest(
         { heading: 'Résumé', content: summary },
         { heading: 'Livrable complet', content: deliverable },
         { heading: 'Notes pour Aria', content: notes },
+        { heading: 'CRM', content: crmSaved > 0 ? `${crmSaved} contacts sauvegardés` : 'Aucun contact CRM ajouté cette mission' },
       ],
       report_type: 'prospecting_deliverable',
-      content: { project_id: project.id, internal_request_id: request.id },
+      content: { project_id: project.id, internal_request_id: request.id, crm_contacts_saved: crmSaved },
     });
 
     await supabase.from('project_history').insert({
       project_id: project.id,
       event_type: 'prospecting_delivered',
       old_value: { request_status: 'pending' },
-      new_value: { request_status: 'completed', prospecting_type: prospectingType },
+      new_value: { request_status: 'completed', prospecting_type: prospectingType, crm_contacts_saved: crmSaved },
       actor_type: 'agent',
-      note: `${profile.name} — livrable produit : ${prospectingType}. ${summary.slice(0, 100)}`,
+      note: `${profile.name} — ${prospectingType} livré. ${crmSaved > 0 ? crmSaved + ' contacts CRM ajoutés. ' : ''}${summary.slice(0, 100)}`,
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, prospectingType, summary);
