@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>KPIs AI Workforce · CreatorFlow Market</title>
+  <style>
+:root{
+  --bg:#04040A;--surf:#0C0C18;--surf-2:#101020;--surf-3:#14142A;
+  --border:rgba(255,255,255,0.055);--border-2:rgba(255,255,255,0.10);--border-3:rgba(255,255,255,0.18);
+  --text:#F4F4FF;--text-2:#9898B8;--text-3:#55557A;
+  --v:#7C3AED;--vs:#A78BFA;
+  --c:#06B6D4;--green:#10B981;--amber:#F59E0B;--red:#EF4444;
+  --r:12px;--r-lg:18px;--f:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;font-size:14px;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(4,4,10,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-left{display:flex;align-items:center;gap:16px;}
+.nav-brand{font-size:14px;font-weight:700;}
+.nav-brand em{color:var(--vs);font-style:normal;}
+.nav-sep{width:1px;height:16px;background:var(--border-2);}
+.nav-links{display:flex;gap:4px;}
+.nav-link{padding:5px 12px;border-radius:99px;font-size:12px;font-weight:500;color:var(--text-2);transition:all 140ms;}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--vs);background:rgba(124,58,237,0.1);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.last-update{font-size:11px;color:var(--text-3);}
+.btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:all 140ms;}
+.btn-primary{background:rgba(124,58,237,0.12);color:var(--vs);border-color:rgba(124,58,237,0.25);}
+.btn-primary:hover{background:rgba(124,58,237,0.22);}
+.btn-primary svg{transition:transform 380ms;}
+.btn-primary.spin svg{transform:rotate(360deg);}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:28px 28px 80px;}
+
+/* SECTION HEADER */
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--text-3);}
+.sec-line{flex:1;height:1px;background:var(--border);}
+
+/* GLOBAL TILES */
+.global-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+@media(max-width:900px){.global-grid{grid-template-columns:repeat(2,1fr);}}
+.g-tile{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;position:relative;overflow:hidden;transition:border-color 200ms;}
+.g-tile:hover{border-color:var(--border-2);}
+.g-tile-accent{position:absolute;top:0;left:0;right:0;height:2px;}
+.g-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;}
+.g-val{font-size:32px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin-bottom:4px;}
+.g-sub{font-size:11px;color:var(--text-3);}
+
+/* AGENT ROW */
+.agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+@media(max-width:900px){.agents-grid{grid-template-columns:repeat(2,1fr);}}
+.agent-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;transition:border-color 200ms;}
+.agent-card:hover{border-color:var(--border-2);}
+.agent-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.agent-avatar{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0;}
+.av-mkt{background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(109,40,217,0.5));border:1px solid rgba(124,58,237,0.3);}
+.av-ctn{background:linear-gradient(135deg,rgba(6,182,212,0.25),rgba(8,145,178,0.4));border:1px solid rgba(6,182,212,0.25);}
+.av-pro{background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.4));border:1px solid rgba(245,158,11,0.25);}
+.av-sup{background:linear-gradient(135deg,rgba(16,185,129,0.25),rgba(5,150,105,0.4));border:1px solid rgba(16,185,129,0.25);}
+.agent-name{font-size:14px;font-weight:700;letter-spacing:-0.02em;}
+.agent-role{font-size:10px;color:var(--text-3);}
+.agent-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.a-kpi{background:var(--surf-2);border-radius:8px;padding:10px 12px;}
+.a-kpi-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+.a-kpi-val{font-size:18px;font-weight:800;letter-spacing:-0.03em;line-height:1;}
+.a-kpi-sub{font-size:10px;color:var(--text-3);margin-top:2px;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}}
+
+/* PANEL */
+.panel{background:var(--surf);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;}
+.panel-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-size:12px;font-weight:700;}
+.panel-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(124,58,237,0.12);color:var(--vs);}
+.panel-body{padding:16px 18px;}
+
+/* PIPELINE */
+.pipeline{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:4px;}
+.pipe-stage{flex:1;min-width:100px;text-align:center;}
+.pipe-bar{height:6px;border-radius:99px;margin:0 4px 8px;}
+.pipe-count{font-size:22px;font-weight:800;letter-spacing:-0.03em;line-height:1;margin-bottom:3px;}
+.pipe-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);}
+.pipe-arrow{display:flex;align-items:center;padding-top:8px;color:var(--text-3);}
+.pipe-arrow svg{flex-shrink:0;}
+
+/* QUALITY DIST */
+.q-bars{display:flex;flex-direction:column;gap:8px;}
+.q-row{display:grid;grid-template-columns:28px 1fr 32px;align-items:center;gap:8px;}
+.q-score{font-size:11px;font-weight:600;color:var(--text-2);text-align:right;}
+.q-track{height:6px;background:var(--surf-3);border-radius:99px;overflow:hidden;}
+.q-fill{height:100%;border-radius:99px;transition:width 600ms cubic-bezier(0.34,1.56,0.64,1);}
+.q-count{font-size:11px;color:var(--text-3);text-align:right;}
+
+/* ACTIVITY FEED */
+.feed{display:flex;flex-direction:column;gap:8px;}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surf-2);border-radius:8px;}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.feed-body{flex:1;min-width:0;}
+.feed-agent{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:2px;}
+.feed-text{font-size:12px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed-time{font-size:10px;color:var(--text-3);flex-shrink:0;margin-top:4px;}
+.feed-empty{text-align:center;color:var(--text-3);font-size:12px;font-style:italic;padding:20px 0;}
+
+/* SKELETON */
+.skel{background:linear-gradient(90deg,var(--surf-2) 25%,var(--surf-3) 50%,var(--surf-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <div class="nav-brand">CreatorFlow <em>Market</em></div>
+    <div class="nav-sep"></div>
+    <div class="nav-links">
+      <a class="nav-link" href="employees-dashboard.html">Dossiers RH</a>
+      <a class="nav-link active" href="#">KPIs Opérationnels</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="last-update" id="lastUpdate">Chargement…</span>
+    <button class="btn btn-primary" id="refreshBtn" onclick="loadAll()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Actualiser
+    </button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- GLOBAL TILES -->
+  <div class="sec-head"><span class="sec-title">Vue globale — 7 derniers jours</span><div class="sec-line"></div></div>
+  <div class="global-grid">
+    <div class="g-tile">
+      <div class="g-tile-accent" style="background:linear-gradient(90deg,#7C3AED,#A78BFA);"></div>
+      <div class="g-label">Projets actifs</div>
+      <div class="g-val" id="g-projects">—</div>
+      <div class="g-sub" id="g-projects-sub">chargement…</div>
+    </div>
+    <div class="g-tile">
+      <div class="g-tile-accent" style="background:linear-gradient(90deg,#06B6D4,#22D3EE);"></div>
+      <div class="g-label">Livrables produits</div>
+      <div class="g-val" id="g-deliverables">—</div>
+      <div class="g-sub" id="g-deliverables-sub">cette semaine</div>
+    </div>
+    <div class="g-tile">
+      <div class="g-tile-accent" style="background:linear-gradient(90deg,#F59E0B,#FCD34D);"></div>
+      <div class="g-label">Prospects CRM</div>
+      <div class="g-val" id="g-crm">—</div>
+      <div class="g-sub" id="g-crm-sub">total identifiés</div>
+    </div>
+    <div class="g-tile">
+      <div class="g-tile-accent" style="background:linear-gradient(90deg,#10B981,#34D399);"></div>
+      <div class="g-label">Score qualité moyen</div>
+      <div class="g-val" id="g-quality">—</div>
+      <div class="g-sub" id="g-quality-sub">sur 10 (Aria quality gate)</div>
+    </div>
+  </div>
+
+  <!-- AGENT CARDS -->
+  <div class="sec-head"><span class="sec-title">Performance par agent</span><div class="sec-line"></div></div>
+  <div class="agents-grid" id="agentsGrid">
+    <div class="agent-card"><div class="skel" style="height:120px;"></div></div>
+    <div class="agent-card"><div class="skel" style="height:120px;"></div></div>
+    <div class="agent-card"><div class="skel" style="height:120px;"></div></div>
+    <div class="agent-card"><div class="skel" style="height:120px;"></div></div>
+  </div>
+
+  <!-- PIPELINE + QUALITY -->
+  <div class="two-col">
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Pipeline Maya — Prospecting</span>
+        <span class="panel-badge" id="pipeTotal">…</span>
+      </div>
+      <div class="panel-body">
+        <div class="pipeline" id="pipeline">
+          <div style="text-align:center;width:100%;color:var(--text-3);font-size:12px;padding:20px 0;">Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Distribution quality gate (Aria)</span>
+        <span class="panel-badge" id="qualityTotal">…</span>
+      </div>
+      <div class="panel-body">
+        <div class="q-bars" id="qualityBars">
+          <div style="text-align:center;color:var(--text-3);font-size:12px;padding:20px 0;">Chargement…</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACTIVITY FEED -->
+  <div class="sec-head"><span class="sec-title">Activité récente des agents</span><div class="sec-line"></div></div>
+  <div class="panel">
+    <div class="panel-body">
+      <div class="feed" id="activityFeed">
+        <div style="text-align:center;color:var(--text-3);font-size:12px;padding:20px 0;">Chargement…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://cjtglfutckaogsmwhfsv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KGyuEEu7EqdF0xiLaL9dig_UZKnu9Ei';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const AGENT_CONFIG = {
+  marketing:   { name: 'Aria',  role: 'Marketing Director', avatarClass: 'av-mkt', accent: '#A78BFA', emoji: '🎯' },
+  content:     { name: 'Léo',   role: 'Content Strategist',  avatarClass: 'av-ctn', accent: '#22D3EE', emoji: '✍️' },
+  prospecting: { name: 'Maya',  role: 'Prospecting Agent',   avatarClass: 'av-pro', accent: '#FCD34D', emoji: '🔍' },
+  support:     { name: 'Kai',   role: 'Support Specialist',  avatarClass: 'av-sup', accent: '#34D399', emoji: '🛟' },
+};
+
+const PIPE_STAGES = [
+  { key: 'identified',       label: 'Identifiés',   color: '#7C3AED' },
+  { key: 'email_verified',   label: 'Email vérifié', color: '#06B6D4' },
+  { key: 'outreach_drafted', label: 'Outreach prêt', color: '#F59E0B' },
+  { key: 'contacted',        label: 'Contactés',    color: '#10B981' },
+];
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(str) {
+  if (!str) return '—';
+  const d = Math.floor((Date.now() - new Date(str).getTime()) / 60000);
+  if (d < 1) return 'à l\'instant';
+  if (d < 60) return `il y a ${d}min`;
+  const h = Math.floor(d / 60);
+  if (h < 24) return `il y a ${h}h`;
+  return `il y a ${Math.floor(h / 24)}j`;
+}
+
+function qualityColor(score) {
+  if (score >= 8) return '#10B981';
+  if (score >= 6) return '#A78BFA';
+  if (score >= 4) return '#F59E0B';
+  return '#EF4444';
+}
+
+async function loadAll() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spin');
+
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+
+  try {
+    const [
+      projectsRes,
+      deliverableRes,
+      crmRes,
+      qualityRes,
+      metricsRes,
+      profilesRes,
+      heartbeatsRes,
+      pipelineRes,
+    ] = await Promise.all([
+      sb.from('client_projects').select('*', { count: 'exact', head: true }).in('status', ['active', 'in_progress']),
+      sb.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', 'content').eq('status', 'completed').gte('completed_at', weekAgo),
+      sb.from('crm_contacts').select('*', { count: 'exact', head: true }),
+      sb.from('internal_requests').select('quality_score').eq('to_dept', 'content').eq('status', 'completed').not('quality_score', 'is', null),
+      sb.from('employee_metrics').select('*').in('employee_slug', ['marketing','content','prospecting','support']),
+      sb.from('employee_profiles').select('slug, name, avatar_emoji, is_owner').in('slug', ['marketing','content','prospecting','support']),
+      sb.from('agent_heartbeats').select('agent_slug, run_type, started_at, decisions, status').order('started_at', { ascending: false }).limit(20),
+      sb.from('crm_contacts').select('next_action').neq('next_action', null),
+    ]);
+
+    // Global tiles
+    document.getElementById('g-projects').textContent = projectsRes.count ?? '—';
+    document.getElementById('g-projects-sub').textContent = 'projets en cours';
+    document.getElementById('g-deliverables').textContent = deliverableRes.count ?? '—';
+
+    const scores = (qualityRes.data || []).map(r => r.quality_score).filter(s => s !== null);
+    if (scores.length) {
+      const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+      document.getElementById('g-quality').textContent = avg.toFixed(1);
+      document.getElementById('g-quality').style.color = qualityColor(avg);
+      document.getElementById('g-quality-sub').textContent = `sur ${scores.length} livrable(s) évalué(s)`;
+    } else {
+      document.getElementById('g-quality').textContent = '—';
+      document.getElementById('g-quality-sub').textContent = 'aucune évaluation';
+    }
+
+    // CRM count
+    const crmCount = crmRes.count ?? 0;
+    document.getElementById('g-crm').textContent = crmCount;
+
+    // Agent cards
+    const metricsMap = Object.fromEntries((metricsRes.data || []).map(m => [m.employee_slug, m]));
+    const profileMap = Object.fromEntries((profilesRes.data || []).map(p => [p.slug, p]));
+
+    // Also get per-agent internal_request counts (this week)
+    const [ariaPickup, leoCompleted, mayaCrm, kaiTickets] = await Promise.all([
+      sb.from('briefs').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo),
+      sb.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', 'content').eq('status', 'completed').gte('completed_at', weekAgo),
+      sb.from('crm_contacts').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo),
+      sb.from('internal_requests').select('*', { count: 'exact', head: true }).eq('to_dept', 'support').eq('status', 'completed').gte('completed_at', weekAgo),
+    ]);
+
+    const perAgentExtra = {
+      marketing:   { k1: ariaPickup.count ?? 0,  l1: 'Briefs reçus',     k2: scores.length, l2: 'Livrables évalués' },
+      content:     { k1: leoCompleted.count ?? 0, l1: 'Livrables/7j',     k2: scores.length ? (scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1) : '—', l2: 'Score qualité moy.' },
+      prospecting: { k1: mayaCrm.count ?? 0,      l1: 'Contacts/7j',      k2: (pipelineRes.data || []).filter(r => r.next_action === 'outreach_drafted').length, l2: 'Outreach prêts' },
+      support:     { k1: kaiTickets.count ?? 0,   l1: 'Tickets résolus',  k2: (metricsMap['support']?.success_rate ?? 0).toFixed(0) + '%', l2: 'Taux résolution' },
+    };
+
+    const order = ['marketing', 'content', 'prospecting', 'support'];
+    document.getElementById('agentsGrid').innerHTML = order.map(slug => {
+      const cfg = AGENT_CONFIG[slug];
+      const m = metricsMap[slug] || {};
+      const extra = perAgentExtra[slug];
+      const totalProjects = m.total_projects ?? 0;
+      const completedProjects = m.completed_projects ?? 0;
+
+      return `<div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-avatar ${cfg.avatarClass}">${esc(cfg.emoji)}</div>
+          <div style="flex:1;">
+            <div class="agent-name">${esc(cfg.name)}</div>
+            <div class="agent-role">${esc(cfg.role)}</div>
+          </div>
+          <div class="status-dot"></div>
+        </div>
+        <div class="agent-kpis">
+          <div class="a-kpi">
+            <div class="a-kpi-label">Total projets</div>
+            <div class="a-kpi-val" style="color:${cfg.accent}">${totalProjects}</div>
+            <div class="a-kpi-sub">${completedProjects} complétés</div>
+          </div>
+          <div class="a-kpi">
+            <div class="a-kpi-label">Taux succès</div>
+            <div class="a-kpi-val">${(m.success_rate ?? 0) > 0 ? (m.success_rate).toFixed(0)+'%' : '—'}</div>
+            <div class="a-kpi-sub">sur l'ensemble</div>
+          </div>
+          <div class="a-kpi">
+            <div class="a-kpi-label">${esc(extra.l1)}</div>
+            <div class="a-kpi-val" style="color:${cfg.accent}">${extra.k1}</div>
+            <div class="a-kpi-sub">7 derniers jours</div>
+          </div>
+          <div class="a-kpi">
+            <div class="a-kpi-label">${esc(extra.l2)}</div>
+            <div class="a-kpi-val">${extra.k2}</div>
+            <div class="a-kpi-sub">&nbsp;</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Pipeline Maya
+    const pipeData = pipelineRes.data || [];
+    const stageCounts = {};
+    for (const r of pipeData) {
+      const key = r.next_action || 'identified';
+      stageCounts[key] = (stageCounts[key] || 0) + 1;
+    }
+    const pipeTotal = pipeData.length;
+    document.getElementById('pipeTotal').textContent = `${pipeTotal} contact${pipeTotal !== 1 ? 's' : ''}`;
+
+    const pipeHtml = PIPE_STAGES.map((stage, i) => {
+      const count = stageCounts[stage.key] || 0;
+      const pct = pipeTotal > 0 ? Math.round((count / pipeTotal) * 100) : 0;
+      const arrow = i < PIPE_STAGES.length - 1
+        ? `<div class="pipe-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></div>`
+        : '';
+      return `
+        <div class="pipe-stage">
+          <div class="pipe-bar" style="background:${stage.color}99;position:relative;">
+            <div style="position:absolute;left:0;top:0;height:100%;width:${pct}%;background:${stage.color};border-radius:99px;transition:width 600ms;"></div>
+          </div>
+          <div class="pipe-count" style="color:${stage.color}">${count}</div>
+          <div class="pipe-label">${esc(stage.label)}</div>
+        </div>
+        ${arrow}`;
+    }).join('');
+    document.getElementById('pipeline').innerHTML = pipeHtml;
+
+    // Quality distribution
+    if (scores.length) {
+      const buckets = [
+        { label: '9-10', min: 9, max: 10, color: '#10B981' },
+        { label: '7-8',  min: 7, max: 8,  color: '#A78BFA' },
+        { label: '5-6',  min: 5, max: 6,  color: '#F59E0B' },
+        { label: '0-4',  min: 0, max: 4,  color: '#EF4444' },
+      ];
+      const maxCount = Math.max(...buckets.map(b => scores.filter(s => s >= b.min && s <= b.max).length), 1);
+      document.getElementById('qualityTotal').textContent = `${scores.length} évaluation${scores.length > 1 ? 's' : ''}`;
+      document.getElementById('qualityBars').innerHTML = buckets.map(b => {
+        const cnt = scores.filter(s => s >= b.min && s <= b.max).length;
+        const pct = Math.round((cnt / maxCount) * 100);
+        return `<div class="q-row">
+          <div class="q-score">${esc(b.label)}</div>
+          <div class="q-track"><div class="q-fill" style="width:${pct}%;background:${b.color};"></div></div>
+          <div class="q-count">${cnt}</div>
+        </div>`;
+      }).join('');
+    } else {
+      document.getElementById('qualityTotal').textContent = '0 évaluation';
+      document.getElementById('qualityBars').innerHTML = '<div style="text-align:center;color:var(--text-3);font-size:12px;font-style:italic;padding:20px 0;">Aucune évaluation qualité encore effectuée.<br>Elle se construit après le premier livrable.</div>';
+    }
+
+    // Activity feed
+    const heartbeats = heartbeatsRes.data || [];
+    const feedItems = heartbeats.slice(0, 12).map(h => {
+      const cfg = AGENT_CONFIG[h.agent_slug] || { name: h.agent_slug, accent: '#9898B8', emoji: '🤖' };
+      const actions = Array.isArray(h.decisions) ? h.decisions.slice(0, 2).join(', ') : (h.run_type || 'check');
+      const statusColor = h.status === 'completed' ? '#10B981' : h.status === 'running' ? '#F59E0B' : '#EF4444';
+      return `<div class="feed-item">
+        <div class="feed-dot" style="background:${statusColor};"></div>
+        <div class="feed-body">
+          <div class="feed-agent">${esc(cfg.name)} · ${esc(h.run_type)}</div>
+          <div class="feed-text">${esc(actions || '—')}</div>
+        </div>
+        <div class="feed-time">${timeAgo(h.started_at)}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('activityFeed').innerHTML = feedItems ||
+      '<div class="feed-empty">Aucune activité enregistrée.</div>';
+
+    // Timestamp
+    const now = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto', hour12: false });
+    document.getElementById('lastUpdate').textContent = `Actualisé à ${now.split(',')[1]?.trim() || now}`;
+
+  } catch (err) {
+    console.error('loadAll error:', err);
+  } finally {
+    setTimeout(() => btn.classList.remove('spin'), 400);
+  }
+}
+
+loadAll();
+</script>
+</body>
+</html>
