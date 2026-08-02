@@ -160,17 +160,25 @@ function mdToHtml(md: string): string {
 async function publishToWordPress(
   siteUrl: string, username: string, appPassword: string,
   title: string, htmlContent: string, status = 'publish',
+  seoMeta?: { metaTitle?: string; metaDescription?: string; slug?: string },
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const endpoint = `${siteUrl.replace(/\/$/, '')}/wp-json/wp/v2/posts`;
     const credentials = btoa(`${username}:${appPassword}`);
+    const postSlug = seoMeta?.slug?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-') || '';
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${credentials}`,
       },
-      body: JSON.stringify({ title, content: htmlContent, status }),
+      body: JSON.stringify({
+        title: seoMeta?.metaTitle || title,
+        content: htmlContent,
+        status,
+        excerpt: seoMeta?.metaDescription || '',
+        ...(postSlug ? { slug: postSlug } : {}),
+      }),
     });
     if (!res.ok) {
       const err = await res.text();
@@ -186,6 +194,7 @@ async function publishToWordPress(
 async function publishToGhost(
   siteUrl: string, adminApiKey: string,
   title: string, htmlContent: string, status = 'published',
+  seoMeta?: { metaTitle?: string; metaDescription?: string; slug?: string },
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const [keyId, keySecret] = adminApiKey.split(':');
@@ -209,6 +218,7 @@ async function publishToGhost(
     const sig = btoa(String.fromCharCode(...new Uint8Array(sigBytes)))
       .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
+    const postSlug = seoMeta?.slug?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-') || '';
     const endpoint = `${siteUrl.replace(/\/$/, '')}/ghost/api/admin/posts/`;
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -216,7 +226,15 @@ async function publishToGhost(
         'Content-Type': 'application/json',
         'Authorization': `Ghost ${header}.${payload}.${sig}`,
       },
-      body: JSON.stringify({ posts: [{ title, html: htmlContent, status }] }),
+      body: JSON.stringify({ posts: [{
+        title: seoMeta?.metaTitle || title,
+        html: htmlContent,
+        status,
+        excerpt: seoMeta?.metaDescription || '',
+        meta_title: seoMeta?.metaTitle || '',
+        meta_description: seoMeta?.metaDescription || '',
+        ...(postSlug ? { slug: postSlug } : {}),
+      }] }),
     });
     if (!res.ok) {
       const err = await res.text();
@@ -261,12 +279,13 @@ async function deliverViaWebhook(
 async function executeDelivery(
   adapter: DeliveryConfig, title: string, htmlContent: string, markdown: string,
   meta: { project_id: string; client_name: string },
+  seoMeta?: { metaTitle?: string; metaDescription?: string; slug?: string },
 ): Promise<{ success: boolean; url?: string; error?: string }> {
   if (adapter.type === 'wordpress' && adapter.username && adapter.app_password) {
-    return publishToWordPress(adapter.url, adapter.username, adapter.app_password, title, htmlContent, adapter.status || 'publish');
+    return publishToWordPress(adapter.url, adapter.username, adapter.app_password, title, htmlContent, adapter.status || 'publish', seoMeta);
   }
   if (adapter.type === 'ghost' && adapter.admin_api_key) {
-    return publishToGhost(adapter.url, adapter.admin_api_key, title, htmlContent, adapter.status || 'published');
+    return publishToGhost(adapter.url, adapter.admin_api_key, title, htmlContent, adapter.status || 'published', seoMeta);
   }
   if (adapter.type === 'webhook') {
     return deliverViaWebhook(adapter.url, title, htmlContent, markdown, { ...meta, status: adapter.status });
@@ -526,6 +545,14 @@ Script : Accroche (0-15s) + Corps (3 parties) + Outro
 Posts : 5 posts complets avec texte + hashtags
 Newsletter : Objet + Corps complet + CTA
 
+[SEO]
+(Si article_blog, newsletter ou contenu web — OBLIGATOIRE. Sinon, laisse vide.)
+TITRE_META: [60 chars max — accrocheur + mot-clé principal]
+DESCRIPTION_META: [155 chars max — incite au clic, contient le mot-clé]
+SLUG: [3-5 mots séparés par des tirets, en minuscules]
+MOT_CLE_PRINCIPAL: [1 mot-clé ou expression cible]
+MOTS_CLES_SECONDAIRES: [3-5 mots-clés secondaires séparés par des virgules]
+
 [NOTES_POUR_ARIA]
 2-3 notes techniques ou recommandations qu'Aria pourrait communiquer au client.`;
 }
@@ -576,6 +603,20 @@ async function executeInternalRequest(
     const deliverable = extract('LIVRABLE_COMPLET') || raw;
     const notes = extract('NOTES_POUR_ARIA') || '';
 
+    // Extraction SEO (articles et contenu web)
+    const seoRaw = extract('SEO');
+    const extractSeoField = (field: string): string => {
+      const m = seoRaw.match(new RegExp(`${field}:\\s*(.+)`));
+      return m ? m[1].trim() : '';
+    };
+    const seoMeta = seoRaw.trim() ? {
+      metaTitle: extractSeoField('TITRE_META'),
+      metaDescription: extractSeoField('DESCRIPTION_META'),
+      slug: extractSeoField('SLUG'),
+      mainKeyword: extractSeoField('MOT_CLE_PRINCIPAL'),
+      secondaryKeywords: extractSeoField('MOTS_CLES_SECONDAIRES'),
+    } : null;
+
     // Enrichissements post-génération : images + correction grammaticale
     const titleMatch2 = deliverable.match(/^#\s+(.+)$/m);
     const imageQuery = titleMatch2 ? titleMatch2[1].trim() : searchQuery;
@@ -594,6 +635,7 @@ async function executeInternalRequest(
         project.delivery_config as DeliveryConfig,
         deliveryTitle, htmlContent, deliverable,
         { project_id: project.id, client_name: project.client_name },
+        seoMeta || undefined,
       );
       console.log(`[content] delivery for ${project.id}: type=${project.delivery_config.type}, success=${deliveryResult.success}, url=${deliveryResult.url}`);
     }
@@ -610,7 +652,7 @@ async function executeInternalRequest(
     await supabase.from('internal_requests').update({
       status: 'completed',
       result: `[${contentType.toUpperCase()}]\n\n${deliverable}${imageSection}${grammarSection}${deliveryNote}`,
-      result_summary: `${contentType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}${deliveryNote}`,
+      result_summary: `${contentType} — ${summary.slice(0, 200)}${notes ? '\n\nNotes : ' + notes.slice(0, 150) : ''}${seoMeta?.metaTitle ? '\n\nSEO: ' + seoMeta.metaTitle : ''}${deliveryNote}`,
       completed_at: new Date().toISOString(),
     }).eq('id', request.id);
 
@@ -620,6 +662,18 @@ async function executeInternalRequest(
       { heading: 'Livrable complet', content: deliverable },
       { heading: 'Notes pour Aria', content: notes },
     ];
+    if (seoMeta?.metaTitle) {
+      reportSections.push({
+        heading: 'SEO',
+        content: [
+          `Titre : ${seoMeta.metaTitle}`,
+          `Description : ${seoMeta.metaDescription}`,
+          `Slug : ${seoMeta.slug}`,
+          `Mot-clé principal : ${seoMeta.mainKeyword}`,
+          `Mots-clés secondaires : ${seoMeta.secondaryKeywords}`,
+        ].filter(l => !l.endsWith(': ')).join('\n'),
+      });
+    }
     if (deliveryResult) {
       reportSections.push({
         heading: 'Livraison',
@@ -638,6 +692,7 @@ async function executeInternalRequest(
         project_id: project.id, internal_request_id: request.id, content_type: contentType,
         delivered: deliveryResult?.success || false,
         delivery_type: (project.delivery_config as DeliveryConfig | undefined)?.type || null,
+        ...(seoMeta ? { seo: seoMeta } : {}),
       },
     });
 
