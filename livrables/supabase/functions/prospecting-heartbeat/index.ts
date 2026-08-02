@@ -589,6 +589,24 @@ async function executeInternalRequest(
     await synthesizeExperience(supabase, anthropicKey, profile, project, prospectingType, summary);
     await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, prospectingType, summary);
 
+    // Notifier Aria quand des prospects avec emails vérifiés sont prêts pour outreach
+    if (crmSaved > 0) {
+      const typeIsOutreach = ['outreach', 'séquence', 'liste', 'prospect'].some(k =>
+        prospectingType.toLowerCase().includes(k),
+      );
+      if (typeIsOutreach) {
+        await supabase.from('internal_requests').insert({
+          project_id: project.id,
+          from_dept: DEPARTMENT,
+          to_dept: 'marketing',
+          brief: `🎯 OUTREACH PRÊT — Maya a complété\n\n${crmSaved} prospect(s) avec emails vérifiés ajoutés au CRM.\nType de livrable : ${prospectingType}\nRésumé : ${summary.slice(0, 200)}\n\nLivrable complet disponible dans le rapport Maya. Maya recommande d'informer le client que sa campagne outreach est prête et de lui présenter le template J1.`,
+          decision_reason: 'Maya a identifié des prospects avec emails vérifiés — campagne outreach prête pour revue client',
+          status: 'pending',
+        });
+        console.log(`[prospecting] Aria notifiée : ${crmSaved} prospects CRM prêts pour outreach`);
+      }
+    }
+
     return true;
   } catch (err) {
     console.error('[prospecting] executeInternalRequest error:', (err as Error).message);
