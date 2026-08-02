@@ -1,10 +1,10 @@
 import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
 
-async function callClaude(apiKey: string, maxTokens: number, prompt: string): Promise<string> {
+async function callClaude(apiKey: string, maxTokens: number, prompt: string, model = 'claude-haiku-4-5-20251001'): Promise<string> {
   const client = new Anthropic({ apiKey });
   const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
+    model,
     max_tokens: maxTokens,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -119,6 +119,23 @@ const PUBLISH_KEYWORDS = [
   'publication directe', 'publier sur le site', 'publish to cms',
   'publier l\'article', 'poster l\'article',
 ];
+
+// Livrables complexes → Sonnet 5 pour qualité maximale
+const COMPLEX_CONTENT_KEYWORDS = [
+  'script vidéo', 'script youtube', 'scénario', 'stratégie de contenu',
+  'plan de contenu', 'piliers de contenu', 'calendrier éditorial',
+  'article long', 'long-form', 'article approfondi', 'guide complet',
+  'ebook', 'livre blanc', 'white paper', 'newsletter complète',
+  'séquence email', 'brand voice', 'identité de contenu',
+  'étude de cas', 'campagne', 'stratégie', 'roadmap', 'plan 90',
+];
+
+function selectContentModel(brief: string): string {
+  const lower = brief.toLowerCase();
+  return COMPLEX_CONTENT_KEYWORDS.some(kw => lower.includes(kw))
+    ? 'claude-sonnet-5'
+    : 'claude-haiku-4-5-20251001';
+}
 
 function needsPublication(brief: string): boolean {
   const lower = brief.toLowerCase();
@@ -545,7 +562,9 @@ async function executeInternalRequest(
       getClientMemory(supabase, project.client_email || ''),
     ]);
 
-    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory, searchResults, videoResults));
+    const contentModel = selectContentModel(request.brief);
+    console.log(`[content] model selected: ${contentModel} for request ${request.id.slice(0, 8)}`);
+    const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory, searchResults, videoResults), contentModel);
 
     const extract = (tag: string): string => {
       const m = raw.match(new RegExp(`\\[${tag}\\]([\\s\\S]*?)(?=\\[[A-Z_ÉÈÀÙÎ]+\\]|$)`));
