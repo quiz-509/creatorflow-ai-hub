@@ -263,7 +263,7 @@ function buildTicketResponsePrompt(
   criticalAlert: string,
 ): string {
   return `${profile.system_prompt_context}
-${experience ? '\n═══ TON EXPÉRIENCE ═══\n' + experience.slice(0, 300) + '\n' : ''}
+${experience ? '\n═══ TON EXPÉRIENCE & KNOWLEDGE BASE ═══\n' + experience.slice(0, 600) + '\nApplique ce savoir pour répondre précisément.\n' : ''}
 ${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nAdapte le ton et les références aux habitudes connues de ce client.\n' : ''}
 ${criticalAlert ? '\n⚠️ ALERTE CRITIQUE ═══\n' + criticalAlert + '\nCe ticket est pré-identifié critique. Réponds avec empathie maximale, sois rassurant, et indique clairement qu\'une intervention humaine suit.\n' : ''}
 ═══ CONTEXTE PROJET ═══
@@ -380,6 +380,15 @@ async function processSupportTickets(
     }
   }
 
+  // Enrichir la knowledge base de Kai après chaque batch de tickets
+  if (totalProcessed > 0) {
+    const globalSummary = actions.join(' | ');
+    await synthesizeExperience(supabase, anthropicKey, profile,
+      { id: '', title: `${totalProcessed} ticket(s) traité(s)`, client_name: 'multi-clients', client_email: '' } as ClientProject,
+      'ticket_batch', globalSummary,
+    );
+  }
+
   return { tickets_processed: totalProcessed, actions };
 }
 
@@ -482,18 +491,25 @@ async function synthesizeExperience(
 
     const prompt = `Tu es ${profile.name}, ${profile.title} chez CreatorFlow Market.
 
-${currentExp ? `EXPÉRIENCE ACTUELLE (${exp?.projects_count || 0} livrables) :\n${currentExp.slice(0, 500)}\n` : ''}
-LIVRABLE VENANT D'ÊTRE PRODUIT :
-Client : ${project.client_name}
-Projet : ${project.title}
+${currentExp ? `EXPÉRIENCE ACTUELLE (${exp?.projects_count || 0} interactions) :\n${currentExp.slice(0, 600)}\n` : ''}
+NOUVELLES INTERACTIONS TRAITÉES :
+Contexte : ${project.client_name} — ${project.title}
 Type : ${deliverableType}
-Résumé : ${summary.slice(0, 200)}
+Résumé : ${summary.slice(0, 300)}
 
-Synthétise ton expérience accumulée en 8-10 bullet points concis (1 ligne chacun).
-Focus : types de demandes support récurrentes, questions FAQ les plus fréquentes, templates qui fonctionnent, points de friction onboarding, cas complexes résolus.
-Format : bullet points uniquement, sans intro ni conclusion.`;
+Synthétise ta base de connaissance en 2 sections :
 
-    const newExp = await callClaude(anthropicKey, 400, prompt);
+PATTERNS (5-7 bullets, 1 ligne chacun) :
+Types de demandes récurrentes, ton le plus efficace, signaux d'escalade, points de friction onboarding, cas complexes résolus.
+
+KNOWLEDGE BASE (3-5 Q/R) :
+Questions client fréquentes avec les meilleures réponses validées. Format strict :
+Q: [question du client en clair]
+R: [réponse concise et actionnable, max 2 phrases]
+
+Commence directement par "PATTERNS" sans introduction. Aucune conclusion.`;
+
+    const newExp = await callClaude(anthropicKey, 600, prompt);
     await supabase.from('employee_experience').update({
       experience_text: newExp.trim(),
       projects_count: count,
