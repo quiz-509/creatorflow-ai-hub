@@ -650,6 +650,143 @@ async function processInternalRequests(
   return { requests_processed: processed, actions };
 }
 
+// ---------------------------------------------------------------------------
+// Séquences outreach — Maya génère les emails personnalisés pour chaque prospect
+// ---------------------------------------------------------------------------
+interface CrmContact {
+  id: string;
+  project_id: string;
+  name: string;
+  email: string;
+  role: string;
+  company: string;
+  icp_score: number;
+  notes: string;
+}
+
+interface ProjectInfo {
+  id: string;
+  title: string;
+  objective: string;
+  client_name: string;
+  client_email: string;
+}
+
+async function processOutreachDrafts(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  profile: EmployeeProfile,
+): Promise<number> {
+  const { data: contacts } = await supabase
+    .from('crm_contacts')
+    .select('id, project_id, name, email, role, company, icp_score, notes')
+    .eq('next_action', 'outreach_1')
+    .not('email', 'is', null)
+    .neq('email', '')
+    .order('icp_score', { ascending: false })
+    .limit(15);
+
+  if (!contacts?.length) return 0;
+
+  // Grouper par projet
+  const byProject = new Map<string, CrmContact[]>();
+  for (const c of contacts as CrmContact[]) {
+    if (!byProject.has(c.project_id)) byProject.set(c.project_id, []);
+    byProject.get(c.project_id)!.push(c);
+  }
+
+  let drafted = 0;
+
+  for (const [projectId, projectContacts] of byProject) {
+    const { data: project } = await supabase
+      .from('client_projects')
+      .select('id, title, objective, client_name, client_email')
+      .eq('id', projectId)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (!project) continue;
+
+    const contactsToProcess = projectContacts.slice(0, 5);
+    const drafts: string[] = [];
+
+    for (const contact of contactsToProcess) {
+      try {
+        const prompt = `Tu es ${profile.name}, ${profile.title} de CreatorFlow Market.
+
+Tu prépares un email d'outreach B2B pour le client "${(project as ProjectInfo).client_name}" qui vise à contacter "${contact.name}" (${contact.role}${contact.company ? ' @ ' + contact.company : ''}).
+
+Objectif du client : ${(project as ProjectInfo).objective || (project as ProjectInfo).title}
+Score ICP du prospect : ${contact.icp_score || 5}/10
+Notes : ${contact.notes ? contact.notes.slice(0, 200) : 'Aucune'}
+
+Rédige un email d'outreach B2B professionnel, court et percutant.
+Réponds UNIQUEMENT dans ce format exact :
+OBJET: [sujet max 60 caractères]
+CORPS:
+[3-4 phrases max. Personnalisé au rôle/entreprise. Appel à l'action clair (ex: "15 min de call ?"). Ton pro mais humain.]`;
+
+        const emailDraft = await callClaude(anthropicKey, 400, prompt);
+        const subject = emailDraft.match(/OBJET:\s*(.+)/)?.[1]?.trim() || `Opportunité — ${contact.name}`;
+        const body = emailDraft.match(/CORPS:\s*([\s\S]+)/)?.[1]?.trim() || emailDraft;
+
+        drafts.push(
+          `### ${contact.name} — ${contact.role}${contact.company ? ' @ ' + contact.company : ''}\n` +
+          `**Email :** ${contact.email}\n\n` +
+          `**Objet :** ${subject}\n\n` +
+          `${body}`,
+        );
+
+        await supabase.from('crm_contacts').update({
+          next_action: 'outreach_drafted',
+          last_contacted_at: new Date().toISOString(),
+          notes: `${(contact.notes || '').trim()}\n[Draft outreach_1 généré le ${new Date().toISOString().slice(0, 10)}]`.trim(),
+          updated_at: new Date().toISOString(),
+        }).eq('id', contact.id);
+
+        drafted++;
+      } catch (err) {
+        console.error(`[prospecting] draft error for ${contact.id}:`, (err as Error).message);
+      }
+    }
+
+    if (!drafts.length) continue;
+
+    await supabase.from('agent_reports').insert({
+      agent_slug: AGENT_SLUG,
+      title: `Outreach prêt — ${(project as ProjectInfo).client_name} : ${drafts.length} email(s) personnalisé(s)`,
+      sections: [
+        {
+          heading: 'Résumé',
+          content: `${drafts.length} email(s) d'outreach rédigé(s) et prêts à envoyer pour le projet "${(project as ProjectInfo).title}".`,
+        },
+        { heading: 'Emails à envoyer', content: drafts.join('\n\n---\n\n') },
+      ],
+      report_type: 'outreach_sequence',
+      content: {
+        project_id: projectId,
+        contacts_count: drafts.length,
+        contact_ids: contactsToProcess.map((c) => c.id),
+      },
+    });
+
+    // Notifier Aria pour qu'elle prévienne le client
+    await supabase.from('internal_requests').insert({
+      project_id: projectId,
+      from_dept: DEPARTMENT,
+      to_dept: 'marketing',
+      brief: `📩 OUTREACH PRÊT — ${drafts.length} email(s) personnalisé(s) pour "${(project as ProjectInfo).title}"\n\nPremier exemple :\n${drafts[0].slice(0, 600)}`,
+      objective: 'Informer le client que ses emails d\'outreach sont prêts à envoyer',
+      decision_reason: `Maya a rédigé ${drafts.length} email(s) outreach personnalisé(s) — client doit valider et envoyer`,
+      status: 'pending',
+    });
+
+    console.log(`[prospecting] outreach drafted: ${drafts.length} emails for project ${projectId}`);
+  }
+
+  return drafted;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
@@ -678,6 +815,10 @@ Deno.serve(async (req) => {
 
     const result = await processInternalRequests(supabase, anthropicKey, apolloApiKey, hunterApiKey, profile);
 
+    // Séquences outreach — génère les emails pour les prospects qualifiés
+    const outreachDrafted = await processOutreachDrafts(supabase, anthropicKey, profile);
+    if (outreachDrafted > 0) result.actions.push(`outreach_drafted:${outreachDrafted}`);
+
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG, run_type: 'daily',
       status: 'completed', started_at: new Date().toISOString(),
@@ -685,7 +826,7 @@ Deno.serve(async (req) => {
     });
 
     return new Response(
-      JSON.stringify({ ok: true, ...result, duration_ms: Date.now() - startTime }),
+      JSON.stringify({ ok: true, ...result, outreach_drafted: outreachDrafted, duration_ms: Date.now() - startTime }),
       { headers: { ...cors, 'Content-Type': 'application/json' } },
     );
   } catch (err) {
