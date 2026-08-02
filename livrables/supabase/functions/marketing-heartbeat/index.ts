@@ -1059,6 +1059,129 @@ Signe avec ton prénom uniquement. Ne mentionne pas d'autres membres d'équipe.`
 }
 
 // ---------------------------------------------------------------------------
+// Rapport hebdomadaire spontané — envoyé au CEO si pas encore envoyé cette semaine
+// ---------------------------------------------------------------------------
+function buildWeeklyReportEmail(
+  profile: EmployeeProfile,
+  reportText: string,
+  weekStr: string,
+  stats: { activeProjects: number; completedCount: number; newBriefs: number; reportsGenerated: number; crmAdded: number; escalations: number },
+): string {
+  const d = new Date().toLocaleString('fr-CA', { timeZone: 'America/Toronto' });
+  const mdToHtml = (s: string): string => s
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{1,3}\s+(.+)$/gm, '<span style="font-size:14px;font-weight:700;color:#C7D2FE;display:block;margin:12px 0 4px">$1</span>')
+    .replace(/^(\d+\.)\s+(.+)$/gm, '<p style="margin:4px 0"><strong>$1</strong> $2</p>')
+    .replace(/\n/g, '<br>');
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${S}</style></head><body><div class="w">
+<div class="hd"><div class="logo">CreatorFlow <em>Market</em></div></div>
+<div class="badge" style="background:rgba(99,102,241,0.15);color:#A5B4FC;border:1px solid rgba(99,102,241,0.3);">📊 Rapport Hebdomadaire</div>
+<div class="h2">AI Workforce — Bilan de la semaine</div>
+<div class="meta">${d} · ${weekStr}</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0">
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:#A5B4FC">${stats.activeProjects}</div><div class="lbl">Projets actifs</div></div>
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:#34D399">${stats.reportsGenerated}</div><div class="lbl">Livrables produits</div></div>
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:#FCD34D">${stats.crmAdded}</div><div class="lbl">Prospects CRM</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 16px">
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:#818CF8">${stats.newBriefs}</div><div class="lbl">Briefs reçus</div></div>
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:#6EE7B7">${stats.completedCount}</div><div class="lbl">Projets clôturés</div></div>
+  <div class="sec" style="text-align:center"><div style="font-size:24px;font-weight:800;color:${stats.escalations > 0 ? '#FCA5A5' : '#34D399'}">${stats.escalations}</div><div class="lbl">Escalades</div></div>
+</div>
+<div class="sec"><div class="lbl">Rapport</div><div class="txt">${mdToHtml(reportText)}</div></div>
+<div class="ft">${profile.name} · ${profile.title} · CreatorFlow Market</div>
+</div></body></html>`;
+}
+
+async function generateWeeklyReport(
+  supabase: ReturnType<typeof createClient>,
+  anthropicKey: string,
+  resendKey: string,
+  profile: EmployeeProfile,
+): Promise<boolean> {
+  // Vérifier si un rapport a déjà été envoyé dans les 7 derniers jours
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: lastReport } = await supabase
+    .from('agent_heartbeats')
+    .select('started_at')
+    .eq('agent_slug', AGENT_SLUG)
+    .eq('run_type', 'weekly_report')
+    .gte('started_at', weekAgo)
+    .maybeSingle();
+  if (lastReport) return false;
+
+  const [activeRes, completedRes, briefsRes, historyRes, crmRes, escalationsRes, reportsRes] = await Promise.all([
+    supabase.from('client_projects').select('title, client_name, phase').eq('status', 'active').order('priority_score', { ascending: false }).limit(10),
+    supabase.from('client_projects').select('*', { count: 'exact', head: true }).eq('status', 'completed').gte('updated_at', weekAgo),
+    supabase.from('briefs').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo),
+    supabase.from('project_history').select('event_type, note, created_at').gte('created_at', weekAgo).order('created_at', { ascending: false }).limit(20),
+    supabase.from('crm_contacts').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo),
+    supabase.from('project_history').select('*', { count: 'exact', head: true }).in('event_type', ['support_escalated']).gte('created_at', weekAgo),
+    supabase.from('agent_reports').select('*', { count: 'exact', head: true }).gte('created_at', weekAgo),
+  ]);
+
+  const activeProjects = activeRes.data || [];
+  const stats = {
+    activeProjects: activeProjects.length,
+    completedCount: completedRes.count || 0,
+    newBriefs: briefsRes.count || 0,
+    reportsGenerated: reportsRes.count || 0,
+    crmAdded: crmRes.count || 0,
+    escalations: escalationsRes.count || 0,
+  };
+
+  const projectsList = activeProjects
+    .map((p: { title: string; client_name: string; phase: string }) => `• ${p.title} — ${p.client_name} [${p.phase}]`)
+    .join('\n');
+
+  const historyHighlights = (historyRes.data || [])
+    .slice(0, 10)
+    .map((h: { event_type: string; note: string; created_at: string }) => `[${h.created_at.slice(0, 10)}] ${(h.note || h.event_type).slice(0, 120)}`)
+    .join('\n');
+
+  const reportText = await callClaude(anthropicKey, 1024,
+    `Tu es ${profile.name}, ${profile.title} chez CreatorFlow Market.
+Tu rédiges ton rapport hebdomadaire spontané à destination du CEO.
+
+DONNÉES DE LA SEMAINE :
+- Portefeuille actif : ${stats.activeProjects} projet(s)
+${projectsList || 'Aucun projet actif'}
+- Projets clôturés : ${stats.completedCount}
+- Nouveaux briefs : ${stats.newBriefs}
+- Livrables produits : ${stats.reportsGenerated}
+- Prospects CRM ajoutés : ${stats.crmAdded}
+- Escalades support : ${stats.escalations}
+
+ÉVÉNEMENTS RÉCENTS :
+${historyHighlights || 'Aucun événement significatif cette semaine'}
+
+Rédige un rapport hebdomadaire structuré (300-400 mots) :
+1. Bilan chiffré de la semaine (highlights, faits marquants)
+2. Statut du portefeuille (ce qui avance, ce qui est bloqué ou risqué)
+3. Points d'attention pour le CEO (risques, opportunités, décisions nécessaires)
+4. Priorités recommandées pour la semaine prochaine
+
+Ton professionnel, direct, orienté résultats. Signe avec ton prénom.`,
+    DECISION_MODEL,
+  );
+
+  const weekStr = new Date().toLocaleDateString('fr-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+  await sendToCEO(resendKey, `📊 Rapport hebdomadaire Aria — ${weekStr}`,
+    buildWeeklyReportEmail(profile, reportText, weekStr, stats));
+
+  await supabase.from('agent_heartbeats').insert({
+    agent_slug: AGENT_SLUG,
+    run_type: 'weekly_report',
+    status: 'completed',
+    started_at: new Date().toISOString(),
+    decisions: [`weekly_report:${new Date().toISOString().slice(0, 10)}`],
+  });
+
+  console.log(`[marketing] Weekly report sent for ${weekStr}`);
+  return true;
+}
+
+// ---------------------------------------------------------------------------
 // Révisions — transformées en internal_requests
 // ---------------------------------------------------------------------------
 async function processRevisionRequests(
@@ -1155,6 +1278,10 @@ async function handleCheck(
   if (actions.length > 0) {
     await updateCompanyMemory(supabase, anthropicKey, actions);
   }
+
+  // 6. Rapport hebdomadaire spontané (1 fois par semaine max)
+  const weeklyReportSent = await generateWeeklyReport(supabase, anthropicKey, resendKey, profile);
+  if (weeklyReportSent) actions.push('weekly_report:sent');
 
   return {
     briefs_picked_up: newBriefs?.length || 0,
