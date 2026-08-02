@@ -1192,6 +1192,30 @@ Deno.serve(async (req) => {
     const body = req.method === 'POST' ? await req.json().catch(() => ({})) : {};
     const runType = body.run_type || body.type || 'check';
 
+    // Mode event-driven : déclenché par le trigger DB sur briefs INSERT
+    if (body.action === 'intake_only' && body.brief_id) {
+      const { data: brief } = await supabase
+        .from('briefs')
+        .select('id, description, user_id, statut, project_id')
+        .eq('id', body.brief_id)
+        .is('project_id', null)
+        .not('statut', 'in', '("in_progress","assigned","completed","cancelled")')
+        .maybeSingle();
+
+      if (!brief) {
+        return new Response(
+          JSON.stringify({ ok: true, note: 'brief déjà traité ou introuvable', brief_id: body.brief_id }),
+          { headers: { ...cors, 'Content-Type': 'application/json' } },
+        );
+      }
+
+      const pid = await handleIntake(supabase, anthropicKey, resendKey, profile, brief);
+      return new Response(
+        JSON.stringify({ ok: true, action: 'intake_only', project_id: pid, duration_ms: Date.now() - startTime }),
+        { headers: { ...cors, 'Content-Type': 'application/json' } },
+      );
+    }
+
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG,
       run_type: runType,
