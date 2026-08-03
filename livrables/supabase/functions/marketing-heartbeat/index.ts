@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
-import { callClaude, cors, HAIKU } from '../_shared/agent-core.ts';
+import { callClaude, cors, HAIKU, loadWorkforceInsights } from '../_shared/agent-core.ts';
 
 const MODEL = HAIKU;                                  // tâches légères: métriques, synthèse
 const DECISION_MODEL = 'claude-sonnet-4-5';           // décisions client complexes
@@ -1339,9 +1339,15 @@ async function handleCheck(
   }
 
   // 2. Revue du portefeuille — Claude décide pour chaque projet
-  const companyMemory = await loadCompanyMemory(supabase);
+  const [companyMemory, prospectingInsights] = await Promise.all([
+    loadCompanyMemory(supabase),
+    loadWorkforceInsights(supabase, 'prospecting'),
+  ]);
+  const combinedContext = prospectingInsights
+    ? `${companyMemory}${companyMemory ? '\n\n' : ''}Patterns de conversion prospection (toute la plateforme) :\n${prospectingInsights}`
+    : companyMemory;
   const { projects_reviewed, actions: ownerActions } = await reviewOwnerPortfolio(
-    supabase, anthropicKey, resendKey, braveApiKey, stripeKey, profile, companyMemory,
+    supabase, anthropicKey, resendKey, braveApiKey, stripeKey, profile, combinedContext,
   );
   actions.push(...ownerActions);
 

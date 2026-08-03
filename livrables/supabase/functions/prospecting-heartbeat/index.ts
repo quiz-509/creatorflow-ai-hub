@@ -2,6 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno
 import {
   callClaude, cors, loadProfile, loadExperience,
   getClientMemory, updateClientMemory, synthesizeExperience,
+  loadWorkforceInsights, upsertWorkforceInsight,
   EmployeeProfile, ClientProject,
 } from '../_shared/agent-core.ts';
 
@@ -46,6 +47,7 @@ async function saveProspectsToCrm(
   projectId: string,
   requestId: string,
   people: ApolloPerson[],
+  sector: string,
 ): Promise<number> {
   let saved = 0;
   for (const person of people) {
@@ -65,6 +67,7 @@ async function saveProspectsToCrm(
         role: person.title || '',
         company: person.organization?.name || '',
         linkedin_url: person.linkedin_url || null,
+        sector: sector || null,
         status: 'identified',
         source_mission_id: requestId,
         agent_slug: AGENT_SLUG,
@@ -298,12 +301,14 @@ function buildDeliverablePrompt(
   request: InternalRequest,
   experience: string,
   clientMemory: string,
+  workforceInsights: string,
   crmContext: string,
   realProspects: string,
   hunterEmails: string,
 ): string {
   return `${profile.system_prompt_context}
 ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience.slice(0, 400) + '\nApplique ces apprentissages dans ce livrable.\n' : ''}
+${workforceInsights ? '\n═══ PATTERNS DÉTECTÉS SUR TOUTE LA PLATEFORME ═══\n' + workforceInsights + '\nCes patterns sont agrégés sur l\'ensemble des clients, pas seulement celui-ci. Utilise-les pour calibrer l\'ICP et prioriser les secteurs qui convertissent le mieux.\n' : ''}
 ${clientMemory ? '\n═══ MÉMOIRE CLIENT ═══\n' + clientMemory + '\nUtilise cette connaissance pour affiner l\'ICP, éviter de cibler des segments déjà épuisés et adapter la séquence outreach.\n' : ''}
 ${crmContext ? '\n═══ PIPELINE CRM ACTUEL ═══\n' + crmContext + '\nCes contacts sont déjà identifiés. Ne les re-cible pas — concentre-toi sur de nouveaux segments ou sur la progression de leur séquence outreach.\n' : ''}
 ${realProspects ? '\n═══ VRAIS PROSPECTS (Apollo.io — sauvegardés en CRM) ═══\n' + realProspects + '\nCes contacts ont été ajoutés automatiquement au CRM. Produis les livrables pour les activer.\n' : ''}
@@ -368,7 +373,7 @@ async function executeInternalRequest(
         const apolloResult = await apolloSearch(apolloApiKey, icp.titles, icp.keywords, 10);
         realProspects = apolloResult.formatted;
         if (apolloResult.people.length) {
-          crmSaved += await saveProspectsToCrm(supabase, project.id, request.id, apolloResult.people);
+          crmSaved += await saveProspectsToCrm(supabase, project.id, request.id, apolloResult.people, icp.keywords);
           console.log(`[prospecting] Apollo → ${apolloResult.people.length} prospects trouvés, ${crmSaved} sauvegardés en CRM`);
         }
       }
@@ -395,8 +400,10 @@ async function executeInternalRequest(
       hunterEmails = parts.join('\n\n');
     }
 
+    const workforceInsights = await loadWorkforceInsights(supabase, DEPARTMENT);
+
     const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(
-      profile, project, request, experience, clientMemory, crmContext, realProspects, hunterEmails,
+      profile, project, request, experience, clientMemory, workforceInsights, crmContext, realProspects, hunterEmails,
     ));
 
     const extract = (tag: string): string => {
@@ -642,6 +649,51 @@ CORPS:
   return drafted;
 }
 
+// ---------------------------------------------------------------------------
+// computeProspectingInsights — détecte les patterns de conversion par secteur
+// à l'échelle de toute la plateforme (P0-2 : mémoire analytique cross-clients)
+// ---------------------------------------------------------------------------
+const CONVERTED_STATUSES = ['qualified', 'meeting_scheduled', 'won'];
+const MIN_SAMPLE_SIZE = 10;
+
+async function computeProspectingInsights(
+  supabase: ReturnType<typeof createClient>,
+): Promise<number> {
+  const { data: contacts } = await supabase
+    .from('crm_contacts')
+    .select('sector, status')
+    .eq('agent_slug', AGENT_SLUG)
+    .not('sector', 'is', null)
+    .neq('sector', '');
+
+  if (!contacts?.length) return 0;
+
+  const bySector = new Map<string, { total: number; converted: number }>();
+  for (const c of contacts as { sector: string; status: string }[]) {
+    const key = c.sector.trim().toLowerCase();
+    if (!key) continue;
+    const stats = bySector.get(key) || { total: 0, converted: 0 };
+    stats.total++;
+    if (CONVERTED_STATUSES.includes(c.status)) stats.converted++;
+    bySector.set(key, stats);
+  }
+
+  let updated = 0;
+  for (const [sector, stats] of bySector) {
+    if (stats.total < MIN_SAMPLE_SIZE) continue;
+    const rate = Math.round((stats.converted / stats.total) * 100);
+    await upsertWorkforceInsight(
+      supabase,
+      DEPARTMENT,
+      `secteur_${sector.replace(/[^a-z0-9]+/g, '_').slice(0, 60)}`,
+      `Secteur "${sector}" : ${rate}% de conversion (${stats.converted}/${stats.total} prospects qualifiés ou plus).`,
+      stats.total,
+    );
+    updated++;
+  }
+  return updated;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
 
@@ -673,6 +725,10 @@ Deno.serve(async (req) => {
     // Séquences outreach — génère les emails pour les prospects qualifiés
     const outreachDrafted = await processOutreachDrafts(supabase, anthropicKey, profile);
     if (outreachDrafted > 0) result.actions.push(`outreach_drafted:${outreachDrafted}`);
+
+    // Mémoire analytique cross-clients — détecte les patterns de conversion par secteur
+    const insightsUpdated = await computeProspectingInsights(supabase);
+    if (insightsUpdated > 0) result.actions.push(`insights_updated:${insightsUpdated}`);
 
     await supabase.from('agent_heartbeats').insert({
       agent_slug: AGENT_SLUG, run_type: 'daily',

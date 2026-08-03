@@ -159,6 +159,42 @@ Format : bullet points uniquement, sans intro ni conclusion.`);
 }
 
 // ---------------------------------------------------------------------------
+// workforce_insights — mémoire analytique cross-clients (patterns à l'échelle
+// de la plateforme, pas d'un seul client). Ex: "secteur X convertit 3x mieux".
+// ---------------------------------------------------------------------------
+export async function loadWorkforceInsights(
+  supabase: ReturnType<typeof createClient>,
+  domain: string,
+  limit = 5,
+): Promise<string> {
+  const { data } = await supabase
+    .from('workforce_insights')
+    .select('insight_text, sample_size')
+    .eq('domain', domain)
+    .order('sample_size', { ascending: false })
+    .limit(limit);
+  if (!data || data.length === 0) return '';
+  return data.map((i: { insight_text: string }) => `• ${i.insight_text}`).join('\n');
+}
+
+export async function upsertWorkforceInsight(
+  supabase: ReturnType<typeof createClient>,
+  domain: string,
+  insightKey: string,
+  insightText: string,
+  sampleSize: number,
+): Promise<void> {
+  const { error } = await supabase.from('workforce_insights').upsert({
+    domain,
+    insight_key: insightKey,
+    insight_text: insightText,
+    sample_size: sampleSize,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'domain,insight_key' });
+  if (error) console.error(`[workforce_insights] upsert error (${domain}/${insightKey}):`, error.message);
+}
+
+// ---------------------------------------------------------------------------
 // synthesizeExperience — synthétise l'expérience accumulée après chaque mission
 // ---------------------------------------------------------------------------
 export async function synthesizeExperience(
