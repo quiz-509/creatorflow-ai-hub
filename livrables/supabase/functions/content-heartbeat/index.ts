@@ -1,16 +1,9 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
-
-async function callClaude(apiKey: string, maxTokens: number, prompt: string, model = 'claude-haiku-4-5-20251001'): Promise<string> {
-  const client = new Anthropic({ apiKey });
-  const msg = await client.messages.create({
-    model,
-    max_tokens: maxTokens,
-    messages: [{ role: 'user', content: prompt }],
-  });
-  const block = msg.content.find((b: { type: string }) => b.type === 'text');
-  return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
-}
+import {
+  callClaude, cors, loadProfile, loadExperience,
+  getClientMemory, updateClientMemory, synthesizeExperience,
+  EmployeeProfile, SONNET_5,
+} from '../_shared/agent-core.ts';
 
 async function searchImages(
   query: string, unsplashKey: string, pexelsKey: string, max = 3,
@@ -109,11 +102,6 @@ async function webSearch(query: string, apiKey: string, maxResults = 5): Promise
   } catch (_) { return ''; }
 }
 
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
 const PUBLISH_KEYWORDS = [
   'publier', 'publish', 'poster sur le blog', 'mettre en ligne',
   'publication directe', 'publier sur le site', 'publish to cms',
@@ -133,7 +121,7 @@ const COMPLEX_CONTENT_KEYWORDS = [
 function selectContentModel(brief: string): string {
   const lower = brief.toLowerCase();
   return COMPLEX_CONTENT_KEYWORDS.some(kw => lower.includes(kw))
-    ? 'claude-sonnet-5'
+    ? SONNET_5
     : 'claude-haiku-4-5-20251001';
 }
 
@@ -296,13 +284,6 @@ async function executeDelivery(
 const AGENT_SLUG = 'content';
 const DEPARTMENT = 'content';
 
-interface EmployeeProfile {
-  slug: string;
-  name: string;
-  title: string;
-  system_prompt_context: string;
-}
-
 interface InternalRequest {
   id: string;
   project_id: string;
@@ -331,125 +312,6 @@ interface ClientProject {
   client_email?: string;
   objective?: string;
   delivery_config?: DeliveryConfig | null;
-}
-
-async function loadProfile(supabase: ReturnType<typeof createClient>): Promise<EmployeeProfile | null> {
-  const { data } = await supabase
-    .from('employee_profiles')
-    .select('slug, name, title, system_prompt_context')
-    .eq('slug', AGENT_SLUG)
-    .single();
-  return data || null;
-}
-
-async function loadExperience(supabase: ReturnType<typeof createClient>): Promise<string> {
-  const { data } = await supabase
-    .from('employee_experience')
-    .select('experience_text, projects_count')
-    .eq('employee_slug', AGENT_SLUG)
-    .single();
-  if (!data || !data.experience_text || data.projects_count === 0) return '';
-  return data.experience_text;
-}
-
-async function getClientMemory(
-  supabase: ReturnType<typeof createClient>, clientEmail: string,
-): Promise<string> {
-  if (!clientEmail) return '';
-  const { data } = await supabase
-    .from('client_memory')
-    .select('memory, projects_count')
-    .eq('client_email', clientEmail)
-    .eq('department', DEPARTMENT)
-    .maybeSingle();
-  if (!data) return '';
-  return `Client récurrent (${data.projects_count} livrable${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
-}
-
-async function updateClientMemory(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  clientEmail: string,
-  projectTitle: string,
-  deliverableType: string,
-  summary: string,
-): Promise<void> {
-  if (!clientEmail) return;
-  try {
-    const { data: existing } = await supabase
-      .from('client_memory')
-      .select('memory, projects_count')
-      .eq('client_email', clientEmail)
-      .eq('department', DEPARTMENT)
-      .maybeSingle();
-
-    const count = (existing?.projects_count || 0) + 1;
-    const currentMemory = existing?.memory || '';
-
-    const newMemory = await callClaude(anthropicKey, 300,
-      `Tu es Léo, Content Employee chez CreatorFlow Market.
-${currentMemory ? `MÉMOIRE EXISTANTE (${existing?.projects_count || 0} livrable(s)) :\n${currentMemory.slice(0, 400)}\n` : ''}
-LIVRABLE VENANT D'ÊTRE PRODUIT :
-Projet : ${projectTitle}
-Type : ${deliverableType}
-Résumé : ${summary.slice(0, 200)}
-
-Synthétise la mémoire client en 5-7 bullet points. Focus : préférences éditoriales observées, formats qui fonctionnent, ton attendu, thèmes récurrents, contraintes spécifiques.
-Format : bullet points uniquement, sans intro ni conclusion.`);
-
-    const { error } = await supabase.from('client_memory').upsert({
-      client_email: clientEmail,
-      department: DEPARTMENT,
-      memory: newMemory.trim(),
-      projects_count: count,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'client_email,department' });
-    if (error) console.error('[content] updateClientMemory upsert error:', error.message);
-  } catch (err) {
-    console.error('[content] updateClientMemory error:', (err as Error).message);
-  }
-}
-
-async function synthesizeExperience(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  profile: EmployeeProfile,
-  project: ClientProject,
-  deliverableType: string,
-  summary: string,
-): Promise<void> {
-  try {
-    const { data: exp } = await supabase
-      .from('employee_experience')
-      .select('experience_text, projects_count')
-      .eq('employee_slug', profile.slug)
-      .single();
-
-    const count = (exp?.projects_count || 0) + 1;
-    const currentExp = exp?.experience_text || '';
-
-    const prompt = `Tu es ${profile.name}, ${profile.title} chez CreatorFlow Market.
-
-${currentExp ? `EXPÉRIENCE ACTUELLE (${exp?.projects_count || 0} livrables) :\n${currentExp.slice(0, 500)}\n` : ''}
-LIVRABLE VENANT D'ÊTRE PRODUIT :
-Client : ${project.client_name}
-Projet : ${project.title}
-Type : ${deliverableType}
-Résumé : ${summary.slice(0, 200)}
-
-Synthétise ton expérience accumulée en 8-10 bullet points concis (1 ligne chacun).
-Focus : types de livrables maîtrisés, profils clients récurrents, ce qui fonctionne, difficultés, meilleures pratiques.
-Format : bullet points uniquement, sans intro ni conclusion.`;
-
-    const newExp = await callClaude(anthropicKey, 400, prompt);
-    await supabase.from('employee_experience').update({
-      experience_text: newExp.trim(),
-      projects_count: count,
-      last_synthesized: new Date().toISOString(),
-    }).eq('employee_slug', profile.slug);
-  } catch (err) {
-    console.error('[content] synthesizeExperience error:', (err as Error).message);
-  }
 }
 
 async function updateMetrics(
@@ -586,7 +448,7 @@ async function executeInternalRequest(
     const [searchResults, videoResults, clientMemory] = await Promise.all([
       webSearch(searchQuery, braveApiKey, 5),
       findYouTubeVideos(searchQuery, youtubeKey, 3),
-      getClientMemory(supabase, project.client_email || ''),
+      getClientMemory(supabase, project.client_email || '', DEPARTMENT),
     ]);
 
     const contentModel = selectContentModel(request.brief);
@@ -709,7 +571,7 @@ async function executeInternalRequest(
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, contentType, summary);
-    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, contentType, summary);
+    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, contentType, summary, profile.name, profile.title, DEPARTMENT);
 
     return true;
   } catch (err) {
@@ -728,7 +590,7 @@ async function processInternalRequests(
   youtubeKey: string,
   profile: EmployeeProfile,
 ): Promise<{ requests_processed: number; actions: string[] }> {
-  const experience = await loadExperience(supabase);
+  const experience = await loadExperience(supabase, AGENT_SLUG);
 
   const { data: requests } = await supabase
     .from('internal_requests')
@@ -771,7 +633,7 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const profile = await loadProfile(supabase);
+    const profile = await loadProfile(supabase, AGENT_SLUG);
     if (!profile) {
       return new Response(
         JSON.stringify({ ok: false, error: 'Profil employee_profiles introuvable pour slug=content' }),

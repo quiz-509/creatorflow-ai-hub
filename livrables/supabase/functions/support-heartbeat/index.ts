@@ -1,21 +1,9 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
-
-async function callClaude(apiKey: string, maxTokens: number, prompt: string): Promise<string> {
-  const client = new Anthropic({ apiKey });
-  const msg = await client.messages.create({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: maxTokens,
-    messages: [{ role: 'user', content: prompt }],
-  });
-  const block = msg.content.find((b: { type: string }) => b.type === 'text');
-  return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
-}
-
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import {
+  callClaude, cors, loadProfile, loadExperience,
+  getClientMemory, updateClientMemory,
+  EmployeeProfile, ClientProject,
+} from '../_shared/agent-core.ts';
 
 const AGENT_SLUG = 'support';
 const DEPARTMENT = 'support';
@@ -72,13 +60,6 @@ async function sendEscalationAlert(
   }
 }
 
-interface EmployeeProfile {
-  slug: string;
-  name: string;
-  title: string;
-  system_prompt_context: string;
-}
-
 interface InternalRequest {
   id: string;
   project_id: string;
@@ -86,14 +67,6 @@ interface InternalRequest {
   brief: string;
   objective?: string;
   decision_reason?: string;
-}
-
-interface ClientProject {
-  id: string;
-  title: string;
-  client_name: string;
-  client_email?: string;
-  objective?: string;
 }
 
 interface SupportAdapter {
@@ -298,7 +271,7 @@ async function processSupportTickets(
   adminEmail: string,
   profile: EmployeeProfile,
 ): Promise<{ tickets_processed: number; actions: string[] }> {
-  const experience = await loadExperience(supabase);
+  const experience = await loadExperience(supabase, AGENT_SLUG);
   const since = new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString();
 
   const { data: projects } = await supabase
@@ -317,7 +290,7 @@ async function processSupportTickets(
 
     console.log(`[support] ${tickets.length} ticket(s) for project ${project.id} (${adapter.type})`);
 
-    const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    const clientMemory = await getClientMemory(supabase, project.client_email || '', DEPARTMENT);
     let ticketsSummary = '';
 
     for (const ticket of tickets) {
@@ -376,7 +349,7 @@ async function processSupportTickets(
     }
 
     if (ticketsSummary) {
-      await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, 'tickets_support', ticketsSummary.trim());
+      await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, 'tickets_support', ticketsSummary.trim(), profile.name, profile.title, DEPARTMENT);
     }
   }
 
@@ -394,82 +367,6 @@ async function processSupportTickets(
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function loadProfile(supabase: ReturnType<typeof createClient>): Promise<EmployeeProfile | null> {
-  const { data } = await supabase
-    .from('employee_profiles')
-    .select('slug, name, title, system_prompt_context')
-    .eq('slug', AGENT_SLUG)
-    .single();
-  return data || null;
-}
-
-async function loadExperience(supabase: ReturnType<typeof createClient>): Promise<string> {
-  const { data } = await supabase
-    .from('employee_experience')
-    .select('experience_text, projects_count')
-    .eq('employee_slug', AGENT_SLUG)
-    .single();
-  if (!data || !data.experience_text || data.projects_count === 0) return '';
-  return data.experience_text;
-}
-
-async function getClientMemory(
-  supabase: ReturnType<typeof createClient>, clientEmail: string,
-): Promise<string> {
-  if (!clientEmail) return '';
-  const { data } = await supabase
-    .from('client_memory')
-    .select('memory, projects_count')
-    .eq('client_email', clientEmail)
-    .eq('department', DEPARTMENT)
-    .maybeSingle();
-  if (!data) return '';
-  return `Client récurrent (${data.projects_count} interaction${data.projects_count > 1 ? 's' : ''}) :\n${data.memory}`;
-}
-
-async function updateClientMemory(
-  supabase: ReturnType<typeof createClient>,
-  anthropicKey: string,
-  clientEmail: string,
-  projectTitle: string,
-  interactionType: string,
-  summary: string,
-): Promise<void> {
-  if (!clientEmail) return;
-  try {
-    const { data: existing } = await supabase
-      .from('client_memory')
-      .select('memory, projects_count')
-      .eq('client_email', clientEmail)
-      .eq('department', DEPARTMENT)
-      .maybeSingle();
-
-    const count = (existing?.projects_count || 0) + 1;
-    const currentMemory = existing?.memory || '';
-
-    const newMemory = await callClaude(anthropicKey, 300,
-      `Tu es Kai, Support Agent chez CreatorFlow Market.
-${currentMemory ? `MÉMOIRE EXISTANTE (${existing?.projects_count || 0} interaction(s)) :\n${currentMemory.slice(0, 400)}\n` : ''}
-INTERACTION VENANT D'ÊTRE TRAITÉE :
-Projet : ${projectTitle}
-Type : ${interactionType}
-Résumé : ${summary.slice(0, 200)}
-
-Synthétise la mémoire client en 5-7 bullet points. Focus : problèmes récurrents, environnement technique du client, ton préféré dans les réponses, points de friction onboarding, cas d'escalade passés.
-Format : bullet points uniquement, sans intro ni conclusion.`);
-
-    const { error } = await supabase.from('client_memory').upsert({
-      client_email: clientEmail,
-      department: DEPARTMENT,
-      memory: newMemory.trim(),
-      projects_count: count,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'client_email,department' });
-    if (error) console.error('[support] updateClientMemory upsert error:', error.message);
-  } catch (err) {
-    console.error('[support] updateClientMemory error:', (err as Error).message);
-  }
-}
 
 async function synthesizeExperience(
   supabase: ReturnType<typeof createClient>,
@@ -630,7 +527,7 @@ async function executeInternalRequest(
 
     await supabase.from('internal_requests').update({ status: 'in_progress' }).eq('id', request.id);
 
-    const clientMemory = await getClientMemory(supabase, project.client_email || '');
+    const clientMemory = await getClientMemory(supabase, project.client_email || '', DEPARTMENT);
     const raw = await callClaude(anthropicKey, 2048, buildDeliverablePrompt(profile, project, request, experience, clientMemory));
 
     const extract = (tag: string): string => {
@@ -673,7 +570,7 @@ async function executeInternalRequest(
     });
 
     await synthesizeExperience(supabase, anthropicKey, profile, project, supportType, summary);
-    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, supportType, summary);
+    await updateClientMemory(supabase, anthropicKey, project.client_email || '', project.title, supportType, summary, profile.name, profile.title, DEPARTMENT);
 
     return true;
   } catch (err) {
@@ -688,7 +585,7 @@ async function processInternalRequests(
   anthropicKey: string,
   profile: EmployeeProfile,
 ): Promise<{ requests_processed: number; actions: string[] }> {
-  const experience = await loadExperience(supabase);
+  const experience = await loadExperience(supabase, AGENT_SLUG);
 
   const { data: requests } = await supabase
     .from('internal_requests')
@@ -729,7 +626,7 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const profile = await loadProfile(supabase);
+    const profile = await loadProfile(supabase, AGENT_SLUG);
     if (!profile) {
       return new Response(
         JSON.stringify({ ok: false, error: 'Profil employee_profiles introuvable pour slug=support' }),

@@ -1,6 +1,41 @@
 # CreatorFlow Market — Master Roadmap
 > Document vivant. Mis à jour après chaque sprint. Source de vérité unique.
-> Dernière mise à jour : 2026-07-06
+> Dernière mise à jour : 2026-07-14
+
+---
+
+## STATUT ACTUEL — 2026-07-14
+
+### Plateforme entièrement nettoyée. Prête pour la première vraie mission client.
+
+**Ce qui a été fait (sessions 2026-07-08 à 2026-07-14) :**
+
+| AI Employee | Équipement | Statut |
+|-------------|-----------|--------|
+| Aria (Marketing Director) | Web Search + Emails + Stripe + Analytics webhook | ✅ Déployé |
+| Léo (Content Employee) | Web Search + Unsplash + YouTube + LanguageTool + delivery_config | ✅ Déployé |
+| Maya (Prospecting Employee) | Apollo.io + Hunter.io | ✅ Déployé |
+| Kai (Support Agent) | support_adapter (Zendesk/Freshdesk/Intercom/Webhook) | ✅ Déployé |
+
+**Base de données — état au 2026-07-14 :**
+
+| Table | Contenu |
+|-------|---------|
+| briefs | 0 (nettoyé) |
+| client_projects | 0 (nettoyé) |
+| experts | 0 (nettoyé) |
+| agent_reports | 0 (nettoyé) |
+| agent_heartbeats | 0 (nettoyé) |
+| employee_experience | 4 (Aria, Léo, Maya, Kai — préservés) |
+
+**Prochaine étape unique : première vraie mission client.**
+
+- Créer un projet client réel dans Supabase
+- Laisser les heartbeats pg_cron travailler
+- Observer les décisions des employees dans `project_history`
+- Construire le Learning Engine une fois les premières données réelles accumulées
+
+---
 >
 > **Constitution AI Workforce :** `livrables/AI_WORKFORCE_OS.md` — lire avant tout développement sur l'AI Workforce.
 > **Contexte complet du projet :** `PROJECT_CONTEXT.md` — URLs, stack, APIs, règles permanentes, AI Workforce, roadmap.

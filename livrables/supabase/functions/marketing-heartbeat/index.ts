@@ -1,19 +1,8 @@
-import Anthropic from 'https://esm.sh/@anthropic-ai/sdk@0.24.0?target=deno';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2?target=deno';
+import { callClaude, cors, HAIKU } from '../_shared/agent-core.ts';
 
-const MODEL = 'claude-haiku-4-5-20251001';           // tâches légères: métriques, synthèse
+const MODEL = HAIKU;                                  // tâches légères: métriques, synthèse
 const DECISION_MODEL = 'claude-sonnet-4-5';           // décisions client complexes
-
-async function callClaude(apiKey: string, maxTokens: number, prompt: string, model = MODEL): Promise<string> {
-  const client = new Anthropic({ apiKey });
-  const msg = await client.messages.create({
-    model,
-    max_tokens: maxTokens,
-    messages: [{ role: 'user', content: prompt }],
-  });
-  const block = msg.content.find((b: { type: string }) => b.type === 'text');
-  return block && block.type === 'text' ? (block as { type: 'text'; text: string }).text : '';
-}
 
 async function webSearch(query: string, apiKey: string, maxResults = 5): Promise<string> {
   if (!apiKey || !query.trim()) return '';
@@ -31,11 +20,6 @@ async function webSearch(query: string, apiKey: string, maxResults = 5): Promise
     ).join('\n\n');
   } catch (_) { return ''; }
 }
-
-const cors = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
 
 const CEO_EMAIL = 'pjoacenel@gmail.com';
 const AGENT_SLUG = 'marketing';
