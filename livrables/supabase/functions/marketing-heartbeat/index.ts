@@ -565,7 +565,7 @@ ${experience ? '\n═══ TON EXPÉRIENCE ACCUMULÉE ═══\n' + experience
 ═══ PROJET EN COURS ═══
 Titre : ${project.title}
 Client : ${project.client_name}
-Objectif : ${(project.objective || '').slice(0, 500)}
+Objectif : ${(project.objective || '').slice(0, 3000)}
 Phase actuelle : ${project.phase}
 Inactif depuis : ${hoursSince}h
 Contacts envoyés au client : ${contactCount} — Dernier : ${lastClientContact || 'Aucun'}
